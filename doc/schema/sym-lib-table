@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "route-runner")(type "KiCad")(uri "${KIPRJMOD}/route-runner.kicad_sym")(options "")(descr ""))
+)
