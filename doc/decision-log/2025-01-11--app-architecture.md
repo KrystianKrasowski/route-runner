@@ -10,6 +10,7 @@ Pros:
 * Simple, verbose and easy to start with
 * Can introduce some of the architecture patterns like sequencer, finite state machine or serial task execution
 * No/limited concurrency
+
 Cons:
 * No real time execution - for example when PID controller starts its computarion and the stop command appears, the PID algorithm will end its work first before stop command would execute
 * Probably not industry way to go
@@ -20,6 +21,7 @@ Pros:
 * Professional approach
 * Industry standard
 * Real time behaviour - for example stop command could suspend PID task execution
+
 Cons:
 * Steep learning curve
 * Complex integration with non-HAL approach (or maybe not?)
