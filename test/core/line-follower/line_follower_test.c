@@ -12,7 +12,7 @@ tearDown(void)
 }
 
 void
-should_run(void)
+should_enqueue(void)
 {
     // when
     line_follower_run();
@@ -25,6 +25,6 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(should_run);
+    RUN_TEST(should_enqueue);
     return UNITY_END();
 }

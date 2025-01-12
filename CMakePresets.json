@@ -52,7 +52,10 @@
     "testPresets": [
         {
             "name": "Unit Tests",
-            "configurePreset": "Test"
+            "configurePreset": "Test",
+            "output": {
+                "outputOnFailure": true
+            }
         }
     ]
 }
