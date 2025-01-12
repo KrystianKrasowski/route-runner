@@ -1,6 +1,5 @@
 #include "queue.h"
 #include <stdio.h>
-#include <string.h>
 
 static volatile queue_t queue = {
     .messages = {0},
@@ -39,7 +38,6 @@ queue_pull()
     }
 
     volatile queue_message_t *message = &queue.messages[queue.tail];
-
     queue.tail = (queue.tail + 1) % QUEUE_SIZE;
 
     queue_unlock();
