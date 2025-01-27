@@ -1,7 +1,3 @@
-set(TARGET line_follower)
+add_library(line_follower STATIC line_follower.c line_follower.h)
 
-add_library(${TARGET} STATIC line_follower.c)
-
-target_include_directories(${TARGET} PRIVATE
-    ${CMAKE_SOURCE_DIR}/inc/core/line-follower
-)
+target_include_directories(line_follower PUBLIC "./")

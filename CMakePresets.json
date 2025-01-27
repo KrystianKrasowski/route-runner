@@ -10,10 +10,11 @@
             "name": "default",
             "displayName": "Production build",
             "generator": "Unix Makefiles",
-            "toolchainFile": "./arm-none-eabi-gcc.cmake",
+            "toolchainFile": "./cmake/arm-none-eabi-gcc.cmake",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "hidden": true,
             "cacheVariables": {
+                "TARGET_ARCH": "stm32f303x8"
             }
         },
         {
@@ -36,6 +37,7 @@
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
+                "TARGET_ARCH": "test"
             }
         }
     ],

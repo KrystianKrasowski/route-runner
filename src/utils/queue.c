@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 static volatile queue_t queue = {
-    .messages = {0},
+    .messages = {{0}},
     .head     = 0,
     .tail     = 0,
 };
@@ -45,7 +45,7 @@ queue_pull()
     return message;
 }
 
-bool
+void
 queue_clear()
 {
     queue.head            = 0;

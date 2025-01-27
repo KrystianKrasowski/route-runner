@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(route-runner)
+project(route-runner VERSION 1.0.0 LANGUAGES C)
 
 include(FetchContent)
 
-add_subdirectory(src)
-
-if(CMAKE_CROSSCOMPILING)
-    add_subdirectory(lib/stm32l476rgtx)
-    add_subdirectory(app)
-else()
-    include(dependencies-test.cmake)
+# For some reason this has to be defined in a top level CMakeLists.txt
+if(TARGET_ARCH STREQUAL "test")
     include(CTest)
     enable_testing()
-    add_subdirectory(test)
+    include(${CMAKE_SOURCE_DIR}/cmake/dependencies-test.cmake)
 endif()
+
+add_subdirectory(app)
+add_subdirectory(lib)
+add_subdirectory(src)
+add_subdirectory(test)
