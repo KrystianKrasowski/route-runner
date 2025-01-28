@@ -24,34 +24,39 @@ typedef struct queue_message
     queue_message_payload_t payload;
 } queue_message_t;
 
+typedef enum
+{
+    QUEUE_TOPIC_REMOTE_CONTROLLER_COMMAND,
+} queue_topic_t;
+
 typedef struct
 {
     queue_message_t messages[QUEUE_SIZE];
     uint8_t         head;
     uint8_t         tail;
-    bool            locked;
 } queue_t;
 
-bool
-queue_push(queue_message_t const message);
+typedef enum
+{
+    QUEUE_STATUS_SUCCESS,
+    QUEUE_STATUS_MESSAGES_FULL,
+    QUEUE_STATUS_MESSAGES_EMPTY,
+} queue_status_t;
 
-volatile queue_message_t *
-queue_pull(void);
+queue_status_t
+queue_push(queue_topic_t const topic, queue_message_t const message);
+
+queue_status_t
+queue_pull(queue_topic_t const topic, queue_message_t volatile *message);
 
 void
-queue_clear(void);
+queue_clear(queue_topic_t const topic);
 
 uint8_t
-queue_get_head(void);
+queue_get_head(queue_topic_t const topic);
 
 uint8_t
-queue_get_tail(void);
-
-void
-queue_lock(void) __attribute__((weak));
-
-void
-queue_unlock(void) __attribute__((weak));
+queue_get_tail(queue_topic_t const topic);
 
 queue_message_t
 queue_message_create_command(int command);

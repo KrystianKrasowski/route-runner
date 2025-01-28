@@ -1,83 +1,75 @@
 #include "queue.h"
 #include <stdio.h>
 
-static volatile queue_t queue = {
-    .messages = {{0}},
-    .head     = 0,
-    .tail     = 0,
-};
+#define QUEUE_TOPICS_SIZE sizeof(queue_topic_t)
 
-bool
-queue_push(queue_message_t const message)
+static volatile queue_t queues[QUEUE_TOPICS_SIZE] = {
+    [QUEUE_TOPIC_REMOTE_CONTROLLER_COMMAND] = {
+        .messages = {{0}},
+        .head     = 0,
+        .tail     = 0,
+    }};
+
+queue_status_t
+queue_push(queue_topic_t const topic, queue_message_t const message)
 {
-    queue_lock();
+    volatile queue_t *queue = &queues[topic];
 
-    uint8_t next = (queue.head + 1) % QUEUE_SIZE;
+    uint8_t next = (queue->head + 1) % QUEUE_SIZE;
 
-    if (next == queue.tail)
+    if (next == queue->tail)
     {
-        return false;
+        return QUEUE_STATUS_MESSAGES_FULL;
     }
 
-    queue.messages[queue.head] = message;
-    queue.head                 = next;
+    queue->messages[queue->head] = message;
+    queue->head                  = next;
 
-    queue_unlock();
-
-    return true;
+    return QUEUE_STATUS_SUCCESS;
 }
 
-volatile queue_message_t *
-queue_pull()
+queue_status_t
+queue_pull(queue_topic_t const topic, queue_message_t volatile *message)
 {
-    queue_lock();
+    volatile queue_t *queue = &queues[topic];
 
-    if (queue.head == queue.tail)
+    if (queue->head == queue->tail)
     {
-        return NULL;
+        return QUEUE_STATUS_MESSAGES_EMPTY;
     }
 
-    volatile queue_message_t *message = &queue.messages[queue.tail];
-    queue.tail = (queue.tail + 1) % QUEUE_SIZE;
+    *message    = queue->messages[queue->tail];
+    queue->tail = (queue->tail + 1) % QUEUE_SIZE;
 
-    queue_unlock();
-
-    return message;
+    return QUEUE_STATUS_SUCCESS;
 }
 
 void
-queue_clear()
+queue_clear(queue_topic_t const topic)
 {
-    queue.head            = 0;
-    queue.tail            = 0;
-    queue_message_t blank = {0};
+    volatile queue_t *queue = &queues[topic];
+    queue->head             = 0;
+    queue->tail             = 0;
+    queue_message_t blank   = {0};
 
     for (uint8_t i = 0; i < QUEUE_SIZE; i++)
     {
-        queue.messages[i] = blank;
+        queue->messages[i] = blank;
     }
 }
 
 uint8_t
-queue_get_head()
+queue_get_head(queue_topic_t const topic)
 {
+    volatile queue_t queue = queues[topic];
     return queue.head;
 }
 
 uint8_t
-queue_get_tail(void)
+queue_get_tail(queue_topic_t const topic)
 {
+    volatile queue_t queue = queues[topic];
     return queue.tail;
-}
-
-__attribute__((weak)) void
-queue_lock(void)
-{
-}
-
-__attribute__((weak)) void
-queue_unlock(void)
-{
 }
 
 queue_message_t

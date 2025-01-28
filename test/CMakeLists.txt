@@ -1,4 +1,6 @@
 if(TARGET_ARCH STREQUAL "test")
     add_subdirectory(core)
     add_subdirectory(utils)
+    add_subdirectory(drivers)
+    add_subdirectory(stm32f303x8_stub)
 endif()
