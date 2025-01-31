@@ -4,7 +4,7 @@
 #define QUEUE_TOPICS_SIZE sizeof(queue_topic_t)
 
 static volatile queue_t queues[QUEUE_TOPICS_SIZE] = {
-    [QUEUE_TOPIC_REMOTE_CONTROLLER_COMMAND] = {
+    [QUEUE_TOPIC_REMOTE_CONTROL_COMMAND] = {
         .messages = {{0}},
         .head     = 0,
         .tail     = 0,

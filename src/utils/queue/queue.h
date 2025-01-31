@@ -26,7 +26,7 @@ typedef struct queue_message
 
 typedef enum
 {
-    QUEUE_TOPIC_REMOTE_CONTROLLER_COMMAND,
+    QUEUE_TOPIC_REMOTE_CONTROL_COMMAND,
 } queue_topic_t;
 
 typedef struct

@@ -1,0 +1,18 @@
+#ifndef _REMOTE_CONTROL_H
+#define _REMOTE_CONTROL_H
+
+typedef enum
+{
+    REMOTE_CONTROL_STOP,
+    REMOTE_CONTROL_FORWARD,
+    REMOTE_CONTROL_FORWARD_RIGHT,
+    REMOTE_CONTROL_FORWARD_LEFT,
+    REMOTE_CONTROL_BACKWARD,
+    REMOTE_CONTROL_BACKWARD_RIGHT,
+    REMOTE_CONTROL_BACKWARD_LEFT,
+} remote_control_command_t;
+
+void
+remote_control_init(void);
+
+#endif
