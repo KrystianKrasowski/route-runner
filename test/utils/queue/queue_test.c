@@ -2,7 +2,7 @@
 #include "unity.h"
 #include <stdio.h>
 
-#define TOPIC QUEUE_TOPIC_REMOTE_CONTROLLER_COMMAND
+#define TOPIC QUEUE_TOPIC_REMOTE_CONTROL_COMMAND
 
 void
 setUp(void)
