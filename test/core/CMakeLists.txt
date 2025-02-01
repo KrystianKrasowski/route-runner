@@ -1,6 +1,27 @@
-add_executable(task_rc_receive_test task_rc_receive_test.c)
+add_subdirectory(ports_mock)
 
-target_link_libraries(task_rc_receive_test
-    PRIVATE
-        unity
+set(TEST_SUITE
+    core_task_remote_control_receive_test.c
+    core_task_motion_update_test.c
 )
+
+foreach(FILE ${TEST_SUITE})
+    get_filename_component(TEST_NAME ${FILE} NAME_WE)
+
+    add_executable(${TEST_NAME} ${FILE})
+
+    target_include_directories(${TEST_NAME}
+        PRIVATE
+            ${CMAKE_SOURCE_DIR}/test/include
+    )
+
+    target_link_libraries(${TEST_NAME}
+        PRIVATE
+            core
+            core_port_mock
+            queue
+            unity
+    )   
+
+    add_test(${TEST_NAME} ${TEST_NAME})
+endforeach()

@@ -4,8 +4,10 @@ add_executable(${MAIN_EXECUTABLE} main.c)
 
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
-        remote-control
-        motion
+        core
+        dualshock2
+        usart2
+        adapter_motion
 )
 
 add_custom_command(TARGET ${MAIN_EXECUTABLE}

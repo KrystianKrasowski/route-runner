@@ -4,7 +4,7 @@
 #define QUEUE_TOPICS_SIZE sizeof(queue_topic_t)
 
 static volatile queue_t queues[QUEUE_TOPICS_SIZE] = {
-    [QUEUE_TOPIC_REMOTE_CONTROL_COMMAND] = {
+    [QUEUE_TOPIC_REMOTE_CONTROL] = {
         .messages = {{0}},
         .head     = 0,
         .tail     = 0,
@@ -19,13 +19,13 @@ queue_push(queue_topic_t const topic, queue_message_t const message)
 
     if (next == queue->tail)
     {
-        return QUEUE_STATUS_MESSAGES_FULL;
+        return QUEUE_FULL;
     }
 
     queue->messages[queue->head] = message;
     queue->head                  = next;
 
-    return QUEUE_STATUS_SUCCESS;
+    return QUEUE_SUCCESS;
 }
 
 queue_status_t
@@ -35,13 +35,13 @@ queue_pull(queue_topic_t const topic, queue_message_t volatile *message)
 
     if (queue->head == queue->tail)
     {
-        return QUEUE_STATUS_MESSAGES_EMPTY;
+        return QUEUE_EMPTY;
     }
 
     *message    = queue->messages[queue->tail];
     queue->tail = (queue->tail + 1) % QUEUE_SIZE;
 
-    return QUEUE_STATUS_SUCCESS;
+    return QUEUE_SUCCESS;
 }
 
 void
@@ -73,7 +73,7 @@ queue_get_tail(queue_topic_t const topic)
 }
 
 queue_message_t
-queue_message_create_command(int command)
+queue_message_create_command(uint16_t command)
 {
     queue_message_t message = {.type    = QUEUE_MSG_TYPE_COMMAND,
                                .payload = {.command = command}};

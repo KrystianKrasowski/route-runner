@@ -2,8 +2,7 @@
 #include "unity.h"
 #include <stdio.h>
 
-#define TOPIC QUEUE_TOPIC_REMOTE_CONTROL_COMMAND
-
+#define TOPIC QUEUE_TOPIC_REMOTE_CONTROL
 void
 setUp(void)
 {
@@ -23,7 +22,7 @@ should_enqueue(void)
     queue_status_t  result      = queue_push(TOPIC, message_in1);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_STATUS_SUCCESS, result);
+    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
 }
 
 void
@@ -62,7 +61,7 @@ should_not_enqueue_in_full_queue(void)
     queue_status_t result = queue_push(TOPIC, queue_message_create_command(20));
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_STATUS_MESSAGES_FULL, result);
+    TEST_ASSERT_EQUAL(QUEUE_FULL, result);
 }
 
 void
@@ -74,7 +73,7 @@ should_dequeue_null_from_empty_queue(void)
 
     // then
     TEST_ASSERT_NULL(message);
-    TEST_ASSERT_EQUAL(QUEUE_STATUS_MESSAGES_EMPTY, result);
+    TEST_ASSERT_EQUAL(QUEUE_EMPTY, result);
 }
 
 int
