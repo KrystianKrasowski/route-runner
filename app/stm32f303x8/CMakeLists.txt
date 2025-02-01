@@ -6,7 +6,6 @@ target_link_libraries(${MAIN_EXECUTABLE}
     PRIVATE
         core
         dualshock2
-        usart2
         adapter_motion
 )
 
