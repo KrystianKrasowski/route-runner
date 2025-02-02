@@ -4,15 +4,12 @@
 #include <stm32f3xx.h>
 #include <string.h>
 
-#define BUFFER_SIZE 15
-
-static volatile uint8_t data_size              = 0;
-static volatile uint8_t tx_buffer[BUFFER_SIZE] = {0};
-static volatile uint8_t rx_buffer[BUFFER_SIZE] = {0};
-static volatile uint8_t tx_index               = 0;
-static volatile uint8_t rx_index               = 0;
-static volatile bool    transfer_complete      = true;
-static volatile gpio_t *select                 = NULL;
+static uint8_t volatile data_size              = 0;
+static uint8_t volatile tx_buffer[BUFFER_SIZE] = {0};
+static uint8_t volatile rx_buffer[BUFFER_SIZE] = {0};
+static uint8_t volatile tx_index               = 0;
+static uint8_t volatile rx_index               = 0;
+static bool volatile transfer_complete         = true;
 
 static void
 transmit_byte_isr(void);
@@ -50,8 +47,8 @@ spi_init_master(void)
     // set PB5 alternate function to SPI MOSI (AF5)
     GPIOB->AFR[0] |= (5 << GPIO_AFRL_AFRL5_Pos);
 
-    // set SPI bus speed to 250kHz (8MHz / 32psc)
-    SPI1->CR1 |= (4 << SPI_CR1_BR_Pos);
+    // set SPI bus speed to 62.5kHz (8MHz / 128psc)
+    SPI1->CR1 |= (6 << SPI_CR1_BR_Pos);
 
     // set mode 3
     SPI1->CR1 |= SPI_CR1_CPOL | SPI_CR1_CPHA;
@@ -89,20 +86,17 @@ spi_init_master(void)
 }
 
 void
-spi_transmittion_start(gpio_t *gpio, uint8_t request[], uint8_t size)
+spi_transmittion_start(uint8_t const request[], uint8_t size)
 {
     if (transfer_complete)
     {
         transfer_complete = false;
-        select            = gpio;
         data_size         = size;
 
-        for (uint8_t i = 0; i < size; i++)
+        for (uint8_t i = 0; i < data_size; i++)
         {
             tx_buffer[i] = request[i];
         }
-
-        gpio_set_state(gpio, GPIO_STATE_LOW);
 
         SPI1->CR2 |= SPI_CR2_TXEIE;
     }
@@ -114,7 +108,6 @@ SPI1_IRQHandler(void)
     if (SPI1->SR & SPI_SR_TXE)
     {
         transmit_byte_isr();
-        SPI1->CR2 &= ~SPI_CR2_TXEIE;
     }
 
     if (SPI1->SR & SPI_SR_RXNE)
@@ -124,7 +117,7 @@ SPI1_IRQHandler(void)
 }
 
 __attribute__((weak)) void
-spi_on_response_received_isr(uint8_t volatile resposne[], uint8_t size)
+spi_on_response_received_isr(uint8_t response[])
 {
 }
 
@@ -135,6 +128,10 @@ transmit_byte_isr(void)
     {
         *(__IO uint8_t *)(&SPI1->DR) = tx_buffer[tx_index++];
     }
+    else
+    {
+        SPI1->CR2 &= ~SPI_CR2_TXEIE;
+    }
 }
 
 static void
@@ -142,14 +139,15 @@ receive_byte_isr(void)
 {
     rx_buffer[rx_index++] = (uint8_t)SPI1->DR;
 
-    if (rx_index < data_size)
+    if (rx_index >= data_size)
     {
-        SPI1->CR2 |= SPI_CR2_TXEIE;
-    }
-    else
-    {
-        gpio_set_state(select, GPIO_STATE_HIGH);
-        spi_on_response_received_isr(rx_buffer, data_size);
+        uint8_t response[data_size];
+        for (uint8_t i = 0; i < data_size; i++)
+        {
+            response[i] = rx_buffer[i];
+        }
+
+        spi_on_response_received_isr(response);
         clear_isr();
     }
 }
@@ -161,5 +159,4 @@ clear_isr(void)
     tx_index          = 0;
     rx_index          = 0;
     transfer_complete = true;
-    select            = NULL;
 }
