@@ -16,7 +16,7 @@ foreach(FILE ${TEST_SUITE})
         PRIVATE
             core
             adapters
-            dualshock2
+            drivers
             unity
     )   
 
