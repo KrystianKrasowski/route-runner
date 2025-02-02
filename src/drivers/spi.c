@@ -1,5 +1,27 @@
 #include "spi.h"
+#include <stdbool.h>
+#include <stdio.h>
 #include <stm32f3xx.h>
+#include <string.h>
+
+#define BUFFER_SIZE 15
+
+static volatile uint8_t data_size              = 0;
+static volatile uint8_t tx_buffer[BUFFER_SIZE] = {0};
+static volatile uint8_t rx_buffer[BUFFER_SIZE] = {0};
+static volatile uint8_t tx_index               = 0;
+static volatile uint8_t rx_index               = 0;
+static volatile bool    transfer_complete      = true;
+static volatile gpio_t *select                 = NULL;
+
+static void
+transmit_byte_isr(void);
+
+static void
+receive_byte_isr(void);
+
+static void
+clear_isr(void);
 
 void
 spi_init_master(void)
@@ -67,25 +89,77 @@ spi_init_master(void)
 }
 
 void
-spi_transmit(uint8_t const request)
+spi_transmittion_start(gpio_t *gpio, uint8_t request[], uint8_t size)
 {
-    while (!(SPI1->SR & SPI_SR_TXE))
-        ;
-    *(__IO uint8_t *)(&SPI1->DR) = request;
-    // while (!(SPI1->SR & SPI_SR_TXE))
-    //     ;
+    if (transfer_complete)
+    {
+        transfer_complete = false;
+        select            = gpio;
+        data_size         = size;
+
+        for (uint8_t i = 0; i < size; i++)
+        {
+            tx_buffer[i] = request[i];
+        }
+
+        gpio_set_state(gpio, GPIO_STATE_LOW);
+
+        SPI1->CR2 |= SPI_CR2_TXEIE;
+    }
 }
 
 void
 SPI1_IRQHandler(void)
 {
+    if (SPI1->SR & SPI_SR_TXE)
+    {
+        transmit_byte_isr();
+        SPI1->CR2 &= ~SPI_CR2_TXEIE;
+    }
+
     if (SPI1->SR & SPI_SR_RXNE)
     {
-        spi_on_response_received_isr((uint8_t)SPI1->DR);
+        receive_byte_isr();
     }
 }
 
 __attribute__((weak)) void
-spi_on_response_received_isr(uint8_t const resposne)
+spi_on_response_received_isr(uint8_t volatile resposne[], uint8_t size)
 {
+}
+
+static void
+transmit_byte_isr(void)
+{
+    if (tx_index < data_size)
+    {
+        *(__IO uint8_t *)(&SPI1->DR) = tx_buffer[tx_index++];
+    }
+}
+
+static void
+receive_byte_isr(void)
+{
+    rx_buffer[rx_index++] = (uint8_t)SPI1->DR;
+
+    if (rx_index < data_size)
+    {
+        SPI1->CR2 |= SPI_CR2_TXEIE;
+    }
+    else
+    {
+        gpio_set_state(select, GPIO_STATE_HIGH);
+        spi_on_response_received_isr(rx_buffer, data_size);
+        clear_isr();
+    }
+}
+
+static void
+clear_isr(void)
+{
+    data_size         = 0;
+    tx_index          = 0;
+    rx_index          = 0;
+    transfer_complete = true;
+    select            = NULL;
 }
