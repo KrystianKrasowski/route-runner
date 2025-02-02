@@ -1,20 +1,16 @@
-#include "stm32f3xx.h"
-
-#define PIN5    (1U << 3)
-#define LED_PIN PIN5
+#include <core.h>
 
 int
 main(void)
 {
-    RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
-    GPIOB->MODER |= GPIO_MODER_MODER3_0;
-    GPIOB->MODER &= ~GPIO_MODER_MODER3_1;
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_port_motion_init();
+    core_port_remote_control_init();
 
     while (1)
     {
-        GPIOB->ODR ^= LED_PIN;
-        for (int i = 0; i < 100000; i++)
-        {
-        }
+        core_task_remote_control_receive(&vehicle);
+        core_task_motion_update(&vehicle);
     }
 }

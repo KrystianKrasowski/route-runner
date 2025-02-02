@@ -15,7 +15,7 @@ typedef enum
 
 typedef union queue_message_payload
 {
-    int command;
+    uint16_t command;
 } queue_message_payload_t;
 
 typedef struct queue_message
@@ -26,7 +26,7 @@ typedef struct queue_message
 
 typedef enum
 {
-    QUEUE_TOPIC_REMOTE_CONTROLLER_COMMAND,
+    QUEUE_TOPIC_REMOTE_CONTROL,
 } queue_topic_t;
 
 typedef struct
@@ -38,9 +38,9 @@ typedef struct
 
 typedef enum
 {
-    QUEUE_STATUS_SUCCESS,
-    QUEUE_STATUS_MESSAGES_FULL,
-    QUEUE_STATUS_MESSAGES_EMPTY,
+    QUEUE_SUCCESS,
+    QUEUE_FULL,
+    QUEUE_EMPTY,
 } queue_status_t;
 
 queue_status_t
@@ -59,6 +59,6 @@ uint8_t
 queue_get_tail(queue_topic_t const topic);
 
 queue_message_t
-queue_message_create_command(int command);
+queue_message_create_command(uint16_t command);
 
 #endif

@@ -1,5 +1,5 @@
 #include "spi.h"
-#include "stm32f3xx.h"
+#include <stm32f3xx.h>
 
 void
 spi_init_master(void)

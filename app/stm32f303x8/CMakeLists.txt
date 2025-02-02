@@ -2,7 +2,11 @@ set(MAIN_EXECUTABLE ${PROJECT_NAME})
 
 add_executable(${MAIN_EXECUTABLE} main.c)
 
-target_link_libraries(${MAIN_EXECUTABLE} PRIVATE stm32f303x8)
+target_link_libraries(${MAIN_EXECUTABLE} 
+    PRIVATE
+        core
+        adapters
+)
 
 add_custom_command(TARGET ${MAIN_EXECUTABLE}
     POST_BUILD
@@ -17,6 +21,6 @@ add_custom_command(TARGET ${MAIN_EXECUTABLE}
 
 add_custom_target(flash
     COMMAND st-flash write ${MAIN_EXECUTABLE}.bin 0x08000000
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/app
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/app/stm32f303x8
     COMMENT "Flashing ${MAIN_EXECUTABLE}.bin"
 )

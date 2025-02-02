@@ -1,8 +1,5 @@
-add_subdirectory(ports_mock)
-
 set(TEST_SUITE
-    core_task_remote_control_receive_test.c
-    core_task_motion_update_test.c
+    adapter_remote_control_dualshock2_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
@@ -18,8 +15,8 @@ foreach(FILE ${TEST_SUITE})
     target_link_libraries(${TEST_NAME}
         PRIVATE
             core
-            core_port_mock
-            queue
+            adapters
+            dualshock2
             unity
     )   
 
