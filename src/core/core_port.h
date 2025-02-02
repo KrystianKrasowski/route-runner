@@ -4,6 +4,12 @@
 #include "core_type.h"
 
 void
+core_port_remote_control_init(void);
+
+uint16_t
+core_port_remote_control_map(uint16_t raw_command);
+
+void
 core_port_motion_init(void);
 
 void

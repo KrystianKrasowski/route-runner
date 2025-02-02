@@ -6,5 +6,4 @@ target_link_libraries(dualshock2
     PRIVATE
         queue
         tim3
-        core_port
 )

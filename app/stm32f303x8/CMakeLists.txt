@@ -5,8 +5,7 @@ add_executable(${MAIN_EXECUTABLE} main.c)
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
         core
-        dualshock2
-        adapter_motion
+        adapters
 )
 
 add_custom_command(TARGET ${MAIN_EXECUTABLE}

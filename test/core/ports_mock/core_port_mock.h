@@ -1,7 +1,7 @@
 #ifndef _CORE_PORT_MOCK_H
 #define _CORE_PORT_MOCK_H
 
-#include "core_type.h"
+#include <core_type.h>
 #include <stdbool.h>
 
 void
