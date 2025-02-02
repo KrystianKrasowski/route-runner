@@ -1,4 +1,4 @@
-#include <core_port.h>
+#include <core.h>
 #include <dualshock2.h>
 #include <unity.h>
 #include <unity_config.h>

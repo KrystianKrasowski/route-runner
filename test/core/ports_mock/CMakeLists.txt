@@ -4,5 +4,5 @@ target_include_directories(core_port_mock PUBLIC "./")
 
 target_link_libraries(core_port_mock
     PUBLIC
-        core_port
+        core
 )

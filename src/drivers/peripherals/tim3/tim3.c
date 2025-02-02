@@ -1,5 +1,5 @@
 #include "tim3.h"
-#include "stm32f3xx.h"
+#include <stm32f3xx.h>
 
 void
 tim3_ch1_init(void)

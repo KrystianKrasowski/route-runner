@@ -1,5 +1,5 @@
 #include "queue.h"
-#include "unity.h"
+#include <unity.h>
 #include <stdio.h>
 
 #define TOPIC QUEUE_TOPIC_REMOTE_CONTROL

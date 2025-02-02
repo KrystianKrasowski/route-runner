@@ -5,7 +5,7 @@ add_library(adapters STATIC
 
 target_link_libraries(adapters
     PRIVATE
-        core_port
+        core
         usart2
         dualshock2
 )

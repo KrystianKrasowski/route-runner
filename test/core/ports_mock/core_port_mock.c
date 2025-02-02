@@ -1,5 +1,4 @@
 #include "core_port_mock.h"
-#include <core_port.h>
 #include <string.h>
 
 static core_motion_t motion_applied;

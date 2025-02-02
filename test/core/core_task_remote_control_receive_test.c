@@ -1,8 +1,7 @@
-#include "core.h"
-#include "core_task.h"
-#include "queue.h"
-#include "unity.h"
-#include "unity_config.h"
+#include <core.h>
+#include <queue.h>
+#include <unity.h>
+#include <unity_config.h>
 
 void
 setUp(void)

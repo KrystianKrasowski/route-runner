@@ -1,5 +1,5 @@
 #include "usart2.h"
-#include "stm32f3xx.h"
+#include <stm32f3xx.h>
 
 #define SYS_FREQ        8000000
 #define APB1_CLK        SYS_FREQ

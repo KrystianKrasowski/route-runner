@@ -1,6 +1,6 @@
-#include "core_port.h"
-#include "usart2.h"
+#include <core.h>
 #include <stdio.h>
+#include <usart2.h>
 
 void
 core_port_motion_init(void)

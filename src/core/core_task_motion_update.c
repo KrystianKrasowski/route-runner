@@ -1,5 +1,4 @@
-#include "core_port.h"
-#include "core_task.h"
+#include "core.h"
 #include <string.h>
 
 static core_motion_t

@@ -1,9 +1,8 @@
-#include "core.h"
-#include "core_port_mock.h"
-#include "core_task.h"
-#include "queue.h"
-#include "unity.h"
-#include "unity_config.h"
+#include <core.h>
+#include <core_port_mock.h>
+#include <queue.h>
+#include <unity.h>
+#include <unity_config.h>
 
 void
 setUp(void)

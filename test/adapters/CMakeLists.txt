@@ -14,7 +14,7 @@ foreach(FILE ${TEST_SUITE})
 
     target_link_libraries(${TEST_NAME}
         PRIVATE
-            core_port
+            core
             adapters
             dualshock2
             unity

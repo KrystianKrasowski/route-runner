@@ -1,6 +1,4 @@
-#include "core.h"
-#include "core_task.h"
-#include "core_port.h"
+#include <core.h>
 
 int
 main(void)
