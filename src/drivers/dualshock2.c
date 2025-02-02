@@ -1,47 +1,63 @@
 #include "dualshock2.h"
+#include "gpio.h"
+#include "spi.h"
+#include "tim3.h"
 #include <queue.h>
 #include <stdint.h>
-#include <tim3.h>
 
-#define SEQUENCE_SIZE 15
+#define COMMAND_SEQ_SIZE 9
 
-static const uint16_t sequence[SEQUENCE_SIZE] = {
-    DS2_NONE,
-    DS2_NONE,
-    DS2_NONE,
-    DS2_NONE,
-    DS2_NONE,
-    DS2_R2,
-    DS2_R2 | DS2_RIGHT,
-    DS2_R2 | DS2_LEFT,
-    DS2_R2 | DS2_LEFT,
-    DS2_R2 | DS2_LEFT,
-    DS2_L2,
-    DS2_L2 | DS2_RIGHT,
-    DS2_L2 | DS2_LEFT,
-    DS2_L2 | DS2_LEFT,
-    DS2_L2 | DS2_LEFT,
+static const uint8_t command_sequence[COMMAND_SEQ_SIZE] = {
+    0x01,
+    0x42,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
 };
 
-static volatile uint8_t index = 0;
+static volatile uint16_t last_command;
+static gpio_t attention;
 
 void
 dualshock2_init(void)
 {
+    attention    = gpio_create(GPIO_DUALSHOCK2_ATTENTION);
+    last_command = DS2_NONE;
+    spi_init_master();
     tim3_ch1_init();
 }
 
 void
 tim3_ch1_compare_isr(void)
 {
-    uint16_t command = sequence[index++];
+    gpio_set_state(&attention, GPIO_STATE_LOW);
+    spi_transmittion_start(command_sequence, COMMAND_SEQ_SIZE);
+}
 
-    queue_message_t message = queue_message_create_command(command);
-    // TODO: DS2 command should be enqueued only if it has changed
-    queue_push(QUEUE_TOPIC_REMOTE_CONTROL, message);
+void
+spi_on_response_received_isr(uint8_t response[])
+{
+    gpio_set_state(&attention, GPIO_STATE_HIGH);
+    uint16_t command;
 
-    if (index >= SEQUENCE_SIZE)
+    if (response[0] != 0xff || (response[1] != 0x41 && response[1] != 0x73) ||
+        response[2] != 0x5a)
     {
-        index = 0;
+        command = DS2_NONE;
+    }
+    else
+    {
+        command = ~(((uint16_t)response[4] << 8) | response[3]);
+    }
+
+    if (last_command != command)
+    {
+        last_command            = command;
+        queue_message_t message = queue_message_create_command(command);
+        queue_push(QUEUE_TOPIC_REMOTE_CONTROL, message);
     }
 }

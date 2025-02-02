@@ -8,9 +8,9 @@ tim3_ch1_init(void)
     RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 
     // set compare match every 1s on channel 1
-    TIM3->PSC  = 8000 - 1;
-    TIM3->ARR  = 1000 - 1;
-    TIM3->CCR1 = 1000;
+    TIM3->PSC  = 8 - 1;
+    TIM3->ARR  = 16000 - 1;
+    TIM3->CCR1 = 16000;
 
     // enable the timer
     TIM3->CR1 |= TIM_CR1_CEN;

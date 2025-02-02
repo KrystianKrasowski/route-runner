@@ -1,5 +1,24 @@
 #include "spi.h"
+#include <stdbool.h>
+#include <stdio.h>
 #include <stm32f3xx.h>
+#include <string.h>
+
+static uint8_t volatile data_size              = 0;
+static uint8_t volatile tx_buffer[BUFFER_SIZE] = {0};
+static uint8_t volatile rx_buffer[BUFFER_SIZE] = {0};
+static uint8_t volatile tx_index               = 0;
+static uint8_t volatile rx_index               = 0;
+static bool volatile transfer_complete         = true;
+
+static void
+transmit_byte_isr(void);
+
+static void
+receive_byte_isr(void);
+
+static void
+clear_isr(void);
 
 void
 spi_init_master(void)
@@ -28,8 +47,8 @@ spi_init_master(void)
     // set PB5 alternate function to SPI MOSI (AF5)
     GPIOB->AFR[0] |= (5 << GPIO_AFRL_AFRL5_Pos);
 
-    // set SPI bus speed to 250kHz (8MHz / 32psc)
-    SPI1->CR1 |= (4 << SPI_CR1_BR_Pos);
+    // set SPI bus speed to 62.5kHz (8MHz / 128psc)
+    SPI1->CR1 |= (6 << SPI_CR1_BR_Pos);
 
     // set mode 3
     SPI1->CR1 |= SPI_CR1_CPOL | SPI_CR1_CPHA;
@@ -67,25 +86,77 @@ spi_init_master(void)
 }
 
 void
-spi_transmit(uint8_t const request)
+spi_transmittion_start(uint8_t const request[], uint8_t size)
 {
-    while (!(SPI1->SR & SPI_SR_TXE))
-        ;
-    *(__IO uint8_t *)(&SPI1->DR) = request;
-    // while (!(SPI1->SR & SPI_SR_TXE))
-    //     ;
+    if (transfer_complete)
+    {
+        transfer_complete = false;
+        data_size         = size;
+
+        for (uint8_t i = 0; i < data_size; i++)
+        {
+            tx_buffer[i] = request[i];
+        }
+
+        SPI1->CR2 |= SPI_CR2_TXEIE;
+    }
 }
 
 void
 SPI1_IRQHandler(void)
 {
+    if (SPI1->SR & SPI_SR_TXE)
+    {
+        transmit_byte_isr();
+    }
+
     if (SPI1->SR & SPI_SR_RXNE)
     {
-        spi_on_response_received_isr((uint8_t)SPI1->DR);
+        receive_byte_isr();
     }
 }
 
 __attribute__((weak)) void
-spi_on_response_received_isr(uint8_t const resposne)
+spi_on_response_received_isr(uint8_t response[])
 {
+}
+
+static void
+transmit_byte_isr(void)
+{
+    if (tx_index < data_size)
+    {
+        *(__IO uint8_t *)(&SPI1->DR) = tx_buffer[tx_index++];
+    }
+    else
+    {
+        SPI1->CR2 &= ~SPI_CR2_TXEIE;
+    }
+}
+
+static void
+receive_byte_isr(void)
+{
+    rx_buffer[rx_index++] = (uint8_t)SPI1->DR;
+
+    if (rx_index >= data_size)
+    {
+        uint8_t response[data_size];
+        for (uint8_t i = 0; i < data_size; i++)
+        {
+            response[i] = rx_buffer[i];
+        }
+
+        spi_on_response_received_isr(response);
+        clear_isr();
+    }
+}
+
+static void
+clear_isr(void)
+{
+    data_size         = 0;
+    tx_index          = 0;
+    rx_index          = 0;
+    transfer_complete = true;
 }

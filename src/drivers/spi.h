@@ -3,13 +3,15 @@
 
 #include <stdint.h>
 
+#define BUFFER_SIZE 15
+
 void
 spi_init_master(void);
 
 void
-spi_transmit(uint8_t const request);
+spi_transmittion_start(uint8_t const request[], uint8_t size);
 
-void
-spi_on_response_received_isr(uint8_t const resposne) __attribute__((weak));
+__attribute__((weak)) void
+spi_on_response_received_isr(uint8_t response[]);
 
 #endif
