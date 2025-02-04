@@ -13,12 +13,17 @@ typedef struct
     uint32_t APB2ENR;
 } RCC_TypeDef;
 
+extern RCC_TypeDef RCC_instance;
+
 typedef struct
 {
     uint32_t MODER;
     uint32_t ODR;
     uint32_t AFR[2];
 } GPIO_TypeDef;
+
+extern GPIO_TypeDef GPIOA_instance;
+extern GPIO_TypeDef GPIOB_instance;
 
 typedef struct
 {
@@ -30,6 +35,8 @@ typedef struct
     uint32_t RXCRCR;
     uint32_t TXCRCR;
 } SPI_TypeDef;
+
+extern SPI_TypeDef SPI1_instance;
 
 typedef struct
 {
@@ -59,6 +66,8 @@ typedef struct
     uint32_t CCR6;
 } TIM_TypeDef;
 
+extern TIM_TypeDef TIM3_instance;
+
 typedef struct
 {
     uint32_t CR1;
@@ -76,12 +85,14 @@ typedef struct
     uint16_t RESERVED2;
 } USART_TypeDef;
 
-extern RCC_TypeDef   *RCC;
-extern GPIO_TypeDef  *GPIOA;
-extern GPIO_TypeDef  *GPIOB;
-extern SPI_TypeDef   *SPI1;
-extern TIM_TypeDef   *TIM3;
-extern USART_TypeDef *USART2;
+extern USART_TypeDef USART2_instance;
+
+#define RCC    (&RCC_instance)
+#define GPIOA  (&GPIOA_instance)
+#define GPIOB  (&GPIOB_instance)
+#define SPI1   (&SPI1_instance)
+#define TIM3   (&TIM3_instance)
+#define USART2 (&USART2_instance)
 
 /******************  Bit definition for RCC_AHBENR register  ******************/
 #define RCC_AHBENR_DMA1EN_Pos  (0U)

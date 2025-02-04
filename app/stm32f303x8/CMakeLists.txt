@@ -1,11 +1,20 @@
 set(MAIN_EXECUTABLE ${PROJECT_NAME})
 
-add_executable(${MAIN_EXECUTABLE} main.c)
+add_executable(${MAIN_EXECUTABLE} 
+    startup_stm32f303x8.s
+    syscalls.c
+    sysmem.c
+    system_stm32f3xx.c
+    main.c
+)
 
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
         core
         adapters
+        drivers_components
+        drivers_stm32f303x8
+        stm32f303x8
 )
 
 add_custom_command(TARGET ${MAIN_EXECUTABLE}
