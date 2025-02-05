@@ -1,1 +1,2 @@
 add_subdirectory(peripherals)
+add_subdirectory(components)

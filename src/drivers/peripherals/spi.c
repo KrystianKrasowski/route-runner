@@ -4,12 +4,12 @@
 #include <stm32f3xx.h>
 #include <string.h>
 
-static uint8_t volatile data_size              = 0;
-static uint8_t volatile tx_buffer[BUFFER_SIZE] = {0};
-static uint8_t volatile rx_buffer[BUFFER_SIZE] = {0};
-static uint8_t volatile tx_index               = 0;
-static uint8_t volatile rx_index               = 0;
-static bool volatile transfer_complete         = true;
+static uint8_t volatile data_size                  = 0;
+static uint8_t volatile tx_buffer[SPI_BUFFER_SIZE] = {0};
+static uint8_t volatile rx_buffer[SPI_BUFFER_SIZE] = {0};
+static uint8_t volatile tx_index                   = 0;
+static uint8_t volatile rx_index                   = 0;
+static bool volatile transfer_complete             = true;
 
 static void
 transmit_byte_isr(void);

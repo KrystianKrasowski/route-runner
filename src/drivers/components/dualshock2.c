@@ -19,14 +19,15 @@ static const uint8_t command_sequence[COMMAND_SEQ_SIZE] = {
     0x00,
 };
 
-static volatile uint16_t last_command;
-static gpio_t attention;
+static volatile uint16_t last_command = DS2_NONE;
+static gpio_t            attention    = {GPIO_DUALSHOCK2_ATTENTION};
 
 void
 dualshock2_init(void)
 {
-    attention    = gpio_create(GPIO_DUALSHOCK2_ATTENTION);
     last_command = DS2_NONE;
+    gpio_init(&attention);
+    gpio_set_state(&attention, GPIO_STATE_HIGH);
     spi_init_master();
     tim3_ch1_init();
 }
