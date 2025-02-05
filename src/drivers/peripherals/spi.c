@@ -81,9 +81,9 @@ spi_init_master(void)
 }
 
 void
-spi_transmittion_start(uint8_t const request[], uint8_t size)
+spi_transmittion_start(spi_request_t const *request)
 {
-    if (spi_transfer_start(&transfer, request, size) == SPI_RESULT_SUCCESS)
+    if (spi_transfer_start(&transfer, request) == SPI_RESULT_SUCCESS)
     {
         SPI1->CR2 |= SPI_CR2_TXEIE;
     }

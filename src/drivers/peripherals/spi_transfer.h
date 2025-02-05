@@ -33,9 +33,7 @@ void
 spi_transfer_init(spi_transfer_t volatile *self);
 
 spi_transfer_result_t
-spi_transfer_start(spi_transfer_t volatile *self,
-                   uint8_t const            request[],
-                   uint8_t                  size);
+spi_transfer_start(spi_transfer_t volatile *self, spi_request_t const *request);
 
 spi_transfer_result_t
 spi_transfer_next_tx(spi_transfer_t volatile *self, uint8_t *byte);

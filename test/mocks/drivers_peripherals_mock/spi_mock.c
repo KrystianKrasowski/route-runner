@@ -12,9 +12,9 @@ spi_init_master(void)
 }
 
 void
-spi_transmittion_start(uint8_t const request[], uint8_t size)
+spi_transmittion_start(spi_request_t const *request)
 {
-    memcpy(&last_request, request, size);
+    memcpy(&last_request, &request->payload, request->size);
 }
 
 int

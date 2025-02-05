@@ -17,18 +17,16 @@ spi_transfer_init(spi_transfer_t volatile *self)
 }
 
 spi_transfer_result_t
-spi_transfer_start(spi_transfer_t volatile *self,
-                   uint8_t const            request[],
-                   uint8_t                  size)
+spi_transfer_start(spi_transfer_t volatile *self, spi_request_t const *request)
 {
     if (self->status == SPI_TRANSFER_IDLE)
     {
         self->status = SPI_TRANSFER_PENDING;
-        self->size   = size;
+        self->size   = request->size;
 
-        for (uint8_t i = 0; i < size; i++)
+        for (uint8_t i = 0; i < self->size; i++)
         {
-            self->tx_buffer[i] = request[i];
+            self->tx_buffer[i] = request->payload[i];
         }
 
         return SPI_RESULT_SUCCESS;

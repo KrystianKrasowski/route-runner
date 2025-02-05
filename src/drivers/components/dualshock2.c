@@ -5,19 +5,9 @@
 #include <queue.h>
 #include <stdint.h>
 
-#define COMMAND_SEQ_SIZE 9
-
-static const uint8_t command_sequence[COMMAND_SEQ_SIZE] = {
-    0x01,
-    0x42,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-};
+static spi_request_t const request = {
+    .payload = {0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+    .size    = 9};
 
 static volatile uint16_t last_command = DS2_NONE;
 static gpio_t            attention    = {GPIO_DUALSHOCK2_ATTENTION};
@@ -36,7 +26,7 @@ void
 tim3_ch1_compare_isr(void)
 {
     gpio_set_state(&attention, GPIO_STATE_LOW);
-    spi_transmittion_start(command_sequence, COMMAND_SEQ_SIZE);
+    spi_transmittion_start(&request);
 }
 
 void
