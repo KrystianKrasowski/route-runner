@@ -17,8 +17,8 @@ foreach(FILE ${TEST_SUITE})
             core
             adapters
             drivers_components
+            drivers_peripherals_mock
             unity
-            stm32f303x8
     )   
 
     add_test(${TEST_NAME} ${TEST_NAME})
