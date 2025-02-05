@@ -1,24 +1,17 @@
 #include "spi.h"
+#include "spi_transfer.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stm32f3xx.h>
 #include <string.h>
 
-static uint8_t volatile data_size                  = 0;
-static uint8_t volatile tx_buffer[SPI_BUFFER_SIZE] = {0};
-static uint8_t volatile rx_buffer[SPI_BUFFER_SIZE] = {0};
-static uint8_t volatile tx_index                   = 0;
-static uint8_t volatile rx_index                   = 0;
-static bool volatile transfer_complete             = true;
+static spi_transfer_t volatile transfer;
 
 static void
 transmit_byte_isr(void);
 
 static void
 receive_byte_isr(void);
-
-static void
-clear_isr(void);
 
 void
 spi_init_master(void)
@@ -83,21 +76,15 @@ spi_init_master(void)
 
     // set NVIC for interrupts
     NVIC_EnableIRQ(SPI1_IRQn);
+
+    spi_transfer_init(&transfer);
 }
 
 void
 spi_transmittion_start(uint8_t const request[], uint8_t size)
 {
-    if (transfer_complete)
+    if (spi_transfer_start(&transfer, request, size) == SPI_RESULT_SUCCESS)
     {
-        transfer_complete = false;
-        data_size         = size;
-
-        for (uint8_t i = 0; i < data_size; i++)
-        {
-            tx_buffer[i] = request[i];
-        }
-
         SPI1->CR2 |= SPI_CR2_TXEIE;
     }
 }
@@ -124,9 +111,10 @@ spi_on_response_received_isr(uint8_t response[])
 static void
 transmit_byte_isr(void)
 {
-    if (tx_index < data_size)
+    uint8_t byte;
+    if (spi_transfer_next_tx(&transfer, &byte) == SPI_RESULT_SUCCESS)
     {
-        *(__IO uint8_t *)(&SPI1->DR) = tx_buffer[tx_index++];
+        *(__IO uint8_t *)(&SPI1->DR) = byte;
     }
     else
     {
@@ -137,26 +125,13 @@ transmit_byte_isr(void)
 static void
 receive_byte_isr(void)
 {
-    rx_buffer[rx_index++] = (uint8_t)SPI1->DR;
-
-    if (rx_index >= data_size)
+    uint8_t byte = (uint8_t)SPI1->DR;
+    if (spi_transfer_put_rx(&transfer, byte) == SPI_RESULT_END_OF_RECEPTION)
     {
-        uint8_t response[data_size];
-        for (uint8_t i = 0; i < data_size; i++)
-        {
-            response[i] = rx_buffer[i];
-        }
-
+        uint8_t size = spi_transfer_get_size(&transfer);
+        uint8_t response[size];
+        spi_transfer_get_response(&transfer, response);
+        spi_transfer_init(&transfer);
         spi_on_response_received_isr(response);
-        clear_isr();
     }
-}
-
-static void
-clear_isr(void)
-{
-    data_size         = 0;
-    tx_index          = 0;
-    rx_index          = 0;
-    transfer_complete = true;
 }

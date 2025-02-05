@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define SPI_BUFFER_SIZE 15
+#define SPI_MAX_BUFFER 15
 
 void
 spi_init_master(void);

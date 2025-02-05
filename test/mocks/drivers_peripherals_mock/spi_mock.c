@@ -3,7 +3,7 @@
 #include <string.h>
 
 static int     init_master_calls             = 0;
-static uint8_t last_request[SPI_BUFFER_SIZE] = {0};
+static uint8_t last_request[SPI_MAX_BUFFER] = {0};
 
 void
 spi_init_master(void)
@@ -41,5 +41,5 @@ void
 spi_mock_reset(void)
 {
     init_master_calls = 0;
-    memset(&last_request, 0, SPI_BUFFER_SIZE);
+    memset(&last_request, 0, SPI_MAX_BUFFER);
 }

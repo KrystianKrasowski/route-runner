@@ -11,6 +11,8 @@ target_include_directories(drivers_peripherals
 )
 
 add_library(drivers_stm32f303x8 STATIC
+    spi_transfer.h
+    spi_transfer.c
     spi.c
     tim3.c
     usart2.c
