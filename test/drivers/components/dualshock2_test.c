@@ -54,7 +54,6 @@ should_start_spi_transmission(void)
 
     // then
     uint8_t request[] = {0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    TEST_ASSERT_EQUAL(GPIO_STATE_LOW, gpio_mock_get_state(ATTENTION_PIN));
     TEST_ASSERT_TRUE(spi_mock_verify_transmission_start_request(request, 9));
 }
 
@@ -68,7 +67,6 @@ should_receive_spi_transmission(uint8_t response[], uint16_t expected_command)
     queue_message_t message;
     queue_status_t  status = queue_pull(QUEUE_TOPIC_REMOTE_CONTROL, &message);
 
-    TEST_ASSERT_EQUAL(GPIO_STATE_HIGH, gpio_mock_get_state(ATTENTION_PIN));
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS, status);
     TEST_ASSERT_DS2_COMMANDS(expected_command, message.payload.command);
 }

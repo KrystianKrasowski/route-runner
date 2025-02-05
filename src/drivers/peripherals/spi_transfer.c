@@ -4,10 +4,11 @@
 void
 spi_transfer_init(spi_transfer_t volatile *self)
 {
-    self->status   = SPI_TRANSFER_IDLE;
-    self->size     = 0;
-    self->tx_index = 0;
-    self->rx_index = 0;
+    self->status        = SPI_TRANSFER_IDLE;
+    self->size          = 0;
+    self->tx_index      = 0;
+    self->rx_index      = 0;
+    self->device_select = NULL;
 
     for (uint8_t i = 0; i < SPI_MAX_BUFFER; i++)
     {
@@ -17,17 +18,20 @@ spi_transfer_init(spi_transfer_t volatile *self)
 }
 
 spi_transfer_result_t
-spi_transfer_start(spi_transfer_t volatile *self, spi_request_t const *request)
+spi_transfer_start(spi_transfer_t volatile *self, spi_request_t *request)
 {
     if (self->status == SPI_TRANSFER_IDLE)
     {
-        self->status = SPI_TRANSFER_PENDING;
-        self->size   = request->size;
+        self->status        = SPI_TRANSFER_PENDING;
+        self->size          = request->size;
+        self->device_select = &request->device_select;
 
         for (uint8_t i = 0; i < self->size; i++)
         {
             self->tx_buffer[i] = request->payload[i];
         }
+
+        gpio_set_state(self->device_select, GPIO_STATE_LOW);
 
         return SPI_RESULT_SUCCESS;
     }
@@ -58,6 +62,7 @@ spi_transfer_put_rx(spi_transfer_t volatile *self, uint8_t byte)
 
     if (self->rx_index >= self->size)
     {
+        gpio_set_state(self->device_select, GPIO_STATE_HIGH);
         return SPI_RESULT_END_OF_RECEPTION;
     }
 

@@ -1,6 +1,7 @@
 #ifndef _SPI_TRANSFER_H
 #define _SPI_TRANSFER_H
 
+#include "gpio.h"
 #include "spi.h"
 #include <stdint.h>
 
@@ -18,6 +19,7 @@ typedef struct spi_transfer
     uint8_t               rx_buffer[SPI_MAX_BUFFER];
     uint8_t               tx_index;
     uint8_t               rx_index;
+    gpio_t               *device_select;
 } spi_transfer_t;
 
 typedef enum
@@ -33,7 +35,7 @@ void
 spi_transfer_init(spi_transfer_t volatile *self);
 
 spi_transfer_result_t
-spi_transfer_start(spi_transfer_t volatile *self, spi_request_t const *request);
+spi_transfer_start(spi_transfer_t volatile *self, spi_request_t *request);
 
 spi_transfer_result_t
 spi_transfer_next_tx(spi_transfer_t volatile *self, uint8_t *byte);
