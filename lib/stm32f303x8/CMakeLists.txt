@@ -1,22 +1,11 @@
-cmake_minimum_required(VERSION 3.28)
+add_library(stm32f303x8 INTERFACE)
 
-project(stm32f303x8)
-
-enable_language(C ASM)
-
-add_library(${PROJECT_NAME} STATIC 
-    src/system_stm32f3xx.c
-    src/syscalls.c
-    src/sysmem.c
-    src/startup_stm32f303x8.s
-)
-
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(stm32f303x8 INTERFACE
     inc/cmsis/device/st/stm32f3xx/include
     inc/cmsis/include
 )
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC 
+target_compile_definitions(stm32f303x8 INTERFACE 
     STM32F303x8
     $<$<CONFIG:Debug>:DEBUG>
 )

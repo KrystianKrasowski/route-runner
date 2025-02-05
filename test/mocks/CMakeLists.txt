@@ -1,0 +1,1 @@
+add_subdirectory(drivers_peripherals_mock)

@@ -13,17 +13,6 @@ static gpio_definition_t gpio[9] = {
     [GPIO_DUALSHOCK2_ATTENTION] = {RCC_AHBENR_GPIOAEN, GPIOA, 12},
 };
 
-gpio_t
-gpio_create(gpio_pin_t pin)
-{
-    gpio_t gpio;
-    memset(&gpio, 0, sizeof(gpio));
-    gpio.pin = pin;
-    gpio_init(&gpio);
-
-    return gpio;
-}
-
 void
 gpio_init(gpio_t *self)
 {

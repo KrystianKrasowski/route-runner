@@ -6,5 +6,6 @@ add_library(adapters STATIC
 target_link_libraries(adapters
     PRIVATE
         core
-        drivers
+        drivers_components
+        drivers_peripherals
 )

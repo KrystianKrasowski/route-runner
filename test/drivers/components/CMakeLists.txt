@@ -1,5 +1,5 @@
 set(TEST_SUITE
-    adapter_remote_control_dualshock2_test.c
+    dualshock2_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
@@ -14,11 +14,10 @@ foreach(FILE ${TEST_SUITE})
 
     target_link_libraries(${TEST_NAME}
         PRIVATE
-            core
-            adapters
             drivers_components
+            drivers_peripherals_mock
             unity
-            stm32f303x8
+            queue
     )   
 
     add_test(${TEST_NAME} ${TEST_NAME})
