@@ -1,57 +1,82 @@
 # Route Runner
 
 Route runner is a name of the line following robot project. It is built using the following components:
-* STM32 NUCLEO-L476 board as a microcontroller
+* STM32 NUCLEO-F303 board as a microcontroller
 * 2 DC motors driven by simple L293D component
 * Pololu's QTR-HD-06A line sensor
-* ST1089 infrared receiver for the NEC-compatibile remote
-* 3 diagnostic LEDs
+* Dualshock2 remote control
+* 1 status indicator LED
 * Two LM2596 step-down voltage converters with the following settings:
     * 6V for the motors
     * 5V for the MCU and L293D logic
 
 For the power details visit the [Power supply](#power-supply) section
 
-
 ## Usage
-* Turn on the device using ON/OFF switch. Green LED should start blinking which indicates the STANDBY state.
-* Place the vehicle on the black line so that it aligns with its vertical axis. The green LED should stop blinking which indicates the READY state.
-* Press "Play" button on the remote. The vehicle should now start following the line and the yellow LED should turn on. Green LED should turn off.
+* Turn on the device using ON/OFF switch. State indicator displays MANUAL CONTROL state.
+* Place the vehicle on the black line so that it aligns with its vertical axis. State indicator displays LINE DETECTED state. 
+* Start line following by issuing START FOLLOWING command. State indicator displays LINE FOLLOWING state.
 
 ### Command reference
-* STANDBY - put vehicle into STANDBY state.
-* RUN - start following the line. Note that the vehicle must be in READY state before.
-* SPEED+ - increase the speed of the vehicle.
-* SPEED- - decrease the speed of the vehicle.
+* MANUAL CONTROL - control vehicle freely with remote control
+* START FOLLOWING - vehicle follows the line with PID control
 
-### Command - remote mapping
-* STANDBY - POWER
-* RUN - PLAY
-* SPEED+ - PLUS
-* SPEED- - MINUS
+### Command - dualshock2 remote mapping
+* MANUAL CONTROL - CIRCLE
+* START FOLLOWING - CROSS
 
 ### State reference
-* Green LED blinking - STANDBY state. The vehicle waits to be placed on the black line on the white background.
-* Green LED turned on - READY state. The vehicle waits for the RUN command
-* Yellow LED turned on - RUNNING state. The vehicle is following the line
-* Red LED turned on - generic error.
+* MANUAL CONTROL
+* LINE DETECTED
+* LINE FOLLOWING
 
-### Troubleshoot
-* Red LED turned on - press STANDBY and follow the usage procedure from the second step.
+### State - LED indicator mapping
+* MANUAL CONTROL - single short blink per second
+* LINE DETECTED - LED constant on
+* LINE FOLLOWING - 4 short blinks per second
+* ERROR - single long blink per second
+
+short blink is a sequence `on -> off` with 250ms duration
+long blink is a sequence `on -> off` with 1s duration
 
 ## Technical info
 * The line sensor is positioned at 4mm above the surface and the calibration is hardcoded.
 
+
 ### Power supply
-The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage equal to 7.4V (3.7V each). From the power source the following power buses are distributed:
+The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage equal to 7.4V (3.7V each). The power buses are distributed as follows:
 * 6V power bus provided by one of the LM2596 voltage converter. Used by L293D for DC motor inputs.
 * 5V power bus provided by the second LM2596 voltage converter. Used by L293D logic and the MCU
-* 3.3V power bus provided by MCU. Used by the IR receiver and diagnostic LEDs
+* 3.3V power bus provided by MCU. Used by the Dualshock2 receiver and state indicator
 * 3.3V analog power bus provided by MCU. Used by line sensor
-* Common GND bus for all digital components
-* Analog GND bus for the line sensor
+* Common GND bus for all components
 
-### Electrical wiring diagram
+### Pin usage summary
+* Motion:
+    * **PB1** (D6) - PWM for left motor
+    * PB6 (D5) - A1 for left motor
+    * PB7 (D4) - A2 for left motor
+    * **PB0** (D3) - PWM for right motor
+    * PA10 (D0) - A1 for right motor
+    * PA12 (D2) - A2 for right motor
+* Remote control:
+    * **PB5** (D11) - MOSI
+    * **PB4** (D12) - MISO
+    * **PB3** (D13) - SCK
+    * PF0 (D7) - CS
+* Line sensing:
+    * *PA1* (A1) - channel 1
+    * *PA3* (A2) - channel 2
+    * *PA4* (A3) - channel 3
+    * *PA5* (A4) - channel 4
+    * *PA6* (A5) - channel 5
+    * *PA7* (A6) - channel 6
+* Status indicator
+    * **PA8** (D9)
+
+Pins in **bold** are unchangeable. *Italic* pin change may implicate other changes.
+
+### Electrical wiring diagram (deprecated)
 ![schematic](./doc/img/schematic.png)
 
 ## Development
