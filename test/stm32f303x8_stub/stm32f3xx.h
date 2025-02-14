@@ -24,6 +24,7 @@ typedef struct
 
 extern GPIO_TypeDef GPIOA_instance;
 extern GPIO_TypeDef GPIOB_instance;
+extern GPIO_TypeDef GPIOF_instance;
 
 typedef struct
 {
@@ -66,6 +67,7 @@ typedef struct
     uint32_t CCR6;
 } TIM_TypeDef;
 
+extern TIM_TypeDef TIM1_instance;
 extern TIM_TypeDef TIM3_instance;
 
 typedef struct
@@ -90,7 +92,9 @@ extern USART_TypeDef USART2_instance;
 #define RCC    (&RCC_instance)
 #define GPIOA  (&GPIOA_instance)
 #define GPIOB  (&GPIOB_instance)
+#define GPIOF  (&GPIOF_instance)
 #define SPI1   (&SPI1_instance)
+#define TIM1   (&TIM1_instance)
 #define TIM3   (&TIM3_instance)
 #define USART2 (&USART2_instance)
 
