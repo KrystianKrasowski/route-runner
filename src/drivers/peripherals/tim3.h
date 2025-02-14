@@ -1,5 +1,5 @@
-#ifndef _TIM2_H
-#define _TIM2_H
+#ifndef _TIM3_H
+#define _TIM3_H
 
 void
 tim3_ch1_init(void);

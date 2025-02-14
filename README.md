@@ -74,6 +74,10 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
 * Status indicator
     * **PA8** (D9)
 
+### Peripherals usage summary
+* TIM3 channel 1 - timer for (dualshock2) MANUAL CONTROL communication trigger
+* TIM1 channel 1 - timer for (LED) status indicator (by toggle on compare)
+
 Pins in **bold** are unchangeable. *Italic* pin change may implicate other changes.
 
 ### Electrical wiring diagram (deprecated)
