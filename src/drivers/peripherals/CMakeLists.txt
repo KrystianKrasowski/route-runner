@@ -24,6 +24,6 @@ target_link_libraries(drivers_stm32f303x8
     PUBLIC
         drivers_peripherals
     PRIVATE
-        queue
+        utils
         stm32f303x8
 )

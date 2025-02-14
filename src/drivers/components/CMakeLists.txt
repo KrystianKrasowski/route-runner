@@ -8,5 +8,5 @@ target_include_directories(drivers_components PUBLIC "./")
 target_link_libraries(drivers_components 
     PRIVATE
         drivers_peripherals
-        queue
+        utils
 )

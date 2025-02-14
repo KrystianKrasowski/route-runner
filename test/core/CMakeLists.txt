@@ -19,7 +19,7 @@ foreach(FILE ${TEST_SUITE})
         PRIVATE
             core
             core_port_mock
-            queue
+            utils
             unity
     )   
 
