@@ -1,6 +1,7 @@
 #ifndef _CORE_H
 #define _CORE_H
 
+#include <stack.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -28,19 +29,28 @@ typedef enum
 
 typedef enum
 {
-    CORE_VEHICLE_STATE_MANUAL
+    CORE_VEHICLE_STATE_MANUAL,
+    CORE_VEHICLE_STATE_LINE_DETECTED,
 } core_vehicle_state_t;
 
 typedef struct core_vehicle
 {
-    uint16_t             command;
-    core_motion_t        motion;
-    core_vehicle_state_t state;
-    bool                 state_changed;
+    uint16_t      command;
+    core_motion_t motion;
+    stack_t       state;
 } core_vehicle_t;
 
 void
 core_vehicle_init(core_vehicle_t *self);
+
+core_vehicle_state_t
+core_vehicle_get_state(core_vehicle_t *self);
+
+void
+core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state);
+
+bool
+core_vehicle_is_state_changed(core_vehicle_t *self);
 
 void
 core_task_remote_control_receive(core_vehicle_t *vehicle);

@@ -9,6 +9,6 @@ add_library(core STATIC
 target_include_directories(core PUBLIC "./")
 
 target_link_libraries(core
-    PRIVATE
+    PUBLIC
         utils
 )

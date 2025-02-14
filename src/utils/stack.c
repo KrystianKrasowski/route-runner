@@ -110,6 +110,12 @@ stack_get_size(stack_t *self)
     return self->size;
 }
 
+uint8_t
+stack_get_length(stack_t *self)
+{
+    return self->top + 1;
+}
+
 stack_result_t
 stack_get_element(stack_t *self, uint8_t index, uint16_t *element)
 {

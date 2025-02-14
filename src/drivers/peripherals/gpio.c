@@ -10,7 +10,7 @@ typedef struct gpio_definition
 } gpio_definition_t;
 
 static gpio_definition_t gpio[9] = {
-    [GPIO_DUALSHOCK2_ATTENTION] = {RCC_AHBENR_GPIOAEN, GPIOF, 0},
+    [GPIO_DUALSHOCK2_ATTENTION] = {RCC_AHBENR_GPIOFEN, GPIOF, 0},
 };
 
 void
