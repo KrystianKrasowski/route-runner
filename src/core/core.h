@@ -53,6 +53,12 @@ bool
 core_vehicle_is_state_changed(core_vehicle_t *self);
 
 void
+core_motion_init(core_motion_t *self);
+
+bool
+core_motion_equals(core_motion_t *self, core_motion_t *other);
+
+void
 core_task_remote_control_receive(core_vehicle_t *vehicle);
 
 void

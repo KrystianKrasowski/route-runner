@@ -9,6 +9,7 @@ core_vehicle_init(core_vehicle_t *self)
 {
     memset(self, 0, sizeof(*self));
     init_state(self);
+    core_motion_init(&self->motion);
 }
 
 core_vehicle_state_t
