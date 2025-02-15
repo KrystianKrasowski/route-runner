@@ -11,6 +11,8 @@ core_task_remote_control_receive(core_vehicle_t *vehicle)
     if (queue_pull(QUEUE_TOPIC_REMOTE_CONTROL, &message) == QUEUE_SUCCESS)
     {
         uint16_t raw_command = message.payload.command;
-        vehicle->command     = core_port_remote_control_map(raw_command);
+        uint16_t command     = core_port_remote_control_map(raw_command);
+        
+        core_vehicle_set_command(vehicle, command);
     }
 }

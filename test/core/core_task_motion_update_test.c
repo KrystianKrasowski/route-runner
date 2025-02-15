@@ -21,11 +21,11 @@ should_not_update_motion_on_same_command(void)
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.command          = CORE_REMOTE_CONTROL_FORWARD;
-    vehicle.motion.direction = CORE_MOTION_FORWARD;
-    vehicle.motion.angle     = 0;
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
+    core_vehicle_update_motion(&vehicle);
 
     // when
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
     core_task_motion_update(&vehicle);
 
     // then
@@ -38,11 +38,11 @@ should_update_motion_on_different_command(void)
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.command          = CORE_REMOTE_CONTROL_FORWARD;
-    vehicle.motion.direction = CORE_MOTION_NONE;
-    vehicle.motion.angle     = 0;
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_NONE);
+    core_vehicle_update_motion(&vehicle);
 
     // when
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
     core_task_motion_update(&vehicle);
 
     // then
@@ -57,9 +57,7 @@ should_update_motion(uint16_t                command,
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.command          = command;
-    vehicle.motion.direction = CORE_MOTION_NONE;
-    vehicle.motion.angle     = 0;
+    core_vehicle_set_command(&vehicle, command);
 
     // when
     core_task_motion_update(&vehicle);
@@ -68,6 +66,25 @@ should_update_motion(uint16_t                command,
     core_motion_t applied_motion = core_port_mock_get_motion_applied();
     TEST_ASSERT_EQUAL(expected_direction, applied_motion.direction);
     TEST_ASSERT_EQUAL(expected_angle, applied_motion.angle);
+}
+
+void
+should_update_to_stop(void)
+{
+    // given
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
+    core_task_motion_update(&vehicle);
+
+    // when
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_NONE);
+    core_task_motion_update(&vehicle);
+
+    // then
+    core_motion_t applied_motion = core_port_mock_get_motion_applied();
+    TEST_ASSERT_EQUAL(CORE_MOTION_NONE, applied_motion.direction);
+    TEST_ASSERT_EQUAL(0, applied_motion.angle);
 }
 
 int
@@ -106,6 +123,14 @@ main()
                    CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_LEFT,
                    CORE_MOTION_BACKWARD,
                    -90);
+
+    RUN_PARAM_TEST(
+        should_update_motion, CORE_REMOTE_CONTROL_LEFT, CORE_MOTION_NONE, 0);
+
+    RUN_PARAM_TEST(
+        should_update_motion, CORE_REMOTE_CONTROL_RIGHT, CORE_MOTION_NONE, 0);
+
+    RUN_TEST(should_update_to_stop);
 
     return UNITY_END();
 }
