@@ -21,11 +21,11 @@ should_not_update_motion_on_same_command(void)
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.command          = CORE_REMOTE_CONTROL_FORWARD;
-    vehicle.motion.direction = CORE_MOTION_FORWARD;
-    vehicle.motion.angle     = 0;
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
+    core_vehicle_update_motion(&vehicle);
 
     // when
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
     core_task_motion_update(&vehicle);
 
     // then
@@ -38,11 +38,11 @@ should_update_motion_on_different_command(void)
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.command          = CORE_REMOTE_CONTROL_FORWARD;
-    vehicle.motion.direction = CORE_MOTION_NONE;
-    vehicle.motion.angle     = 0;
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_NONE);
+    core_vehicle_update_motion(&vehicle);
 
     // when
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
     core_task_motion_update(&vehicle);
 
     // then
@@ -57,9 +57,7 @@ should_update_motion(uint16_t                command,
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.command          = command;
-    vehicle.motion.direction = CORE_MOTION_NONE;
-    vehicle.motion.angle     = 0;
+    core_vehicle_set_command(&vehicle, command);
 
     // when
     core_task_motion_update(&vehicle);
@@ -76,13 +74,11 @@ should_update_to_stop(void)
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.command          = CORE_REMOTE_CONTROL_FORWARD;
-    vehicle.motion.direction = CORE_MOTION_NONE;
-    vehicle.motion.angle     = 0;
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FORWARD);
     core_task_motion_update(&vehicle);
 
     // when
-    vehicle.command = CORE_REMOTE_CONTROL_NONE;
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_NONE);
     core_task_motion_update(&vehicle);
 
     // then

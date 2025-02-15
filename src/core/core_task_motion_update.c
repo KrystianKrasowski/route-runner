@@ -4,7 +4,7 @@
 void
 core_task_motion_update(core_vehicle_t *vehicle)
 {
-    if (core_vehicle_motion_update(vehicle) == CORE_VEHICLE_MOTION_CHANGED)
+    if (core_vehicle_update_motion(vehicle) == CORE_VEHICLE_MOTION_CHANGED)
     {
         core_port_motion_apply(&vehicle->motion);
     }

@@ -58,8 +58,14 @@ core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state);
 bool
 core_vehicle_is_state_changed(core_vehicle_t *self);
 
+void
+core_vehicle_set_command(core_vehicle_t *self, uint16_t command);
+
+uint16_t
+core_vehicle_get_command(core_vehicle_t *self);
+
 core_vehicle_result_t
-core_vehicle_motion_update(core_vehicle_t *self);
+core_vehicle_update_motion(core_vehicle_t *self);
 
 void
 core_motion_init(core_motion_t *self);

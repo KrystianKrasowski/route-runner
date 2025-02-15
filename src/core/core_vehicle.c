@@ -45,8 +45,20 @@ core_vehicle_is_state_changed(core_vehicle_t *self)
     return bottom != top || stack_get_length(&self->state) == 1;
 }
 
+void
+core_vehicle_set_command(core_vehicle_t *self, uint16_t command)
+{
+    self->command = command;
+}
+
+uint16_t
+core_vehicle_get_command(core_vehicle_t *self)
+{
+    return self->command;
+}
+
 core_vehicle_result_t
-core_vehicle_motion_update(core_vehicle_t *self)
+core_vehicle_update_motion(core_vehicle_t *self)
 {
     core_motion_t motion;
     core_motion_init(&motion);
