@@ -33,6 +33,12 @@ typedef enum
     CORE_VEHICLE_STATE_LINE_DETECTED,
 } core_vehicle_state_t;
 
+typedef enum
+{
+    CORE_VEHICLE_MOTION_CHANGED,
+    CORE_VEHICLE_MOTION_REMAINS,
+} core_vehicle_result_t;
+
 typedef struct core_vehicle
 {
     uint16_t      command;
@@ -51,6 +57,9 @@ core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state);
 
 bool
 core_vehicle_is_state_changed(core_vehicle_t *self);
+
+core_vehicle_result_t
+core_vehicle_motion_update(core_vehicle_t *self);
 
 void
 core_motion_init(core_motion_t *self);
