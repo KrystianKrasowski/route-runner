@@ -75,7 +75,7 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
     * **PA8** (D9)
 
 ### Peripherals usage summary
-* TIM3 channel 1 - timer for (dualshock2) MANUAL CONTROL communication trigger
+* TIM2 channel 1 - timer for (dualshock2) MANUAL CONTROL communication trigger
 * TIM3 channel 4 - timer for PWM signal for left motor (PB1)
 * TIM3 channel 3 - timer for PWM signal for right motor (PB0)
 * TIM1 channel 1 - timer for (LED) status indicator (by toggle on compare)

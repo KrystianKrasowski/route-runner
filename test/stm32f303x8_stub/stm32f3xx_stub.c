@@ -43,6 +43,27 @@ TIM_TypeDef TIM1_instance = {
     .DMAR  = 0,
 };
 
+TIM_TypeDef TIM2_instance = {
+    .CR1   = 0,
+    .CR2   = 0,
+    .SMCR  = 0,
+    .DIER  = 0,
+    .SR    = 0,
+    .EGR   = 0,
+    .CCMR1 = 0,
+    .CCMR2 = 0,
+    .CCER  = 0,
+    .CNT   = 0,
+    .PSC   = 0,
+    .ARR   = 0xffffffff,
+    .CCR1  = 0,
+    .CCR2  = 0,
+    .CCR3  = 0,
+    .CCR4  = 0,
+    .DCR   = 0,
+    .DMAR  = 0,
+};
+
 TIM_TypeDef TIM3_instance = {
     .CR1   = 0,
     .CR2   = 0,

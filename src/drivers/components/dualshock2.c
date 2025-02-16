@@ -1,7 +1,7 @@
 #include "dualshock2.h"
 #include "gpio.h"
 #include "spi.h"
-#include "tim3.h"
+#include "tim2.h"
 #include <queue.h>
 #include <stdint.h>
 
@@ -20,11 +20,11 @@ dualshock2_init(void)
     gpio_init(&request.device_select);
     gpio_set_state(&request.device_select, GPIO_STATE_HIGH);
     spi_init_master();
-    tim3_ch1_init();
+    tim2_ch1_init();
 }
 
 void
-tim3_ch1_compare_isr(void)
+tim2_ch1_compare_isr(void)
 {
     spi_transmittion_start(&request);
 }

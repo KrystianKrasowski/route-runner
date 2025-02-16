@@ -2,7 +2,7 @@
 #include <gpio_mock.h>
 #include <queue.h>
 #include <spi_mock.h>
-#include <tim3_mock.h>
+#include <tim2_mock.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -21,7 +21,7 @@ tearDown(void)
 {
     gpio_mock_reset();
     spi_mock_reset();
-    tim3_ch1_mock_reset();
+    tim2_ch1_mock_reset();
 }
 
 void
@@ -43,14 +43,14 @@ void
 should_initialize_timer3_channel1(void)
 {
     // then
-    TEST_ASSERT_EQUAL(1, tim3_ch1_mock_verify_init_calls());
+    TEST_ASSERT_EQUAL(1, tim2_ch1_mock_verify_init_calls());
 }
 
 void
 should_start_spi_transmission(void)
 {
     // when
-    tim3_ch1_compare_isr();
+    tim2_ch1_compare_isr();
 
     // then
     uint8_t request[] = {0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
