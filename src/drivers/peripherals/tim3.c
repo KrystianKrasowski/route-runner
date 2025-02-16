@@ -1,7 +1,6 @@
 #include "tim3.h"
 #include <stm32f3xx.h>
 
-#define PWM_MODE                  6
 #define PWM_CENTER_ALIGNED_MODE_1 1
 
 static inline void
@@ -35,10 +34,10 @@ tim3_init(void)
     // set center aligned mode
     // TODO: review this setting, probably mode 3 is better, but needs different
     // timer frequency setting
-    TIM3->CR1 |= (PWM_CENTER_ALIGNED_MODE_1 << TIM_CR1_CMS_Pos);
+    TIM3->CR1 |= TIM_CR1_CMS_0;
 
-    // Ensure main output is enabled
-    TIM3->BDTR |= TIM_BDTR_MOE;
+    // Force update event to load ARR, PSC, and PWM settings
+    TIM3->EGR |= TIM_EGR_UG;
 }
 
 void
@@ -100,13 +99,13 @@ tim3_ch3_pwm_init(void)
     GPIOB->MODER |= GPIO_MODER_MODER0_1;
 
     // set AF6 for PB0
-    GPIOB->AFR[0] |= (6 << GPIO_AFRL_AFRL0_Pos);
+    GPIOB->AFR[0] |= (2 << GPIO_AFRL_AFRL0_Pos);
 
     // default duty cycle to 80%
     TIM3->CCR3 = 80;
 
     // set PWM mode
-    TIM3->CCMR2 |= (PWM_MODE << TIM_CCMR2_OC3M_Pos);
+    TIM3->CCMR2 |= TIM_CCMR2_OC3M_1 | TIM_CCMR2_OC3M_2;
 
     // set preload enable
     // TODO: review this setting why it is neccessary
@@ -124,13 +123,13 @@ tim3_ch4_pwm_init(void)
     GPIOB->MODER |= GPIO_MODER_MODER1_1;
 
     // set AF6 for PB1
-    GPIOB->AFR[0] |= (6 << GPIO_AFRL_AFRL1_Pos);
+    GPIOB->AFR[0] |= (2 << GPIO_AFRL_AFRL1_Pos);
 
     // default duty cycle to 80%
     TIM3->CCR4 = 80;
 
     // set PWM mode
-    TIM3->CCMR2 |= (PWM_MODE << TIM_CCMR2_OC4M_Pos);
+    TIM3->CCMR2 |= TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2;
 
     // set preload enable
     // TODO: review this setting why it is neccessary

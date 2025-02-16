@@ -4,13 +4,8 @@
 l293_t
 l293_create_channel_left(void)
 {
-    gpio_t a1 = {GPIO_MOTOR_LEFT_A1};
-    a1.mode   = GPIO_MODE_OUTPUT;
-    a1.state  = GPIO_STATE_LOW;
-
-    gpio_t a2 = {GPIO_MOTOR_LEFT_A2};
-    a2.mode   = GPIO_MODE_OUTPUT;
-    a2.state  = GPIO_STATE_LOW;
+    gpio_t a1 = {GPIO_MOTOR_LEFT_A1, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
+    gpio_t a2 = {GPIO_MOTOR_LEFT_A2, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
 
     l293_t l293 = {a1, a2, TIM3_CHANNEL_4};
 
@@ -20,13 +15,8 @@ l293_create_channel_left(void)
 l293_t
 l293_create_channel_right(void)
 {
-    gpio_t a1 = {GPIO_MOTOR_RIGHT_A1};
-    a1.mode   = GPIO_MODE_OUTPUT;
-    a1.state  = GPIO_STATE_LOW;
-
-    gpio_t a2 = {GPIO_MOTOR_RIGHT_A2};
-    a2.mode   = GPIO_MODE_OUTPUT;
-    a2.state  = GPIO_STATE_LOW;
+    gpio_t a1 = {GPIO_MOTOR_RIGHT_A1, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
+    gpio_t a2 = {GPIO_MOTOR_RIGHT_A2, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
 
     l293_t l293 = {a1, a2, TIM3_CHANNEL_3};
 
@@ -63,6 +53,8 @@ void
 l293_stop_running(l293_t *self)
 {
     tim3_channel_pwm_stop(self->pwm_channel);
+    gpio_set_state(&self->a1, GPIO_STATE_LOW);
+    gpio_set_state(&self->a2, GPIO_STATE_LOW);
 }
 
 void
