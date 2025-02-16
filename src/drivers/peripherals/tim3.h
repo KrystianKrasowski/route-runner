@@ -3,6 +3,12 @@
 
 #include <stdint.h>
 
+typedef enum
+{
+    TIM3_CHANNEL_3,
+    TIM3_CHANNEL_4,
+} tim3_channel_t;
+
 void
 tim3_init(void);
 
@@ -10,27 +16,12 @@ void
 tim3_enable(void);
 
 void
-tim3_ch3_pwm_init(void);
+tim3_channel_pwm_init(tim3_channel_t channel);
 
 void
-tim3_ch3_pwm_set_duty_cycle(uint8_t percentage);
+tim3_channel_pwm_run(tim3_channel_t channel);
 
 void
-tim3_ch3_pwm_run(void);
-
-void
-tim3_ch3_pwm_stop(void);
-
-void
-tim3_ch4_pwm_init(void);
-
-void
-tim3_ch4_pwm_set_duty_cycle(uint8_t percentage);
-
-void
-tim3_ch4_pwm_run(void);
-
-void
-tim3_ch4_pwm_stop(void);
+tim3_channel_pwm_stop(tim3_channel_t channel);
 
 #endif

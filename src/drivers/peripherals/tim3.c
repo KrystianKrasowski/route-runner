@@ -4,8 +4,23 @@
 #define PWM_MODE                  6
 #define PWM_CENTER_ALIGNED_MODE_1 1
 
-static inline uint8_t
-trim_duty_cycle(uint8_t percentage);
+static inline void
+tim3_ch3_pwm_init(void);
+
+static inline void
+tim3_ch4_pwm_init(void);
+
+static inline void
+tim3_ch3_pwm_run(void);
+
+static inline void
+tim3_ch3_pwm_stop(void);
+
+static inline void
+tim3_ch4_pwm_run(void);
+
+static inline void
+tim3_ch4_pwm_stop(void);
 
 void
 tim3_init(void)
@@ -33,6 +48,48 @@ tim3_enable(void)
 }
 
 void
+tim3_channel_pwm_init(tim3_channel_t channel)
+{
+    if (channel == TIM3_CHANNEL_3)
+    {
+        tim3_ch3_pwm_init();
+    }
+
+    if (channel == TIM3_CHANNEL_4)
+    {
+        tim3_ch4_pwm_init();
+    }
+}
+
+void
+tim3_channel_pwm_run(tim3_channel_t channel)
+{
+    if (channel == TIM3_CHANNEL_3)
+    {
+        tim3_ch3_pwm_run();
+    }
+
+    if (channel == TIM3_CHANNEL_4)
+    {
+        tim3_ch4_pwm_run();
+    }
+}
+
+void
+tim3_channel_pwm_stop(tim3_channel_t channel)
+{
+    if (channel == TIM3_CHANNEL_3)
+    {
+        tim3_ch3_pwm_stop();
+    }
+
+    if (channel == TIM3_CHANNEL_4)
+    {
+        tim3_ch4_pwm_stop();
+    }
+}
+
+static inline void
 tim3_ch3_pwm_init(void)
 {
     // enable clock access to GPIOB
@@ -56,27 +113,7 @@ tim3_ch3_pwm_init(void)
     TIM3->CCMR2 |= TIM_CCMR2_OC3PE;
 }
 
-void
-tim3_ch3_pwm_set_duty_cycle(uint8_t percentage)
-{
-    TIM3->CCR3 = trim_duty_cycle(percentage);
-}
-
-void
-tim3_ch3_pwm_run(void)
-{
-    // Enable the output channel
-    TIM3->CCER |= TIM_CCER_CC3E;
-}
-
-void
-tim3_ch3_pwm_stop(void)
-{
-    // Disable the output channel
-    TIM3->CCER &= ~TIM_CCER_CC3E;
-}
-
-void
+static inline void
 tim3_ch4_pwm_init(void)
 {
     // enable clock access to GPIOB
@@ -100,39 +137,30 @@ tim3_ch4_pwm_init(void)
     TIM3->CCMR2 |= TIM_CCMR2_OC4PE;
 }
 
-void
-tim3_ch4_pwm_set_duty_cycle(uint8_t percentage)
+static inline void
+tim3_ch3_pwm_run(void)
 {
-    TIM3->CCR4 = trim_duty_cycle(percentage);
+    // Enable the output channel
+    TIM3->CCER |= TIM_CCER_CC3E;
 }
 
-void
+static inline void
+tim3_ch3_pwm_stop(void)
+{
+    // Disable the output channel
+    TIM3->CCER &= ~TIM_CCER_CC3E;
+}
+
+static inline void
 tim3_ch4_pwm_run(void)
 {
     // Enable the output channel
     TIM3->CCER |= TIM_CCER_CC4E;
 }
 
-void
+static inline void
 tim3_ch4_pwm_stop(void)
 {
     // Disable the output channel
     TIM3->CCER &= ~TIM_CCER_CC4E;
-}
-
-static inline uint8_t
-trim_duty_cycle(uint8_t percentage)
-{
-    if (percentage < 50)
-    {
-        return 50;
-    }
-    else if (percentage > 95)
-    {
-        return 95;
-    }
-    else
-    {
-        return percentage;
-    }
 }

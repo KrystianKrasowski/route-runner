@@ -1,5 +1,6 @@
 set(TEST_SUITE
     dualshock2_test.c
+    l293_test.c
 )
 
 foreach(FILE ${TEST_SUITE})

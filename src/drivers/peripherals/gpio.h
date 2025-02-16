@@ -4,6 +4,10 @@
 typedef enum
 {
     GPIO_DUALSHOCK2_ATTENTION,
+    GPIO_MOTOR_LEFT_A1,
+    GPIO_MOTOR_LEFT_A2,
+    GPIO_MOTOR_RIGHT_A1,
+    GPIO_MOTOR_RIGHT_A2,
 } gpio_pin_t;
 
 typedef enum
