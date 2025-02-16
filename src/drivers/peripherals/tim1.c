@@ -46,7 +46,7 @@ tim1_ch1_init(void)
     // enable capture/compare interrupt for channel 1
     TIM1->DIER |= TIM_DIER_CC1IE;
 
-    // enable TIM3 IRQ in NVIC
+    // enable TIM1 IRQ in NVIC
     NVIC_EnableIRQ(TIM1_CC_IRQn);
 }
 

@@ -1,4 +1,6 @@
 add_library(drivers_peripherals_mock STATIC
+    tim2_mock.h
+    tim2_mock.c
     tim3_mock.h
     tim3_mock.c
     spi_mock.h

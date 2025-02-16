@@ -1,6 +1,8 @@
 add_library(drivers_components STATIC
     dualshock2.h
     dualshock2.c
+    l293.h
+    l293.c
 )
 
 target_include_directories(drivers_components PUBLIC "./")

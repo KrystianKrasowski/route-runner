@@ -3,6 +3,7 @@
 
 #define SPI1_IRQn    0
 #define TIM1_CC_IRQn 0
+#define TIM2_IRQn    0
 #define TIM3_IRQn    0
 
 void
