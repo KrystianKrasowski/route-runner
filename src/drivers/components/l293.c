@@ -34,33 +34,48 @@ l293_init(l293_t *self)
 }
 
 void
-l293_turn_left(l293_t *self)
+l293_set_left(l293_t *self)
 {
     gpio_set_state(&self->a1, GPIO_STATE_HIGH);
     gpio_set_state(&self->a2, GPIO_STATE_LOW);
+}
+
+void
+l293_set_right(l293_t *self)
+{
+    gpio_set_state(&self->a1, GPIO_STATE_LOW);
+    gpio_set_state(&self->a2, GPIO_STATE_HIGH);
+}
+
+void
+l293_set_stop(l293_t *self)
+{
+    gpio_set_state(&self->a1, GPIO_STATE_LOW);
+    gpio_set_state(&self->a2, GPIO_STATE_LOW);
+}
+
+void
+l293_enable(l293_t *self)
+{
     tim3_channel_pwm_run(self->pwm_channel);
 }
 
 void
-l293_turn_right(l293_t *self)
+l293_disable(l293_t *self)
 {
-    gpio_set_state(&self->a1, GPIO_STATE_LOW);
-    gpio_set_state(&self->a2, GPIO_STATE_HIGH);
-    tim3_channel_pwm_run(self->pwm_channel);
+    tim3_channel_pwm_stop(self->pwm_channel);
 }
 
 void
 l293_stop_running(l293_t *self)
 {
-    tim3_channel_pwm_stop(self->pwm_channel);
-    gpio_set_state(&self->a1, GPIO_STATE_LOW);
-    gpio_set_state(&self->a2, GPIO_STATE_LOW);
+    l293_disable(self);
+    l293_set_stop(self);
 }
 
 void
 l293_stop(l293_t *self)
 {
-    gpio_set_state(&self->a1, GPIO_STATE_LOW);
-    gpio_set_state(&self->a2, GPIO_STATE_LOW);
-    tim3_channel_pwm_run(self->pwm_channel);
+    l293_set_stop(self);
+    l293_enable(self);
 }

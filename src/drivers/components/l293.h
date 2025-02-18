@@ -27,10 +27,19 @@ void
 l293_init(l293_t *self);
 
 void
-l293_turn_left(l293_t *self);
+l293_set_left(l293_t *self);
 
 void
-l293_turn_right(l293_t *self);
+l293_set_right(l293_t *self);
+
+void
+l293_set_stop(l293_t *self);
+
+void
+l293_enable(l293_t *self);
+
+void
+l293_disable(l293_t *self);
 
 void
 l293_stop_running(l293_t *self);

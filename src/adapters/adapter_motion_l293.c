@@ -42,41 +42,47 @@ core_port_motion_init(void)
 void
 core_port_motion_apply(core_motion_t *motion)
 {
+    l293_disable(&motor_left);
+    l293_disable(&motor_right);
+
     if (is_stop(motion))
     {
-        l293_stop_running(&motor_left);
-        l293_stop_running(&motor_right);
+        l293_set_stop(&motor_left);
+        l293_set_stop(&motor_right);
     }
     else if (is_forward_stright(motion))
     {
-        l293_turn_right(&motor_left);
-        l293_turn_right(&motor_right);
+        l293_set_right(&motor_left);
+        l293_set_right(&motor_right);
     }
     else if (is_forward_left(motion))
     {
-        l293_stop(&motor_left);
-        l293_turn_right(&motor_right);
+        l293_set_stop(&motor_left);
+        l293_set_right(&motor_right);
     }
     else if (is_forward_right(motion))
     {
-        l293_turn_right(&motor_left);
-        l293_stop(&motor_right);
+        l293_set_right(&motor_left);
+        l293_set_stop(&motor_right);
     }
     else if (is_backward_stright(motion))
     {
-        l293_turn_left(&motor_left);
-        l293_turn_left(&motor_right);
+        l293_set_left(&motor_left);
+        l293_set_left(&motor_right);
     }
     else if (is_backward_left(motion))
     {
-        l293_stop(&motor_left);
-        l293_turn_left(&motor_right);
+        l293_set_stop(&motor_left);
+        l293_set_left(&motor_right);
     }
     else if (is_backward_right(motion))
     {
-        l293_turn_left(&motor_left);
-        l293_stop(&motor_right);
+        l293_set_left(&motor_left);
+        l293_set_stop(&motor_right);
     }
+
+    l293_enable(&motor_left);
+    l293_enable(&motor_right);
 }
 
 static inline bool
