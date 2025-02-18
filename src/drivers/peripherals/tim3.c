@@ -101,8 +101,8 @@ tim3_ch3_pwm_init(void)
     // set AF6 for PB0
     GPIOB->AFR[0] |= (2 << GPIO_AFRL_AFRL0_Pos);
 
-    // default duty cycle to 80%
-    TIM3->CCR3 = 80;
+    // default duty cycle to 90%
+    TIM3->CCR3 = 90;
 
     // set PWM mode
     TIM3->CCMR2 |= TIM_CCMR2_OC3M_1 | TIM_CCMR2_OC3M_2;
@@ -125,8 +125,8 @@ tim3_ch4_pwm_init(void)
     // set AF6 for PB1
     GPIOB->AFR[0] |= (2 << GPIO_AFRL_AFRL1_Pos);
 
-    // default duty cycle to 80%
-    TIM3->CCR4 = 80;
+    // default duty cycle to 90%
+    TIM3->CCR4 = 90;
 
     // set PWM mode
     TIM3->CCMR2 |= TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2;
