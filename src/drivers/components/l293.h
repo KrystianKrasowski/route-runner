@@ -12,9 +12,9 @@ typedef enum
 
 typedef struct l293
 {
-    gpio_t         a1;
-    gpio_t         a2;
-    tim3_channel_t pwm_channel;
+    gpio_t     a1;
+    gpio_t     a2;
+    tim3_pwm_t pwm_channel;
 } l293_t;
 
 l293_t

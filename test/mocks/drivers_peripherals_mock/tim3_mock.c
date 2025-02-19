@@ -9,6 +9,8 @@ struct tim3_mock
     bool tim3_enabled;
     bool tim3_ch3_running;
     bool tim3_ch4_running;
+    int  tim3_ch3_duty_cycle;
+    int  tim3_ch4_duty_cycle;
 };
 
 static struct tim3_mock mock;
@@ -26,44 +28,58 @@ tim3_enable(void)
 }
 
 void
-tim3_channel_pwm_init(tim3_channel_t channel)
+tim3_pwm_init(tim3_pwm_t *self)
 {
-    if (channel == TIM3_CHANNEL_3)
+    if (self->channel == TIM3_CHANNEL_3)
     {
         mock.tim3_ch3_pwm_init_calls++;
     }
 
-    if (channel == TIM3_CHANNEL_4)
+    if (self->channel == TIM3_CHANNEL_4)
     {
         mock.tim3_ch4_pwm_init_calls++;
     }
 }
 
 void
-tim3_channel_pwm_run(tim3_channel_t channel)
+tim3_pwm_run(tim3_pwm_t *self)
 {
-    if (channel == TIM3_CHANNEL_3)
+    if (self->channel == TIM3_CHANNEL_3)
     {
         mock.tim3_ch3_running = true;
     }
 
-    if (channel == TIM3_CHANNEL_4)
+    if (self->channel == TIM3_CHANNEL_4)
     {
         mock.tim3_ch4_running = true;
     }
 }
 
 void
-tim3_channel_pwm_stop(tim3_channel_t channel)
+tim3_pwm_stop(tim3_pwm_t *self)
 {
-    if (channel == TIM3_CHANNEL_3)
+    if (self->channel == TIM3_CHANNEL_3)
     {
         mock.tim3_ch3_running = false;
     }
 
-    if (channel == TIM3_CHANNEL_4)
+    if (self->channel == TIM3_CHANNEL_4)
     {
         mock.tim3_ch4_running = false;
+    }
+}
+
+void
+tim3_pwm_set_duty_cycle(tim3_pwm_t *self, uint8_t duty_cycle)
+{
+    if (self->channel == TIM3_CHANNEL_3)
+    {
+        mock.tim3_ch3_duty_cycle = duty_cycle;
+    }
+
+    if (self->channel == TIM3_CHANNEL_4)
+    {
+        mock.tim3_ch4_duty_cycle = duty_cycle;
     }
 }
 
@@ -101,6 +117,18 @@ bool
 tim3_mock_verify_channel4_running(void)
 {
     return mock.tim3_ch4_running;
+}
+
+int
+tim3_mock_verify_channel3_duty_cycle(void)
+{
+    return mock.tim3_ch3_duty_cycle;
+}
+
+int
+tim3_mock_verify_channel4_duty_cycle(void)
+{
+    return mock.tim3_ch4_duty_cycle;
 }
 
 void
