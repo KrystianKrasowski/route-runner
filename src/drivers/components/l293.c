@@ -6,7 +6,7 @@ l293_create_channel_left(void)
 {
     gpio_t     a1 = {GPIO_MOTOR_LEFT_A1, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
     gpio_t     a2 = {GPIO_MOTOR_LEFT_A2, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
-    tim3_pwm_t pwm_channel = {TIM3_CHANNEL_4, 90};
+    tim3_pwm_t pwm_channel = {TIM3_CHANNEL_3, 90};
 
     l293_t l293 = {a1, a2, pwm_channel};
 
@@ -18,7 +18,7 @@ l293_create_channel_right(void)
 {
     gpio_t     a1 = {GPIO_MOTOR_RIGHT_A1, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
     gpio_t     a2 = {GPIO_MOTOR_RIGHT_A2, GPIO_MODE_OUTPUT, GPIO_STATE_LOW};
-    tim3_pwm_t pwm_channel = {TIM3_CHANNEL_3, 90};
+    tim3_pwm_t pwm_channel = {TIM3_CHANNEL_4, 90};
 
     l293_t l293 = {a1, a2, pwm_channel};
 

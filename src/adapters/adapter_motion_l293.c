@@ -1,31 +1,25 @@
 #include <core.h>
 #include <l293.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
+#include <tim3.h>
+
+#define MIN_DUTY_CYCLE 50
+#define MAX_DUTY_CYCLE 96
+#define MAX_ANGLE      90
 
 static l293_t motor_left;
 static l293_t motor_right;
 
-static inline bool
-is_forward_stright(core_motion_t *motion);
+static inline void
+apply_duty_cycle(core_motion_t *motion);
 
-static inline bool
-is_forward_left(core_motion_t *motion);
+static inline void
+apply_direction(core_motion_t *motion);
 
-static inline bool
-is_forward_right(core_motion_t *motion);
-
-static inline bool
-is_backward_stright(core_motion_t *motion);
-
-static inline bool
-is_backward_left(core_motion_t *motion);
-
-static inline bool
-is_backward_right(core_motion_t *motion);
-
-static inline bool
-is_stop(core_motion_t *motion);
+static uint8_t
+compute_duty_cycle(uint8_t angle);
 
 void
 core_port_motion_init(void)
@@ -45,84 +39,60 @@ core_port_motion_apply(core_motion_t *motion)
     l293_disable(&motor_left);
     l293_disable(&motor_right);
 
-    if (is_stop(motion))
-    {
-        l293_set_stop(&motor_left);
-        l293_set_stop(&motor_right);
-    }
-    else if (is_forward_stright(motion))
-    {
-        l293_set_right(&motor_left);
-        l293_set_right(&motor_right);
-    }
-    else if (is_forward_left(motion))
-    {
-        l293_set_stop(&motor_left);
-        l293_set_right(&motor_right);
-    }
-    else if (is_forward_right(motion))
-    {
-        l293_set_right(&motor_left);
-        l293_set_stop(&motor_right);
-    }
-    else if (is_backward_stright(motion))
-    {
-        l293_set_left(&motor_left);
-        l293_set_left(&motor_right);
-    }
-    else if (is_backward_left(motion))
-    {
-        l293_set_stop(&motor_left);
-        l293_set_left(&motor_right);
-    }
-    else if (is_backward_right(motion))
-    {
-        l293_set_left(&motor_left);
-        l293_set_stop(&motor_right);
-    }
+    apply_duty_cycle(motion);
+    apply_direction(motion);
 
     l293_enable(&motor_left);
     l293_enable(&motor_right);
 }
 
-static inline bool
-is_forward_stright(core_motion_t *motion)
+static inline void
+apply_duty_cycle(core_motion_t *motion)
 {
-    return motion->direction == CORE_MOTION_FORWARD && motion->angle == 0;
+    uint8_t duty_cycle = compute_duty_cycle(abs(motion->angle));
+
+    if (motion->angle < 0)
+    {
+        tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, duty_cycle);
+    }
+    else if (motion->angle > 0)
+    {
+        tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, duty_cycle);
+    }
+    else
+    {
+        tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, MAX_DUTY_CYCLE);
+        tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, MAX_DUTY_CYCLE);
+    }
 }
 
-static inline bool
-is_forward_left(core_motion_t *motion)
+static inline void
+apply_direction(core_motion_t *motion)
 {
-    return motion->direction == CORE_MOTION_FORWARD && motion->angle == -90;
+    if (motion->direction == CORE_MOTION_FORWARD)
+    {
+        l293_set_right(&motor_left);
+        l293_set_right(&motor_right);
+    }
+    else if (motion->direction == CORE_MOTION_BACKWARD)
+    {
+        l293_set_left(&motor_left);
+        l293_set_left(&motor_right);
+    }
+    else
+    {
+        l293_set_stop(&motor_left);
+        l293_set_stop(&motor_right);
+    }
 }
 
-static inline bool
-is_forward_right(core_motion_t *motion)
+static uint8_t
+compute_duty_cycle(uint8_t angle)
 {
-    return motion->direction == CORE_MOTION_FORWARD && motion->angle == 90;
-}
+    uint8_t duty_cycle;
+    uint8_t duty_cycle_range = MAX_DUTY_CYCLE - MIN_DUTY_CYCLE;
 
-static inline bool
-is_backward_stright(core_motion_t *motion)
-{
-    return motion->direction == CORE_MOTION_BACKWARD && motion->angle == 0;
-}
+    duty_cycle = MAX_DUTY_CYCLE - ((duty_cycle_range * angle) / MAX_ANGLE);
 
-static inline bool
-is_backward_left(core_motion_t *motion)
-{
-    return motion->direction == CORE_MOTION_BACKWARD && motion->angle == -90;
-}
-
-static inline bool
-is_backward_right(core_motion_t *motion)
-{
-    return motion->direction == CORE_MOTION_BACKWARD && motion->angle == 90;
-}
-
-static inline bool
-is_stop(core_motion_t *motion)
-{
-    return motion->direction == CORE_MOTION_NONE;
+    return duty_cycle;
 }
