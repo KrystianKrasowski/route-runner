@@ -1,5 +1,6 @@
 set(TEST_SUITE
     adapter_remote_control_dualshock2_test.c
+    adapter_motion_l293_test.c
 )
 
 foreach(FILE ${TEST_SUITE})

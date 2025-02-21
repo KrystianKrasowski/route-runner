@@ -30,13 +30,11 @@ tim3_init(void)
     // enable clock access to TIM3
     RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 
-    // set prescaler value for ~60Hz PWM frequency
-    TIM3->PSC = 665;
+    // set prescaler value for 10kHz TIMER frequency
+    TIM3->PSC = 8 - 1;
     TIM3->ARR = 100 - 1;
 
-    // set center aligned mode
-    // TODO: review this setting, probably mode 3 is better, but needs different
-    // timer frequency setting
+    // set center aligned mode resulting 5kHz PWM frequency
     TIM3->CR1 |= TIM_CR1_CMS_0;
 
     // Force update event to load ARR, PSC, and PWM settings
@@ -105,48 +103,6 @@ tim3_pwm_set_duty_cycle(tim3_pwm_t *self, uint8_t duty_cycle)
     }
 }
 
-// void
-// tim3_channel_pwm_init(tim3_pwm_channel_t channel)
-// {
-//     if (channel == TIM3_CHANNEL_3)
-//     {
-//         tim3_ch3_pwm_init();
-//     }
-
-//     if (channel == TIM3_CHANNEL_4)
-//     {
-//         tim3_ch4_pwm_init();
-//     }
-// }
-
-// void
-// tim3_channel_pwm_run(tim3_pwm_channel_t channel)
-// {
-//     if (channel == TIM3_CHANNEL_3)
-//     {
-//         tim3_ch3_pwm_run();
-//     }
-
-//     if (channel == TIM3_CHANNEL_4)
-//     {
-//         tim3_ch4_pwm_run();
-//     }
-// }
-
-// void
-// tim3_channel_pwm_stop(tim3_pwm_channel_t channel)
-// {
-//     if (channel == TIM3_CHANNEL_3)
-//     {
-//         tim3_ch3_pwm_stop();
-//     }
-
-//     if (channel == TIM3_CHANNEL_4)
-//     {
-//         tim3_ch4_pwm_stop();
-//     }
-// }
-
 static inline void
 tim3_ch3_pwm_init(tim3_pwm_t *self)
 {
@@ -167,7 +123,6 @@ tim3_ch3_pwm_init(tim3_pwm_t *self)
     TIM3->CCMR2 |= TIM_CCMR2_OC3M_1 | TIM_CCMR2_OC3M_2;
 
     // set preload enable
-    // TODO: review this setting why it is neccessary
     TIM3->CCMR2 |= TIM_CCMR2_OC3PE;
 }
 
@@ -191,7 +146,6 @@ tim3_ch4_pwm_init(tim3_pwm_t *self)
     TIM3->CCMR2 |= TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2;
 
     // set preload enable
-    // TODO: review this setting why it is neccessary
     TIM3->CCMR2 |= TIM_CCMR2_OC4PE;
 }
 

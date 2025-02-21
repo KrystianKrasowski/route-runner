@@ -1,11 +1,12 @@
 #include <core.h>
 #include <l293.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <tim3.h>
 
-#define MIN_DUTY_CYCLE 50
+#define MIN_DUTY_CYCLE 20
 #define MAX_DUTY_CYCLE 96
 #define MAX_ANGLE      90
 
@@ -54,9 +55,11 @@ apply_duty_cycle(core_motion_t *motion)
     if (motion->angle < 0)
     {
         tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, duty_cycle);
+        tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, MAX_DUTY_CYCLE);
     }
     else if (motion->angle > 0)
     {
+        tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, MAX_DUTY_CYCLE);
         tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, duty_cycle);
     }
     else

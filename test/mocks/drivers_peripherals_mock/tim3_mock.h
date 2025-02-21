@@ -22,6 +22,12 @@ tim3_mock_verify_channel3_running(void);
 bool
 tim3_mock_verify_channel4_running(void);
 
+uint8_t
+tim3_mock_verify_channel3_duty_cycle(void);
+
+uint8_t
+tim3_mock_verify_channel4_duty_cycle(void);
+
 void
 tim3_mock_reset(void);
 
