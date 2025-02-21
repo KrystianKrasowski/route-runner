@@ -53,10 +53,10 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
 
 ### Pin usage summary
 * Motion:
-    * **PB1** (D6) - PWM (tim3, ch4) for left motor
+    * **PB0** (D3) - PWM (tim3, ch3) for left motor
     * PB6 (D5) - A2 for right motor
     * PB7 (D4) - A1 for right motor
-    * **PB0** (D3) - PWM (tim3, ch3) for right motor
+    * **PB1** (D6) - PWM (tim3, ch4) for right motor
     * PA10 (D0) - A1 for left motor
     * PA12 (D2) - A2 for left motor
 * Remote control:
