@@ -82,7 +82,7 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
 
 Pins in **bold** are unchangeable. *Italic* pin change may implicate other changes.
 
-### Electrical wiring diagram (deprecated)
+### Electrical wiring diagram
 ![schematic](./doc/img/schematic.png)
 
 ## Development
