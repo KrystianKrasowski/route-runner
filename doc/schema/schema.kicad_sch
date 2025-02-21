@@ -3293,6 +3293,12 @@
 		(color 0 0 0 0)
 		(uuid "e5170398-f8a6-4d58-b23b-4fb61440e8fd")
 	)
+	(junction
+		(at 50.8 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e7f120f5-63b2-4840-8084-eb6e7223ee78")
+	)
 	(no_connect
 		(at 77.47 152.4)
 		(uuid "08c39459-c7d4-49d9-bd42-ef1306ba06bf")
@@ -3447,6 +3453,16 @@
 	)
 	(wire
 		(pts
+			(xy 50.8 60.96) (xy 50.8 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "17d063f4-8328-483a-a268-86bad8e66dc5")
+	)
+	(wire
+		(pts
 			(xy 205.74 48.26) (xy 217.17 48.26)
 		)
 		(stroke
@@ -3467,7 +3483,7 @@
 	)
 	(wire
 		(pts
-			(xy 50.8 57.15) (xy 50.8 62.23)
+			(xy 50.8 57.15) (xy 50.8 60.96)
 		)
 		(stroke
 			(width 0)
@@ -3654,6 +3670,16 @@
 			(type default)
 		)
 		(uuid "5a048594-2ed5-46e1-adf0-2c001c001a82")
+	)
+	(wire
+		(pts
+			(xy 50.8 60.96) (xy 57.15 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "61d37576-e73f-4179-b976-3f2238ddd8f2")
 	)
 	(wire
 		(pts
@@ -6944,6 +6970,73 @@
 			(project "schema"
 				(path "/fdd85666-e408-451c-91f4-9eba5bc098ae"
 					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 57.15 60.96 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bf12b564-b7f4-47e7-a564-162681ade045")
+		(property "Reference" "#FLG02"
+			(at 59.055 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 60.96 60.9599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 57.15 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 57.15 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 57.15 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b88efbfb-af2e-41b7-b3f4-f31c2bc83d16")
+		)
+		(instances
+			(project "schema"
+				(path "/fdd85666-e408-451c-91f4-9eba5bc098ae"
+					(reference "#FLG02")
 					(unit 1)
 				)
 			)
