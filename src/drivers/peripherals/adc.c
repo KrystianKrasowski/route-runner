@@ -3,7 +3,7 @@
 #include <stm32f3xx.h>
 #include <string.h>
 
-#define SEQ_SIZE 2
+#define SEQ_SIZE 4
 
 typedef struct adc_periph
 {
@@ -39,6 +39,9 @@ adc_init()
     ADC12_COMMON->CCR &= ~ADC_CCR_CKMODE;  // Clear clock mode bits
     ADC12_COMMON->CCR |= ADC_CCR_CKMODE_0; // Set ADC clock to HCLK/1
 
+    // Set regular simultenaous only dual mode
+    ADC12_COMMON->CCR |= (6 << ADC12_CCR_MULTI_Pos);
+
     advreg_enable();
     init_adc_sequence();
 
@@ -46,6 +49,7 @@ adc_init()
     ADC1->CFGR |= ADC_CFGR_CONT | ADC_CFGR_AUTDLY;
 
     ADC1->IER |= ADC_IER_EOCIE | ADC_IER_EOSIE;
+    ADC2->IER |= ADC_IER_EOCIE | ADC_IER_EOSIE;
 
     // enable IRQ
     NVIC_EnableIRQ(ADC1_2_IRQn);
@@ -54,10 +58,10 @@ adc_init()
 void
 adc_on(void)
 {
-    ADC1->CR |= ADC_CR_ADEN;
-    while (!(ADC1->ISR & ADC_ISR_ADRDY))
-        ;
-    ADC1->ISR |= ADC_ISR_ADRDY;
+    ADC1->CR |= ADC_CR_ADEN; // Enable ADC1
+    ADC2->CR |= ADC_CR_ADEN; // Enable ADC2
+    while (!(ADC1->ISR & ADC_ISR_ADRDY)); // Wait until ADC1 is ready
+    while (!(ADC2->ISR & ADC_ISR_ADRDY)); // Wait until ADC2 is ready
 }
 
 void
@@ -82,24 +86,21 @@ adc_stop(void)
 void
 ADC1_2_IRQHandler(void)
 {
-    if (ADC1->ISR & ADC_ISR_EOC)
+    if (ADC2->ISR & ADC_ISR_EOC)
     {
-        uint16_t value = ADC1->DR;
-        adc_peripheral.value[adc_peripheral.index++] = value;
-
-        // if (adc_peripheral.index >= SEQ_SIZE)
-        // {
-        //     adc_peripheral.index = 0;
-        //     adc_sequence_complete_isr(adc_peripheral.value, SEQ_SIZE);
-        // }
+        uint32_t value = ADC12_COMMON->CDR;
+        adc_peripheral.value[adc_peripheral.index] = (uint16_t)(value & 0xffff);
+        adc_peripheral.value[adc_peripheral.index + 2] = (uint16_t)((value >> 16) & 0xffff);
+        adc_peripheral.index++;
     }
 
-    if (ADC1->ISR & ADC_ISR_EOS)
+    if (ADC2->ISR & ADC_ISR_EOS)
     {
-        uint16_t value = ADC1->DR;
-        adc_peripheral.value[adc_peripheral.index] = value;
+        uint32_t value = ADC12_COMMON->CDR;
+        adc_peripheral.value[adc_peripheral.index] = (uint16_t)(value & 0xffff);
+        adc_peripheral.value[adc_peripheral.index + 2] = (uint16_t)((value >> 16) & 0xffff);
         adc_peripheral.index = 0;
-        adc_sequence_complete_isr(adc_peripheral.value, SEQ_SIZE);
+        adc_sequence_complete_isr(adc_peripheral.value, 4);
     }
 }
 
@@ -119,6 +120,12 @@ init_gpio(void)
 
     // set PA3 in analog mode
     GPIOA->MODER |= GPIO_MODER_MODER3_1 | GPIO_MODER_MODER3_0;
+
+    // set PA4 in analog mode
+    GPIOA->MODER |= GPIO_MODER_MODER4_1 | GPIO_MODER_MODER4_0;
+
+    // set PA5 in analog mode
+    GPIOA->MODER |= GPIO_MODER_MODER5_1 | GPIO_MODER_MODER5_0;
 }
 
 static inline void
@@ -149,4 +156,7 @@ init_adc_sequence(void)
 {
     ADC1->SQR1 |= (1 << ADC_SQR1_L_Pos);
     ADC1->SQR1 |= (2 << ADC_SQR1_SQ1_Pos) | (4 << ADC_SQR1_SQ2_Pos);
+
+    ADC2->SQR1 |= (1 << ADC_SQR1_L_Pos);
+    ADC2->SQR1 |= (1 << ADC_SQR1_SQ1_Pos) | (2 << ADC_SQR1_SQ2_Pos);
 }

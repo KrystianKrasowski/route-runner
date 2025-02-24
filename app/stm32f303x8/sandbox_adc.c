@@ -19,5 +19,5 @@ main(void)
 __attribute__((weak)) void
 adc_sequence_complete_isr(uint16_t volatile value[], uint8_t size)
 {
-    printf("Value 1: %d; Value 2: %d\n", value[0], value[1]);
+    printf("V1: %d; V2: %d; V3: %d; V4: %d\n", value[0], value[1], value[2], value[3]);
 }
