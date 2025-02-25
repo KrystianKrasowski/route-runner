@@ -1,8 +1,7 @@
 #include "usart2.h"
+#include "sysclock.h"
 #include <stm32f3xx.h>
 
-#define SYS_FREQ        8000000
-#define APB1_CLK        SYS_FREQ
 #define USART_BAUD_RATE 115200
 
 static uint16_t
@@ -45,10 +44,12 @@ void
 usart2_tx_write(int chr)
 {
     // make sure the transmit data register is empty
-	while(!(USART2->ISR & USART_ISR_TXE)) {}
+    while (!(USART2->ISR & USART_ISR_TXE))
+    {
+    }
 
-	// write to transmit data register
-	USART2->TDR = (chr & 0xff);
+    // write to transmit data register
+    USART2->TDR = (chr & 0xff);
 }
 
 static uint16_t

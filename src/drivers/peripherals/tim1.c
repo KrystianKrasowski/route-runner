@@ -1,4 +1,5 @@
 #include "tim1.h"
+#include "sysclock.h"
 #include <stm32f3xx.h>
 
 static volatile uint8_t count = 0;
@@ -27,7 +28,7 @@ tim1_ch1_init(void)
     RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
 
     // set compare match
-    TIM1->PSC = 8000 - 1; // 8 000 000 / 8 000 = 1 000
+    TIM1->PSC = sysclock_get_prescaller_base(1000) - 1;
     TIM1->ARR = 125 - 1;
 
     // set toggle on compare

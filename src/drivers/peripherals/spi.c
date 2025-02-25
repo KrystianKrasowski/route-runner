@@ -1,5 +1,6 @@
 #include "spi.h"
 #include "spi_transfer.h"
+#include "sysclock.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stm32f3xx.h>
@@ -40,8 +41,8 @@ spi_init_master(void)
     // set PB5 alternate function to SPI MOSI (AF5)
     GPIOB->AFR[0] |= (5 << GPIO_AFRL_AFRL5_Pos);
 
-    // set SPI bus speed to 62.5kHz (8MHz / 128psc)
-    SPI1->CR1 |= (6 << SPI_CR1_BR_Pos);
+    // set SPI bus speed to 62.5kHz (16MHz / 256psc)
+    SPI1->CR1 |= (7 << SPI_CR1_BR_Pos);
 
     // set mode 3
     SPI1->CR1 |= SPI_CR1_CPOL | SPI_CR1_CPHA;

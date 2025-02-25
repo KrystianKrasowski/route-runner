@@ -1,8 +1,11 @@
 #include <core.h>
+#include <sysclock.h>
 
 int
 main(void)
 {
+    sysclock_init();
+    
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_port_motion_init();

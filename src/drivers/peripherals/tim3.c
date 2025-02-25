@@ -1,4 +1,5 @@
 #include "tim3.h"
+#include "sysclock.h"
 #include <stm32f3xx.h>
 
 #define PWM_CENTER_ALIGNED_MODE_1 1
@@ -31,7 +32,7 @@ tim3_init(void)
     RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 
     // set prescaler value for 10kHz TIMER frequency
-    TIM3->PSC = 8 - 1;
+    TIM3->PSC = sysclock_get_prescaller_base(1000000) - 1;
     TIM3->ARR = 100 - 1;
 
     // set center aligned mode resulting 5kHz PWM frequency
