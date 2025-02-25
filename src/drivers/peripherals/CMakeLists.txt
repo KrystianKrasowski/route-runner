@@ -5,6 +5,7 @@ add_library(drivers_peripherals INTERFACE
     tim3.h
     usart2.h
     gpio.h
+    sysclock.h
 )
 
 target_include_directories(drivers_peripherals 
@@ -21,6 +22,7 @@ add_library(drivers_stm32f303x8 STATIC
     tim3.c
     usart2.c
     gpio.c
+    sysclock.c
 )
 
 target_link_libraries(drivers_stm32f303x8

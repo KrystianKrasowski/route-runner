@@ -1,4 +1,5 @@
 #include "tim2.h"
+#include "sysclock.h"
 #include <stm32f3xx.h>
 
 void
@@ -8,9 +9,9 @@ tim2_ch1_init(void)
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 
     // set compare match every 16ms on channel 1
-    TIM2->PSC  = 8 - 1;
-    TIM2->ARR  = 16000 - 1;
-    TIM2->CCR1 = 16000;
+    TIM2->PSC  = sysclock_get_prescaller_base(1000) - 1;
+    TIM2->ARR  = 16 - 1;
+    TIM2->CCR1 = 16;
 
     // enable the timer
     TIM2->CR1 |= TIM_CR1_CEN;
