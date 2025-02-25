@@ -3,12 +3,12 @@
 #include <stm32f3xx.h>
 #include <string.h>
 
-#define SEQ_SIZE 4
+#define SEQ_SIZE 3
 
 typedef struct adc_periph
 {
     uint16_t value[SEQ_SIZE];
-    uint8_t index;
+    uint8_t  index;
 } adc_peripheral_t;
 
 static adc_peripheral_t volatile adc_peripheral;
@@ -25,6 +25,9 @@ advreg_disable();
 static inline void
 init_adc_sequence(void);
 
+static inline void
+init_adc_sample_rates(void);
+
 void
 adc_init()
 {
@@ -33,22 +36,18 @@ adc_init()
     init_gpio();
 
     // enable clock access to ADC
-    RCC->AHBENR = RCC_AHBENR_ADC12EN;
+    RCC->AHBENR |= RCC_AHBENR_ADC12EN;
 
-    // Set ADC Clock Source (Use AHB clock)
-    ADC12_COMMON->CCR &= ~ADC_CCR_CKMODE;  // Clear clock mode bits
-    ADC12_COMMON->CCR |= ADC_CCR_CKMODE_0; // Set ADC clock to HCLK/1
-
-    // Set regular simultenaous only dual mode
-    ADC12_COMMON->CCR |= (6 << ADC12_CCR_MULTI_Pos);
+    // Set ADC Clock Source (Use PLL/2 clock, resulting 8MHz)
+    RCC->CFGR2 |= RCC_CFGR2_ADCPRE12_DIV2;
 
     advreg_enable();
     init_adc_sequence();
+    init_adc_sample_rates();
 
     // enable adc continous conversion mode
-    ADC1->CFGR |= ADC_CFGR_CONT | ADC_CFGR_AUTDLY;
+    ADC2->CFGR |= ADC_CFGR_CONT | ADC_CFGR_AUTDLY;
 
-    ADC1->IER |= ADC_IER_EOCIE | ADC_IER_EOSIE;
     ADC2->IER |= ADC_IER_EOCIE | ADC_IER_EOSIE;
 
     // enable IRQ
@@ -58,29 +57,28 @@ adc_init()
 void
 adc_on(void)
 {
-    ADC1->CR |= ADC_CR_ADEN; // Enable ADC1
-    ADC2->CR |= ADC_CR_ADEN; // Enable ADC2
-    while (!(ADC1->ISR & ADC_ISR_ADRDY)); // Wait until ADC1 is ready
-    while (!(ADC2->ISR & ADC_ISR_ADRDY)); // Wait until ADC2 is ready
+    ADC2->CR |= ADC_CR_ADEN;
+    while (!(ADC2->ISR & ADC_ISR_ADRDY))
+        ;
 }
 
 void
 adc_off(void)
 {
     adc_stop();
-    ADC1->CR |= ADC_CR_ADDIS;
+    ADC2->CR |= ADC_CR_ADDIS;
 }
 
 void
 adc_start(void)
 {
-    ADC1->CR |= ADC_CR_ADSTART;
+    ADC2->CR |= ADC_CR_ADSTART;
 }
 
 void
 adc_stop(void)
 {
-    ADC1->CR |= ADC_CR_ADSTP;
+    ADC2->CR |= ADC_CR_ADSTP;
 }
 
 void
@@ -88,19 +86,15 @@ ADC1_2_IRQHandler(void)
 {
     if (ADC2->ISR & ADC_ISR_EOC)
     {
-        uint32_t value = ADC12_COMMON->CDR;
-        adc_peripheral.value[adc_peripheral.index] = (uint16_t)(value & 0xffff);
-        adc_peripheral.value[adc_peripheral.index + 2] = (uint16_t)((value >> 16) & 0xffff);
-        adc_peripheral.index++;
+        adc_peripheral.value[adc_peripheral.index++] = ADC2->DR;
     }
 
     if (ADC2->ISR & ADC_ISR_EOS)
     {
-        uint32_t value = ADC12_COMMON->CDR;
-        adc_peripheral.value[adc_peripheral.index] = (uint16_t)(value & 0xffff);
-        adc_peripheral.value[adc_peripheral.index + 2] = (uint16_t)((value >> 16) & 0xffff);
-        adc_peripheral.index = 0;
-        adc_sequence_complete_isr(adc_peripheral.value, 4);
+        ADC2->ISR |= ADC_ISR_EOS;
+        adc_peripheral.value[adc_peripheral.index] = ADC2->DR;
+        adc_peripheral.index                       = 0;
+        adc_sequence_complete_isr(adc_peripheral.value, 3);
     }
 }
 
@@ -115,17 +109,14 @@ init_gpio(void)
     // enable clock access to gpioa
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
 
-    // set PA1 in analog mode
-    GPIOA->MODER |= GPIO_MODER_MODER1_1 | GPIO_MODER_MODER1_0;
-
-    // set PA3 in analog mode
-    GPIOA->MODER |= GPIO_MODER_MODER3_1 | GPIO_MODER_MODER3_0;
-
     // set PA4 in analog mode
     GPIOA->MODER |= GPIO_MODER_MODER4_1 | GPIO_MODER_MODER4_0;
 
     // set PA5 in analog mode
     GPIOA->MODER |= GPIO_MODER_MODER5_1 | GPIO_MODER_MODER5_0;
+
+    // set PA6 in analog mode
+    GPIOA->MODER |= GPIO_MODER_MODER6_1 | GPIO_MODER_MODER6_0;
 }
 
 static inline void
@@ -137,26 +128,30 @@ advreg_enable(void)
      * I omitted this and the program still works, but keep in mind
      * to add some timer polling here
      */
-    ADC1->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
-    ADC1->CR |= ADC_CR_ADVREGEN_0;
+    ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
+    ADC2->CR |= ADC_CR_ADVREGEN_0;
 
-    for (int i = 0; i < 8000; i++)
+    for (int i = 0; i < 16000; i++)
         ;
 }
 
 static inline void
 advreg_disable()
 {
-    ADC1->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
-    ADC1->CR |= ADC_CR_ADVREGEN_1;
+    ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
+    ADC2->CR |= ADC_CR_ADVREGEN_1;
 }
 
 static inline void
 init_adc_sequence(void)
 {
-    ADC1->SQR1 |= (1 << ADC_SQR1_L_Pos);
-    ADC1->SQR1 |= (2 << ADC_SQR1_SQ1_Pos) | (4 << ADC_SQR1_SQ2_Pos);
+    ADC2->SQR1 |= (2 << ADC_SQR1_L_Pos);
+    ADC2->SQR1 |= (1 << ADC_SQR1_SQ1_Pos) | (2 << ADC_SQR1_SQ2_Pos) |
+                  (3 << ADC_SQR1_SQ3_Pos);
+}
 
-    ADC2->SQR1 |= (1 << ADC_SQR1_L_Pos);
-    ADC2->SQR1 |= (1 << ADC_SQR1_SQ1_Pos) | (2 << ADC_SQR1_SQ2_Pos);
+static inline void
+init_adc_sample_rates(void)
+{
+    ADC2->SMPR1 |= (2 << ADC_SMPR1_SMP1_Pos) | (2 << ADC_SMPR1_SMP2_Pos) | (2 << ADC_SMPR1_SMP3_Pos);
 }

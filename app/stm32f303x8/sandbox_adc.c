@@ -1,10 +1,18 @@
 #include <adc.h>
+#include <sysclock.h>
 #include <usart2.h>
 #include <stdio.h>
+
+uint16_t volatile v1 = 0;
+uint16_t volatile v2 = 0;
+uint16_t volatile v3 = 0;
+uint8_t volatile changed = 0;
 
 int
 main(void)
 {
+    sysclock_init();
+
     usart2_tx_init();
     printf("Waiting for readings...\n");
     adc_init();
@@ -13,11 +21,16 @@ main(void)
 
     while (1)
     {
+        printf("V1: %d; V2: %d; V3: %d\n", v1, v2, v3);
     }
 }
 
-__attribute__((weak)) void
+void
 adc_sequence_complete_isr(uint16_t volatile value[], uint8_t size)
 {
-    printf("V1: %d; V2: %d; V3: %d; V4: %d\n", value[0], value[1], value[2], value[3]);
+    v1 = value[0];
+    v2 = value[1];
+    v3 = value[2];
+    changed = 1;
+    // printf("V1: %d; V2: %d; V3: %d\n", v1, v2, v3);
 }
