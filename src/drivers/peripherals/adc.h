@@ -19,6 +19,6 @@ void
 adc_stop(void);
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint16_t volatile value[], uint8_t size);
+adc_sequence_complete_isr(uint16_t volatile value[]);
 
 #endif

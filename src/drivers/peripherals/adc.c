@@ -1,23 +1,23 @@
 #include "adc.h"
+#include "systick.h"
+#include "tim6.h"
 #include <stdbool.h>
 #include <stm32f3xx.h>
 #include <string.h>
+#include <stdio.h>
 
-#define SEQ_SIZE 3
+#define ADC_BUFFER_SIZE 30
 
-typedef struct adc_periph
-{
-    uint16_t value[SEQ_SIZE];
-    uint8_t  index;
-} adc_peripheral_t;
-
-static adc_peripheral_t volatile adc_peripheral;
+uint16_t volatile adc_buffer[ADC_BUFFER_SIZE];
 
 static inline void
 init_gpio(void);
 
 static inline void
-advreg_enable(void);
+init_rcc(void);
+
+static inline void
+enable_advreg(void);
 
 static inline void
 advreg_disable();
@@ -26,32 +26,23 @@ static inline void
 init_adc_sequence(void);
 
 static inline void
-init_adc_sample_rates(void);
+init_tim6_trgo_trigger(void);
+
+static inline void
+init_adc_interrupts(void);
+
+static inline void
+init_adc_dma(void);
 
 void
 adc_init()
 {
-    adc_peripheral.index = 0;
-
     init_gpio();
-
-    // enable clock access to ADC
-    RCC->AHBENR |= RCC_AHBENR_ADC12EN;
-
-    // Set ADC Clock Source (Use PLL/2 clock, resulting 8MHz)
-    RCC->CFGR2 |= RCC_CFGR2_ADCPRE12_DIV2;
-
-    advreg_enable();
+    init_rcc();
+    enable_advreg();
     init_adc_sequence();
-    init_adc_sample_rates();
-
-    // enable adc continous conversion mode
-    ADC2->CFGR |= ADC_CFGR_CONT | ADC_CFGR_AUTDLY;
-
-    ADC2->IER |= ADC_IER_EOCIE | ADC_IER_EOSIE;
-
-    // enable IRQ
-    NVIC_EnableIRQ(ADC1_2_IRQn);
+    init_tim6_trgo_trigger();
+    init_adc_dma();
 }
 
 void
@@ -60,11 +51,14 @@ adc_on(void)
     ADC2->CR |= ADC_CR_ADEN;
     while (!(ADC2->ISR & ADC_ISR_ADRDY))
         ;
+
+    tim6_run();
 }
 
 void
 adc_off(void)
 {
+    tim6_stop();
     adc_stop();
     ADC2->CR |= ADC_CR_ADDIS;
 }
@@ -82,24 +76,17 @@ adc_stop(void)
 }
 
 void
-ADC1_2_IRQHandler(void)
+DMA1_Channel2_IRQHandler(void)
 {
-    if (ADC2->ISR & ADC_ISR_EOC)
+    if (DMA1->ISR & DMA_ISR_TCIF2)
     {
-        adc_peripheral.value[adc_peripheral.index++] = ADC2->DR;
-    }
-
-    if (ADC2->ISR & ADC_ISR_EOS)
-    {
-        ADC2->ISR |= ADC_ISR_EOS;
-        adc_peripheral.value[adc_peripheral.index] = ADC2->DR;
-        adc_peripheral.index                       = 0;
-        adc_sequence_complete_isr(adc_peripheral.value, 3);
+        DMA1->IFCR |= DMA_IFCR_CTCIF2;
+        adc_sequence_complete_isr(adc_buffer);
     }
 }
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint16_t volatile value[], uint8_t size)
+adc_sequence_complete_isr(uint16_t volatile value[])
 {
 }
 
@@ -120,19 +107,22 @@ init_gpio(void)
 }
 
 static inline void
-advreg_enable(void)
+init_rcc(void)
 {
-    /*
-     * NOTE: The reference manual says that the software must wait
-     * for the regulator to start. The data sheet stands for 10 uS.
-     * I omitted this and the program still works, but keep in mind
-     * to add some timer polling here
-     */
+    // enable clock access to ADC
+    RCC->AHBENR |= RCC_AHBENR_ADC12EN;
+
+    // Set ADC Clock Source (Use PLL/2 clock, resulting 8MHz)
+    RCC->CFGR2 |= RCC_CFGR2_ADCPRE12_DIV2;
+}
+
+static inline void
+enable_advreg(void)
+{
     ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
     ADC2->CR |= ADC_CR_ADVREGEN_0;
 
-    for (int i = 0; i < 16000; i++)
-        ;
+    systick_delay_us(10);
 }
 
 static inline void
@@ -146,12 +136,63 @@ static inline void
 init_adc_sequence(void)
 {
     ADC2->SQR1 |= (2 << ADC_SQR1_L_Pos);
-    ADC2->SQR1 |= (1 << ADC_SQR1_SQ1_Pos) | (2 << ADC_SQR1_SQ2_Pos) |
-                  (3 << ADC_SQR1_SQ3_Pos);
+    ADC2->SQR1 |= (1 << ADC_SQR1_SQ1_Pos);
+    ADC2->SQR1 |= (2 << ADC_SQR1_SQ2_Pos);
+    ADC2->SQR1 |= (3 << ADC_SQR1_SQ3_Pos);
 }
 
 static inline void
-init_adc_sample_rates(void)
+init_tim6_trgo_trigger(void)
 {
-    ADC2->SMPR1 |= (2 << ADC_SMPR1_SMP1_Pos) | (2 << ADC_SMPR1_SMP2_Pos) | (2 << ADC_SMPR1_SMP3_Pos);
+    tim6_init();
+    ADC2->CFGR |= (13 << ADC_CFGR_EXTSEL_Pos);
+    ADC2->CFGR |= (1 << ADC_CFGR_EXTEN_Pos);
+}
+
+static inline void
+init_adc_interrupts(void)
+{
+    // set interrupt on conversion end
+    ADC2->IER |= ADC_IER_EOCIE | ADC_IER_EOSIE;
+
+    // enable IRQ
+    NVIC_EnableIRQ(ADC1_2_IRQn);
+}
+
+static inline void
+init_adc_dma(void)
+{
+    // enable clock access to DMA controller
+    RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+
+    // Set peripheral address
+    DMA1_Channel2->CPAR = (uint32_t)&ADC2->DR;
+
+    // set memory address
+    DMA1_Channel2->CMAR = (uint32_t)adc_buffer;
+
+    // set dma transfers number
+    DMA1_Channel2->CNDTR = ADC_BUFFER_SIZE;
+
+    // set memory increment mode
+    DMA1_Channel2->CCR |= DMA_CCR_MINC;
+
+    // set circular mode
+    DMA1_Channel2->CCR |= DMA_CCR_CIRC;
+
+    // set peripheral 16-bit size
+    DMA1_Channel2->CCR |= (1 << DMA_CCR_PSIZE_Pos);
+
+    // set memory 16-bit size
+    DMA1_Channel2->CCR |= (1 << DMA_CCR_MSIZE_Pos);
+
+    // Enable transfer complete interrupt
+    DMA1_Channel2->CCR |= DMA_CCR_TCIE;
+    NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+
+    // Enable DMA channel
+    DMA1_Channel2->CCR |= DMA_CCR_EN;
+
+    // Enable DMA in ADC
+    ADC2->CFGR |= ADC_CFGR_DMAEN | ADC_CFGR_DMACFG;
 }
