@@ -6,9 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define ADC_BUFFER_SIZE 30
-
-uint16_t volatile adc_buffer[ADC_BUFFER_SIZE];
+uint16_t adc_buffer[ADC_BUFFER_SIZE];
 
 static inline void
 init_gpio(void);
@@ -86,7 +84,7 @@ DMA1_Channel2_IRQHandler(void)
 }
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint16_t volatile value[])
+adc_sequence_complete_isr(uint16_t value[])
 {
 }
 

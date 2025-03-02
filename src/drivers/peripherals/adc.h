@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define ADC_BUFFER_SIZE 30
+
 void
 adc_init();
 
@@ -19,6 +21,6 @@ void
 adc_stop(void);
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint16_t volatile value[]);
+adc_sequence_complete_isr(uint16_t value[]);
 
 #endif
