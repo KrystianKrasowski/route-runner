@@ -90,6 +90,7 @@ DMA1_Channel2_IRQHandler(void)
 __attribute__((weak)) void
 adc_sequence_complete_isr(uint8_t value[])
 {
+    (void)value;
 }
 
 static inline void
