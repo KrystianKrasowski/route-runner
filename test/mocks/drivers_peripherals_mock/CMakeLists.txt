@@ -7,6 +7,8 @@ add_library(drivers_peripherals_mock STATIC
     spi_mock.c
     gpio_mock.h
     gpio_mock.c
+    adc_mock.h
+    adc_mock.c
 )
 
 target_include_directories(drivers_peripherals_mock PUBLIC "./")

@@ -79,7 +79,7 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
 * TIM3 channel 4 - timer for PWM signal for left motor (PB1)
 * TIM3 channel 3 - timer for PWM signal for right motor (PB0)
 * TIM1 channel 1 - timer for (LED) status indicator (by toggle on compare)
-* TIM6 - timer trigger for ADC conversion, every 1ms
+* TIM6 - timer trigger for ADC conversion by TRGO, every 1ms
 
 Pins in **bold** are unchangeable. *Italic* pin change may implicate other changes.
 
