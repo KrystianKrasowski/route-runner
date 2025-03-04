@@ -12,7 +12,7 @@ qtrhd06a_init(void)
 }
 
 void
-adc_sequence_complete_isr(uint16_t value[])
+adc_sequence_complete_isr(uint8_t value[])
 {
     uint16_t left   = 0;
     uint16_t middle = 0;
@@ -34,7 +34,7 @@ adc_sequence_complete_isr(uint16_t value[])
         }
     }
 
-    uint16_t line_position[3];
+    uint8_t line_position[3];
     line_position[0] = left / 10;
     line_position[1] = middle / 10;
     line_position[2] = right / 10;

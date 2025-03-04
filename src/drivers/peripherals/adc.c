@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-uint16_t adc_buffer[ADC_BUFFER_SIZE];
+uint8_t adc_buffer[ADC_BUFFER_SIZE];
 
 static inline void
 init_gpio(void);
@@ -19,6 +19,9 @@ enable_advreg(void);
 
 static inline void
 advreg_disable();
+
+static inline void
+init_adc_resolution(void);
 
 static inline void
 init_adc_sequence(void);
@@ -38,6 +41,7 @@ adc_init()
     init_gpio();
     init_rcc();
     enable_advreg();
+    init_adc_resolution();
     init_adc_sequence();
     init_tim6_trgo_trigger();
     init_adc_dma();
@@ -84,7 +88,7 @@ DMA1_Channel2_IRQHandler(void)
 }
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint16_t value[])
+adc_sequence_complete_isr(uint8_t value[])
 {
 }
 
@@ -128,6 +132,13 @@ advreg_disable()
 {
     ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
     ADC2->CR |= ADC_CR_ADVREGEN_1;
+}
+
+static inline void
+init_adc_resolution(void)
+{
+    // set 8-bit resolution
+    ADC2->CFGR |= (2 << ADC_CFGR_RES_Pos);
 }
 
 static inline void
@@ -178,11 +189,11 @@ init_adc_dma(void)
     // set circular mode
     DMA1_Channel2->CCR |= DMA_CCR_CIRC;
 
-    // set peripheral 16-bit size
-    DMA1_Channel2->CCR |= (1 << DMA_CCR_PSIZE_Pos);
+    // set peripheral 8-bit size
+    DMA1_Channel2->CCR &= ~DMA_CCR_PSIZE;
 
-    // set memory 16-bit size
-    DMA1_Channel2->CCR |= (1 << DMA_CCR_MSIZE_Pos);
+    // set memory 8-bit size
+    DMA1_Channel2->CCR &= ~DMA_CCR_MSIZE;
 
     // Enable transfer complete interrupt
     DMA1_Channel2->CCR |= DMA_CCR_TCIE;

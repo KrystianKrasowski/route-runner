@@ -21,6 +21,6 @@ void
 adc_stop(void);
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint16_t value[]);
+adc_sequence_complete_isr(uint8_t value[]);
 
 #endif

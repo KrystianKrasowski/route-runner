@@ -5,8 +5,7 @@ add_executable(${MAIN_EXECUTABLE}
     syscalls.c
     sysmem.c
     system_stm32f3xx.c
-    # main.c
-    sandbox_adc.c
+    main.c
 )
 
 target_link_libraries(${MAIN_EXECUTABLE} 

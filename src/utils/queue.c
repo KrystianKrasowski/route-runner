@@ -89,7 +89,7 @@ queue_message_create_command(uint16_t command)
 }
 
 queue_message_t
-queue_message_create_line_position(uint16_t position[])
+queue_message_create_line_position(uint8_t position[])
 {
     queue_message_t message;
     message.type = QUEUE_MSG_TYPE_LINE_POSITION;

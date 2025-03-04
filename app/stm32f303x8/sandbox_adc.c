@@ -21,7 +21,7 @@ main(void)
     {
         if (queue_pull(QUEUE_TOPIC_LINE_POSITION, &message) == QUEUE_SUCCESS)
         {
-            uint16_t *pos = message.payload.line_position;
+            uint8_t *pos = message.payload.line_position;
             printf("V1: %d; V2: %d; V3: %d\n", pos[0], pos[1], pos[2]);
         }
     }
