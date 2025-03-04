@@ -2,7 +2,7 @@
 #define _QUEUE_H
 
 #ifndef QUEUE_SIZE
-#define QUEUE_SIZE 10
+#define QUEUE_SIZE 5
 #endif
 
 #include <stdbool.h>
@@ -11,11 +11,13 @@
 typedef enum
 {
     QUEUE_MSG_TYPE_COMMAND,
+    QUEUE_MSG_TYPE_LINE_POSITION,
 } queue_message_type_t;
 
 typedef union queue_message_payload
 {
     uint16_t command;
+    uint8_t line_position[3];
 } queue_message_payload_t;
 
 typedef struct queue_message
@@ -27,6 +29,7 @@ typedef struct queue_message
 typedef enum
 {
     QUEUE_TOPIC_REMOTE_CONTROL,
+    QUEUE_TOPIC_LINE_POSITION,
 } queue_topic_t;
 
 typedef struct
@@ -60,5 +63,8 @@ queue_get_tail(queue_topic_t const topic);
 
 queue_message_t
 queue_message_create_command(uint16_t command);
+
+queue_message_t
+queue_message_create_line_position(uint8_t position[]);
 
 #endif

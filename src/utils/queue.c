@@ -1,10 +1,17 @@
 #include "queue.h"
 #include <stdio.h>
+#include <string.h>
 
-#define QUEUE_TOPICS_SIZE sizeof(queue_topic_t)
+#define QUEUE_TOPICS_SIZE 2
 
 static volatile queue_t queues[QUEUE_TOPICS_SIZE] = {
-    [QUEUE_TOPIC_REMOTE_CONTROL] = {
+    [QUEUE_TOPIC_REMOTE_CONTROL] =
+        {
+            .messages = {{0}},
+            .head     = 0,
+            .tail     = 0,
+        },
+    [QUEUE_TOPIC_LINE_POSITION] = {
         .messages = {{0}},
         .head     = 0,
         .tail     = 0,
@@ -77,6 +84,16 @@ queue_message_create_command(uint16_t command)
 {
     queue_message_t message = {.type    = QUEUE_MSG_TYPE_COMMAND,
                                .payload = {.command = command}};
+
+    return message;
+}
+
+queue_message_t
+queue_message_create_line_position(uint8_t position[])
+{
+    queue_message_t message;
+    message.type = QUEUE_MSG_TYPE_LINE_POSITION;
+    memcpy(message.payload.line_position, position, sizeof(message.payload.line_position));
 
     return message;
 }
