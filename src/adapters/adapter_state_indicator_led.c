@@ -13,6 +13,9 @@ core_port_state_indicator_apply(core_vehicle_state_t state)
 {
     switch (state)
     {
+        case CORE_VEHICLE_STATE_LINE_FOLLOWING:
+            tim1_ch1_set_toggles(8);
+            break;
         case CORE_VEHICLE_STATE_LINE_DETECTED:
             tim1_ch1_set_toggles(4);
             break;

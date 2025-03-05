@@ -89,6 +89,82 @@ should_transit_to_manual_from_line_detected(void)
                       core_vehicle_get_state(&vehicle));
 }
 
+void
+should_transit_to_line_following_from_line_detected(void)
+{
+    // given
+    core_position_t position = {10, 110, 10};
+
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
+    core_vehicle_set_line_position(&vehicle, position);
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
+
+    // when
+    core_task_vehicle_state_update(&vehicle);
+
+    // then
+    TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_LINE_FOLLOWING,
+                      core_vehicle_get_state(&vehicle));
+}
+
+void
+should_transit_to_manual_from_line_following_by_remote_command(void)
+{
+    // given
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_BREAK);
+
+    // when
+    core_task_vehicle_state_update(&vehicle);
+
+    // then
+    TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_MANUAL,
+                      core_vehicle_get_state(&vehicle));
+}
+
+void
+should_transit_to_manual_from_line_following_by_line_end(void)
+{
+    // given
+    core_position_t position = {10, 10, 10};
+
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
+    core_vehicle_set_line_position(&vehicle, position);
+
+    // when
+    core_task_vehicle_state_update(&vehicle);
+
+    // then
+    TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_MANUAL,
+                      core_vehicle_get_state(&vehicle));
+}
+
+void
+should_clear_command_on_line_end(void)
+{
+    // given
+    core_position_t position = {10, 10, 10};
+
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
+    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
+    core_vehicle_set_line_position(&vehicle, position);
+
+    // when
+    core_task_vehicle_state_update(&vehicle);
+
+    // then
+    TEST_ASSERT_EQUAL(CORE_REMOTE_CONTROL_NONE,
+                      core_vehicle_get_command(&vehicle));
+}
+
 int
 main(void)
 {
@@ -97,5 +173,9 @@ main(void)
     RUN_TEST(should_transit_to_line_detected_from_manual);
     RUN_TEST(should_stay_line_detected);
     RUN_TEST(should_transit_to_manual_from_line_detected);
+    RUN_TEST(should_transit_to_line_following_from_line_detected);
+    RUN_TEST(should_transit_to_manual_from_line_following_by_remote_command);
+    RUN_TEST(should_transit_to_manual_from_line_following_by_line_end);
+    RUN_TEST(should_clear_command_on_line_end);
     return UNITY_END();
 }
