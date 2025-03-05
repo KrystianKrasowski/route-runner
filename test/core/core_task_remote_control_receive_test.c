@@ -45,6 +45,13 @@ should_reveice_remote_control(uint16_t command)
     TEST_ASSERT_EQUAL(command, vehicle.command);
 }
 
+void
+should_not_receive_motion_command_on_line_following_state(void)
+{
+    // Not implemented yet
+    TEST_ASSERT_TRUE(0);
+}
+
 int
 main(void)
 {
@@ -55,5 +62,6 @@ main(void)
     RUN_PARAM_TEST(should_reveice_remote_control, CORE_REMOTE_CONTROL_BACKWARD);
     RUN_PARAM_TEST(should_reveice_remote_control, CORE_REMOTE_CONTROL_LEFT);
     RUN_PARAM_TEST(should_reveice_remote_control, CORE_REMOTE_CONTROL_RIGHT);
+    // RUN_TEST(should_not_receive_motion_command_on_line_following_state);
     return UNITY_END();
 }

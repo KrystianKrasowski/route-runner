@@ -23,15 +23,26 @@ core_port_motion_apply(core_motion_t *motion)
 void
 core_port_state_indicator_apply(core_vehicle_state_t state)
 {
-    state_indicator = state;
+    state_indicator            = state;
     is_state_indicator_updated = true;
+}
+
+core_position_t
+core_port_line_position_map(uint8_t *raw_position)
+{
+    core_position_t position;
+    position.left   = raw_position[0];
+    position.middle = raw_position[1];
+    position.right  = raw_position[2];
+
+    return position;
 }
 
 void
 core_port_mock_reset(void)
 {
     memset(&motion_applied, 0, sizeof(motion_applied));
-    is_motion_applied = false;
+    is_motion_applied          = false;
     is_state_indicator_updated = false;
 }
 

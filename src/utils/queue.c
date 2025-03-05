@@ -93,7 +93,10 @@ queue_message_create_line_position(uint8_t position[])
 {
     queue_message_t message;
     message.type = QUEUE_MSG_TYPE_LINE_POSITION;
-    memcpy(message.payload.line_position, position, sizeof(message.payload.line_position));
+    
+    memcpy(message.payload.line_position,
+           position,
+           sizeof(message.payload.line_position));
 
     return message;
 }
