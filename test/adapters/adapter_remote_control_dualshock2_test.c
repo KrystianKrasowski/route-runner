@@ -57,5 +57,8 @@ main(void)
 
     RUN_PARAM_TEST(
         should_map_dualshock2, DS2_CIRCLE, CORE_REMOTE_CONTROL_BREAK);
+
+        RUN_PARAM_TEST(
+            should_map_dualshock2, DS2_CROSS, CORE_REMOTE_CONTROL_FOLLOW);
     return UNITY_END();
 }
