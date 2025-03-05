@@ -6,9 +6,8 @@
 #include <string.h>
 #include <tim3.h>
 
-#define MIN_DUTY_CYCLE 20
-#define MAX_DUTY_CYCLE 96
-#define MAX_ANGLE      90
+#define MIN_DUTY_CYCLE 0
+#define MAX_DUTY_CYCLE 100
 
 static l293_t motor_left;
 static l293_t motor_right;
@@ -20,7 +19,7 @@ static inline void
 apply_direction(core_motion_t *motion);
 
 static uint8_t
-compute_duty_cycle(uint8_t angle);
+compute_duty_cycle(uint8_t correction);
 
 void
 core_port_motion_init(void)
@@ -50,14 +49,14 @@ core_port_motion_apply(core_motion_t *motion)
 static inline void
 apply_duty_cycle(core_motion_t *motion)
 {
-    uint8_t duty_cycle = compute_duty_cycle(abs(motion->angle));
+    uint8_t duty_cycle = compute_duty_cycle(abs(motion->correction));
 
-    if (motion->angle < 0)
+    if (motion->correction < 0)
     {
         tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, duty_cycle);
         tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, MAX_DUTY_CYCLE);
     }
-    else if (motion->angle > 0)
+    else if (motion->correction > 0)
     {
         tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, MAX_DUTY_CYCLE);
         tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, duty_cycle);
@@ -90,12 +89,12 @@ apply_direction(core_motion_t *motion)
 }
 
 static uint8_t
-compute_duty_cycle(uint8_t angle)
+compute_duty_cycle(uint8_t correction)
 {
     uint8_t duty_cycle;
     uint8_t duty_cycle_range = MAX_DUTY_CYCLE - MIN_DUTY_CYCLE;
 
-    duty_cycle = MAX_DUTY_CYCLE - ((duty_cycle_range * angle) / MAX_ANGLE);
+    duty_cycle = MAX_DUTY_CYCLE - ((duty_cycle_range * correction) / MAX_DUTY_CYCLE);
 
     return duty_cycle;
 }

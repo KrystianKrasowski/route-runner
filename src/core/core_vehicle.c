@@ -125,15 +125,15 @@ set_motion_angle(core_vehicle_t *self, core_motion_t *motion)
 {
     if (self->command & CORE_REMOTE_CONTROL_LEFT)
     {
-        motion->angle = -90;
+        motion->correction = -90;
     }
     else if (self->command & CORE_REMOTE_CONTROL_RIGHT)
     {
-        motion->angle = 90;
+        motion->correction = 90;
     }
     else
     {
-        motion->angle = 0;
+        motion->correction = 0;
     }
 }
 
@@ -151,6 +151,6 @@ set_motion_direction(core_vehicle_t *self, core_motion_t *motion)
     else
     {
         motion->direction = CORE_MOTION_NONE;
-        motion->angle = 0;
+        motion->correction = 0;
     }
 }

@@ -15,7 +15,7 @@ typedef enum
 typedef struct
 {
     core_motion_direction_t direction;
-    int8_t                  angle;
+    int8_t                  correction;
 } core_motion_t;
 
 typedef enum

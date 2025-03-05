@@ -52,7 +52,7 @@ should_update_motion_on_different_command(void)
 void
 should_update_motion(uint16_t                command,
                      core_motion_direction_t expected_direction,
-                     int8_t                  expected_angle)
+                     int8_t                  expected_correction)
 {
     // given
     core_vehicle_t vehicle;
@@ -65,7 +65,7 @@ should_update_motion(uint16_t                command,
     // then
     core_motion_t applied_motion = core_port_mock_get_motion_applied();
     TEST_ASSERT_EQUAL(expected_direction, applied_motion.direction);
-    TEST_ASSERT_EQUAL(expected_angle, applied_motion.angle);
+    TEST_ASSERT_EQUAL(expected_correction, applied_motion.correction);
 }
 
 void
@@ -84,7 +84,7 @@ should_update_to_stop(void)
     // then
     core_motion_t applied_motion = core_port_mock_get_motion_applied();
     TEST_ASSERT_EQUAL(CORE_MOTION_NONE, applied_motion.direction);
-    TEST_ASSERT_EQUAL(0, applied_motion.angle);
+    TEST_ASSERT_EQUAL(0, applied_motion.correction);
 }
 
 int
