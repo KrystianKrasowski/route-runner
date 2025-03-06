@@ -1,0 +1,15 @@
+#ifndef _CORE_TYPES_H
+#define _CORE_TYPES_H
+
+typedef enum
+{
+    CORE_REMOTE_CONTROL_NONE     = 0,
+    CORE_REMOTE_CONTROL_FORWARD  = 1,
+    CORE_REMOTE_CONTROL_BACKWARD = 2,
+    CORE_REMOTE_CONTROL_LEFT     = 4,
+    CORE_REMOTE_CONTROL_RIGHT    = 8,
+    CORE_REMOTE_CONTROL_BREAK    = 16,
+    CORE_REMOTE_CONTROL_FOLLOW   = 32,
+} core_remote_control_t;
+
+#endif

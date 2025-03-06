@@ -22,9 +22,13 @@ should_apply_duty_cycle_based_on_motion_angle(int8_t  correction,
     // given
     core_port_motion_init();
 
-    // when
     core_motion_t motion = {CORE_MOTION_BACKWARD, correction};
-    core_port_motion_apply(&motion);
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    vehicle.motion = motion;
+
+    // when
+    core_port_motion_apply(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(expected_left_duty_cycle,

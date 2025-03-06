@@ -1,5 +1,4 @@
 add_library(core STATIC 
-    core.h 
     core_vehicle.c
     core_motion.c
     core_task_remote_control_receive.c
@@ -9,7 +8,7 @@ add_library(core STATIC
     core_task_vehicle_state_update.c
 )
 
-target_include_directories(core PUBLIC "./")
+target_include_directories(core PUBLIC "./inc")
 
 target_link_libraries(core
     PUBLIC

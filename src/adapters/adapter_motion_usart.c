@@ -1,4 +1,4 @@
-#include <core.h>
+#include <core/vehicle.h>
 #include <stdio.h>
 #include <usart2.h>
 
@@ -9,7 +9,9 @@ core_port_motion_init(void)
 }
 
 void
-core_port_motion_apply(core_motion_t *motion)
+core_port_motion_apply(core_vehicle_t *vehicle)
 {
-    printf("Direction: %d, correction: %d\n", motion->direction, motion->correction);
+    printf("Direction: %d, correction: %d\n",
+           core_vehicle_get_motion_direction(vehicle),
+           core_vehicle_get_motion_correction(vehicle));
 }
