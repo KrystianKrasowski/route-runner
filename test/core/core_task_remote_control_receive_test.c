@@ -95,7 +95,6 @@ main(void)
     RUN_PARAM_TEST(should_reveice_remote_control, CORE_REMOTE_CONTROL_BACKWARD);
     RUN_PARAM_TEST(should_reveice_remote_control, CORE_REMOTE_CONTROL_LEFT);
     RUN_PARAM_TEST(should_reveice_remote_control, CORE_REMOTE_CONTROL_RIGHT);
-    RUN_PARAM_TEST(should_reveice_remote_control, CORE_REMOTE_CONTROL_FOLLOW);
 
     RUN_PARAM_TEST(should_not_apply_command_on_line_following_state,
                    CORE_REMOTE_CONTROL_FORWARD);

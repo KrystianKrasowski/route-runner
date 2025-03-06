@@ -14,6 +14,12 @@ set_motion_correction(core_vehicle_t *self, core_motion_t *motion);
 static inline void
 set_motion_direction(core_vehicle_t *self, core_motion_t *motion);
 
+static inline bool
+is_state(core_vehicle_t *self, core_vehicle_state_t state);
+
+static inline bool
+contains_command(uint16_t remote_control, core_remote_control_t command);
+
 void
 core_vehicle_init(core_vehicle_t *self)
 {
@@ -84,25 +90,6 @@ core_vehicle_is_line_detected(core_vehicle_t *self)
     return middle_on_line && (left_on_background || right_on_background);
 }
 
-core_vehicle_result_t
-core_vehicle_update_motion(core_vehicle_t *self)
-{
-    core_motion_t motion;
-    core_motion_init(&motion);
-    set_motion_correction(self, &motion);
-    set_motion_direction(self, &motion);
-
-    if (!core_motion_equals(&self->motion, &motion))
-    {
-        self->motion = motion;
-        return CORE_VEHICLE_MOTION_CHANGED;
-    }
-    else
-    {
-        return CORE_VEHICLE_MOTION_REMAINS;
-    }
-}
-
 core_motion_direction_t
 core_vehicle_get_motion_direction(core_vehicle_t *self)
 {
@@ -125,6 +112,52 @@ bool
 core_vehicle_is_movint_backward(core_vehicle_t *self)
 {
     return core_vehicle_get_motion_direction(self) == CORE_MOTION_BACKWARD;
+}
+
+void
+core_vehicle_apply_remote_control(core_vehicle_t *self, uint16_t command)
+{
+    if (is_state(self, CORE_VEHICLE_STATE_LINE_FOLLOWING) &&
+        contains_command(command, CORE_REMOTE_CONTROL_BREAK))
+    {
+        core_vehicle_set_command(self, CORE_REMOTE_CONTROL_BREAK);
+        return;
+    }
+
+    if (is_state(self, CORE_VEHICLE_STATE_LINE_FOLLOWING) &&
+        !contains_command(command, CORE_REMOTE_CONTROL_BREAK))
+    {
+        core_vehicle_set_command(self, CORE_REMOTE_CONTROL_NONE);
+        return;
+    }
+
+    if (is_state(self, CORE_VEHICLE_STATE_MANUAL) &&
+        contains_command(command, CORE_REMOTE_CONTROL_FOLLOW))
+    {
+        core_vehicle_set_command(self, command - CORE_REMOTE_CONTROL_FOLLOW);
+        return;
+    }
+
+    core_vehicle_set_command(self, command);
+}
+
+core_vehicle_result_t
+core_vehicle_update_motion(core_vehicle_t *self)
+{
+    core_motion_t motion;
+    core_motion_init(&motion);
+    set_motion_correction(self, &motion);
+    set_motion_direction(self, &motion);
+
+    if (!core_motion_equals(&self->motion, &motion))
+    {
+        self->motion = motion;
+        return CORE_VEHICLE_MOTION_CHANGED;
+    }
+    else
+    {
+        return CORE_VEHICLE_MOTION_REMAINS;
+    }
 }
 
 static inline void
@@ -178,4 +211,16 @@ set_motion_direction(core_vehicle_t *self, core_motion_t *motion)
         motion->direction  = CORE_MOTION_NONE;
         motion->correction = 0;
     }
+}
+
+static inline bool
+is_state(core_vehicle_t *self, core_vehicle_state_t state)
+{
+    return core_vehicle_get_state(self) == state;
+}
+
+static inline bool
+contains_command(uint16_t remote_control, core_remote_control_t command)
+{
+    return remote_control & command;
 }
