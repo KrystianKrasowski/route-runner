@@ -1,5 +1,6 @@
 #include "core/types.h"
 #include "core/vehicle.h"
+#include "core_remote_control_apply_chain.h"
 #include <string.h>
 
 static inline void
@@ -10,12 +11,6 @@ set_motion_correction(core_vehicle_t *self, core_motion_t *motion);
 
 static inline void
 set_motion_direction(core_vehicle_t *self, core_motion_t *motion);
-
-static inline bool
-is_state(core_vehicle_t *self, core_vehicle_state_t state);
-
-static inline bool
-contains_command(uint16_t remote_control, core_remote_control_t command);
 
 void
 core_vehicle_init(core_vehicle_t *self)
@@ -105,28 +100,7 @@ core_vehicle_is_movint_backward(core_vehicle_t *self)
 void
 core_vehicle_apply_remote_control(core_vehicle_t *self, uint16_t command)
 {
-    if (is_state(self, CORE_VEHICLE_STATE_LINE_FOLLOWING) &&
-        contains_command(command, CORE_REMOTE_CONTROL_BREAK))
-    {
-        core_vehicle_set_command(self, CORE_REMOTE_CONTROL_BREAK);
-        return;
-    }
-
-    if (is_state(self, CORE_VEHICLE_STATE_LINE_FOLLOWING) &&
-        !contains_command(command, CORE_REMOTE_CONTROL_BREAK))
-    {
-        core_vehicle_set_command(self, CORE_REMOTE_CONTROL_NONE);
-        return;
-    }
-
-    if (is_state(self, CORE_VEHICLE_STATE_MANUAL) &&
-        contains_command(command, CORE_REMOTE_CONTROL_FOLLOW))
-    {
-        core_vehicle_set_command(self, command - CORE_REMOTE_CONTROL_FOLLOW);
-        return;
-    }
-
-    core_vehicle_set_command(self, command);
+    core_remote_control_apply(self, command);
 }
 
 core_vehicle_result_t
@@ -191,16 +165,4 @@ set_motion_direction(core_vehicle_t *self, core_motion_t *motion)
         motion->direction  = CORE_MOTION_NONE;
         motion->correction = 0;
     }
-}
-
-static inline bool
-is_state(core_vehicle_t *self, core_vehicle_state_t state)
-{
-    return core_vehicle_get_state(self) == state;
-}
-
-static inline bool
-contains_command(uint16_t remote_control, core_remote_control_t command)
-{
-    return remote_control & command;
 }
