@@ -165,6 +165,25 @@ should_clear_command_on_line_end(void)
                       core_vehicle_get_command(&vehicle));
 }
 
+void
+should_keep_following_the_line(uint8_t left, uint8_t middle, uint8_t right)
+{
+    // given
+    core_position_t position = {left, middle, right};
+
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
+    core_vehicle_set_line_position(&vehicle, position);
+
+    // when
+    core_vehicle_update_state(&vehicle);
+
+    // then
+    TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_LINE_FOLLOWING,
+                      core_vehicle_get_state(&vehicle));
+}
+
 int
 main(void)
 {
@@ -177,5 +196,10 @@ main(void)
     RUN_TEST(should_transit_to_manual_from_line_following_by_remote_command);
     RUN_TEST(should_transit_to_manual_from_line_following_by_line_end);
     RUN_TEST(should_clear_command_on_line_end);
+    RUN_PARAM_TEST(should_keep_following_the_line, 10, 110, 10);
+    RUN_PARAM_TEST(should_keep_following_the_line, 10, 50, 50);
+    RUN_PARAM_TEST(should_keep_following_the_line, 50, 50, 10);
+    RUN_PARAM_TEST(should_keep_following_the_line, 70, 30, 10);
+    RUN_PARAM_TEST(should_keep_following_the_line, 10, 30, 70);
     return UNITY_END();
 }

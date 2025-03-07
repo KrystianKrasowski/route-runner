@@ -36,12 +36,6 @@ core_vehicle_get_state(core_vehicle_t *self);
 void
 core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state);
 
-void
-core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position);
-
-bool
-core_vehicle_is_line_detected(core_vehicle_t *self);
-
 bool
 core_vehicle_is_state_changed(core_vehicle_t *self);
 
@@ -50,6 +44,24 @@ core_vehicle_set_command(core_vehicle_t *self, uint16_t command);
 
 uint16_t
 core_vehicle_get_command(core_vehicle_t *self);
+
+bool
+core_vehicle_is_commanded(core_vehicle_t *self, uint16_t command);
+
+void
+core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position);
+
+bool
+core_vehicle_is_line_detected(core_vehicle_t *self);
+
+bool
+core_vehicle_is_line_lost(core_vehicle_t *self);
+
+void
+core_vehicle_set_motion(core_vehicle_t *self, core_motion_t motion);
+
+bool
+core_vehicle_motion_differs(core_vehicle_t *self, core_motion_t *motion);
 
 core_motion_direction_t
 core_vehicle_get_motion_direction(core_vehicle_t *self);

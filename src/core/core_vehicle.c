@@ -1,8 +1,8 @@
 #include "core/types.h"
 #include "core/vehicle.h"
 #include "core_vehicle_command_apply.h"
-#include "core_vehicle_state_apply.h"
 #include "core_vehicle_motion_apply.h"
+#include "core_vehicle_state_apply.h"
 #include <string.h>
 
 static inline void
@@ -56,6 +56,12 @@ core_vehicle_get_command(core_vehicle_t *self)
     return self->command;
 }
 
+bool
+core_vehicle_is_commanded(core_vehicle_t *self, uint16_t command)
+{
+    return self->command & command;
+}
+
 void
 core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position)
 {
@@ -67,6 +73,24 @@ core_vehicle_is_line_detected(core_vehicle_t *self)
 {
     return core_position_get_status(&self->position) ==
            CORE_POSITION_STRIGHT_ON_LINE;
+}
+
+bool
+core_vehicle_is_line_lost(core_vehicle_t *self)
+{
+    return core_position_get_status(&self->position) == CORE_POSITION_NO_LINE;
+}
+
+void
+core_vehicle_set_motion(core_vehicle_t *self, core_motion_t motion)
+{
+    self->motion = motion;
+}
+
+bool
+core_vehicle_motion_differs(core_vehicle_t *self, core_motion_t *motion)
+{
+    return !core_motion_equals(&self->motion, motion);
 }
 
 core_motion_direction_t

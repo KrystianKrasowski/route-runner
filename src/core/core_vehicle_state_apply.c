@@ -69,7 +69,7 @@ transit_from_line_following(core_vehicle_t *vehicle)
     {
         core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_MANUAL);
     }
-    else if (!core_vehicle_is_line_detected(vehicle))
+    else if (core_vehicle_is_line_lost(vehicle))
     {
         core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_MANUAL);
         core_vehicle_set_command(vehicle, CORE_REMOTE_CONTROL_NONE);
