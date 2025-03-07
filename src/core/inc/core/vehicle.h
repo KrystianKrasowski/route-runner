@@ -3,8 +3,8 @@
 
 #include "motion.h"
 #include "position.h"
-#include <stdint.h>
 #include <stack.h>
+#include <stdint.h>
 
 typedef enum
 {
@@ -25,6 +25,7 @@ typedef struct core_vehicle
     core_motion_t   motion;
     stack_t         state;
     core_position_t position;
+    stack_t         position_error;
 } core_vehicle_t;
 
 void
@@ -57,6 +58,9 @@ core_vehicle_is_line_detected(core_vehicle_t *self);
 bool
 core_vehicle_is_line_lost(core_vehicle_t *self);
 
+int8_t
+core_vehicle_get_position_error(core_vehicle_t *self);
+
 void
 core_vehicle_set_motion(core_vehicle_t *self, core_motion_t motion);
 
@@ -83,5 +87,8 @@ core_vehicle_update_state(core_vehicle_t *self);
 
 core_vehicle_result_t
 core_vehicle_update_motion(core_vehicle_t *self);
+
+void
+core_vehicle_update_position_error(core_vehicle_t *self);
 
 #endif

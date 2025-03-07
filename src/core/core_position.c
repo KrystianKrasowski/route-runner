@@ -34,6 +34,12 @@ core_position_get_status(core_position_t *self)
     }
 }
 
+int8_t
+core_position_compute_error(core_position_t *self)
+{
+    return self->right - self->left;
+}
+
 static inline bool
 is_stright_on_line(core_position_t *self)
 {

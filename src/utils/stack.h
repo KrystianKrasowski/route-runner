@@ -1,10 +1,10 @@
 #ifndef _STACK_H
 #define _STACK_H
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-#define STACK_MAX_SIZE 5
+#define STACK_MAX_SIZE 10
 
 typedef enum
 {
@@ -17,28 +17,28 @@ typedef enum
 
 typedef struct stack
 {
-    uint16_t elements[STACK_MAX_SIZE];
-    int8_t   top;
-    uint8_t  size;
+    int16_t elements[STACK_MAX_SIZE];
+    int8_t  top;
+    uint8_t size;
 } stack_t;
 
 stack_result_t
 stack_init(stack_t *self, uint8_t size);
 
 stack_result_t
-stack_pop(stack_t *self, uint16_t *element);
+stack_pop(stack_t *self, int16_t *element);
 
 stack_result_t
-stack_peek(stack_t *self, uint16_t *element);
+stack_peek(stack_t *self, int16_t *element);
 
 stack_result_t
-stack_peek_bottom(stack_t *self, uint16_t *element);
+stack_peek_bottom(stack_t *self, int16_t *element);
 
 stack_result_t
-stack_push(stack_t *self, uint16_t element);
+stack_push(stack_t *self, int16_t element);
 
 void
-stack_push_rolling(stack_t *self, uint16_t element);
+stack_push_rolling(stack_t *self, int16_t element);
 
 bool
 stack_is_empty(stack_t *self);
@@ -56,6 +56,6 @@ uint8_t
 stack_get_length(stack_t *self);
 
 stack_result_t
-stack_get_element(stack_t *self, uint8_t index, uint16_t *element);
+stack_get_element(stack_t *self, uint8_t index, int16_t *element);
 
 #endif

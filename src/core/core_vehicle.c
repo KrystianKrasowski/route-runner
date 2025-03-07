@@ -8,11 +8,15 @@
 static inline void
 init_state(core_vehicle_t *self);
 
+static inline void
+init_position_error(core_vehicle_t *self);
+
 void
 core_vehicle_init(core_vehicle_t *self)
 {
     memset(self, 0, sizeof(*self));
     init_state(self);
+    init_position_error(self);
     core_motion_init(&self->motion);
     core_position_init(&self->position);
 }
@@ -20,7 +24,7 @@ core_vehicle_init(core_vehicle_t *self)
 core_vehicle_state_t
 core_vehicle_get_state(core_vehicle_t *self)
 {
-    uint16_t state;
+    int16_t state;
     stack_peek(&self->state, &state);
 
     return state;
@@ -29,14 +33,14 @@ core_vehicle_get_state(core_vehicle_t *self)
 void
 core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state)
 {
-    stack_push_rolling(&self->state, (uint16_t)state);
+    stack_push_rolling(&self->state, (int16_t)state);
 }
 
 bool
 core_vehicle_is_state_changed(core_vehicle_t *self)
 {
-    uint16_t bottom;
-    uint16_t top;
+    int16_t bottom;
+    int16_t top;
 
     stack_peek_bottom(&self->state, &bottom);
     stack_peek(&self->state, &top);
@@ -79,6 +83,14 @@ bool
 core_vehicle_is_line_lost(core_vehicle_t *self)
 {
     return core_position_get_status(&self->position) == CORE_POSITION_NO_LINE;
+}
+
+int8_t
+core_vehicle_get_position_error(core_vehicle_t *self)
+{
+    int16_t error = 0;
+    stack_peek(&self->position_error, &error);
+    return (int8_t)error;
 }
 
 void
@@ -135,12 +147,28 @@ core_vehicle_update_motion(core_vehicle_t *self)
     return core_vehicle_motion_apply(self);
 }
 
+void
+core_vehicle_update_position_error(core_vehicle_t *self)
+{
+    int8_t error = core_position_compute_error(&self->position);
+    stack_push_rolling(&self->position_error, error);
+}
+
 static inline void
 init_state(core_vehicle_t *self)
 {
     stack_t state;
     stack_init(&state, 2);
-    stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
+    stack_result_t result = stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
 
     self->state = state;
+}
+
+static inline void
+init_position_error(core_vehicle_t *self)
+{
+    stack_t errors;
+    stack_init(&errors, 10);
+
+    self->position_error = errors;
 }

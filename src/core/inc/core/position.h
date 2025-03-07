@@ -23,4 +23,7 @@ core_position_init(core_position_t *self);
 core_position_status_t
 core_position_get_status(core_position_t *self);
 
+int8_t
+core_position_compute_error(core_position_t *self);
+
 #endif

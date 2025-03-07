@@ -200,10 +200,10 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 6);
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 7);
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 8);
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 9);
+    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 16);
+    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 17);
+    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 18);
+    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 19);
     RUN_TEST(should_successfully_init_stack);
     RUN_TEST(should_successfully_push_element_on_stack);
     RUN_TEST(should_increase_top_index_while_pushing_on_stack);

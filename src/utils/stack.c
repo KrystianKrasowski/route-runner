@@ -17,7 +17,7 @@ stack_init(stack_t *self, uint8_t size)
 }
 
 stack_result_t
-stack_pop(stack_t *self, uint16_t *element)
+stack_pop(stack_t *self, int16_t *element)
 {
     if (stack_is_empty(self))
     {
@@ -30,7 +30,7 @@ stack_pop(stack_t *self, uint16_t *element)
 }
 
 stack_result_t
-stack_peek(stack_t *self, uint16_t *element)
+stack_peek(stack_t *self, int16_t *element)
 {
     if (stack_is_empty(self))
     {
@@ -43,7 +43,7 @@ stack_peek(stack_t *self, uint16_t *element)
 }
 
 stack_result_t
-stack_peek_bottom(stack_t *self, uint16_t *element)
+stack_peek_bottom(stack_t *self, int16_t *element)
 {
     if (stack_is_empty(self))
     {
@@ -56,7 +56,7 @@ stack_peek_bottom(stack_t *self, uint16_t *element)
 }
 
 stack_result_t
-stack_push(stack_t *self, uint16_t element)
+stack_push(stack_t *self, int16_t element)
 {
     if (self->top >= self->size - 1)
     {
@@ -69,7 +69,7 @@ stack_push(stack_t *self, uint16_t element)
 }
 
 void
-stack_push_rolling(stack_t *self, uint16_t element)
+stack_push_rolling(stack_t *self, int16_t element)
 {
     if (self->top >= self->size - 1)
     {
@@ -117,7 +117,7 @@ stack_get_length(stack_t *self)
 }
 
 stack_result_t
-stack_get_element(stack_t *self, uint8_t index, uint16_t *element)
+stack_get_element(stack_t *self, uint8_t index, int16_t *element)
 {
     if (index > self->top)
     {
