@@ -18,7 +18,9 @@ should_not_receive_anything_on_empty_queue(void)
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_position_t initial_position = core_vehicle_get_line_position(&vehicle);
+
+    core_position_t initial_position;
+    core_position_init(&initial_position);
 
     // when
     core_task_line_position_receive(&vehicle);

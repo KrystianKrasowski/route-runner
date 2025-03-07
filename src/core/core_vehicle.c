@@ -6,9 +6,6 @@ static inline void
 init_state(core_vehicle_t *self);
 
 static inline void
-init_position(core_vehicle_t *self);
-
-static inline void
 set_motion_correction(core_vehicle_t *self, core_motion_t *motion);
 
 static inline void
@@ -26,7 +23,7 @@ core_vehicle_init(core_vehicle_t *self)
     memset(self, 0, sizeof(*self));
     init_state(self);
     core_motion_init(&self->motion);
-    init_position(self);
+    core_position_init(&self->position);
 }
 
 core_vehicle_state_t
@@ -74,20 +71,11 @@ core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position)
     self->position = position;
 }
 
-core_position_t
-core_vehicle_get_line_position(core_vehicle_t *self)
-{
-    return self->position;
-}
-
 bool
 core_vehicle_is_line_detected(core_vehicle_t *self)
 {
-    bool middle_on_line      = self->position.middle >= 100;
-    bool left_on_background  = self->position.left <= 20;
-    bool right_on_background = self->position.right <= 20;
-
-    return middle_on_line && (left_on_background || right_on_background);
+    return core_position_get_status(&self->position) ==
+           CORE_POSITION_STRIGHT_ON_LINE;
 }
 
 core_motion_direction_t
@@ -168,14 +156,6 @@ init_state(core_vehicle_t *self)
     stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
 
     self->state = state;
-}
-
-static inline void
-init_position(core_vehicle_t *self)
-{
-    core_position_t position;
-    memset(&position, 0, sizeof(position));
-    self->position = position;
 }
 
 static inline void

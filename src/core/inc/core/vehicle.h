@@ -2,6 +2,7 @@
 #define _CORE_VEHICLE_H
 
 #include "motion.h"
+#include "position.h"
 #include <stdint.h>
 #include <stack.h>
 
@@ -17,13 +18,6 @@ typedef enum
     CORE_VEHICLE_MOTION_CHANGED,
     CORE_VEHICLE_MOTION_REMAINS,
 } core_vehicle_result_t;
-
-typedef struct
-{
-    uint8_t left;
-    uint8_t middle;
-    uint8_t right;
-} core_position_t;
 
 typedef struct core_vehicle
 {
@@ -44,9 +38,6 @@ core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state);
 
 void
 core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position);
-
-core_position_t
-core_vehicle_get_line_position(core_vehicle_t *self);
 
 bool
 core_vehicle_is_line_detected(core_vehicle_t *self);
