@@ -1,29 +1,46 @@
 #include "core_vehicle_motion_apply.h"
 #include "core/types.h"
 
+#define KP 1
+
 static inline void
 set_motion_correction(core_vehicle_t *self, core_motion_t *motion);
 
 static inline void
 set_motion_direction(core_vehicle_t *self, core_motion_t *motion);
 
+static inline int8_t
+pid_regulation(core_vehicle_t *vehicle);
+
 core_vehicle_result_t
 core_vehicle_motion_apply(core_vehicle_t *vehicle)
 {
-    core_motion_t motion;
-    core_motion_init(&motion);
-    
-    set_motion_correction(vehicle, &motion);
-    set_motion_direction(vehicle, &motion);
-
-    if (core_vehicle_motion_differs(vehicle, &motion))
+    if (core_vehicle_get_state(vehicle) == CORE_VEHICLE_STATE_LINE_FOLLOWING)
     {
-        core_vehicle_set_motion(vehicle, motion);
-        return CORE_VEHICLE_MOTION_CHANGED;
+        core_vehicle_update_position_error(vehicle);
+
+        int8_t error = core_vehicle_get_position_error(vehicle);
+
+        core_vehicle_set_motion_direction(vehicle, CORE_MOTION_FORWARD);
+        core_vehicle_set_motion_correction(vehicle, error);
     }
     else
     {
-        return CORE_VEHICLE_MOTION_REMAINS;
+        core_motion_t motion;
+        core_motion_init(&motion);
+
+        set_motion_correction(vehicle, &motion);
+        set_motion_direction(vehicle, &motion);
+
+        if (core_vehicle_motion_differs(vehicle, &motion))
+        {
+            core_vehicle_set_motion(vehicle, motion);
+            return CORE_VEHICLE_MOTION_CHANGED;
+        }
+        else
+        {
+            return CORE_VEHICLE_MOTION_REMAINS;
+        }
     }
 }
 
@@ -60,4 +77,15 @@ set_motion_direction(core_vehicle_t *vehicle, core_motion_t *motion)
         core_motion_set_direction(motion, CORE_MOTION_NONE);
         core_motion_set_correction(motion, 0);
     }
+}
+
+static inline int8_t
+pid_regulation(core_vehicle_t *vehicle)
+{
+    int8_t error = core_vehicle_update_position_error(vehicle);
+
+    int8_t correction = KP * error;
+
+    core_vehicle_set_motion_direction(vehicle, CORE_MOTION_FORWARD);
+    core_vehicle_set_motion_correction(vehicle, correction);
 }

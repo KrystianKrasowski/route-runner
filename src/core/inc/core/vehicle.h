@@ -73,6 +73,13 @@ core_vehicle_get_motion_direction(core_vehicle_t *self);
 int8_t
 core_vehicle_get_motion_correction(core_vehicle_t *self);
 
+void
+core_vehicle_set_motion_direction(core_vehicle_t         *self,
+                                  core_motion_direction_t direction);
+
+void
+core_vehicle_set_motion_correction(core_vehicle_t *self, int8_t correction);
+
 bool
 core_vehicle_is_moving_forward(core_vehicle_t *self);
 
@@ -88,7 +95,7 @@ core_vehicle_update_state(core_vehicle_t *self);
 core_vehicle_result_t
 core_vehicle_update_motion(core_vehicle_t *self);
 
-void
+int8_t
 core_vehicle_update_position_error(core_vehicle_t *self);
 
 #endif

@@ -117,6 +117,19 @@ core_vehicle_get_motion_correction(core_vehicle_t *self)
     return core_motion_get_correction(&self->motion);
 }
 
+void
+core_vehicle_set_motion_direction(core_vehicle_t         *self,
+                                  core_motion_direction_t direction)
+{
+    core_motion_set_direction(&self->motion, direction);
+}
+
+void
+core_vehicle_set_motion_correction(core_vehicle_t *self, int8_t correction)
+{
+    core_motion_set_correction(&self->motion, correction);
+}
+
 bool
 core_vehicle_is_moving_forward(core_vehicle_t *self)
 {
@@ -147,11 +160,12 @@ core_vehicle_update_motion(core_vehicle_t *self)
     return core_vehicle_motion_apply(self);
 }
 
-void
+int8_t
 core_vehicle_update_position_error(core_vehicle_t *self)
 {
     int8_t error = core_position_compute_error(&self->position);
     stack_push_rolling(&self->position_error, error);
+    return error;
 }
 
 static inline void
