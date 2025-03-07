@@ -66,6 +66,9 @@ core_vehicle_is_movint_backward(core_vehicle_t *self);
 void
 core_vehicle_apply_remote_control(core_vehicle_t *self, uint16_t command);
 
+void
+core_vehicle_update_state(core_vehicle_t *self);
+
 core_vehicle_result_t
 core_vehicle_update_motion(core_vehicle_t *self);
 

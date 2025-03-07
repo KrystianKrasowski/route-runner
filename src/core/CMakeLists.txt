@@ -8,6 +8,7 @@ add_library(core STATIC
     core_task_line_position_receive.c
     core_task_vehicle_state_update.c
     core_remote_control_apply_chain.c
+    core_vehicle_state_transition_chain.c
 )
 
 target_include_directories(core PUBLIC "./inc")

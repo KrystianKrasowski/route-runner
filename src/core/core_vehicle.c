@@ -1,6 +1,7 @@
 #include "core/types.h"
 #include "core/vehicle.h"
 #include "core_remote_control_apply_chain.h"
+#include "core_vehicle_state_transition_chain.h"
 #include <string.h>
 
 static inline void
@@ -101,6 +102,12 @@ void
 core_vehicle_apply_remote_control(core_vehicle_t *self, uint16_t command)
 {
     core_remote_control_apply(self, command);
+}
+
+void
+core_vehicle_update_state(core_vehicle_t *self)
+{
+    core_vehicle_state_transition(self);
 }
 
 core_vehicle_result_t
