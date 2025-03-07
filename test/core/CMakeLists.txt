@@ -4,9 +4,9 @@ set(TEST_SUITE
     core_task_remote_control_receive_test.c
     core_task_motion_update_test.c
     core_task_state_indicator_update_test.c
-    core_task_vehicle_state_update_test.c
     core_task_line_position_receive_test.c
     core_vehicle_test.c
+    core_vehicle_update_state_test.c
 )
 
 foreach(FILE ${TEST_SUITE})

@@ -13,6 +13,6 @@ core_task_remote_control_receive(core_vehicle_t *vehicle)
         uint16_t raw_command = message.payload.command;
         uint16_t command     = core_port_remote_control_map(raw_command);
         
-        core_vehicle_apply_remote_control(vehicle, command);
+        core_vehicle_update_command(vehicle, command);
     }
 }

@@ -1,4 +1,4 @@
-#include "core_vehicle_state_transition_chain.h"
+#include "core_vehicle_state_apply.h"
 #include "core/types.h"
 
 static inline void
@@ -11,7 +11,7 @@ static inline void
 transit_from_line_following(core_vehicle_t *vehicle);
 
 bool
-core_vehicle_state_transition(core_vehicle_t *vehicle)
+core_vehicle_state_apply(core_vehicle_t *vehicle)
 {
     core_vehicle_state_t state = core_vehicle_get_state(vehicle);
 

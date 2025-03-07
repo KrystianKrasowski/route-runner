@@ -1,7 +1,7 @@
 #include "core/types.h"
 #include "core/vehicle.h"
-#include "core_remote_control_apply_chain.h"
-#include "core_vehicle_state_transition_chain.h"
+#include "core_vehicle_command_apply.h"
+#include "core_vehicle_state_apply.h"
 #include <string.h>
 
 static inline void
@@ -93,21 +93,21 @@ core_vehicle_is_moving_forward(core_vehicle_t *self)
 }
 
 bool
-core_vehicle_is_movint_backward(core_vehicle_t *self)
+core_vehicle_is_moving_backward(core_vehicle_t *self)
 {
     return core_vehicle_get_motion_direction(self) == CORE_MOTION_BACKWARD;
 }
 
 void
-core_vehicle_apply_remote_control(core_vehicle_t *self, uint16_t command)
+core_vehicle_update_command(core_vehicle_t *self, uint16_t command)
 {
-    core_remote_control_apply(self, command);
+    core_vehicle_command_apply(self, command);
 }
 
 void
 core_vehicle_update_state(core_vehicle_t *self)
 {
-    core_vehicle_state_transition(self);
+    core_vehicle_state_apply(self);
 }
 
 core_vehicle_result_t

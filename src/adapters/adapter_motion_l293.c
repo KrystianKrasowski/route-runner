@@ -77,7 +77,7 @@ apply_direction(core_vehicle_t *vehicle)
         l293_set_right(&motor_left);
         l293_set_right(&motor_right);
     }
-    else if (core_vehicle_is_movint_backward(vehicle))
+    else if (core_vehicle_is_moving_backward(vehicle))
     {
         l293_set_left(&motor_left);
         l293_set_left(&motor_right);

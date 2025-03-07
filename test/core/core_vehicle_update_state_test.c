@@ -23,7 +23,7 @@ should_stay_manual(void)
     core_vehicle_set_line_position(&vehicle, position);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_MANUAL,
@@ -42,7 +42,7 @@ should_transit_to_line_detected_from_manual(void)
     core_vehicle_set_line_position(&vehicle, position);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_LINE_DETECTED,
@@ -61,7 +61,7 @@ should_stay_line_detected(void)
     core_vehicle_set_line_position(&vehicle, position);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_LINE_DETECTED,
@@ -82,7 +82,7 @@ should_transit_to_manual_from_line_detected(void)
     core_vehicle_set_line_position(&vehicle, position);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_MANUAL,
@@ -102,7 +102,7 @@ should_transit_to_line_following_from_line_detected(void)
     core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_LINE_FOLLOWING,
@@ -119,7 +119,7 @@ should_transit_to_manual_from_line_following_by_remote_command(void)
     core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_BREAK);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_MANUAL,
@@ -138,7 +138,7 @@ should_transit_to_manual_from_line_following_by_line_end(void)
     core_vehicle_set_line_position(&vehicle, position);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_MANUAL,
@@ -158,7 +158,7 @@ should_clear_command_on_line_end(void)
     core_vehicle_set_line_position(&vehicle, position);
 
     // when
-    core_task_vehicle_state_update(&vehicle);
+    core_vehicle_update_state(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(CORE_REMOTE_CONTROL_NONE,

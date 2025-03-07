@@ -1,4 +1,4 @@
-#include "core_remote_control_apply_chain.h"
+#include "core_vehicle_command_apply.h"
 #include "core/types.h"
 
 static bool
@@ -20,7 +20,7 @@ static inline bool
 contains_command(uint16_t remote_control, core_remote_control_t command);
 
 bool
-core_remote_control_apply(core_vehicle_t *vehicle, uint16_t command)
+core_vehicle_command_apply(core_vehicle_t *vehicle, uint16_t command)
 {
     return apply_break_for_line_following(vehicle, command) ||
            bypass_any_for_line_following(vehicle, command) ||

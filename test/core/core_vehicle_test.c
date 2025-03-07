@@ -130,7 +130,7 @@ should_apply_remote_control(core_vehicle_state_t state,
     core_vehicle_set_state(&vehicle, state);
 
     // when
-    core_vehicle_apply_remote_control(&vehicle, command);
+    core_vehicle_update_command(&vehicle, command);
 
     // then
     TEST_ASSERT_EQUAL(expected_command, core_vehicle_get_command(&vehicle));
