@@ -7,6 +7,7 @@ set(TEST_SUITE
     core_task_line_position_receive_test.c
     core_vehicle_test.c
     core_vehicle_update_state_test.c
+    core_vehicle_update_motion_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
