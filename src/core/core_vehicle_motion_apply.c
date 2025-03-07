@@ -17,12 +17,18 @@ core_vehicle_motion_apply(core_vehicle_t *vehicle)
 {
     if (core_vehicle_get_state(vehicle) == CORE_VEHICLE_STATE_LINE_FOLLOWING)
     {
-        core_vehicle_update_position_error(vehicle);
-
-        int8_t error = core_vehicle_get_position_error(vehicle);
-
-        core_vehicle_set_motion_direction(vehicle, CORE_MOTION_FORWARD);
-        core_vehicle_set_motion_correction(vehicle, error);
+        if (!core_vehicle_is_position_updated(vehicle))
+        {
+            int8_t correction = pid_regulation(vehicle);
+            core_vehicle_set_motion_direction(vehicle, CORE_MOTION_FORWARD);
+            core_vehicle_set_motion_correction(vehicle, correction);
+            core_vehicle_set_position_updated(vehicle, true);
+            return CORE_VEHICLE_MOTION_CHANGED;
+        }
+        else
+        {
+            return CORE_VEHICLE_MOTION_REMAINS;
+        }
     }
     else
     {
@@ -86,6 +92,5 @@ pid_regulation(core_vehicle_t *vehicle)
 
     int8_t correction = KP * error;
 
-    core_vehicle_set_motion_direction(vehicle, CORE_MOTION_FORWARD);
-    core_vehicle_set_motion_correction(vehicle, correction);
+    return correction;
 }

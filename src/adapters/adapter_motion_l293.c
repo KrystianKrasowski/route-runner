@@ -95,8 +95,7 @@ compute_duty_cycle(uint8_t correction)
     uint8_t duty_cycle;
     uint8_t duty_cycle_range = MAX_DUTY_CYCLE - MIN_DUTY_CYCLE;
 
-    duty_cycle =
-        MAX_DUTY_CYCLE - ((duty_cycle_range * correction) / MAX_DUTY_CYCLE);
+    duty_cycle = MAX_DUTY_CYCLE - ((duty_cycle_range * correction) / 100);
 
     return duty_cycle;
 }

@@ -12,5 +12,6 @@ core_task_line_position_receive(core_vehicle_t *vehicle)
         core_position_t position = core_port_line_position_map(raw_position);
 
         core_vehicle_set_line_position(vehicle, position);
+        core_vehicle_set_position_updated(vehicle, false);
     }
 }

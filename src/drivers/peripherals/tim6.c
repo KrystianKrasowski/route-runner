@@ -11,8 +11,8 @@ tim6_init(void)
     // set frequency to 1MHz
     TIM6->PSC = sysclock_get_prescaller_base(1000000) - 1;
 
-    // update event every 1ms
-    TIM6->ARR = 1000 - 1;
+    // update event every 5ms
+    TIM6->ARR = 5000 - 1;
 
     // enable TRGO on update event
     TIM6->CR2 |= (2 << TIM_CR2_MMS_Pos);

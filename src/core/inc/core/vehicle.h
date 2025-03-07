@@ -26,6 +26,7 @@ typedef struct core_vehicle
     stack_t         state;
     core_position_t position;
     stack_t         position_error;
+    bool            position_updated;
 } core_vehicle_t;
 
 void
@@ -60,6 +61,12 @@ core_vehicle_is_line_lost(core_vehicle_t *self);
 
 int8_t
 core_vehicle_get_position_error(core_vehicle_t *self);
+
+void
+core_vehicle_set_position_updated(core_vehicle_t *self, bool updated);
+
+bool
+core_vehicle_is_position_updated(core_vehicle_t *self);
 
 void
 core_vehicle_set_motion(core_vehicle_t *self, core_motion_t motion);

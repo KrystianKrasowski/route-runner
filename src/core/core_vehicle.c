@@ -19,6 +19,7 @@ core_vehicle_init(core_vehicle_t *self)
     init_position_error(self);
     core_motion_init(&self->motion);
     core_position_init(&self->position);
+    self->position_updated = false;
 }
 
 core_vehicle_state_t
@@ -91,6 +92,18 @@ core_vehicle_get_position_error(core_vehicle_t *self)
     int16_t error = 0;
     stack_peek(&self->position_error, &error);
     return (int8_t)error;
+}
+
+void
+core_vehicle_set_position_updated(core_vehicle_t *self, bool updated)
+{
+    self->position_updated = updated;
+}
+
+bool
+core_vehicle_is_position_updated(core_vehicle_t *self)
+{
+    return self->position_updated;
 }
 
 void
@@ -173,7 +186,7 @@ init_state(core_vehicle_t *self)
 {
     stack_t state;
     stack_init(&state, 2);
-    stack_result_t result = stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
+    stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
 
     self->state = state;
 }
