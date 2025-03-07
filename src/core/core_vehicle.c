@@ -1,14 +1,13 @@
-#include "core.h"
+#include "core/types.h"
+#include "core/vehicle.h"
+#include "core_remote_control_apply_chain.h"
 #include <string.h>
 
 static inline void
 init_state(core_vehicle_t *self);
 
 static inline void
-init_position(core_vehicle_t *self);
-
-static inline void
-set_motion_angle(core_vehicle_t *self, core_motion_t *motion);
+set_motion_correction(core_vehicle_t *self, core_motion_t *motion);
 
 static inline void
 set_motion_direction(core_vehicle_t *self, core_motion_t *motion);
@@ -19,7 +18,7 @@ core_vehicle_init(core_vehicle_t *self)
     memset(self, 0, sizeof(*self));
     init_state(self);
     core_motion_init(&self->motion);
-    init_position(self);
+    core_position_init(&self->position);
 }
 
 core_vehicle_state_t
@@ -67,20 +66,41 @@ core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position)
     self->position = position;
 }
 
-core_position_t
-core_vehicle_get_line_position(core_vehicle_t *self)
-{
-    return self->position;
-}
-
 bool
 core_vehicle_is_line_detected(core_vehicle_t *self)
 {
-    bool middle_on_line = self->position.middle >= 100;
-    bool left_on_background = self->position.left <= 20;
-    bool right_on_background = self->position.right <= 20;
-    
-    return middle_on_line && (left_on_background || right_on_background);
+    return core_position_get_status(&self->position) ==
+           CORE_POSITION_STRIGHT_ON_LINE;
+}
+
+core_motion_direction_t
+core_vehicle_get_motion_direction(core_vehicle_t *self)
+{
+    return core_motion_get_direction(&self->motion);
+}
+
+int8_t
+core_vehicle_get_motion_correction(core_vehicle_t *self)
+{
+    return core_motion_get_correction(&self->motion);
+}
+
+bool
+core_vehicle_is_moving_forward(core_vehicle_t *self)
+{
+    return core_vehicle_get_motion_direction(self) == CORE_MOTION_FORWARD;
+}
+
+bool
+core_vehicle_is_movint_backward(core_vehicle_t *self)
+{
+    return core_vehicle_get_motion_direction(self) == CORE_MOTION_BACKWARD;
+}
+
+void
+core_vehicle_apply_remote_control(core_vehicle_t *self, uint16_t command)
+{
+    core_remote_control_apply(self, command);
 }
 
 core_vehicle_result_t
@@ -88,7 +108,7 @@ core_vehicle_update_motion(core_vehicle_t *self)
 {
     core_motion_t motion;
     core_motion_init(&motion);
-    set_motion_angle(self, &motion);
+    set_motion_correction(self, &motion);
     set_motion_direction(self, &motion);
 
     if (!core_motion_equals(&self->motion, &motion))
@@ -108,20 +128,12 @@ init_state(core_vehicle_t *self)
     stack_t state;
     stack_init(&state, 2);
     stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
-    
+
     self->state = state;
 }
 
 static inline void
-init_position(core_vehicle_t *self)
-{
-    core_position_t position;
-    memset(&position, 0, sizeof(position));
-    self->position = position;
-}
-
-static inline void
-set_motion_angle(core_vehicle_t *self, core_motion_t *motion)
+set_motion_correction(core_vehicle_t *self, core_motion_t *motion)
 {
     if (self->command & CORE_REMOTE_CONTROL_LEFT)
     {
@@ -150,7 +162,7 @@ set_motion_direction(core_vehicle_t *self, core_motion_t *motion)
     }
     else
     {
-        motion->direction = CORE_MOTION_NONE;
+        motion->direction  = CORE_MOTION_NONE;
         motion->correction = 0;
     }
 }

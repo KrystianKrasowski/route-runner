@@ -1,4 +1,4 @@
-#include <core.h>
+#include <core/vehicle.h>
 #include <l293.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -13,10 +13,10 @@ static l293_t motor_left;
 static l293_t motor_right;
 
 static inline void
-apply_duty_cycle(core_motion_t *motion);
+apply_duty_cycle(core_vehicle_t *vehicle);
 
 static inline void
-apply_direction(core_motion_t *motion);
+apply_direction(core_vehicle_t *vehicle);
 
 static uint8_t
 compute_duty_cycle(uint8_t correction);
@@ -34,29 +34,30 @@ core_port_motion_init(void)
 }
 
 void
-core_port_motion_apply(core_motion_t *motion)
+core_port_motion_apply(core_vehicle_t *vehicle)
 {
     l293_disable(&motor_left);
     l293_disable(&motor_right);
 
-    apply_duty_cycle(motion);
-    apply_direction(motion);
+    apply_duty_cycle(vehicle);
+    apply_direction(vehicle);
 
     l293_enable(&motor_left);
     l293_enable(&motor_right);
 }
 
 static inline void
-apply_duty_cycle(core_motion_t *motion)
+apply_duty_cycle(core_vehicle_t *vehicle)
 {
-    uint8_t duty_cycle = compute_duty_cycle(abs(motion->correction));
+    int8_t  correction = core_vehicle_get_motion_correction(vehicle);
+    uint8_t duty_cycle = compute_duty_cycle(abs(correction));
 
-    if (motion->correction < 0)
+    if (correction < 0)
     {
         tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, duty_cycle);
         tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, MAX_DUTY_CYCLE);
     }
-    else if (motion->correction > 0)
+    else if (correction > 0)
     {
         tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, MAX_DUTY_CYCLE);
         tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, duty_cycle);
@@ -69,14 +70,14 @@ apply_duty_cycle(core_motion_t *motion)
 }
 
 static inline void
-apply_direction(core_motion_t *motion)
+apply_direction(core_vehicle_t *vehicle)
 {
-    if (motion->direction == CORE_MOTION_FORWARD)
+    if (core_vehicle_is_moving_forward(vehicle))
     {
         l293_set_right(&motor_left);
         l293_set_right(&motor_right);
     }
-    else if (motion->direction == CORE_MOTION_BACKWARD)
+    else if (core_vehicle_is_movint_backward(vehicle))
     {
         l293_set_left(&motor_left);
         l293_set_left(&motor_right);
@@ -94,7 +95,8 @@ compute_duty_cycle(uint8_t correction)
     uint8_t duty_cycle;
     uint8_t duty_cycle_range = MAX_DUTY_CYCLE - MIN_DUTY_CYCLE;
 
-    duty_cycle = MAX_DUTY_CYCLE - ((duty_cycle_range * correction) / MAX_DUTY_CYCLE);
+    duty_cycle =
+        MAX_DUTY_CYCLE - ((duty_cycle_range * correction) / MAX_DUTY_CYCLE);
 
     return duty_cycle;
 }

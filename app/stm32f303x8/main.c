@@ -1,4 +1,6 @@
-#include <core.h>
+#include <core/vehicle.h>
+#include <core/ports.h>
+#include <core/tasks.h>
 #include <sysclock.h>
 
 int

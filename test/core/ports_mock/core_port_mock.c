@@ -14,9 +14,9 @@ core_port_remote_control_map(uint16_t raw_command)
 }
 
 void
-core_port_motion_apply(core_motion_t *motion)
+core_port_motion_apply(core_vehicle_t *vehicle)
 {
-    motion_applied    = *motion;
+    motion_applied    = vehicle->motion;
     is_motion_applied = true;
 }
 
