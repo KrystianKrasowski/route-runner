@@ -28,4 +28,10 @@ core_port_state_indicator_init(void);
 void
 core_port_state_indicator_apply(core_vehicle_state_t state);
 
+void
+core_port_debug_init(void);
+
+void
+core_port_debug_apply(core_vehicle_t *vehicle);
+
 #endif

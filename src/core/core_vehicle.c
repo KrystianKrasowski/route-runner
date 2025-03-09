@@ -73,6 +73,12 @@ core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position)
     self->position = position;
 }
 
+core_position_t
+core_vehicle_get_line_position(core_vehicle_t *self)
+{
+    return self->position;
+}
+
 bool
 core_vehicle_is_line_detected(core_vehicle_t *self)
 {

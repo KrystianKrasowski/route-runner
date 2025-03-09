@@ -3,6 +3,7 @@ add_library(adapters STATIC
     adapter_motion_l293.c
     adapter_state_indicator_led.c
     adapter_line_position_qtrhd06a.c
+    adapter_debug_usart.c
 )
 
 target_link_libraries(adapters

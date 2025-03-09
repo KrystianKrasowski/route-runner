@@ -10,6 +10,7 @@ add_library(core STATIC
     core_task_state_indicator_update.c
     core_task_line_position_receive.c
     core_task_vehicle_state_update.c
+    core_task_debug.c
 )
 
 target_include_directories(core PUBLIC "./inc")

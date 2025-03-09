@@ -16,6 +16,8 @@ main(void)
     core_port_state_indicator_init();
     core_port_line_position_init();
 
+    // core_port_debug_init();
+
     while (1)
     {
         core_task_remote_control_receive(&vehicle);
@@ -23,5 +25,6 @@ main(void)
         core_task_vehicle_state_update(&vehicle);
         core_task_motion_update(&vehicle);
         core_task_state_indicator_update(&vehicle);
+        // core_task_debug(&vehicle);
     }
 }

@@ -18,4 +18,7 @@ core_task_motion_update(core_vehicle_t *vehicle);
 void
 core_task_state_indicator_update(core_vehicle_t *vehicle);
 
+void
+core_task_debug(core_vehicle_t *vehicle);
+
 #endif
