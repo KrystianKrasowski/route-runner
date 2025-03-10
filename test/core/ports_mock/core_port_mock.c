@@ -31,9 +31,12 @@ core_position_t
 core_port_line_position_map(uint8_t *raw_position)
 {
     core_position_t position;
-    position.left   = raw_position[0];
-    position.middle = raw_position[1];
-    position.right  = raw_position[2];
+    position.left_3  = raw_position[0];
+    position.left_2  = raw_position[1];
+    position.left_1  = raw_position[2];
+    position.right_1 = raw_position[3];
+    position.right_2 = raw_position[4];
+    position.right_3 = raw_position[5];
 
     return position;
 }

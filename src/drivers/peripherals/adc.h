@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define ADC_BUFFER_SIZE 30
+#define ADC_BUFFER_SIZE 40
 
 void
 adc_init();
@@ -21,6 +21,6 @@ void
 adc_stop(void);
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint8_t value[]);
+adc_sequence_complete_isr(uint32_t value[]);
 
 #endif

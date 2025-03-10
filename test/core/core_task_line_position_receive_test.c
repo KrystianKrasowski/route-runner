@@ -26,9 +26,9 @@ should_not_receive_anything_on_empty_queue(void)
     core_task_line_position_receive(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(initial_position.left, vehicle.position.left);
-    TEST_ASSERT_EQUAL(initial_position.middle, vehicle.position.middle);
-    TEST_ASSERT_EQUAL(initial_position.right, vehicle.position.right);
+    TEST_ASSERT_TRUE(
+        core_position_equals(&initial_position, &vehicle.position));
+    TEST_ASSERT_TRUE(core_vehicle_is_position_updated(&vehicle));
 }
 
 void
@@ -38,7 +38,7 @@ should_receive_line_position_from_queue(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
 
-    uint8_t         position[3] = {15, 110, 15};
+    uint8_t         position[6] = {0, 0, 100, 100, 0, 0};
     queue_message_t message     = queue_message_create_line_position(position);
     queue_push(QUEUE_TOPIC_LINE_POSITION, message);
 
@@ -46,9 +46,25 @@ should_receive_line_position_from_queue(void)
     core_task_line_position_receive(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(15, vehicle.position.left);
-    TEST_ASSERT_EQUAL(110, vehicle.position.middle);
-    TEST_ASSERT_EQUAL(15, vehicle.position.right);
+    core_position_t vehicle_position = core_vehicle_get_line_position(&vehicle);
+    TEST_ASSERT_EQUAL(0,
+                      core_position_get_by_place(&vehicle_position,
+                                                 CORE_POSITION_PLACE_LEFT_3));
+    TEST_ASSERT_EQUAL(0,
+                      core_position_get_by_place(&vehicle_position,
+                                                 CORE_POSITION_PLACE_LEFT_2));
+    TEST_ASSERT_EQUAL(100,
+                      core_position_get_by_place(&vehicle_position,
+                                                 CORE_POSITION_PLACE_LEFT_1));
+    TEST_ASSERT_EQUAL(100,
+                      core_position_get_by_place(&vehicle_position,
+                                                 CORE_POSITION_PLACE_RIGHT_1));
+    TEST_ASSERT_EQUAL(0,
+                      core_position_get_by_place(&vehicle_position,
+                                                 CORE_POSITION_PLACE_RIGHT_2));
+    TEST_ASSERT_EQUAL(0,
+                      core_position_get_by_place(&vehicle_position,
+                                                 CORE_POSITION_PLACE_RIGHT_3));
 }
 
 int

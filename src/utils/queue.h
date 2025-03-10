@@ -17,7 +17,7 @@ typedef enum
 typedef union queue_message_payload
 {
     uint16_t command;
-    uint8_t line_position[3];
+    uint8_t line_position[6];
 } queue_message_payload_t;
 
 typedef struct queue_message

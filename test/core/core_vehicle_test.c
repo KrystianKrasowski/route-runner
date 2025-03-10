@@ -77,17 +77,30 @@ should_init_starting_position(void)
 
     // when
     core_vehicle_init(&vehicle);
+    core_position_t position = core_vehicle_get_line_position(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(0, vehicle.position.left);
-    TEST_ASSERT_EQUAL(0, vehicle.position.middle);
-    TEST_ASSERT_EQUAL(0, vehicle.position.right);
+    TEST_ASSERT_EQUAL(
+        0, core_position_get_by_place(&position, CORE_POSITION_PLACE_LEFT_3));
+    TEST_ASSERT_EQUAL(
+        0, core_position_get_by_place(&position, CORE_POSITION_PLACE_LEFT_2));
+    TEST_ASSERT_EQUAL(
+        0, core_position_get_by_place(&position, CORE_POSITION_PLACE_LEFT_1));
+    TEST_ASSERT_EQUAL(
+        0, core_position_get_by_place(&position, CORE_POSITION_PLACE_RIGHT_1));
+    TEST_ASSERT_EQUAL(
+        0, core_position_get_by_place(&position, CORE_POSITION_PLACE_RIGHT_2));
+    TEST_ASSERT_EQUAL(
+        0, core_position_get_by_place(&position, CORE_POSITION_PLACE_RIGHT_3));
 }
 
 void
-should_detect_line(uint8_t left,
-                   uint8_t middle,
-                   uint8_t right,
+should_detect_line(uint8_t left_3,
+                   uint8_t left_2,
+                   uint8_t left_1,
+                   uint8_t right_1,
+                   uint8_t right_2,
+                   uint8_t right_3,
                    bool    expected_result)
 {
     // given
@@ -95,7 +108,8 @@ should_detect_line(uint8_t left,
     core_vehicle_init(&vehicle);
 
     // when
-    core_position_t position = {left, middle, right};
+    core_position_t position = {
+        left_3, left_2, left_1, right_1, right_2, right_3};
     core_vehicle_set_line_position(&vehicle, position);
 
     // then
@@ -103,17 +117,21 @@ should_detect_line(uint8_t left,
 }
 
 void
-should_compute_position_error(uint8_t left,
-                              uint8_t middle,
-                              uint8_t right,
-                              int8_t  expected_error)
+should_compute_position_error(uint8_t left_3,
+                              uint8_t left_2,
+                              uint8_t left_1,
+                              uint8_t right_1,
+                              uint8_t right_2,
+                              uint8_t right_3,
+                              int16_t  expected_error)
 {
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
 
     // when
-    core_position_t position = {left, middle, right};
+    core_position_t position = {
+        left_3, left_2, left_1, right_1, right_2, right_3};
     core_vehicle_set_line_position(&vehicle, position);
     core_vehicle_update_position_error(&vehicle);
 
@@ -131,19 +149,30 @@ main(void)
     RUN_TEST(should_detect_state_change_on_transition);
     RUN_TEST(should_detect_state_change_without_transition);
     RUN_TEST(should_init_starting_position);
-    RUN_PARAM_TEST(should_detect_line, 0, 100, 0, true);
-    RUN_PARAM_TEST(should_detect_line, 0, 110, 0, true);
-    RUN_PARAM_TEST(should_detect_line, 0, 120, 0, true);
-    RUN_PARAM_TEST(should_detect_line, 0, 110, 50, true);
-    RUN_PARAM_TEST(should_detect_line, 50, 110, 0, true);
-    RUN_PARAM_TEST(should_detect_line, 40, 90, 0, false);
-    RUN_PARAM_TEST(should_detect_line, 0, 80, 70, false);
-    RUN_PARAM_TEST(should_detect_line, 0, 50, 80, false);
-    RUN_PARAM_TEST(should_detect_line, 100, 100, 100, false);
-    RUN_PARAM_TEST(should_compute_position_error, 0, 100, 0, 0);
-    RUN_PARAM_TEST(should_compute_position_error, 0, 100, 9, 9);
-    RUN_PARAM_TEST(should_compute_position_error, 9, 100, 0, -9);
-    RUN_PARAM_TEST(should_compute_position_error, 50, 43, 0, -50);
-    RUN_PARAM_TEST(should_compute_position_error, 0, 33, 50, 50);
+    RUN_PARAM_TEST(should_detect_line, 10, 0, 0, 0, 0, 0, true);
+    RUN_PARAM_TEST(should_detect_line, 0, 10, 0, 0, 0, 0, true);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 10, 0, 0, 0, true);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 10, 0, 0, true);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 0, 10, 0, true);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 0, 0, 10, true);
+    RUN_PARAM_TEST(should_detect_line, 9, 0, 0, 0, 0, 0, false);
+    RUN_PARAM_TEST(should_detect_line, 0, 9, 0, 0, 0, 0, false);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 9, 0, 0, 0, false);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 9, 0, 0, false);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 0, 9, 0, false);
+    RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 0, 0, 9, false);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 100, 100, 0, 0, 0);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 50, 100, 100, 0, 0, -10);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 60, 100, 90, 0, 0, -12);
+    RUN_PARAM_TEST(should_compute_position_error, 50, 50, 100, 0, 0, 0, -40);
+    RUN_PARAM_TEST(should_compute_position_error, 100, 0, 0, 0, 0, 0, -90);
+    RUN_PARAM_TEST(should_compute_position_error, 70, 0, 0, 0, 0, 0, -90);
+    RUN_PARAM_TEST(should_compute_position_error, 40, 0, 0, 0, 0, 0, -90);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 100, 100, 50, 0, 10);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 90, 100, 60, 0, 12);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 100, 50, 50, 40);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 0, 100, 90);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 0, 70, 90);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 0, 40, 90);
     return UNITY_END();
 }

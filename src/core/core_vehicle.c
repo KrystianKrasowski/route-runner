@@ -19,7 +19,7 @@ core_vehicle_init(core_vehicle_t *self)
     init_position_error(self);
     core_motion_init(&self->motion);
     core_position_init(&self->position);
-    self->position_updated = false;
+    self->position_updated = true;
 }
 
 core_vehicle_state_t
@@ -83,7 +83,7 @@ bool
 core_vehicle_is_line_detected(core_vehicle_t *self)
 {
     return core_position_get_status(&self->position) ==
-           CORE_POSITION_STRIGHT_ON_LINE;
+           CORE_POSITION_ON_LINE;
 }
 
 bool

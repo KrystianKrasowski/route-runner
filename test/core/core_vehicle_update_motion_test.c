@@ -37,12 +37,13 @@ void
 should_update_motion_by_proportional_factor(void)
 {
     // given
-    core_position_t position = {10, 50, 50};
+    core_position_t position = {0, 0, 0, 50, 100, 50};
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
     core_vehicle_set_line_position(&vehicle, position);
+    core_vehicle_set_position_updated(&vehicle, false);
 
     // when
     core_vehicle_result_t result = core_vehicle_update_motion(&vehicle);
@@ -50,7 +51,7 @@ should_update_motion_by_proportional_factor(void)
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD,
                       core_vehicle_get_motion_direction(&vehicle));
-    TEST_ASSERT_EQUAL(40, core_vehicle_get_motion_correction(&vehicle));
+    TEST_ASSERT_EQUAL(50, core_vehicle_get_motion_correction(&vehicle));
 }
 
 int

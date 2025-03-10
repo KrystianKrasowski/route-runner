@@ -30,9 +30,12 @@ void
 should_average_adc_conversions(void)
 {
     // given
-    uint8_t conversions[30] = {
-        15, 20, 16, 16, 22, 15, 18, 21, 17, 17, 22, 15, 14, 19, 18,
-        15, 20, 16, 16, 22, 15, 18, 21, 17, 17, 22, 15, 14, 19, 18,
+    uint32_t conversions[40] = {
+        7798798, 7864333, 1048576, 917504, 7536656, 7667726, 983040,  851968,
+        7733262, 7602190, 917504,  917504, 7602190, 7667727, 851968,  786432,
+        7733262, 7667728, 917504,  851968, 7798798, 7864333, 1048576, 917504,
+        7536656, 7667726, 983040,  851968, 7733262, 7602190, 917504,  917504,
+        7602190, 7667727, 851968,  786432, 7733262, 7667728, 917504,  851968,
     };
 
     queue_message_t message;
@@ -44,9 +47,12 @@ should_average_adc_conversions(void)
     // then
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS, status);
     TEST_ASSERT_EQUAL(QUEUE_MSG_TYPE_LINE_POSITION, message.type);
-    TEST_ASSERT_EQUAL(16, message.payload.line_position[0]);
-    TEST_ASSERT_EQUAL(20, message.payload.line_position[1]);
-    TEST_ASSERT_EQUAL(16, message.payload.line_position[2]);
+    TEST_ASSERT_EQUAL(13, message.payload.line_position[0]);
+    TEST_ASSERT_EQUAL(14, message.payload.line_position[1]);
+    TEST_ASSERT_EQUAL(117, message.payload.line_position[2]);
+    TEST_ASSERT_EQUAL(117, message.payload.line_position[3]);
+    TEST_ASSERT_EQUAL(14, message.payload.line_position[4]);
+    TEST_ASSERT_EQUAL(14, message.payload.line_position[5]);
 }
 
 int

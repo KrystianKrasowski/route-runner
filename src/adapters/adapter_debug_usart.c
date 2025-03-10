@@ -16,13 +16,22 @@ core_port_debug_apply(core_vehicle_t *vehicle)
 
     uint8_t left_3 =
         core_position_get_by_place(&position, CORE_POSITION_PLACE_LEFT_3);
+    uint8_t left_2 =
+        core_position_get_by_place(&position, CORE_POSITION_PLACE_LEFT_2);
+    uint8_t left_1 =
+        core_position_get_by_place(&position, CORE_POSITION_PLACE_LEFT_1);
     uint8_t right_1 =
         core_position_get_by_place(&position, CORE_POSITION_PLACE_RIGHT_1);
+    uint8_t right_2 =
+        core_position_get_by_place(&position, CORE_POSITION_PLACE_RIGHT_2);
     uint8_t right_3 =
         core_position_get_by_place(&position, CORE_POSITION_PLACE_RIGHT_3);
 
-    printf("Position. L3: %d, L2: -, L1: -, R1: %d, R2: -, R3: %d\n",
+    printf("Position. L3: %d, L2: %d, L1: %d, R1: %d, R2: %d, R3: %d\n",
            left_3,
+           left_2,
+           left_1,
            right_1,
+           right_2,
            right_3);
 }

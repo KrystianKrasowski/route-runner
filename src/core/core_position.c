@@ -2,11 +2,14 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define FULL_ON_LINE  100
-#define FULL_OFF_LINE 20
+#define FULL_OFF_LINE 9
 
-static inline bool
-is_stright_on_line(core_position_t *self);
+#define WL3 -90
+#define WL2 -50
+#define WL1 -10
+#define WR1 10
+#define WR2 50
+#define WR3 90
 
 static inline bool
 is_on_line(core_position_t *self);
@@ -20,11 +23,7 @@ core_position_init(core_position_t *self)
 core_position_status_t
 core_position_get_status(core_position_t *self)
 {
-    if (is_stright_on_line(self))
-    {
-        return CORE_POSITION_STRIGHT_ON_LINE;
-    }
-    else if(is_on_line(self))
+    if (is_on_line(self))
     {
         return CORE_POSITION_ON_LINE;
     }
@@ -34,44 +33,89 @@ core_position_get_status(core_position_t *self)
     }
 }
 
-int8_t
+int16_t
 core_position_compute_error(core_position_t *self)
 {
-    return self->right - self->left;
+    int16_t left_3_weight  = WL3 * self->left_3;
+    int16_t left_2_weight  = WL2 * self->left_2;
+    int16_t left_1_weight  = WL1 * self->left_1;
+    int16_t right_1_weight = WR1 * self->right_1;
+    int16_t right_2_weight = WR2 * self->right_2;
+    int16_t right_3_weight = WR3 * self->right_3;
+
+    int16_t weight_sum = left_3_weight + left_2_weight + left_1_weight +
+                         right_1_weight + right_2_weight + right_3_weight;
+
+    int16_t sum = self->left_3 + self->left_2 + self->left_1 + self->right_1 +
+                  self->right_2 + self->right_3;
+
+    return weight_sum / sum;
 }
 
 uint8_t
 core_position_get_by_place(core_position_t *self, core_position_place_t place)
 {
-    switch(place)
+    switch (place)
     {
         case CORE_POSITION_PLACE_LEFT_3:
-            return self->left;
+            return self->left_3;
         case CORE_POSITION_PLACE_LEFT_2:
-            return self->left;
+            return self->left_2;
         case CORE_POSITION_PLACE_LEFT_1:
-            return self->left;
+            return self->left_1;
         case CORE_POSITION_PLACE_RIGHT_1:
-            return self->middle;
+            return self->right_1;
         case CORE_POSITION_PLACE_RIGHT_2:
-            return self->middle;
+            return self->right_2;
         case CORE_POSITION_PLACE_RIGHT_3:
-            return self->right;
+            return self->right_3;
         default:
             return 0;
     }
 }
 
-static inline bool
-is_stright_on_line(core_position_t *self)
+void
+core_position_set_by_place(core_position_t      *self,
+                           core_position_place_t place,
+                           uint8_t               position)
 {
-    return self->middle >= FULL_ON_LINE &&
-           (self->left <= FULL_OFF_LINE || self->right <= FULL_OFF_LINE);
+    switch (place)
+    {
+        case CORE_POSITION_PLACE_LEFT_3:
+            self->left_3 = position;
+            break;
+        case CORE_POSITION_PLACE_LEFT_2:
+            self->left_2 = position;
+            break;
+        case CORE_POSITION_PLACE_LEFT_1:
+            self->left_1 = position;
+            break;
+        case CORE_POSITION_PLACE_RIGHT_1:
+            self->right_1 = position;
+            break;
+        case CORE_POSITION_PLACE_RIGHT_2:
+            self->right_2 = position;
+            break;
+        case CORE_POSITION_PLACE_RIGHT_3:
+            self->right_3 = position;
+            break;
+        default:
+            return;
+    }
+}
+
+bool
+core_position_equals(core_position_t *self, core_position_t *other)
+{
+    return self->left_1 == other->left_1 && self->left_2 == other->left_2 &&
+           self->left_3 == other->left_3 && self->right_1 == other->right_1 &&
+           self->right_2 == other->right_2 && self->right_3 == other->right_3;
 }
 
 static inline bool
 is_on_line(core_position_t *self)
 {
-    return self->middle >= FULL_OFF_LINE || self->left >= FULL_OFF_LINE ||
-           self->right >= FULL_OFF_LINE;
+    return self->left_3 > FULL_OFF_LINE || self->left_2 > FULL_OFF_LINE ||
+           self->left_1 > FULL_OFF_LINE || self->right_1 > FULL_OFF_LINE ||
+           self->right_2 > FULL_OFF_LINE || self->right_3 > FULL_OFF_LINE;
 }

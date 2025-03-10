@@ -16,7 +16,7 @@ void
 should_stay_manual(void)
 {
     // given
-    core_position_t position = {10, 10, 10};
+    core_position_t position = {0, 0, 0, 0, 0, 0};
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
@@ -74,7 +74,7 @@ void
 should_transit_to_manual_from_line_detected(void)
 {
     // given
-    core_position_t position = {10, 10, 10};
+    core_position_t position = {0, 0, 0, 0, 0, 0};
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
@@ -130,7 +130,7 @@ void
 should_transit_to_manual_from_line_following_by_line_end(void)
 {
     // given
-    core_position_t position = {10, 10, 10};
+    core_position_t position = {0, 0, 0, 0, 0, 0};
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
@@ -149,7 +149,7 @@ void
 should_clear_command_on_line_end(void)
 {
     // given
-    core_position_t position = {10, 10, 10};
+    core_position_t position = {0, 0, 0, 0, 0, 0};
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);

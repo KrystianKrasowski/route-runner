@@ -12,32 +12,44 @@ qtrhd06a_init(void)
 }
 
 void
-adc_sequence_complete_isr(uint8_t value[])
+adc_sequence_complete_isr(uint32_t value[])
 {
-    uint16_t left   = 0;
-    uint16_t middle = 0;
-    uint16_t right  = 0;
+    uint16_t l3 = 0;
+    uint16_t l2 = 0;
+    uint16_t l1 = 0;
+    uint16_t r1 = 0;
+    uint16_t r2 = 0;
+    uint16_t r3 = 0;
 
     for (uint8_t i = 0; i < ADC_BUFFER_SIZE; i++)
     {
-        if (i % 3 == 0)
+        if (i % 4 == 0)
         {
-            right += value[i];
+            r1 += (uint16_t)(value[i] >> 16);
+            r3 += (uint16_t)value[i];
         }
-        else if (i % 3 == 1)
+        else if (i % 4 == 1)
         {
-            middle += value[i];
+            l1 += (uint16_t)(value[i] >> 16);
+            r2 += (uint16_t)value[i];
+        }
+        else if (i % 4 == 2)
+        {
+            l2 += (uint16_t)(value[i] >> 16);
         }
         else
         {
-            left += value[i];
+            l3 += (uint16_t)(value[i] >> 16);
         }
     }
 
-    uint8_t line_position[3];
-    line_position[0] = left / 10;
-    line_position[1] = middle / 10;
-    line_position[2] = right / 10;
+    uint8_t line_position[6];
+    line_position[0] = l3 / 10;
+    line_position[1] = l2 / 10;
+    line_position[2] = l1 / 10;
+    line_position[3] = r1 / 10;
+    line_position[4] = r2 / 10;
+    line_position[5] = r3 / 10;
 
     queue_message_t message = queue_message_create_line_position(line_position);
     queue_push(QUEUE_TOPIC_LINE_POSITION, message);
