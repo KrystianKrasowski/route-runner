@@ -58,4 +58,7 @@ stack_get_length(stack_t *self);
 stack_result_t
 stack_get_element(stack_t *self, uint8_t index, int16_t *element);
 
+int16_t
+stack_sum(stack_t *self);
+
 #endif

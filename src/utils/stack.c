@@ -128,3 +128,16 @@ stack_get_element(stack_t *self, uint8_t index, int16_t *element)
 
     return STACK_SUCCESS;
 }
+
+int16_t
+stack_sum(stack_t *self)
+{
+    int16_t sum = 0;
+
+    for (uint8_t i = 0; i <= self->top; i++)
+    {
+        sum += self->elements[i];
+    }
+
+    return sum;
+}

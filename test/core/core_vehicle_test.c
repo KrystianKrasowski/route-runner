@@ -174,5 +174,8 @@ main(void)
     RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 0, 100, 90);
     RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 0, 70, 90);
     RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 0, 40, 90);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 50, 100, 50, 50);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 100, 100, 70);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 50, 100, 76);
     return UNITY_END();
 }

@@ -34,7 +34,7 @@ should_update_motion_while_in_manual_state(core_motion_direction_t direction,
 }
 
 void
-should_update_motion_by_proportional_factor(void)
+should_update_motion_by_pid_regulator(void)
 {
     // given
     core_position_t position = {0, 0, 0, 50, 100, 50};
@@ -51,7 +51,7 @@ should_update_motion_by_proportional_factor(void)
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD,
                       core_vehicle_get_motion_direction(&vehicle));
-    TEST_ASSERT_EQUAL(50, core_vehicle_get_motion_correction(&vehicle));
+    TEST_ASSERT_EQUAL(100, core_vehicle_get_motion_correction(&vehicle));
 }
 
 int
@@ -82,6 +82,6 @@ main(void)
                    CORE_MOTION_BACKWARD,
                    90,
                    CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_RIGHT);
-    RUN_TEST(should_update_motion_by_proportional_factor);
+    RUN_TEST(should_update_motion_by_pid_regulator);
     return UNITY_END();
 }

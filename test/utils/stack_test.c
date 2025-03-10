@@ -196,6 +196,54 @@ should_fail_while_peeking_empty_stack(void)
     TEST_ASSERT_EQUAL(STACK_EMPTY, result);
 }
 
+void
+should_sum_stack(void)
+{
+    // given
+    stack_t stack;
+    stack_init(&stack, 3);
+    stack_push(&stack, 1);
+    stack_push(&stack, 2);
+    stack_push(&stack, 3);
+
+    // when
+    int16_t sum = stack_sum(&stack);
+
+    // then
+    TEST_ASSERT_EQUAL(6, sum);
+}
+
+void
+should_sum_incomplete_stack(void)
+{
+    // given
+    stack_t stack;
+    stack_init(&stack, 10);
+    stack_push(&stack, 1);
+    stack_push(&stack, 2);
+    stack_push(&stack, 3);
+
+    // when
+    int16_t sum = stack_sum(&stack);
+
+    // then
+    TEST_ASSERT_EQUAL(6, sum);
+}
+
+void
+should_sum_empty_stack(void)
+{
+    // given
+    stack_t stack;
+    stack_init(&stack, 10);
+
+    // when
+    int16_t sum = stack_sum(&stack);
+
+    // then
+    TEST_ASSERT_EQUAL(0, sum);
+}
+
 int
 main(void)
 {
@@ -213,5 +261,8 @@ main(void)
     RUN_TEST(should_fail_while_popping_from_empty_stack);
     RUN_TEST(should_successfully_peek_stack);
     RUN_TEST(should_fail_while_peeking_empty_stack);
+    RUN_TEST(should_sum_stack);
+    RUN_TEST(should_sum_incomplete_stack);
+    RUN_TEST(should_sum_empty_stack);
     return UNITY_END();
 }

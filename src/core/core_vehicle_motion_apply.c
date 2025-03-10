@@ -2,6 +2,8 @@
 #include "core/types.h"
 
 #define KP 1
+#define KI 0.1
+#define KD 1
 
 static inline void
 set_motion_correction(core_vehicle_t *self, core_motion_t *motion);
@@ -88,9 +90,22 @@ set_motion_direction(core_vehicle_t *vehicle, core_motion_t *motion)
 static inline int8_t
 pid_regulation(core_vehicle_t *vehicle)
 {
-    int8_t error = core_vehicle_update_position_error(vehicle);
+    int8_t  previous   = core_vehicle_get_position_error(vehicle);
+    int8_t  error      = core_vehicle_update_position_error(vehicle);
+    int16_t all_errors = core_vehicle_get_position_errors_sum(vehicle);
 
-    int8_t correction = KP * error;
+    int16_t correction = KP * error + KI * all_errors + KD * (error - previous);
 
-    return correction;
+    if (correction > 100)
+    {
+        return 100;
+    }
+    else if (correction < -100)
+    {
+        return -100;
+    }
+    else
+    {
+        return correction;
+    }
 }

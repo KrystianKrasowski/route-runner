@@ -65,6 +65,9 @@ core_vehicle_is_line_lost(core_vehicle_t *self);
 int8_t
 core_vehicle_get_position_error(core_vehicle_t *self);
 
+int16_t
+core_vehicle_get_position_errors_sum(core_vehicle_t *self);
+
 void
 core_vehicle_set_position_updated(core_vehicle_t *self, bool updated);
 
