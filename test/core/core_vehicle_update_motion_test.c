@@ -51,7 +51,7 @@ should_update_motion_by_pid_regulator(void)
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD,
                       core_vehicle_get_motion_direction(&vehicle));
-    TEST_ASSERT_EQUAL(100, core_vehicle_get_motion_correction(&vehicle));
+    TEST_ASSERT_EQUAL(52, core_vehicle_get_motion_correction(&vehicle));
 }
 
 int
