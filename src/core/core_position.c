@@ -4,12 +4,12 @@
 
 #define FULL_OFF_LINE 9
 
-#define WL3 -90
+#define WL3 -100
 #define WL2 -50
 #define WL1 -10
 #define WR1 10
 #define WR2 50
-#define WR3 90
+#define WR3 100
 
 static inline bool
 is_on_line(core_position_t *self);

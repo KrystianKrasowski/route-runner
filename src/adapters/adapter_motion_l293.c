@@ -39,8 +39,8 @@ core_port_motion_apply(core_vehicle_t *vehicle)
     l293_disable(&motor_left);
     l293_disable(&motor_right);
 
-    apply_duty_cycle(vehicle);
     apply_direction(vehicle);
+    apply_duty_cycle(vehicle);
 
     l293_enable(&motor_left);
     l293_enable(&motor_right);

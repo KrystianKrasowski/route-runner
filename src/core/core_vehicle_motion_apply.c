@@ -2,8 +2,8 @@
 #include "core/types.h"
 
 #define KP 1
-#define KI 0.1
-#define KD 1
+#define KI 0
+#define KD 0
 
 static inline void
 set_motion_correction(core_vehicle_t *self, core_motion_t *motion);

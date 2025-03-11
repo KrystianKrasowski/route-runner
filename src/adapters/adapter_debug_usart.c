@@ -27,11 +27,15 @@ core_port_debug_apply(core_vehicle_t *vehicle)
     uint8_t right_3 =
         core_position_get_by_place(&position, CORE_POSITION_PLACE_RIGHT_3);
 
-    printf("Position. L3: %d, L2: %d, L1: %d, R1: %d, R2: %d, R3: %d\n",
+    int8_t correction = core_vehicle_get_motion_correction(vehicle);
+
+    printf("Position. L3: %d, L2: %d, L1: %d, R1: %d, R2: %d, R3: %d, "
+           "Correction: %d\n",
            left_3,
            left_2,
            left_1,
            right_1,
            right_2,
-           right_3);
+           right_3,
+           correction);
 }
