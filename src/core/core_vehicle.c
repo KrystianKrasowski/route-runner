@@ -89,7 +89,8 @@ core_vehicle_is_line_detected(core_vehicle_t *self)
 bool
 core_vehicle_is_line_lost(core_vehicle_t *self)
 {
-    return core_position_get_status(&self->position) == CORE_POSITION_NO_LINE;
+    return core_position_get_status(&self->position) == CORE_POSITION_NO_LINE &&
+           core_vehicle_get_position_errors_sum(self) == 0;
 }
 
 int8_t

@@ -1,8 +1,21 @@
 #include "core_vehicle_tracking_motion_apply.h"
 
-#define KP 1
-#define KI 0
-#define KD 0
+// 1,2ms
+// kp 0.4; ki 0.015; kd 5.5
+// kp 0.4; ki 0.016; kd 5.52
+// kp 0.38; ki 0.018; kd 5.545
+// kp 0.385; ki 0.019; kd 5.547
+// kp 0.385; ki 0.019; kd 5.57
+// kp 0.385; ki 0.02; kd 5.57
+// 1ms
+// kp 0.385; ki 0.02; kd 5.572
+// kp 0.388; ki 0.024; kd 5.573
+// kp 0.328; ki 0.024; kd 5.573 !!
+// 1.3ms
+
+#define KP 0.328
+#define KI 0.024
+#define KD 5.573
 
 static inline int8_t
 pid_regulation(core_vehicle_t *vehicle);

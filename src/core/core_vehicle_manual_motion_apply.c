@@ -32,11 +32,11 @@ set_motion_correction(core_vehicle_t *vehicle, core_motion_t *motion)
 {
     if (core_vehicle_is_commanded(vehicle, CORE_REMOTE_CONTROL_LEFT))
     {
-        core_motion_set_correction(motion, -90);
+        core_motion_set_correction(motion, -50);
     }
     else if (core_vehicle_is_commanded(vehicle, CORE_REMOTE_CONTROL_RIGHT))
     {
-        core_motion_set_correction(motion, 90);
+        core_motion_set_correction(motion, 50);
     }
     else
     {
