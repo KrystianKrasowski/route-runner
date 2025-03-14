@@ -4,6 +4,6 @@
 #include "core/vehicle.h"
 
 core_vehicle_result_t
-core_vehicle_motion_apply(core_vehicle_t *vehicle);
+core_vehicle_manual_motion_apply(core_vehicle_t *vehicle);
 
 #endif

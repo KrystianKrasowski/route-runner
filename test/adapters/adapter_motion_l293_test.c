@@ -1,4 +1,5 @@
 #include <core.h>
+#include <gpio_mock.h>
 #include <tim3_mock.h>
 #include <unity.h>
 #include <unity_config.h>
@@ -15,17 +16,17 @@ tearDown(void)
 }
 
 void
-should_apply_duty_cycle_based_on_motion_angle(int8_t  correction,
-                                              uint8_t expected_left_duty_cycle,
-                                              uint8_t expected_right_duty_cycle)
+should_apply_duty_cycle(int8_t  correction,
+                        uint8_t expected_left_duty_cycle,
+                        uint8_t expected_right_duty_cycle)
 {
     // given
     core_port_motion_init();
 
-    core_motion_t motion = {CORE_MOTION_BACKWARD, correction};
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    vehicle.motion = motion;
+    core_vehicle_set_motion_direction(&vehicle, CORE_MOTION_FORWARD);
+    core_vehicle_set_motion_correction(&vehicle, correction);
 
     // when
     core_port_motion_apply(&vehicle);
@@ -42,14 +43,26 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, 0, 100, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, -90, 10, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, 90, 100, 10);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, -30, 70, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, 30, 100, 70);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, -45, 55, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, 45, 100, 55);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, -60, 40, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle_based_on_motion_angle, 60, 100, 40);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -100, 100, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -90, 80, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -80, 60, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -70, 40, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -60, 20, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -50, 0, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -40, 20, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -30, 40, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -20, 60, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, -10, 80, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 0, 100, 100);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 10, 100, 80);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 20, 100, 60);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 30, 100, 40);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 40, 100, 20);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 50, 100, 0);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 60, 100, 20);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 70, 100, 40);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 80, 100, 60);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 90, 100, 80);
+    RUN_PARAM_TEST(should_apply_duty_cycle, 100, 100, 100);
     return UNITY_END();
 }

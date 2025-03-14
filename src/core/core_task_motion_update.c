@@ -1,6 +1,5 @@
 #include "core/ports.h"
 #include "core/vehicle.h"
-#include <string.h>
 
 void
 core_task_motion_update(core_vehicle_t *vehicle)

@@ -1,8 +1,9 @@
 #include "core/types.h"
 #include "core/vehicle.h"
 #include "core_vehicle_command_apply.h"
-#include "core_vehicle_motion_apply.h"
+#include "core_vehicle_manual_motion_apply.h"
 #include "core_vehicle_state_apply.h"
+#include "core_vehicle_tracking_motion_apply.h"
 #include <string.h>
 
 static inline void
@@ -82,14 +83,14 @@ core_vehicle_get_line_position(core_vehicle_t *self)
 bool
 core_vehicle_is_line_detected(core_vehicle_t *self)
 {
-    return core_position_get_status(&self->position) ==
-           CORE_POSITION_ON_LINE;
+    return core_position_get_status(&self->position) == CORE_POSITION_ON_LINE;
 }
 
 bool
 core_vehicle_is_line_lost(core_vehicle_t *self)
 {
-    return core_position_get_status(&self->position) == CORE_POSITION_NO_LINE;
+    return core_position_get_status(&self->position) == CORE_POSITION_NO_LINE &&
+           core_vehicle_get_position_errors_sum(self) == 0;
 }
 
 int8_t
@@ -182,7 +183,13 @@ core_vehicle_update_state(core_vehicle_t *self)
 core_vehicle_result_t
 core_vehicle_update_motion(core_vehicle_t *self)
 {
-    return core_vehicle_motion_apply(self);
+    switch (core_vehicle_get_state(self))
+    {
+        case CORE_VEHICLE_STATE_LINE_FOLLOWING:
+            return core_vehicle_tracking_motion_apply(self);
+        default:
+            return core_vehicle_manual_motion_apply(self);
+    }
 }
 
 int8_t

@@ -2,7 +2,8 @@ add_library(core STATIC
     core_vehicle.c
     core_vehicle_command_apply.c
     core_vehicle_state_apply.c
-    core_vehicle_motion_apply.c
+    core_vehicle_manual_motion_apply.c
+    core_vehicle_tracking_motion_apply.c
     core_motion.c
     core_position.c
     core_task_remote_control_receive.c
