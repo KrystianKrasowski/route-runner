@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define CORE_POSITION_DETECTION_TRESHOLD 3
+
 typedef enum
 {
     CORE_POSITION_PLACE_LEFT_3,

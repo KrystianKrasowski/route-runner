@@ -2,13 +2,11 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define FULL_OFF_LINE 9
-
 #define WL3 -100
-#define WL2 -50
-#define WL1 -10
-#define WR1 10
-#define WR2 50
+#define WL2 -40
+#define WL1 -20
+#define WR1 20
+#define WR2 40
 #define WR3 100
 
 static inline bool
@@ -115,7 +113,10 @@ core_position_equals(core_position_t *self, core_position_t *other)
 static inline bool
 is_on_line(core_position_t *self)
 {
-    return self->left_3 > FULL_OFF_LINE || self->left_2 > FULL_OFF_LINE ||
-           self->left_1 > FULL_OFF_LINE || self->right_1 > FULL_OFF_LINE ||
-           self->right_2 > FULL_OFF_LINE || self->right_3 > FULL_OFF_LINE;
+    return self->left_3 >= CORE_POSITION_DETECTION_TRESHOLD ||
+           self->left_2 >= CORE_POSITION_DETECTION_TRESHOLD ||
+           self->left_1 >= CORE_POSITION_DETECTION_TRESHOLD ||
+           self->right_1 >= CORE_POSITION_DETECTION_TRESHOLD ||
+           self->right_2 >= CORE_POSITION_DETECTION_TRESHOLD ||
+           self->right_3 >= CORE_POSITION_DETECTION_TRESHOLD;
 }
