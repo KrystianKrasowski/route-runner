@@ -89,7 +89,7 @@ core_vehicle_is_line_detected(core_vehicle_t *self)
 bool
 core_vehicle_is_line_lost(core_vehicle_t *self)
 {
-    return core_position_get_status(&self->position) == CORE_POSITION_NO_LINE &&
+    return core_position_get_status(&self->position) == CORE_POSITION_OFF_LINE &&
            core_vehicle_get_position_errors_sum(self) == 0;
 }
 
@@ -195,7 +195,8 @@ core_vehicle_update_motion(core_vehicle_t *self)
 int8_t
 core_vehicle_update_position_error(core_vehicle_t *self)
 {
-    int8_t error = core_position_compute_error(&self->position);
+    int8_t error = core_vehicle_get_position_error(self);
+    core_position_compute_error(&self->position, &error);
     stack_push_rolling(&self->position_error, error);
     return error;
 }
@@ -214,7 +215,7 @@ static inline void
 init_position_error(core_vehicle_t *self)
 {
     stack_t errors;
-    stack_init(&errors, 5);
+    stack_init(&errors, 20);
 
     self->position_error = errors;
 }

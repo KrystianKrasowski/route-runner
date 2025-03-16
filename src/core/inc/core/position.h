@@ -28,8 +28,8 @@ typedef struct
 
 typedef enum
 {
-    CORE_POSITION_NO_LINE,
     CORE_POSITION_ON_LINE,
+    CORE_POSITION_OFF_LINE,
 } core_position_status_t;
 
 void
@@ -38,8 +38,8 @@ core_position_init(core_position_t *self);
 core_position_status_t
 core_position_get_status(core_position_t *self);
 
-int16_t
-core_position_compute_error(core_position_t *self);
+core_position_status_t
+core_position_compute_error(core_position_t *self, int8_t *error);
 
 uint8_t
 core_position_get_by_place(core_position_t *self, core_position_place_t place);

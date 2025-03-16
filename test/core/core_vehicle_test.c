@@ -143,6 +143,26 @@ should_compute_position_error(uint8_t left_3,
                       core_vehicle_get_position_error(&vehicle));
 }
 
+void
+should_set_last_error_when_drifting_off_line(void)
+{
+    // given
+    core_position_t last_on_line_position = {5, 0, 0, 0, 0, 0};
+    core_position_t line_lost_position    = {0, 0, 0, 0, 0, 0};
+    core_vehicle_t vehicle;
+
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_line_position(&vehicle, last_on_line_position);
+    core_vehicle_update_position_error(&vehicle);
+
+    // when
+    core_vehicle_set_line_position(&vehicle, line_lost_position);
+    core_vehicle_update_position_error(&vehicle);
+
+    // then
+    TEST_ASSERT_EQUAL(-100, core_vehicle_get_position_error(&vehicle));
+}
+
 int
 main(void)
 {
@@ -182,5 +202,6 @@ main(void)
     RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 50, 100, 50, 50);
     RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 100, 100, 70);
     RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 50, 100, 80);
+    RUN_TEST(should_set_last_error_when_drifting_off_line);
     return UNITY_END();
 }
