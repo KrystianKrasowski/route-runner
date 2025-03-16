@@ -214,7 +214,7 @@ static inline void
 init_position_error(core_vehicle_t *self)
 {
     stack_t errors;
-    stack_init(&errors, 10);
+    stack_init(&errors, 5);
 
     self->position_error = errors;
 }

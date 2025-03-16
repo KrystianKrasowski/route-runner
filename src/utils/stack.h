@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define STACK_MAX_SIZE 10
+#define STACK_MAX_SIZE 100
 
 typedef enum
 {
