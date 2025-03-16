@@ -13,13 +13,13 @@ tearDown(void)
 }
 
 void
-should_fail_while_initializing_too_big_stack(uint8_t size)
+should_fail_while_initializing_too_big_stack(void)
 {
     // given
     stack_t stack;
 
     // when
-    stack_result_t result = stack_init(&stack, size);
+    stack_result_t result = stack_init(&stack, STACK_MAX_SIZE + 1);
 
     // then
     TEST_ASSERT_EQUAL(STACK_SIZE_EXCEEDED, result);
@@ -248,10 +248,7 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 16);
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 17);
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 18);
-    RUN_PARAM_TEST(should_fail_while_initializing_too_big_stack, 19);
+    RUN_TEST(should_fail_while_initializing_too_big_stack);
     RUN_TEST(should_successfully_init_stack);
     RUN_TEST(should_successfully_push_element_on_stack);
     RUN_TEST(should_increase_top_index_while_pushing_on_stack);

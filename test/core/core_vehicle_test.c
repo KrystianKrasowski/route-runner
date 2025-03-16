@@ -164,6 +164,7 @@ main(void)
     RUN_PARAM_TEST(should_detect_line, 0, 0, 0, OFF_THE_LINE, 0, 0, false);
     RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 0, OFF_THE_LINE, 0, false);
     RUN_PARAM_TEST(should_detect_line, 0, 0, 0, 0, 0, OFF_THE_LINE, false);
+    RUN_PARAM_TEST(should_compute_position_error, 0, 0, 0, 0, 0, 0, 0);
     RUN_PARAM_TEST(should_compute_position_error, 0, 0, 100, 100, 0, 0, 0);
     RUN_PARAM_TEST(should_compute_position_error, 0, 50, 100, 100, 0, 0, -8);
     RUN_PARAM_TEST(should_compute_position_error, 0, 60, 100, 90, 0, 0, -10);

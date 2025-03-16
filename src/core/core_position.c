@@ -34,6 +34,14 @@ core_position_get_status(core_position_t *self)
 int16_t
 core_position_compute_error(core_position_t *self)
 {
+    int16_t sum = self->left_3 + self->left_2 + self->left_1 + self->right_1 +
+                  self->right_2 + self->right_3;
+
+    if (sum == 0)
+    {
+        return 0;
+    }
+
     int16_t left_3_weight  = WL3 * self->left_3;
     int16_t left_2_weight  = WL2 * self->left_2;
     int16_t left_1_weight  = WL1 * self->left_1;
@@ -43,9 +51,6 @@ core_position_compute_error(core_position_t *self)
 
     int16_t weight_sum = left_3_weight + left_2_weight + left_1_weight +
                          right_1_weight + right_2_weight + right_3_weight;
-
-    int16_t sum = self->left_3 + self->left_2 + self->left_1 + self->right_1 +
-                  self->right_2 + self->right_3;
 
     return weight_sum / sum;
 }
