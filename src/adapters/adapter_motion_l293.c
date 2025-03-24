@@ -33,6 +33,12 @@ apply_direction_right(core_motion_direction_t direction);
 static core_motion_direction_t
 flip_direction(core_motion_direction_t direction);
 
+static inline uint8_t
+duty_cycle_linear(int8_t error);
+
+static inline uint8_t
+duty_cycle_quadratic(int8_t error);
+
 void
 core_port_motion_init(void)
 {
@@ -75,26 +81,34 @@ core_port_motion_apply(core_vehicle_t *vehicle)
 static inline uint8_t
 compute_duty_cycle_left(int8_t correction)
 {
-    if (correction >= 0)
+    if (correction >= -100 && correction < -50)
     {
-        return 100;
+        return duty_cycle_linear(correction);
+    }
+    else if (correction >= -50 && correction < 0)
+    {
+        return duty_cycle_quadratic(correction);
     }
     else
     {
-        return abs(2 * correction + 100);
+        return 100;
     }
 }
 
 static inline uint8_t
 compute_duty_cycle_right(int8_t correction)
 {
-    if (correction <= 0)
+    if (correction < 0)
     {
         return 100;
     }
+    else if (correction >= 0 && correction < 50)
+    {
+        return duty_cycle_quadratic(correction);
+    }
     else
     {
-        return abs(-2 * correction + 100);
+        return duty_cycle_linear(correction);
     }
 }
 
@@ -171,4 +185,16 @@ flip_direction(core_motion_direction_t direction)
         default:
             return CORE_MOTION_NONE;
     }
+}
+
+static inline uint8_t
+duty_cycle_linear(int8_t error)
+{
+    return abs(-2 * abs(error) + 100);
+}
+
+static inline uint8_t
+duty_cycle_quadratic(int8_t error)
+{
+    return (-1 * error * error + 2500) / 25;
 }
