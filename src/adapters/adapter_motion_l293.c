@@ -6,8 +6,7 @@
 #include <string.h>
 #include <tim3.h>
 
-#define MIN_DUTY_CYCLE 0
-#define MAX_DUTY_CYCLE 100
+#define DUTY_CYCLE(pid) (abs(-2 * abs(pid) + 100))
 
 static l293_t motor_left;
 static l293_t motor_right;
@@ -75,26 +74,26 @@ core_port_motion_apply(core_vehicle_t *vehicle)
 static inline uint8_t
 compute_duty_cycle_left(int8_t correction)
 {
-    if (correction >= 0)
+    if (correction >= -100 && correction < 0)
     {
-        return 100;
+        return DUTY_CYCLE(correction);
     }
     else
     {
-        return abs(2 * correction + 100);
+        return 100;
     }
 }
 
 static inline uint8_t
 compute_duty_cycle_right(int8_t correction)
 {
-    if (correction <= 0)
+    if (correction > 0 && correction <= 100)
     {
-        return 100;
+        return DUTY_CYCLE(correction);
     }
     else
     {
-        return abs(-2 * correction + 100);
+        return 100;
     }
 }
 
