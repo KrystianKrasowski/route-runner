@@ -6,8 +6,7 @@
 #include <string.h>
 #include <tim3.h>
 
-#define MIN_DUTY_CYCLE 0
-#define MAX_DUTY_CYCLE 100
+#define DUTY_CYCLE(pid) (abs(-2 * abs(pid) + 100))
 
 static l293_t motor_left;
 static l293_t motor_right;
@@ -32,12 +31,6 @@ apply_direction_right(core_motion_direction_t direction);
 
 static core_motion_direction_t
 flip_direction(core_motion_direction_t direction);
-
-static inline uint8_t
-duty_cycle_linear(int8_t error);
-
-static inline uint8_t
-duty_cycle_quadratic(int8_t error);
 
 void
 core_port_motion_init(void)
@@ -81,13 +74,9 @@ core_port_motion_apply(core_vehicle_t *vehicle)
 static inline uint8_t
 compute_duty_cycle_left(int8_t correction)
 {
-    if (correction >= -100 && correction < -50)
+    if (correction >= -100 && correction < 0)
     {
-        return duty_cycle_linear(correction);
-    }
-    else if (correction >= -50 && correction < 0)
-    {
-        return duty_cycle_quadratic(correction);
+        return DUTY_CYCLE(correction);
     }
     else
     {
@@ -98,17 +87,13 @@ compute_duty_cycle_left(int8_t correction)
 static inline uint8_t
 compute_duty_cycle_right(int8_t correction)
 {
-    if (correction < 0)
+    if (correction > 0 && correction <= 100)
     {
-        return 100;
-    }
-    else if (correction >= 0 && correction < 50)
-    {
-        return duty_cycle_quadratic(correction);
+        return DUTY_CYCLE(correction);
     }
     else
     {
-        return duty_cycle_linear(correction);
+        return 100;
     }
 }
 
@@ -185,16 +170,4 @@ flip_direction(core_motion_direction_t direction)
         default:
             return CORE_MOTION_NONE;
     }
-}
-
-static inline uint8_t
-duty_cycle_linear(int8_t error)
-{
-    return abs(-2 * abs(error) + 100);
-}
-
-static inline uint8_t
-duty_cycle_quadratic(int8_t error)
-{
-    return (-1 * error * error + 2500) / 25;
 }
