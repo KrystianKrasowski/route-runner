@@ -2,7 +2,7 @@
 #include "gpio.h"
 #include "spi.h"
 #include "tim2.h"
-#include <queue.h>
+#include <mq.h>
 #include <stdint.h>
 
 static spi_request_t request = {
@@ -47,7 +47,7 @@ spi_on_response_received_isr(uint8_t response[])
     if (last_command != command)
     {
         last_command            = command;
-        queue_message_t message = queue_message_create_command(command);
-        queue_push(QUEUE_TOPIC_REMOTE_CONTROL, message);
+        mq_message_t message = mq_create_command_message(command);
+        mq_push(MQ_TOPIC_REMOTE_CONTROL, message);
     }
 }

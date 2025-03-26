@@ -1,6 +1,6 @@
 #include <adc_mock.h>
 #include <qtrhd06a.h>
-#include <queue.h>
+#include <mq.h>
 #include <unity.h>
 
 void
@@ -38,15 +38,15 @@ should_average_adc_conversions(void)
         7602190, 7667727, 851968,  786432, 7733262, 7667728, 917504,  851968,
     };
 
-    queue_message_t message;
+    mq_message_t message;
 
     // when
     adc_sequence_complete_isr(conversions);
-    queue_status_t status = queue_pull(QUEUE_TOPIC_LINE_POSITION, &message);
+    mq_status_t status = mq_pull(MQ_TOPIC_LINE_POSITION, &message);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, status);
-    TEST_ASSERT_EQUAL(QUEUE_MSG_TYPE_LINE_POSITION, message.type);
+    TEST_ASSERT_EQUAL(MQ_SUCCESS, status);
+    TEST_ASSERT_EQUAL(MQ_MESSAGE_TYPE_LINE_POSITION, message.type);
     TEST_ASSERT_EQUAL(13, message.payload.line_position[0]);
     TEST_ASSERT_EQUAL(14, message.payload.line_position[1]);
     TEST_ASSERT_EQUAL(117, message.payload.line_position[2]);

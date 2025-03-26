@@ -1,6 +1,6 @@
 #include <core/ports.h>
 #include <core/vehicle.h>
-#include <queue.h>
+#include <mq.h>
 #include <string.h>
 #include <tasks.h>
 
@@ -32,10 +32,10 @@ tasks_run(core_vehicle_t *vehicle)
 static void
 remote_control_receive(core_vehicle_t *vehicle)
 {
-    queue_message_t message;
+    mq_message_t message;
     memset(&message, 0, sizeof(message));
 
-    if (queue_pull(QUEUE_TOPIC_REMOTE_CONTROL, &message) == QUEUE_SUCCESS)
+    if (mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message) == MQ_SUCCESS)
     {
         uint16_t raw_command = message.payload.command;
         uint16_t command     = core_port_remote_control_map(raw_command);
@@ -47,9 +47,9 @@ remote_control_receive(core_vehicle_t *vehicle)
 static void
 position_receive(core_vehicle_t *vehicle)
 {
-    queue_message_t message;
+    mq_message_t message;
 
-    if (queue_pull(QUEUE_TOPIC_LINE_POSITION, &message) == QUEUE_SUCCESS)
+    if (mq_pull(MQ_TOPIC_LINE_POSITION, &message) == MQ_SUCCESS)
     {
         uint8_t        *raw_position = message.payload.line_position;
         core_position_t position = core_port_line_position_map(raw_position);

@@ -1,6 +1,6 @@
 #include <dualshock2.h>
 #include <gpio_mock.h>
-#include <queue.h>
+#include <mq.h>
 #include <spi_mock.h>
 #include <tim2_mock.h>
 #include <unity.h>
@@ -64,10 +64,10 @@ should_receive_spi_transmission(uint8_t response[], uint16_t expected_command)
     spi_on_response_received_isr(response);
 
     // then
-    queue_message_t message;
-    queue_status_t  status = queue_pull(QUEUE_TOPIC_REMOTE_CONTROL, &message);
+    mq_message_t message;
+    mq_status_t  status = mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message);
 
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, status);
+    TEST_ASSERT_EQUAL(MQ_SUCCESS, status);
     TEST_ASSERT_DS2_COMMANDS(expected_command, message.payload.command);
 }
 
