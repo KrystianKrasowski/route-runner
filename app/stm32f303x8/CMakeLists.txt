@@ -10,6 +10,7 @@ add_executable(${MAIN_EXECUTABLE}
 
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
+        tasks
         core
         adapters
         drivers_components
