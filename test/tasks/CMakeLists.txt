@@ -1,5 +1,5 @@
 set(TEST_SUITE
-    queue_test.c
+    mq_test.c
 )
 
 foreach(FILE ${TEST_SUITE})

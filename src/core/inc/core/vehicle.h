@@ -3,8 +3,8 @@
 
 #include "motion.h"
 #include "position.h"
-#include <stack.h>
 #include <stdint.h>
+#include <utils/stack.h>
 
 typedef enum
 {

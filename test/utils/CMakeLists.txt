@@ -1,5 +1,6 @@
 set(TEST_SUITE
     stack_test.c
+    queue_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
