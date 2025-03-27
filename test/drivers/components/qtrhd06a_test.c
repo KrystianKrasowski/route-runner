@@ -6,6 +6,7 @@
 void
 setUp(void)
 {
+    mq_init();
     adc_mock_reset();
 }
 
@@ -42,7 +43,7 @@ should_average_adc_conversions(void)
 
     // when
     adc_sequence_complete_isr(conversions);
-    mq_status_t status = mq_pull(MQ_TOPIC_LINE_POSITION, &message);
+    mq_result_t status = mq_pull(MQ_TOPIC_LINE_POSITION, &message);
 
     // then
     TEST_ASSERT_EQUAL(MQ_SUCCESS, status);

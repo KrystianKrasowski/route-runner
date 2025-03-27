@@ -4,6 +4,9 @@
 #include <core/vehicle.h>
 
 void
+tasks_init(void);
+
+void
 tasks_run(core_vehicle_t *vehicle);
 
 #endif

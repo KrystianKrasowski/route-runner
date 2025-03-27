@@ -1,89 +1,82 @@
 #include "mq.h"
 #include <stdio.h>
 #include <string.h>
+#include <utils/queue.h>
 
 #define QUEUE_TOPICS_SIZE 2
 
-static volatile mq_t queues[QUEUE_TOPICS_SIZE] = {
-    [MQ_TOPIC_REMOTE_CONTROL] =
-        {
-            .messages = {{0}},
-            .head     = 0,
-            .tail     = 0,
-        },
-    [MQ_TOPIC_LINE_POSITION] = {
-        .messages = {{0}},
-        .head     = 0,
-        .tail     = 0,
-    }};
+static queue_t volatile queues[QUEUE_TOPICS_SIZE];
 
-mq_status_t
-mq_push(mq_topic_t const topic, mq_message_t const message)
+mq_result_t
+mq_init(void)
 {
-    volatile mq_t *queue = &queues[topic];
-
-    uint8_t next = (queue->head + 1) % MQ_SIZE;
-
-    if (next == queue->tail)
+    for (uint8_t i = 0; i < QUEUE_TOPICS_SIZE; i++)
     {
-        return MQ_FULL;
-    }
+        queue_result_t result =
+            queue_init(&queues[i], MQ_SIZE, sizeof(mq_message_t));
 
-    queue->messages[queue->head] = message;
-    queue->head                  = next;
+        if (result != QUEUE_SUCCESS)
+        {
+            return MQ_INIT_ERROR;
+        }
+    }
 
     return MQ_SUCCESS;
 }
 
-mq_status_t
-mq_pull(mq_topic_t const topic, mq_message_t volatile *message)
+mq_result_t
+mq_push(mq_topic_t const topic, mq_message_t message)
 {
-    volatile mq_t *queue = &queues[topic];
+    queue_t volatile *queue = &queues[topic];
 
-    if (queue->head == queue->tail)
+    if (queue_push(queue, &message) == QUEUE_SUCCESS)
+    {
+        return MQ_SUCCESS;
+    }
+    else
+    {
+        return MQ_FULL;
+    }
+}
+
+mq_result_t
+mq_pull(mq_topic_t const topic, mq_message_t *message)
+{
+    queue_t volatile *queue = &queues[topic];
+
+    if (queue_pull(queue, message) == QUEUE_SUCCESS)
+    {
+        return MQ_SUCCESS;
+    }
+    else
     {
         return MQ_EMPTY;
     }
-
-    *message    = queue->messages[queue->tail];
-    queue->tail = (queue->tail + 1) % MQ_SIZE;
-
-    return MQ_SUCCESS;
 }
 
 void
 mq_clear(mq_topic_t const topic)
 {
-    volatile mq_t *queue = &queues[topic];
-    queue->head             = 0;
-    queue->tail             = 0;
-    mq_message_t blank   = {0};
-
-    for (uint8_t i = 0; i < MQ_SIZE; i++)
-    {
-        queue->messages[i] = blank;
-    }
+    queue_clear(&queues[topic]);
 }
 
 uint8_t
 mq_get_head(mq_topic_t const topic)
 {
-    volatile mq_t queue = queues[topic];
-    return queue.head;
+    return queue_get_head(&queues[topic]);
 }
 
 uint8_t
 mq_get_tail(mq_topic_t const topic)
 {
-    volatile mq_t queue = queues[topic];
-    return queue.tail;
+    return queue_get_tail(&queues[topic]);
 }
 
 mq_message_t
 mq_create_command_message(uint16_t command)
 {
     mq_message_t message = {.type    = MQ_MESSAGE_TYPE_COMMAND,
-                               .payload = {.command = command}};
+                            .payload = {.command = command}};
 
     return message;
 }
@@ -93,7 +86,7 @@ mq_create_position_message(uint8_t position[])
 {
     mq_message_t message;
     message.type = MQ_MESSAGE_TYPE_LINE_POSITION;
-    
+
     memcpy(message.payload.line_position,
            position,
            sizeof(message.payload.line_position));

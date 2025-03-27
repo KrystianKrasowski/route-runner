@@ -32,25 +32,22 @@ typedef enum
     MQ_TOPIC_LINE_POSITION,
 } mq_topic_t;
 
-typedef struct
-{
-    mq_message_t messages[MQ_SIZE];
-    uint8_t      head;
-    uint8_t      tail;
-} mq_t;
-
 typedef enum
 {
     MQ_SUCCESS,
+    MQ_INIT_ERROR,
     MQ_FULL,
     MQ_EMPTY,
-} mq_status_t;
+} mq_result_t;
 
-mq_status_t
-mq_push(mq_topic_t const topic, mq_message_t const message);
+mq_result_t
+mq_init(void);
 
-mq_status_t
-mq_pull(mq_topic_t const topic, mq_message_t volatile *message);
+mq_result_t
+mq_push(mq_topic_t const topic, mq_message_t message);
+
+mq_result_t
+mq_pull(mq_topic_t const topic, mq_message_t *message);
 
 void
 mq_clear(mq_topic_t const topic);

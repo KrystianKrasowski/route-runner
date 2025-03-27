@@ -20,6 +20,16 @@ static void
 state_indicator_update(core_vehicle_t *vehicle);
 
 void
+tasks_init(void)
+{
+    mq_init();
+    core_port_motion_init();
+    core_port_remote_control_init();
+    core_port_state_indicator_init();
+    core_port_line_position_init();
+}
+
+void
 tasks_run(core_vehicle_t *vehicle)
 {
     remote_control_receive(vehicle);
