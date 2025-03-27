@@ -52,12 +52,6 @@ mq_pull(mq_topic_t const topic, mq_message_t *message);
 void
 mq_clear(mq_topic_t const topic);
 
-uint8_t
-mq_get_head(mq_topic_t const topic);
-
-uint8_t
-mq_get_tail(mq_topic_t const topic);
-
 mq_message_t
 mq_create_command_message(uint16_t command);
 

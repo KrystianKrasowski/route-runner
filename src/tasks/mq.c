@@ -60,18 +60,6 @@ mq_clear(mq_topic_t const topic)
     queue_clear(&queues[topic]);
 }
 
-uint8_t
-mq_get_head(mq_topic_t const topic)
-{
-    return queue_get_head(&queues[topic]);
-}
-
-uint8_t
-mq_get_tail(mq_topic_t const topic)
-{
-    return queue_get_tail(&queues[topic]);
-}
-
 mq_message_t
 mq_create_command_message(uint16_t command)
 {
