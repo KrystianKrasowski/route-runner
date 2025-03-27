@@ -14,12 +14,12 @@ main(void)
 
     qtrhd06a_init();
 
-    queue_message_t message;
+    mq_message_t message;
     memset(&message, 0, sizeof(message));
 
     while (1)
     {
-        if (queue_pull(QUEUE_TOPIC_LINE_POSITION, &message) == QUEUE_SUCCESS)
+        if (mq_pull(MQ_TOPIC_LINE_POSITION, &message) == MQ_SUCCESS)
         {
             uint8_t *pos = message.payload.line_position;
             printf("V1: %d; V2: %d; V3: %d\n", pos[0], pos[1], pos[2]);

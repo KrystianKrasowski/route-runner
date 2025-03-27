@@ -1,12 +1,10 @@
 set(TEST_SUITE
-    dualshock2_test.c
-    l293_test.c
-    qtrhd06a_test.c
+    mq_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
     get_filename_component(TEST_NAME ${FILE} NAME_WE)
-
+    
     add_executable(${TEST_NAME} ${FILE})
 
     target_include_directories(${TEST_NAME}
@@ -16,11 +14,9 @@ foreach(FILE ${TEST_SUITE})
 
     target_link_libraries(${TEST_NAME}
         PRIVATE
-            drivers_components
-            drivers_peripherals_mock
-            unity
             tasks
-    )   
-
+            unity
+    )
     add_test(${TEST_NAME} ${TEST_NAME})
 endforeach()
+

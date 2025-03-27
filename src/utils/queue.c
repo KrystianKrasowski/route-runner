@@ -1,102 +1,97 @@
-#include "queue.h"
+#include "utils/queue.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
-#define QUEUE_TOPICS_SIZE 2
-
-static volatile queue_t queues[QUEUE_TOPICS_SIZE] = {
-    [QUEUE_TOPIC_REMOTE_CONTROL] =
-        {
-            .messages = {{0}},
-            .head     = 0,
-            .tail     = 0,
-        },
-    [QUEUE_TOPIC_LINE_POSITION] = {
-        .messages = {{0}},
-        .head     = 0,
-        .tail     = 0,
-    }};
-
-queue_status_t
-queue_push(queue_topic_t const topic, queue_message_t const message)
+queue_result_t
+queue_init(queue_t volatile *self, uint8_t queue_size, size_t element_size)
 {
-    volatile queue_t *queue = &queues[topic];
+    uint8_t capacity = queue_size + 1;
 
-    uint8_t next = (queue->head + 1) % QUEUE_SIZE;
-
-    if (next == queue->tail)
+    if (capacity > QUEUE_MAX_CAPACITY)
     {
-        return QUEUE_FULL;
+        return QUEUE_SIZE_TOO_LARGE;
     }
 
-    queue->messages[queue->head] = message;
-    queue->head                  = next;
+    if (element_size > QUEUE_ELEMENT_MAX_SIZE)
+    {
+        return QUEUE_ELEMENT_SIZE_TOO_LARGE;
+    }
+
+    for (uint8_t i = 0; i < capacity; i++)
+    {
+        for (uint8_t j = 0; j < element_size; j++)
+        {
+            self->elements[i][j] = 0;
+        }
+    }
+
+    self->capacity     = capacity;
+    self->element_size = element_size;
+    self->head         = 0;
+    self->tail         = 0;
 
     return QUEUE_SUCCESS;
 }
 
-queue_status_t
-queue_pull(queue_topic_t const topic, queue_message_t volatile *message)
+queue_result_t
+queue_push(queue_t volatile *self, void *element)
 {
-    volatile queue_t *queue = &queues[topic];
+    uint8_t next = (self->tail + 1) % self->capacity;
 
-    if (queue->head == queue->tail)
+    if (next == self->head)
+    {
+        return QUEUE_FULL;
+    }
+
+    uint8_t element_bytes[self->element_size];
+    memcpy(&element_bytes, element, self->element_size);
+
+    for (uint8_t i = 0; i < self->element_size; i++)
+    {
+        self->elements[self->tail][i] = element_bytes[i];
+    }
+
+    self->tail = next;
+
+    return QUEUE_SUCCESS;
+}
+
+queue_result_t
+queue_pull(queue_t volatile *self, void *element)
+{
+    if (self->head == self->tail)
     {
         return QUEUE_EMPTY;
     }
 
-    *message    = queue->messages[queue->tail];
-    queue->tail = (queue->tail + 1) % QUEUE_SIZE;
+    uint8_t element_bytes[self->element_size];
+
+    for (uint8_t i = 0; i < self->element_size; i++)
+    {
+        element_bytes[i] = self->elements[self->head][i];
+    }
+
+    memcpy(element, &element_bytes, self->element_size);
+    self->head = (self->head + 1) % self->capacity;
 
     return QUEUE_SUCCESS;
 }
 
 void
-queue_clear(queue_topic_t const topic)
+queue_clear(queue_t volatile *self)
 {
-    volatile queue_t *queue = &queues[topic];
-    queue->head             = 0;
-    queue->tail             = 0;
-    queue_message_t blank   = {0};
-
-    for (uint8_t i = 0; i < QUEUE_SIZE; i++)
-    {
-        queue->messages[i] = blank;
-    }
+    queue_init(self, self->capacity, self->element_size);
 }
 
 uint8_t
-queue_get_head(queue_topic_t const topic)
+queue_get_head(queue_t volatile *self)
 {
-    volatile queue_t queue = queues[topic];
-    return queue.head;
+    return self->head;
 }
 
 uint8_t
-queue_get_tail(queue_topic_t const topic)
+queue_get_tail(queue_t volatile *self)
 {
-    volatile queue_t queue = queues[topic];
-    return queue.tail;
-}
-
-queue_message_t
-queue_message_create_command(uint16_t command)
-{
-    queue_message_t message = {.type    = QUEUE_MSG_TYPE_COMMAND,
-                               .payload = {.command = command}};
-
-    return message;
-}
-
-queue_message_t
-queue_message_create_line_position(uint8_t position[])
-{
-    queue_message_t message;
-    message.type = QUEUE_MSG_TYPE_LINE_POSITION;
-    
-    memcpy(message.payload.line_position,
-           position,
-           sizeof(message.payload.line_position));
-
-    return message;
+    return self->tail;
 }

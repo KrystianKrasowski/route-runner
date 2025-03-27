@@ -1,6 +1,6 @@
 #include "qtrhd06a.h"
 #include <adc.h>
-#include <queue.h>
+#include <mq.h>
 #include <string.h>
 
 void
@@ -51,6 +51,6 @@ adc_sequence_complete_isr(uint32_t value[])
     line_position[4] = r2 / 10;
     line_position[5] = r3 / 10;
 
-    queue_message_t message = queue_message_create_line_position(line_position);
-    queue_push(QUEUE_TOPIC_LINE_POSITION, message);
+    mq_message_t message = mq_create_position_message(line_position);
+    mq_push(MQ_TOPIC_LINE_POSITION, message);
 }

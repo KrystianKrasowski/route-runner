@@ -1,8 +1,6 @@
 add_library(utils STATIC
-    queue.h
-    queue.c
-    stack.h
     stack.c
+    queue.c
 )
 
-target_include_directories(utils PUBLIC "./")
+target_include_directories(utils PUBLIC "./inc")
