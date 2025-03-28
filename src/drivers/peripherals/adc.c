@@ -6,13 +6,19 @@
 #include <string.h>
 #include <stdio.h>
 
-uint16_t volatile adc_buffer[ADC_BUFFER_SIZE];
+static uint16_t adc_buffer[ADC_BUFFER_SIZE];
 
 static inline void
 init_gpio(void);
 
 static inline void
 init_rcc(void);
+
+static inline void
+init_adc_dma(void);
+
+static inline void
+init_adc_dual_mode(void);
 
 static inline void
 enable_advreg(void);
@@ -29,9 +35,6 @@ init_adc_sequence(void);
 static inline void
 init_tim6_trgo_trigger(void);
 
-static inline void
-init_adc_dma(void);
-
 void
 adc_init()
 {
@@ -39,16 +42,7 @@ adc_init()
     init_gpio();
     init_adc_dma();
     enable_advreg();
-
-    // enable ADC 12 dual mode
-    ADC12_COMMON->CCR |= (6 << ADC12_CCR_MULTI_Pos);
-
-    // enable DMA for dual mode 8-bit
-    ADC12_COMMON->CCR |= (3 << ADC12_CCR_MDMA_Pos);
-
-    // DMA circular mode
-    ADC12_COMMON->CCR |= (1 << ADC12_CCR_DMACFG_Pos);
-
+    init_adc_dual_mode();
     init_adc_resolution();
     init_adc_sequence();
     init_tim6_trgo_trigger();
@@ -99,6 +93,12 @@ DMA1_Channel1_IRQHandler(void)
     }
 }
 
+__attribute__((weak)) void
+adc_sequence_complete_isr(uint16_t value[])
+{
+    (void)value;
+}
+
 static inline void
 init_gpio(void)
 {
@@ -132,61 +132,6 @@ init_rcc(void)
 
     // Set ADC Clock Source (Use PLL/2 clock, resulting 8MHz)
     RCC->CFGR2 |= RCC_CFGR2_ADCPRE12_DIV2;
-}
-
-static inline void
-enable_advreg(void)
-{
-    ADC1->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
-    ADC1->CR |= ADC_CR_ADVREGEN_0;
-
-    ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
-    ADC2->CR |= ADC_CR_ADVREGEN_0;
-
-    systick_delay_us(10);
-}
-
-static inline void
-advreg_disable()
-{
-    ADC1->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
-    ADC1->CR |= ADC_CR_ADVREGEN_1;
-
-    ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
-    ADC2->CR |= ADC_CR_ADVREGEN_1;
-}
-
-static inline void
-init_adc_resolution(void)
-{
-    // set 8-bit resolution
-    ADC1->CFGR |= (2 << ADC_CFGR_RES_Pos);
-    ADC2->CFGR |= (2 << ADC_CFGR_RES_Pos);
-}
-
-static inline void
-init_adc_sequence(void)
-{
-    ADC1->SQR1 |= (3 << ADC_SQR1_L_Pos);
-    ADC1->SQR1 |= (2 << ADC_SQR1_SQ1_Pos);
-    ADC1->SQR1 |= (4 << ADC_SQR1_SQ2_Pos);
-    // dummy conversions for sequence length match
-    ADC1->SQR1 |= (4 << ADC_SQR1_SQ3_Pos);
-    ADC1->SQR1 |= (4 << ADC_SQR1_SQ4_Pos);
-
-    ADC2->SQR1 |= (3 << ADC_SQR1_L_Pos);
-    ADC2->SQR1 |= (1 << ADC_SQR1_SQ1_Pos);
-    ADC2->SQR1 |= (2 << ADC_SQR1_SQ2_Pos);
-    ADC2->SQR1 |= (3 << ADC_SQR1_SQ3_Pos);
-    ADC2->SQR1 |= (4 << ADC_SQR1_SQ4_Pos);
-}
-
-static inline void
-init_tim6_trgo_trigger(void)
-{
-    tim6_init();
-    ADC1->CFGR |= (13 << ADC_CFGR_EXTSEL_Pos);
-    ADC1->CFGR |= (1 << ADC_CFGR_EXTEN_Pos);
 }
 
 static inline void
@@ -225,4 +170,73 @@ init_adc_dma(void)
 
     // Enable DMA channel
     DMA1_Channel1->CCR |= DMA_CCR_EN;
+}
+
+static inline void
+enable_advreg(void)
+{
+    ADC1->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
+    ADC1->CR |= ADC_CR_ADVREGEN_0;
+
+    ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
+    ADC2->CR |= ADC_CR_ADVREGEN_0;
+
+    systick_delay_us(10);
+}
+
+static inline void
+advreg_disable()
+{
+    ADC1->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
+    ADC1->CR |= ADC_CR_ADVREGEN_1;
+
+    ADC2->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);
+    ADC2->CR |= ADC_CR_ADVREGEN_1;
+}
+
+
+static inline void
+init_adc_dual_mode(void)
+{
+    // enable ADC 12 dual mode
+    ADC12_COMMON->CCR |= (6 << ADC12_CCR_MULTI_Pos);
+
+    // enable DMA for dual mode 8-bit
+    ADC12_COMMON->CCR |= (3 << ADC12_CCR_MDMA_Pos);
+
+    // DMA circular mode
+    ADC12_COMMON->CCR |= (1 << ADC12_CCR_DMACFG_Pos);
+}
+
+static inline void
+init_adc_resolution(void)
+{
+    // set 8-bit resolution
+    ADC1->CFGR |= (2 << ADC_CFGR_RES_Pos);
+    ADC2->CFGR |= (2 << ADC_CFGR_RES_Pos);
+}
+
+static inline void
+init_adc_sequence(void)
+{
+    ADC1->SQR1 |= (3 << ADC_SQR1_L_Pos);
+    ADC1->SQR1 |= (2 << ADC_SQR1_SQ1_Pos);
+    ADC1->SQR1 |= (4 << ADC_SQR1_SQ2_Pos);
+    // dummy conversions for sequence length match
+    ADC1->SQR1 |= (4 << ADC_SQR1_SQ3_Pos);
+    ADC1->SQR1 |= (4 << ADC_SQR1_SQ4_Pos);
+
+    ADC2->SQR1 |= (3 << ADC_SQR1_L_Pos);
+    ADC2->SQR1 |= (1 << ADC_SQR1_SQ1_Pos);
+    ADC2->SQR1 |= (2 << ADC_SQR1_SQ2_Pos);
+    ADC2->SQR1 |= (3 << ADC_SQR1_SQ3_Pos);
+    ADC2->SQR1 |= (4 << ADC_SQR1_SQ4_Pos);
+}
+
+static inline void
+init_tim6_trgo_trigger(void)
+{
+    tim6_init();
+    ADC1->CFGR |= (13 << ADC_CFGR_EXTSEL_Pos);
+    ADC1->CFGR |= (1 << ADC_CFGR_EXTEN_Pos);
 }
