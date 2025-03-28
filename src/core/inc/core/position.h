@@ -1,10 +1,11 @@
 #ifndef _CORE_POSITION_H
 #define _CORE_POSITION_H
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define CORE_POSITION_DETECTION_TRESHOLD 3
+#define CORE_POSITION_COORDS_SIZE        6
 
 typedef enum
 {
@@ -18,12 +19,7 @@ typedef enum
 
 typedef struct
 {
-    uint8_t left_3;
-    uint8_t left_2;
-    uint8_t left_1;
-    uint8_t right_1;
-    uint8_t right_2;
-    uint8_t right_3;
+    uint8_t coordinates[CORE_POSITION_COORDS_SIZE];
 } core_position_t;
 
 typedef enum
