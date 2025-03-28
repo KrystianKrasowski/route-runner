@@ -19,7 +19,7 @@ core_vehicle_init(core_vehicle_t *self)
     init_state(self);
     init_position_error(self);
     core_motion_init(&self->motion);
-    core_position_init(&self->position);
+    core_coords_init(&self->coords);
     self->position_updated = true;
 }
 
@@ -69,27 +69,28 @@ core_vehicle_is_commanded(core_vehicle_t *self, uint16_t command)
 }
 
 void
-core_vehicle_set_line_position(core_vehicle_t *self, core_position_t position)
+core_vehicle_set_coords(core_vehicle_t *self, core_coords_t coords)
 {
-    self->position = position;
+    self->coords = coords;
 }
 
-core_position_t
-core_vehicle_get_line_position(core_vehicle_t *self)
+core_coords_t
+core_vehicle_get_coords(core_vehicle_t *self)
 {
-    return self->position;
+    return self->coords;
 }
 
 bool
 core_vehicle_is_line_detected(core_vehicle_t *self)
 {
-    return core_position_get_status(&self->position) == CORE_POSITION_ON_LINE;
+    return core_coords_get_status(&self->coords) == CORE_COORDS_STATUS_ON_LINE;
 }
 
 bool
 core_vehicle_is_line_lost(core_vehicle_t *self)
 {
-    return core_position_get_status(&self->position) == CORE_POSITION_OFF_LINE &&
+    return core_coords_get_status(&self->coords) ==
+               CORE_COORDS_STATUS_OFF_LINE &&
            core_vehicle_get_position_errors_sum(self) == 0;
 }
 
@@ -196,7 +197,7 @@ int8_t
 core_vehicle_update_position_error(core_vehicle_t *self)
 {
     int8_t error = core_vehicle_get_position_error(self);
-    core_position_compute_error(&self->position, &error);
+    core_coords_compute_error(&self->coords, &error);
     stack_push_rolling(&self->position_error, error);
     return error;
 }

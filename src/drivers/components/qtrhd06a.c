@@ -43,14 +43,14 @@ adc_sequence_complete_isr(uint16_t value[])
         }
     }
 
-    uint8_t line_position[6];
-    line_position[0] = l3 / 10;
-    line_position[1] = l2 / 10;
-    line_position[2] = l1 / 10;
-    line_position[3] = r1 / 10;
-    line_position[4] = r2 / 10;
-    line_position[5] = r3 / 10;
+    uint8_t coords[6];
+    coords[0] = l3 / 10;
+    coords[1] = l2 / 10;
+    coords[2] = l1 / 10;
+    coords[3] = r1 / 10;
+    coords[4] = r2 / 10;
+    coords[5] = r3 / 10;
 
-    mq_message_t message = mq_create_position_message(line_position);
-    mq_push(MQ_TOPIC_LINE_POSITION, message);
+    mq_message_t message = mq_create_coords_message(coords);
+    mq_push(MQ_TOPIC_COORDS, message);
 }

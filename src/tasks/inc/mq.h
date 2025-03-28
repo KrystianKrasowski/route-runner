@@ -11,13 +11,13 @@
 typedef enum
 {
     MQ_MESSAGE_TYPE_COMMAND,
-    MQ_MESSAGE_TYPE_LINE_POSITION,
+    MQ_MESSAGE_TYPE_COORDS,
 } mq_message_type_t;
 
 typedef union mq_message_payload
 {
     uint16_t command;
-    uint8_t  line_position[6];
+    uint8_t  coords[6];
 } mq_message_payload_t;
 
 typedef struct mq_message
@@ -29,7 +29,7 @@ typedef struct mq_message
 typedef enum
 {
     MQ_TOPIC_REMOTE_CONTROL,
-    MQ_TOPIC_LINE_POSITION,
+    MQ_TOPIC_COORDS,
 } mq_topic_t;
 
 typedef enum
@@ -56,6 +56,6 @@ mq_message_t
 mq_create_command_message(uint16_t command);
 
 mq_message_t
-mq_create_position_message(uint8_t position[]);
+mq_create_coords_message(uint8_t coords[]);
 
 #endif

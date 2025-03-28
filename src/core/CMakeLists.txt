@@ -5,7 +5,7 @@ add_library(core STATIC
     core_vehicle_manual_motion_apply.c
     core_vehicle_tracking_motion_apply.c
     core_motion.c
-    core_position.c
+    core_coords.c
 )
 
 target_include_directories(core PUBLIC "./inc")

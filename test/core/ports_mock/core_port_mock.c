@@ -27,18 +27,18 @@ core_port_state_indicator_apply(core_vehicle_state_t state)
     is_state_indicator_updated = true;
 }
 
-core_position_t
-core_port_line_position_map(uint8_t *raw_position)
+core_coords_t
+core_port_coords_map(uint8_t *raw)
 {
-    core_position_t position;
-    core_position_init(&position);
+    core_coords_t coords;
+    core_coords_init(&coords);
 
-    for (uint8_t i = 0; i < CORE_POSITION_COORDS_SIZE; i++)
+    for (uint8_t i = 0; i < CORE_COORDS_SIZE; i++)
     {
-        core_position_set_by_place(&position, i, raw_position[i]);
+        core_coords_set_place(&coords, i, raw[i]);
     }
 
-    return position;
+    return coords;
 }
 
 void

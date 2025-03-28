@@ -8,7 +8,7 @@ static void
 remote_control_receive(core_vehicle_t *vehicle);
 
 static void
-position_receive(core_vehicle_t *vehicle);
+coords_receive(core_vehicle_t *vehicle);
 
 static void
 mode_update(core_vehicle_t *vehicle);
@@ -26,14 +26,14 @@ tasks_init(void)
     core_port_motion_init();
     core_port_remote_control_init();
     core_port_state_indicator_init();
-    core_port_line_position_init();
+    core_port_coords_init();
 }
 
 void
 tasks_run(core_vehicle_t *vehicle)
 {
     remote_control_receive(vehicle);
-    position_receive(vehicle);
+    coords_receive(vehicle);
     mode_update(vehicle);
     motion_update(vehicle);
     state_indicator_update(vehicle);
@@ -55,16 +55,16 @@ remote_control_receive(core_vehicle_t *vehicle)
 }
 
 static void
-position_receive(core_vehicle_t *vehicle)
+coords_receive(core_vehicle_t *vehicle)
 {
     mq_message_t message;
 
-    if (mq_pull(MQ_TOPIC_LINE_POSITION, &message) == MQ_SUCCESS)
+    if (mq_pull(MQ_TOPIC_COORDS, &message) == MQ_SUCCESS)
     {
-        uint8_t        *raw_position = message.payload.line_position;
-        core_position_t position = core_port_line_position_map(raw_position);
+        uint8_t      *raw_coords = message.payload.coords;
+        core_coords_t coords     = core_port_coords_map(raw_coords);
 
-        core_vehicle_set_line_position(vehicle, position);
+        core_vehicle_set_coords(vehicle, coords);
         core_vehicle_set_position_updated(vehicle, false);
     }
 }

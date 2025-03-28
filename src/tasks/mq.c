@@ -66,14 +66,12 @@ mq_create_command_message(uint16_t command)
 }
 
 mq_message_t
-mq_create_position_message(uint8_t position[])
+mq_create_coords_message(uint8_t coords[])
 {
     mq_message_t message;
-    message.type = MQ_MESSAGE_TYPE_LINE_POSITION;
+    message.type = MQ_MESSAGE_TYPE_COORDS;
 
-    memcpy(message.payload.line_position,
-           position,
-           sizeof(message.payload.line_position));
+    memcpy(message.payload.coords, coords, sizeof(message.payload.coords));
 
     return message;
 }

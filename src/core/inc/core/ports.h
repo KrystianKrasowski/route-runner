@@ -11,10 +11,10 @@ uint16_t
 core_port_remote_control_map(uint16_t raw_command);
 
 void
-core_port_line_position_init(void);
+core_port_coords_init(void);
 
-core_position_t
-core_port_line_position_map(uint8_t *raw_position);
+core_coords_t
+core_port_coords_map(uint8_t *raw);
 
 void
 core_port_motion_init(void);
