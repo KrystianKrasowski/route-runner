@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-uint32_t adc_buffer[ADC_BUFFER_SIZE];
+uint16_t volatile adc_buffer[ADC_BUFFER_SIZE];
 
 static inline void
 init_gpio(void);
@@ -35,17 +35,23 @@ init_adc_dma(void);
 void
 adc_init()
 {
-    init_gpio();
     init_rcc();
+    init_gpio();
+    init_adc_dma();
     enable_advreg();
 
     // enable ADC 12 dual mode
     ADC12_COMMON->CCR |= (6 << ADC12_CCR_MULTI_Pos);
 
+    // enable DMA for dual mode 8-bit
+    ADC12_COMMON->CCR |= (3 << ADC12_CCR_MDMA_Pos);
+
+    // DMA circular mode
+    ADC12_COMMON->CCR |= (1 << ADC12_CCR_DMACFG_Pos);
+
     init_adc_resolution();
     init_adc_sequence();
     init_tim6_trgo_trigger();
-    init_adc_dma();
 }
 
 void
@@ -84,19 +90,13 @@ adc_stop(void)
 }
 
 void
-DMA1_Channel2_IRQHandler(void)
+DMA1_Channel1_IRQHandler(void)
 {
-    if (DMA1->ISR & DMA_ISR_TCIF2)
+    if (DMA1->ISR & DMA_ISR_TCIF1)
     {
-        DMA1->IFCR |= DMA_IFCR_CTCIF2;
+        DMA1->IFCR |= DMA_IFCR_CTCIF1;
         adc_sequence_complete_isr(adc_buffer);
     }
-}
-
-__attribute__((weak)) void
-adc_sequence_complete_isr(uint32_t value[])
-{
-    (void)value;
 }
 
 static inline void
@@ -195,34 +195,34 @@ init_adc_dma(void)
     // enable clock access to DMA controller
     RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
+    // Disable DMA channel - it is necessary due to compiler optimizations
+    DMA1_Channel1->CCR &= ~DMA_CCR_EN;
+
     // Set peripheral address
-    DMA1_Channel2->CPAR = (uint32_t)&ADC12_COMMON->CDR;
+    DMA1_Channel1->CPAR = (uint32_t)&ADC12_COMMON->CDR;
 
     // set memory address
-    DMA1_Channel2->CMAR = (uint32_t)adc_buffer;
+    DMA1_Channel1->CMAR = (uint32_t)adc_buffer;
 
     // set dma transfers number
-    DMA1_Channel2->CNDTR = ADC_BUFFER_SIZE;
+    DMA1_Channel1->CNDTR = ADC_BUFFER_SIZE;
 
     // set memory increment mode
-    DMA1_Channel2->CCR |= DMA_CCR_MINC;
+    DMA1_Channel1->CCR |= DMA_CCR_MINC;
 
     // set circular mode
-    DMA1_Channel2->CCR |= DMA_CCR_CIRC;
+    DMA1_Channel1->CCR |= DMA_CCR_CIRC;
 
     // set peripheral 32-bit size
-    DMA1_Channel2->CCR |= (2 << DMA_CCR_PSIZE_Pos);
+    DMA1_Channel1->CCR |= (2 << DMA_CCR_PSIZE_Pos);
 
-    // set memory 32-bit size
-    DMA1_Channel2->CCR |= (2 << DMA_CCR_MSIZE_Pos);
+    // set memory 16-bit size
+    DMA1_Channel1->CCR |= (1 << DMA_CCR_MSIZE_Pos);
 
     // Enable transfer complete interrupt
-    DMA1_Channel2->CCR |= DMA_CCR_TCIE;
-    NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+    NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+    DMA1_Channel1->CCR |= DMA_CCR_TCIE;
 
     // Enable DMA channel
-    DMA1_Channel2->CCR |= DMA_CCR_EN;
-
-    // Enable DMA in ADC
-    ADC2->CFGR |= ADC_CFGR_DMAEN | ADC_CFGR_DMACFG;
+    DMA1_Channel1->CCR |= DMA_CCR_EN;
 }

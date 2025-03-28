@@ -12,7 +12,7 @@ qtrhd06a_init(void)
 }
 
 void
-adc_sequence_complete_isr(uint32_t value[])
+adc_sequence_complete_isr(uint16_t volatile value[])
 {
     uint16_t l3 = 0;
     uint16_t l2 = 0;
@@ -25,21 +25,21 @@ adc_sequence_complete_isr(uint32_t value[])
     {
         if (i % 4 == 0)
         {
-            r1 += (uint16_t)(value[i] >> 16);
-            r3 += (uint16_t)value[i];
+            r1 += (value[i] >> 8) & 0xff;
+            r3 += value[i] & 0xff;
         }
         else if (i % 4 == 1)
         {
-            l1 += (uint16_t)(value[i] >> 16);
-            r2 += (uint16_t)value[i];
+            l1 += (value[i] >> 8) & 0xff;
+            r2 += value[i] & 0xff;
         }
         else if (i % 4 == 2)
         {
-            l2 += (uint16_t)(value[i] >> 16);
+            l2 += (value[i] >> 8) & 0xff;
         }
         else
         {
-            l3 += (uint16_t)(value[i] >> 16);
+            l3 += (value[i] >> 8) & 0xff;
         }
     }
 

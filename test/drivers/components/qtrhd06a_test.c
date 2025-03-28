@@ -31,12 +31,17 @@ void
 should_average_adc_conversions(void)
 {
     // given
-    uint32_t conversions[40] = {
-        7798798, 7864333, 1048576, 917504, 7536656, 7667726, 983040,  851968,
-        7733262, 7602190, 917504,  917504, 7602190, 7667727, 851968,  786432,
-        7733262, 7667728, 917504,  851968, 7798798, 7864333, 1048576, 917504,
-        7536656, 7667726, 983040,  851968, 7733262, 7602190, 917504,  917504,
-        7602190, 7667727, 851968,  786432, 7733262, 7667728, 917504,  851968,
+    uint16_t conversions[40] = {
+        5906, 28946, 28945, 6417,
+        5906, 28945, 28945, 6417,
+        5906, 29202, 28945, 6418,
+        5906, 28945, 28945, 6417,
+        5906, 28945, 28946, 6418,
+        5906, 28946, 28945, 6417,
+        5906, 29202, 28945, 6417,
+        5906, 28945, 28945, 6417,
+        5906, 28945, 28945, 6417,
+        5906, 28945, 28946, 6418,
     };
 
     mq_message_t message;
@@ -48,12 +53,12 @@ should_average_adc_conversions(void)
     // then
     TEST_ASSERT_EQUAL(MQ_SUCCESS, status);
     TEST_ASSERT_EQUAL(MQ_MESSAGE_TYPE_LINE_POSITION, message.type);
-    TEST_ASSERT_EQUAL(13, message.payload.line_position[0]);
-    TEST_ASSERT_EQUAL(14, message.payload.line_position[1]);
-    TEST_ASSERT_EQUAL(117, message.payload.line_position[2]);
-    TEST_ASSERT_EQUAL(117, message.payload.line_position[3]);
-    TEST_ASSERT_EQUAL(14, message.payload.line_position[4]);
-    TEST_ASSERT_EQUAL(14, message.payload.line_position[5]);
+    TEST_ASSERT_EQUAL(25, message.payload.line_position[0]);
+    TEST_ASSERT_EQUAL(113, message.payload.line_position[1]);
+    TEST_ASSERT_EQUAL(113, message.payload.line_position[2]);
+    TEST_ASSERT_EQUAL(23, message.payload.line_position[3]);
+    TEST_ASSERT_EQUAL(17, message.payload.line_position[4]);
+    TEST_ASSERT_EQUAL(18, message.payload.line_position[5]);
 }
 
 int
