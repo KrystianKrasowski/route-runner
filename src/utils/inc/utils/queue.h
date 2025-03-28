@@ -28,21 +28,21 @@ typedef enum
 } queue_result_t;
 
 queue_result_t
-queue_init(queue_t volatile *self, uint8_t capacity, size_t element_size);
+queue_init(queue_t *self, uint8_t capacity, size_t element_size);
 
 queue_result_t
-queue_push(queue_t volatile *self, void *element);
+queue_push(queue_t *self, void *element);
 
 queue_result_t
-queue_pull(queue_t volatile *self, void *element);
+queue_pull(queue_t *self, void *element);
 
 void
-queue_clear(queue_t volatile *self);
+queue_clear(queue_t *self);
 
 uint8_t
-queue_get_head(queue_t volatile *self);
+queue_get_head(queue_t *self);
 
 uint8_t
-queue_get_tail(queue_t volatile *self);
+queue_get_tail(queue_t *self);
 
 #endif

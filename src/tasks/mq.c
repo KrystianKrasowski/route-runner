@@ -5,7 +5,7 @@
 
 #define QUEUE_TOPICS_SIZE 2
 
-static queue_t volatile queues[QUEUE_TOPICS_SIZE];
+static queue_t queues[QUEUE_TOPICS_SIZE];
 
 mq_result_t
 mq_init(void)
@@ -27,9 +27,7 @@ mq_init(void)
 mq_result_t
 mq_push(mq_topic_t const topic, mq_message_t message)
 {
-    queue_t volatile *queue = &queues[topic];
-
-    if (queue_push(queue, &message) == QUEUE_SUCCESS)
+    if (queue_push(&queues[topic], &message) == QUEUE_SUCCESS)
     {
         return MQ_SUCCESS;
     }
@@ -42,9 +40,7 @@ mq_push(mq_topic_t const topic, mq_message_t message)
 mq_result_t
 mq_pull(mq_topic_t const topic, mq_message_t *message)
 {
-    queue_t volatile *queue = &queues[topic];
-
-    if (queue_pull(queue, message) == QUEUE_SUCCESS)
+    if (queue_pull(&queues[topic], message) == QUEUE_SUCCESS)
     {
         return MQ_SUCCESS;
     }
