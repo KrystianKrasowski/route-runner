@@ -43,7 +43,7 @@ core_coords_get_status(core_coords_t *self)
 }
 
 core_coords_status_t
-core_coords_compute_error(core_coords_t *self, int8_t *error)
+core_coords_compute_mass_center(core_coords_t *self, int8_t *error)
 {
     int16_t sum        = 0;
     int16_t weight_sum = 0;

@@ -64,8 +64,7 @@ coords_receive(core_vehicle_t *vehicle)
         uint8_t      *raw_coords = message.payload.coords;
         core_coords_t coords     = core_port_coords_map(raw_coords);
 
-        core_vehicle_set_coords(vehicle, coords);
-        core_vehicle_set_position_updated(vehicle, false);
+        core_vehicle_update_coords(vehicle, coords);
     }
 }
 

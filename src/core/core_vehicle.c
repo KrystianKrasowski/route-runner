@@ -9,18 +9,13 @@
 static inline void
 init_state(core_vehicle_t *self);
 
-static inline void
-init_position_error(core_vehicle_t *self);
-
 void
 core_vehicle_init(core_vehicle_t *self)
 {
     memset(self, 0, sizeof(*self));
     init_state(self);
-    init_position_error(self);
     core_motion_init(&self->motion);
-    core_coords_init(&self->coords);
-    self->position_updated = true;
+    core_position_init(&self->position);
 }
 
 core_vehicle_state_t
@@ -69,55 +64,45 @@ core_vehicle_is_commanded(core_vehicle_t *self, uint16_t command)
 }
 
 void
-core_vehicle_set_coords(core_vehicle_t *self, core_coords_t coords)
+core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords)
 {
-    self->coords = coords;
+    core_position_update_coords(&self->position, coords);
 }
 
 core_coords_t
 core_vehicle_get_coords(core_vehicle_t *self)
 {
-    return self->coords;
+    return core_position_get_coords(&self->position);
 }
 
 bool
 core_vehicle_is_line_detected(core_vehicle_t *self)
 {
-    return core_coords_get_status(&self->coords) == CORE_COORDS_STATUS_ON_LINE;
+    return core_position_is_line_detected(&self->position);
 }
 
 bool
 core_vehicle_is_line_lost(core_vehicle_t *self)
 {
-    return core_coords_get_status(&self->coords) ==
-               CORE_COORDS_STATUS_OFF_LINE &&
-           core_vehicle_get_position_errors_sum(self) == 0;
+    return core_position_is_line_lost(&self->position);
 }
 
 int8_t
-core_vehicle_get_position_error(core_vehicle_t *self)
+core_vehicle_last_position_error(core_vehicle_t *self)
 {
-    int16_t error = 0;
-    stack_peek(&self->position_error, &error);
-    return (int8_t)error;
+    return core_position_last_error(&self->position);
 }
 
 int16_t
 core_vehicle_get_position_errors_sum(core_vehicle_t *self)
 {
-    return stack_sum(&self->position_error);
-}
-
-void
-core_vehicle_set_position_updated(core_vehicle_t *self, bool updated)
-{
-    self->position_updated = updated;
+    return core_position_sum_errors(&self->position);
 }
 
 bool
 core_vehicle_is_position_updated(core_vehicle_t *self)
 {
-    return self->position_updated;
+    return core_position_is_handled(&self->position);
 }
 
 void
@@ -196,10 +181,7 @@ core_vehicle_update_motion(core_vehicle_t *self)
 int8_t
 core_vehicle_update_position_error(core_vehicle_t *self)
 {
-    int8_t error = core_vehicle_get_position_error(self);
-    core_coords_compute_error(&self->coords, &error);
-    stack_push_rolling(&self->position_error, error);
-    return error;
+    return core_position_update_error(&self->position);
 }
 
 static inline void
@@ -210,13 +192,4 @@ init_state(core_vehicle_t *self)
     stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
 
     self->state = state;
-}
-
-static inline void
-init_position_error(core_vehicle_t *self)
-{
-    stack_t errors;
-    stack_init(&errors, 20);
-
-    self->position_error = errors;
 }

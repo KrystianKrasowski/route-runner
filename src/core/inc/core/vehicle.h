@@ -1,8 +1,8 @@
 #ifndef _CORE_VEHICLE_H
 #define _CORE_VEHICLE_H
 
-#include "coords.h"
 #include "motion.h"
+#include "position.h"
 #include <stdint.h>
 #include <utils/stack.h>
 
@@ -21,12 +21,10 @@ typedef enum
 
 typedef struct core_vehicle
 {
-    uint16_t      command;
-    core_motion_t motion;
-    stack_t       state;
-    core_coords_t coords;
-    stack_t       position_error;
-    bool          position_updated;
+    uint16_t        command;
+    core_motion_t   motion;
+    stack_t         state;
+    core_position_t position;
 } core_vehicle_t;
 
 void
@@ -51,7 +49,7 @@ bool
 core_vehicle_is_commanded(core_vehicle_t *self, uint16_t command);
 
 void
-core_vehicle_set_coords(core_vehicle_t *self, core_coords_t coords);
+core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords);
 
 core_coords_t
 core_vehicle_get_coords(core_vehicle_t *self);
@@ -63,13 +61,10 @@ bool
 core_vehicle_is_line_lost(core_vehicle_t *self);
 
 int8_t
-core_vehicle_get_position_error(core_vehicle_t *self);
+core_vehicle_last_position_error(core_vehicle_t *self);
 
 int16_t
 core_vehicle_get_position_errors_sum(core_vehicle_t *self);
-
-void
-core_vehicle_set_position_updated(core_vehicle_t *self, bool updated);
 
 bool
 core_vehicle_is_position_updated(core_vehicle_t *self);

@@ -39,7 +39,7 @@ core_coords_status_t
 core_coords_get_status(core_coords_t *self);
 
 core_coords_status_t
-core_coords_compute_error(core_coords_t *self, int8_t *error);
+core_coords_compute_mass_center(core_coords_t *self, int8_t *error);
 
 uint8_t
 core_coords_get_place(core_coords_t *self, core_coords_place_t place);

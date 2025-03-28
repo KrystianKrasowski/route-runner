@@ -20,7 +20,7 @@ should_stay_manual(void)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_state(&vehicle);
@@ -39,7 +39,7 @@ should_transit_to_line_detected_from_manual(void)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_state(&vehicle);
@@ -58,7 +58,7 @@ should_stay_line_detected(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_state(&vehicle);
@@ -79,7 +79,7 @@ should_transit_to_manual_from_line_detected(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_state(&vehicle);
@@ -98,7 +98,7 @@ should_transit_to_line_following_from_line_detected(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
     core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
 
     // when
@@ -135,7 +135,7 @@ should_transit_to_manual_from_line_following_by_line_end(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_state(&vehicle);
@@ -155,7 +155,7 @@ should_clear_command_on_line_end(void)
     core_vehicle_init(&vehicle);
     core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
     core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_state(&vehicle);
@@ -175,7 +175,7 @@ should_keep_following_the_line(uint8_t left, uint8_t middle, uint8_t right)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_state(&vehicle);

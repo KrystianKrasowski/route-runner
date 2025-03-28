@@ -15,7 +15,6 @@ core_vehicle_tracking_motion_apply(core_vehicle_t *vehicle)
         int8_t correction = pid_regulation(vehicle);
         core_vehicle_set_motion_direction(vehicle, CORE_MOTION_FORWARD);
         core_vehicle_set_motion_correction(vehicle, correction);
-        core_vehicle_set_position_updated(vehicle, true);
         return CORE_VEHICLE_MOTION_CHANGED;
     }
     else
@@ -27,7 +26,7 @@ core_vehicle_tracking_motion_apply(core_vehicle_t *vehicle)
 static inline int8_t
 pid_regulation(core_vehicle_t *vehicle)
 {
-    int8_t  previous   = core_vehicle_get_position_error(vehicle);
+    int8_t  previous   = core_vehicle_last_position_error(vehicle);
     int8_t  error      = core_vehicle_update_position_error(vehicle);
     int16_t all_errors = core_vehicle_get_position_errors_sum(vehicle);
 

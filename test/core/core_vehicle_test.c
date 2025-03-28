@@ -114,7 +114,7 @@ should_detect_line(uint8_t left3,
     core_coords_t coords =
         core_coords_create(left3, left2, left1, right1, right2, right3);
 
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
 
     // then
     TEST_ASSERT_EQUAL(expected_result, core_vehicle_is_line_detected(&vehicle));
@@ -137,12 +137,12 @@ should_compute_position_error(uint8_t left3,
     core_coords_t coords =
         core_coords_create(left3, left2, left1, right1, right2, right3);
 
-    core_vehicle_set_coords(&vehicle, coords);
+    core_vehicle_update_coords(&vehicle, coords);
     core_vehicle_update_position_error(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(expected_error,
-                      core_vehicle_get_position_error(&vehicle));
+                      core_vehicle_last_position_error(&vehicle));
 }
 
 void
@@ -155,15 +155,15 @@ should_set_last_error_when_drifting_off_line(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
 
-    core_vehicle_set_coords(&vehicle, last_on_line);
+    core_vehicle_update_coords(&vehicle, last_on_line);
     core_vehicle_update_position_error(&vehicle);
 
     // when
-    core_vehicle_set_coords(&vehicle, lost_line);
+    core_vehicle_update_coords(&vehicle, lost_line);
     core_vehicle_update_position_error(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(-100, core_vehicle_get_position_error(&vehicle));
+    TEST_ASSERT_EQUAL(-100, core_vehicle_last_position_error(&vehicle));
 }
 
 int
