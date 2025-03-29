@@ -17,7 +17,7 @@ static void
 motion_update(core_vehicle_t *vehicle);
 
 static void
-state_indicator_update(core_vehicle_t *vehicle);
+mode_indicator_update(core_vehicle_t *vehicle);
 
 void
 tasks_init(void)
@@ -25,7 +25,7 @@ tasks_init(void)
     mq_init();
     core_port_motion_init();
     core_port_remote_control_init();
-    core_port_state_indicator_init();
+    core_port_mode_indicator_init();
     core_port_coords_init();
 }
 
@@ -36,7 +36,7 @@ tasks_run(core_vehicle_t *vehicle)
     coords_receive(vehicle);
     mode_update(vehicle);
     motion_update(vehicle);
-    state_indicator_update(vehicle);
+    mode_indicator_update(vehicle);
 }
 
 static void
@@ -71,7 +71,7 @@ coords_receive(core_vehicle_t *vehicle)
 static void
 mode_update(core_vehicle_t *vehicle)
 {
-    core_vehicle_update_state(vehicle);
+    core_vehicle_update_mode(vehicle);
 }
 
 static void
@@ -84,11 +84,11 @@ motion_update(core_vehicle_t *vehicle)
 }
 
 static void
-state_indicator_update(core_vehicle_t *vehicle)
+mode_indicator_update(core_vehicle_t *vehicle)
 {
-    if (core_vehicle_is_state_changed(vehicle))
+    if (core_vehicle_is_mode_changed(vehicle))
     {
-        core_vehicle_state_t state = core_vehicle_get_state(vehicle);
-        core_port_state_indicator_apply(state);
+        core_mode_t mode = core_vehicle_get_mode(vehicle);
+        core_port_mode_indicator_apply(mode);
     }
 }

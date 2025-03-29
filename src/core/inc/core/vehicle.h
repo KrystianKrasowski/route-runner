@@ -8,10 +8,10 @@
 
 typedef enum
 {
-    CORE_VEHICLE_STATE_MANUAL,
-    CORE_VEHICLE_STATE_LINE_DETECTED,
-    CORE_VEHICLE_STATE_LINE_FOLLOWING,
-} core_vehicle_state_t;
+    CORE_MODE_MANUAL,
+    CORE_MODE_LINE_DETECTED,
+    CORE_MODE_LINE_FOLLOWING,
+} core_mode_t;
 
 typedef enum
 {
@@ -23,21 +23,21 @@ typedef struct core_vehicle
 {
     uint16_t        command;
     core_motion_t   motion;
-    stack_t         state;
+    stack_t         mode;
     core_position_t position;
 } core_vehicle_t;
 
 void
 core_vehicle_init(core_vehicle_t *self);
 
-core_vehicle_state_t
-core_vehicle_get_state(core_vehicle_t *self);
+core_mode_t
+core_vehicle_get_mode(core_vehicle_t *self);
 
 void
-core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state);
+core_vehicle_set_mode(core_vehicle_t *self, core_mode_t mode);
 
 bool
-core_vehicle_is_state_changed(core_vehicle_t *self);
+core_vehicle_is_mode_changed(core_vehicle_t *self);
 
 void
 core_vehicle_set_command(core_vehicle_t *self, uint16_t command);
@@ -98,7 +98,7 @@ void
 core_vehicle_update_command(core_vehicle_t *self, uint16_t command);
 
 void
-core_vehicle_update_state(core_vehicle_t *self);
+core_vehicle_update_mode(core_vehicle_t *self);
 
 core_vehicle_result_t
 core_vehicle_update_motion(core_vehicle_t *self);

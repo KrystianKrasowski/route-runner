@@ -23,10 +23,10 @@ void
 core_port_motion_apply(core_vehicle_t *vehicle);
 
 void
-core_port_state_indicator_init(void);
+core_port_mode_indicator_init(void);
 
 void
-core_port_state_indicator_apply(core_vehicle_state_t state);
+core_port_mode_indicator_apply(core_mode_t mode);
 
 void
 core_port_debug_init(void);

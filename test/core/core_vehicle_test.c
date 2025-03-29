@@ -16,7 +16,7 @@ tearDown(void)
 }
 
 void
-should_init_vehicle_state(void)
+should_init_vehicle_mode(void)
 {
     // given
     core_vehicle_t vehicle;
@@ -25,12 +25,12 @@ should_init_vehicle_state(void)
     core_vehicle_init(&vehicle);
 
     // then
-    core_vehicle_state_t state = core_vehicle_get_state(&vehicle);
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_STATE_MANUAL, state);
+    core_mode_t mode = core_vehicle_get_mode(&vehicle);
+    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, mode);
 }
 
 void
-should_detect_state_change_on_init(void)
+should_detect_mode_change_on_init(void)
 {
     // given
     core_vehicle_t vehicle;
@@ -39,37 +39,37 @@ should_detect_state_change_on_init(void)
     core_vehicle_init(&vehicle);
 
     // then
-    TEST_ASSERT_TRUE(core_vehicle_is_state_changed(&vehicle));
+    TEST_ASSERT_TRUE(core_vehicle_is_mode_changed(&vehicle));
 }
 
 void
-should_detect_state_change_on_transition(void)
+should_detect_mode_change_on_transition(void)
 {
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
 
     // when
-    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_MANUAL);
-    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
+    core_vehicle_set_mode(&vehicle, CORE_MODE_MANUAL);
+    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
 
     // then
-    TEST_ASSERT_TRUE(core_vehicle_is_state_changed(&vehicle));
+    TEST_ASSERT_TRUE(core_vehicle_is_mode_changed(&vehicle));
 }
 
 void
-should_detect_state_change_without_transition(void)
+should_detect_mode_change_without_transition(void)
 {
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
 
     // when
-    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
-    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
+    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
 
     // then
-    TEST_ASSERT_FALSE(core_vehicle_is_state_changed(&vehicle));
+    TEST_ASSERT_FALSE(core_vehicle_is_mode_changed(&vehicle));
 }
 
 void
@@ -170,10 +170,10 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(should_init_vehicle_state);
-    RUN_TEST(should_detect_state_change_on_init);
-    RUN_TEST(should_detect_state_change_on_transition);
-    RUN_TEST(should_detect_state_change_without_transition);
+    RUN_TEST(should_init_vehicle_mode);
+    RUN_TEST(should_detect_mode_change_on_init);
+    RUN_TEST(should_detect_mode_change_on_transition);
+    RUN_TEST(should_detect_mode_change_without_transition);
     RUN_TEST(should_init_starting_coords);
     RUN_PARAM_TEST(should_detect_line, ON_THE_LINE, 0, 0, 0, 0, 0, true);
     RUN_PARAM_TEST(should_detect_line, 0, ON_THE_LINE, 0, 0, 0, 0, true);

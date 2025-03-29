@@ -1,4 +1,4 @@
-#include "core_vehicle_state_apply.h"
+#include "core_vehicle_mode_apply.h"
 #include "core/types.h"
 
 static inline void
@@ -11,19 +11,19 @@ static inline void
 transit_from_line_following(core_vehicle_t *vehicle);
 
 bool
-core_vehicle_state_apply(core_vehicle_t *vehicle)
+core_vehicle_mode_apply(core_vehicle_t *vehicle)
 {
-    core_vehicle_state_t state = core_vehicle_get_state(vehicle);
+    core_mode_t mode = core_vehicle_get_mode(vehicle);
 
-    switch (state)
+    switch (mode)
     {
-        case CORE_VEHICLE_STATE_LINE_DETECTED:
+        case CORE_MODE_LINE_DETECTED:
             transit_from_line_detected(vehicle);
             break;
-        case CORE_VEHICLE_STATE_LINE_FOLLOWING:
+        case CORE_MODE_LINE_FOLLOWING:
             transit_from_line_following(vehicle);
             break;
-        case CORE_VEHICLE_STATE_MANUAL:
+        case CORE_MODE_MANUAL:
         default:
             transit_from_manual(vehicle);
             break;
@@ -37,11 +37,11 @@ transit_from_manual(core_vehicle_t *vehicle)
 {
     if (core_vehicle_is_line_detected(vehicle))
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
+        core_vehicle_set_mode(vehicle, CORE_MODE_LINE_DETECTED);
     }
     else
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_MANUAL);
+        core_vehicle_set_mode(vehicle, CORE_MODE_MANUAL);
     }
 }
 
@@ -50,15 +50,15 @@ transit_from_line_detected(core_vehicle_t *vehicle)
 {
     if (!core_vehicle_is_line_detected(vehicle))
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_MANUAL);
+        core_vehicle_set_mode(vehicle, CORE_MODE_MANUAL);
     }
     else if (core_vehicle_get_command(vehicle) == CORE_REMOTE_CONTROL_FOLLOW)
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
+        core_vehicle_set_mode(vehicle, CORE_MODE_LINE_FOLLOWING);
     }
     else
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_LINE_DETECTED);
+        core_vehicle_set_mode(vehicle, CORE_MODE_LINE_DETECTED);
     }
 }
 
@@ -67,15 +67,15 @@ transit_from_line_following(core_vehicle_t *vehicle)
 {
     if (core_vehicle_get_command(vehicle) == CORE_REMOTE_CONTROL_BREAK)
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_MANUAL);
+        core_vehicle_set_mode(vehicle, CORE_MODE_MANUAL);
     }
     else if (core_vehicle_is_line_lost(vehicle))
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_MANUAL);
+        core_vehicle_set_mode(vehicle, CORE_MODE_MANUAL);
         core_vehicle_set_command(vehicle, CORE_REMOTE_CONTROL_NONE);
     }
     else
     {
-        core_vehicle_set_state(vehicle, CORE_VEHICLE_STATE_LINE_FOLLOWING);
+        core_vehicle_set_mode(vehicle, CORE_MODE_LINE_FOLLOWING);
     }
 }

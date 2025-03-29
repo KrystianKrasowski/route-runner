@@ -2,47 +2,47 @@
 #include "core/vehicle.h"
 #include "core_vehicle_command_apply.h"
 #include "core_vehicle_manual_motion_apply.h"
-#include "core_vehicle_state_apply.h"
+#include "core_vehicle_mode_apply.h"
 #include "core_vehicle_tracking_motion_apply.h"
 #include <string.h>
 
 static inline void
-init_state(core_vehicle_t *self);
+init_mode(core_vehicle_t *self);
 
 void
 core_vehicle_init(core_vehicle_t *self)
 {
     memset(self, 0, sizeof(*self));
-    init_state(self);
+    init_mode(self);
     core_motion_init(&self->motion);
     core_position_init(&self->position);
 }
 
-core_vehicle_state_t
-core_vehicle_get_state(core_vehicle_t *self)
+core_mode_t
+core_vehicle_get_mode(core_vehicle_t *self)
 {
-    int16_t state;
-    stack_peek(&self->state, &state);
+    int16_t value;
+    stack_peek(&self->mode, &value);
 
-    return state;
+    return value;
 }
 
 void
-core_vehicle_set_state(core_vehicle_t *self, core_vehicle_state_t state)
+core_vehicle_set_mode(core_vehicle_t *self, core_mode_t mode)
 {
-    stack_push_rolling(&self->state, (int16_t)state);
+    stack_push_rolling(&self->mode, (int16_t)mode);
 }
 
 bool
-core_vehicle_is_state_changed(core_vehicle_t *self)
+core_vehicle_is_mode_changed(core_vehicle_t *self)
 {
     int16_t bottom;
     int16_t top;
 
-    stack_peek_bottom(&self->state, &bottom);
-    stack_peek(&self->state, &top);
+    stack_peek_bottom(&self->mode, &bottom);
+    stack_peek(&self->mode, &top);
 
-    return stack_get_length(&self->state) == 1 || bottom != top;
+    return stack_get_length(&self->mode) == 1 || bottom != top;
 }
 
 void
@@ -161,17 +161,17 @@ core_vehicle_update_command(core_vehicle_t *self, uint16_t command)
 }
 
 void
-core_vehicle_update_state(core_vehicle_t *self)
+core_vehicle_update_mode(core_vehicle_t *self)
 {
-    core_vehicle_state_apply(self);
+    core_vehicle_mode_apply(self);
 }
 
 core_vehicle_result_t
 core_vehicle_update_motion(core_vehicle_t *self)
 {
-    switch (core_vehicle_get_state(self))
+    switch (core_vehicle_get_mode(self))
     {
-        case CORE_VEHICLE_STATE_LINE_FOLLOWING:
+        case CORE_MODE_LINE_FOLLOWING:
             return core_vehicle_tracking_motion_apply(self);
         default:
             return core_vehicle_manual_motion_apply(self);
@@ -185,11 +185,11 @@ core_vehicle_update_position_error(core_vehicle_t *self)
 }
 
 static inline void
-init_state(core_vehicle_t *self)
+init_mode(core_vehicle_t *self)
 {
-    stack_t state;
-    stack_init(&state, 2);
-    stack_push(&state, CORE_VEHICLE_STATE_MANUAL);
+    stack_t mode;
+    stack_init(&mode, 2);
+    stack_push(&mode, CORE_MODE_MANUAL);
 
-    self->state = state;
+    self->mode = mode;
 }

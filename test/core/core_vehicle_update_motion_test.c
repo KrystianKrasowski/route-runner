@@ -14,14 +14,14 @@ tearDown(void)
 }
 
 void
-should_update_motion_while_in_manual_state(core_motion_direction_t direction,
-                                           int8_t                  correction,
-                                           uint16_t                command)
+should_update_motion_while_in_manual_mode(core_motion_direction_t direction,
+                                          int8_t                  correction,
+                                          uint16_t                command)
 {
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_state(&vehicle, CORE_VEHICLE_STATE_MANUAL);
+    core_vehicle_set_mode(&vehicle, CORE_MODE_MANUAL);
 
     // when
     core_vehicle_set_command(&vehicle, command);
@@ -37,27 +37,27 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_state,
+    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
                    CORE_MOTION_FORWARD,
                    0,
                    CORE_REMOTE_CONTROL_FORWARD);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_state,
+    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
                    CORE_MOTION_FORWARD,
                    -50,
                    CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_LEFT);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_state,
+    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
                    CORE_MOTION_FORWARD,
                    50,
                    CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_RIGHT);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_state,
+    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
                    CORE_MOTION_BACKWARD,
                    0,
                    CORE_REMOTE_CONTROL_BACKWARD);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_state,
+    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
                    CORE_MOTION_BACKWARD,
                    -50,
                    CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_LEFT);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_state,
+    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
                    CORE_MOTION_BACKWARD,
                    50,
                    CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_RIGHT);
