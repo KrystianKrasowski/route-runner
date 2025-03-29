@@ -26,7 +26,7 @@ should_stay_manual(void)
     core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode(&vehicle));
+    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode_value(&vehicle));
     TEST_ASSERT_FALSE(core_vehicle_is_mode_changed(&vehicle));
 }
 
@@ -44,7 +44,7 @@ should_transit_to_line_detected_from_manual(void)
     core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_MODE_LINE_DETECTED, core_vehicle_get_mode(&vehicle));
+    TEST_ASSERT_EQUAL(CORE_MODE_LINE_DETECTED, core_vehicle_get_mode_value(&vehicle));
 }
 
 void
@@ -55,14 +55,14 @@ should_stay_line_detected(void)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
     core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_MODE_LINE_DETECTED, core_vehicle_get_mode(&vehicle));
+    TEST_ASSERT_EQUAL(CORE_MODE_LINE_DETECTED, core_vehicle_get_mode_value(&vehicle));
 
     TEST_ASSERT_FALSE(core_vehicle_is_mode_changed(&vehicle));
 }
@@ -75,14 +75,14 @@ should_transit_to_manual_from_line_detected(void)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
     core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode(&vehicle));
+    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode_value(&vehicle));
 }
 
 void
@@ -93,7 +93,7 @@ should_transit_to_line_following_from_line_detected(void)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
     core_vehicle_update_coords(&vehicle, coords);
     core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
 
@@ -102,7 +102,7 @@ should_transit_to_line_following_from_line_detected(void)
 
     // then
     TEST_ASSERT_EQUAL(CORE_MODE_LINE_FOLLOWING,
-                      core_vehicle_get_mode(&vehicle));
+                      core_vehicle_get_mode_value(&vehicle));
 }
 
 void
@@ -111,14 +111,14 @@ should_transit_to_manual_from_line_following_by_remote_command(void)
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_FOLLOWING);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
     core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_BREAK);
 
     // when
     core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode(&vehicle));
+    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode_value(&vehicle));
 }
 
 void
@@ -129,14 +129,14 @@ should_transit_to_manual_from_line_following_by_line_end(void)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_FOLLOWING);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
     core_vehicle_update_coords(&vehicle, coords);
 
     // when
     core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode(&vehicle));
+    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, core_vehicle_get_mode_value(&vehicle));
 }
 
 void
@@ -147,7 +147,7 @@ should_clear_command_on_line_end(void)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_FOLLOWING);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
     core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
     core_vehicle_update_coords(&vehicle, coords);
 
@@ -168,7 +168,7 @@ should_keep_following_the_line(uint8_t left, uint8_t middle, uint8_t right)
 
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_FOLLOWING);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
     core_vehicle_update_coords(&vehicle, coords);
 
     // when
@@ -176,7 +176,7 @@ should_keep_following_the_line(uint8_t left, uint8_t middle, uint8_t right)
 
     // then
     TEST_ASSERT_EQUAL(CORE_MODE_LINE_FOLLOWING,
-                      core_vehicle_get_mode(&vehicle));
+                      core_vehicle_get_mode_value(&vehicle));
 }
 
 int

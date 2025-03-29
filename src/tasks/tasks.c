@@ -88,7 +88,7 @@ mode_indicator_update(core_vehicle_t *vehicle)
 {
     if (core_vehicle_is_mode_changed(vehicle))
     {
-        core_mode_t mode = core_vehicle_get_mode(vehicle);
-        core_port_mode_indicator_apply(mode);
+        core_mode_value_t value = core_vehicle_get_mode_value(vehicle);
+        core_port_mode_indicator_apply(value);
     }
 }

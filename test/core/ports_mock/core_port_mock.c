@@ -4,8 +4,8 @@
 static core_motion_t motion_applied;
 static bool          is_motion_applied = false;
 
-static core_mode_t mode_indicator;
-static bool        is_mode_indicator_updated = false;
+static core_mode_value_t mode_value_indicator;
+static bool              is_mode_indicator_updated = false;
 
 uint16_t
 core_port_remote_control_map(uint16_t raw_command)
@@ -21,9 +21,9 @@ core_port_motion_apply(core_vehicle_t *vehicle)
 }
 
 void
-core_port_mode_indicator_apply(core_mode_t mode)
+core_port_mode_indicator_apply(core_mode_value_t value)
 {
-    mode_indicator            = mode;
+    mode_value_indicator      = value;
     is_mode_indicator_updated = true;
 }
 
@@ -61,10 +61,10 @@ core_port_mock_get_motion_applied(void)
     return motion_applied;
 }
 
-core_mode_t
+core_mode_value_t
 core_port_mock_get_modeindicator_applied(void)
 {
-    return mode_indicator;
+    return mode_value_indicator;
 }
 
 bool

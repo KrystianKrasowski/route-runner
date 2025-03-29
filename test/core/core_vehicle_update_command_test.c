@@ -14,14 +14,14 @@ tearDown(void)
 }
 
 void
-should_update_command(core_mode_t mode,
-                      uint16_t    command,
-                      uint16_t    expected_command)
+should_update_command(core_mode_value_t value,
+                      uint16_t          command,
+                      uint16_t          expected_command)
 {
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-    core_vehicle_set_mode(&vehicle, mode);
+    core_vehicle_set_mode_value(&vehicle, value);
 
     // when
     core_vehicle_update_command(&vehicle, command);

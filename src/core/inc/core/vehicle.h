@@ -11,7 +11,7 @@ typedef enum
     CORE_MODE_MANUAL,
     CORE_MODE_LINE_DETECTED,
     CORE_MODE_LINE_FOLLOWING,
-} core_mode_t;
+} core_mode_value_t;
 
 typedef enum
 {
@@ -30,11 +30,11 @@ typedef struct core_vehicle
 void
 core_vehicle_init(core_vehicle_t *self);
 
-core_mode_t
-core_vehicle_get_mode(core_vehicle_t *self);
+core_mode_value_t
+core_vehicle_get_mode_value(core_vehicle_t *self);
 
 void
-core_vehicle_set_mode(core_vehicle_t *self, core_mode_t mode);
+core_vehicle_set_mode_value(core_vehicle_t *self, core_mode_value_t value);
 
 bool
 core_vehicle_is_mode_changed(core_vehicle_t *self);

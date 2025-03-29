@@ -18,8 +18,8 @@ core_vehicle_init(core_vehicle_t *self)
     core_position_init(&self->position);
 }
 
-core_mode_t
-core_vehicle_get_mode(core_vehicle_t *self)
+core_mode_value_t
+core_vehicle_get_mode_value(core_vehicle_t *self)
 {
     int16_t value;
     stack_peek(&self->mode, &value);
@@ -28,9 +28,9 @@ core_vehicle_get_mode(core_vehicle_t *self)
 }
 
 void
-core_vehicle_set_mode(core_vehicle_t *self, core_mode_t mode)
+core_vehicle_set_mode_value(core_vehicle_t *self, core_mode_value_t value)
 {
-    stack_push_rolling(&self->mode, (int16_t)mode);
+    stack_push_rolling(&self->mode, (int16_t)value);
 }
 
 bool
@@ -169,7 +169,7 @@ core_vehicle_update_mode(core_vehicle_t *self)
 core_vehicle_result_t
 core_vehicle_update_motion(core_vehicle_t *self)
 {
-    switch (core_vehicle_get_mode(self))
+    switch (core_vehicle_get_mode_value(self))
     {
         case CORE_MODE_LINE_FOLLOWING:
             return core_vehicle_tracking_motion_apply(self);

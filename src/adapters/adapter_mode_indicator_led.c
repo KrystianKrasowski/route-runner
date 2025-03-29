@@ -9,9 +9,9 @@ core_port_mode_indicator_init(void)
 }
 
 void
-core_port_mode_indicator_apply(core_mode_t mode)
+core_port_mode_indicator_apply(core_mode_value_t value)
 {
-    switch (mode)
+    switch (value)
     {
         case CORE_MODE_LINE_FOLLOWING:
             tim1_ch1_set_toggles(8);

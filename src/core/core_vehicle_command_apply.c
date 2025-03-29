@@ -14,7 +14,7 @@ static bool
 apply_any_command(core_vehicle_t *vehicle, uint16_t command);
 
 static inline bool
-is_mode(core_vehicle_t *vehicle, core_mode_t mode);
+is_mode_value(core_vehicle_t *vehicle, core_mode_value_t value);
 
 static inline bool
 contains_command(uint16_t remote_control, core_remote_control_t command);
@@ -31,7 +31,7 @@ core_vehicle_command_apply(core_vehicle_t *vehicle, uint16_t command)
 static bool
 apply_break_for_line_following(core_vehicle_t *vehicle, uint16_t command)
 {
-    if (is_mode(vehicle, CORE_MODE_LINE_FOLLOWING) &&
+    if (is_mode_value(vehicle, CORE_MODE_LINE_FOLLOWING) &&
         contains_command(command, CORE_REMOTE_CONTROL_BREAK))
     {
         core_vehicle_set_command(vehicle, CORE_REMOTE_CONTROL_BREAK);
@@ -44,7 +44,7 @@ apply_break_for_line_following(core_vehicle_t *vehicle, uint16_t command)
 static bool
 bypass_any_for_line_following(core_vehicle_t *vehicle, uint16_t command)
 {
-    if (is_mode(vehicle, CORE_MODE_LINE_FOLLOWING) &&
+    if (is_mode_value(vehicle, CORE_MODE_LINE_FOLLOWING) &&
         !contains_command(command, CORE_REMOTE_CONTROL_BREAK))
     {
         core_vehicle_set_command(vehicle, CORE_REMOTE_CONTROL_NONE);
@@ -57,7 +57,7 @@ bypass_any_for_line_following(core_vehicle_t *vehicle, uint16_t command)
 static bool
 truncate_follow_for_manual(core_vehicle_t *vehicle, uint16_t command)
 {
-    if (is_mode(vehicle, CORE_MODE_MANUAL) &&
+    if (is_mode_value(vehicle, CORE_MODE_MANUAL) &&
         contains_command(command, CORE_REMOTE_CONTROL_FOLLOW))
     {
         core_vehicle_set_command(vehicle, command - CORE_REMOTE_CONTROL_FOLLOW);
@@ -75,9 +75,9 @@ apply_any_command(core_vehicle_t *vehicle, uint16_t command)
 }
 
 static inline bool
-is_mode(core_vehicle_t *self, core_mode_t mode)
+is_mode_value(core_vehicle_t *self, core_mode_value_t value)
 {
-    return core_vehicle_get_mode(self) == mode;
+    return core_vehicle_get_mode_value(self) == value;
 }
 
 static inline bool

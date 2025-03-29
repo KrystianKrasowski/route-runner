@@ -14,7 +14,7 @@ core_port_mock_verify_motion_applied(void);
 core_motion_t
 core_port_mock_get_motion_applied(void);
 
-core_mode_t
+core_mode_value_t
 core_port_mock_get_modeindicator_applied(void);
 
 bool

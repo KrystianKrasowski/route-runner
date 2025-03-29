@@ -25,8 +25,8 @@ should_init_vehicle_mode(void)
     core_vehicle_init(&vehicle);
 
     // then
-    core_mode_t mode = core_vehicle_get_mode(&vehicle);
-    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, mode);
+    core_mode_value_t value = core_vehicle_get_mode_value(&vehicle);
+    TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, value);
 }
 
 void
@@ -50,8 +50,8 @@ should_detect_mode_change_on_transition(void)
     core_vehicle_init(&vehicle);
 
     // when
-    core_vehicle_set_mode(&vehicle, CORE_MODE_MANUAL);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
 
     // then
     TEST_ASSERT_TRUE(core_vehicle_is_mode_changed(&vehicle));
@@ -65,8 +65,8 @@ should_detect_mode_change_without_transition(void)
     core_vehicle_init(&vehicle);
 
     // when
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
-    core_vehicle_set_mode(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
 
     // then
     TEST_ASSERT_FALSE(core_vehicle_is_mode_changed(&vehicle));
