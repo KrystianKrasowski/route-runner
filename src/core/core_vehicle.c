@@ -1,6 +1,5 @@
 #include "core/types.h"
 #include "core/vehicle.h"
-#include "core_vehicle_command_apply.h"
 #include "core_vehicle_manual_motion_apply.h"
 #include "core_vehicle_mode_apply.h"
 #include "core_vehicle_tracking_motion_apply.h"
@@ -157,7 +156,28 @@ core_vehicle_is_moving_backward(core_vehicle_t *self)
 void
 core_vehicle_update_command(core_vehicle_t *self, uint16_t command)
 {
-    core_vehicle_command_apply(self, command);
+    core_mode_value_t mode               = core_vehicle_get_mode_value(self);
+    bool              is_mode_follow     = mode == CORE_MODE_LINE_FOLLOWING;
+    bool              is_mode_manual     = mode == CORE_MODE_MANUAL;
+    bool              has_command_break  = command & CORE_REMOTE_CONTROL_BREAK;
+    bool              has_command_follow = command & CORE_REMOTE_CONTROL_FOLLOW;
+
+    if (is_mode_follow && has_command_break)
+    {
+        self->command = CORE_REMOTE_CONTROL_BREAK;
+    }
+    else if (is_mode_follow && !has_command_break)
+    {
+        self->command = CORE_REMOTE_CONTROL_NONE;
+    }
+    else if (is_mode_manual && has_command_follow)
+    {
+        self->command = command - CORE_REMOTE_CONTROL_FOLLOW;
+    }
+    else
+    {
+        self->command = command;
+    }
 }
 
 void
