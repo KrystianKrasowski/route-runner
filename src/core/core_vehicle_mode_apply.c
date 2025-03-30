@@ -72,7 +72,7 @@ transit_from_line_following(core_vehicle_t *vehicle)
     else if (core_vehicle_is_line_lost(vehicle))
     {
         core_vehicle_set_mode_value(vehicle, CORE_MODE_MANUAL);
-        core_vehicle_set_command(vehicle, CORE_REMOTE_CONTROL_NONE);
+        core_vehicle_update_command(vehicle, CORE_REMOTE_CONTROL_NONE);
     }
     else
     {

@@ -24,7 +24,7 @@ should_update_motion_while_in_manual_mode(core_motion_direction_t direction,
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
 
     // when
-    core_vehicle_set_command(&vehicle, command);
+    core_vehicle_update_command(&vehicle, command);
     core_vehicle_result_t result = core_vehicle_update_motion(&vehicle);
 
     // then

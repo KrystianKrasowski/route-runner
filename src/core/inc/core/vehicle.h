@@ -39,9 +39,6 @@ core_vehicle_set_mode_value(core_vehicle_t *self, core_mode_value_t value);
 bool
 core_vehicle_is_mode_changed(core_vehicle_t *self);
 
-void
-core_vehicle_set_command(core_vehicle_t *self, uint16_t command);
-
 uint16_t
 core_vehicle_get_command(core_vehicle_t *self);
 

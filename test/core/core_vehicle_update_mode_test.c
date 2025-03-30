@@ -95,7 +95,7 @@ should_transit_to_line_following_from_line_detected(void)
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
     core_vehicle_update_coords(&vehicle, coords);
-    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
+    core_vehicle_update_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
 
     // when
     core_vehicle_update_mode(&vehicle);
@@ -112,7 +112,7 @@ should_transit_to_manual_from_line_following_by_remote_command(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
-    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_BREAK);
+    core_vehicle_update_command(&vehicle, CORE_REMOTE_CONTROL_BREAK);
 
     // when
     core_vehicle_update_mode(&vehicle);
@@ -148,7 +148,7 @@ should_clear_command_on_line_end(void)
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
-    core_vehicle_set_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
+    core_vehicle_update_command(&vehicle, CORE_REMOTE_CONTROL_FOLLOW);
     core_vehicle_update_coords(&vehicle, coords);
 
     // when

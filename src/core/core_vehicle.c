@@ -44,12 +44,6 @@ core_vehicle_is_mode_changed(core_vehicle_t *self)
     return stack_get_length(&self->mode) == 1 || bottom != top;
 }
 
-void
-core_vehicle_set_command(core_vehicle_t *self, uint16_t command)
-{
-    self->command = command;
-}
-
 uint16_t
 core_vehicle_get_command(core_vehicle_t *self)
 {
