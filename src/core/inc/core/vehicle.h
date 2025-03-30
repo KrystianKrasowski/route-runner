@@ -51,12 +51,6 @@ core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords);
 core_coords_t
 core_vehicle_get_coords(core_vehicle_t *self);
 
-bool
-core_vehicle_is_line_detected(core_vehicle_t *self);
-
-bool
-core_vehicle_is_line_lost(core_vehicle_t *self);
-
 int8_t
 core_vehicle_last_position_error(core_vehicle_t *self);
 

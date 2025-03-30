@@ -2,6 +2,7 @@ add_subdirectory(ports_mock)
 
 set(TEST_SUITE
     core_vehicle_test.c
+    core_position_test.c
     core_vehicle_update_mode_test.c
     core_vehicle_update_motion_test.c
     core_vehicle_update_command_test.c

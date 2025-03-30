@@ -1,12 +1,20 @@
 #include "core/types.h"
 #include "core/vehicle.h"
 #include "core_vehicle_manual_motion_apply.h"
-#include "core_vehicle_mode_apply.h"
 #include "core_vehicle_tracking_motion_apply.h"
 #include <string.h>
 
 static inline void
 init_mode(core_vehicle_t *self);
+
+static inline void
+mode_transit_from_line_detected(core_vehicle_t *self);
+
+static inline void
+mode_transit_from_line_following(core_vehicle_t *self);
+
+static inline void
+mode_transit_from_manual(core_vehicle_t *self);
 
 void
 core_vehicle_init(core_vehicle_t *self)
@@ -62,22 +70,11 @@ core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords)
     core_position_update_coords(&self->position, coords);
 }
 
+// TODO: Delete
 core_coords_t
 core_vehicle_get_coords(core_vehicle_t *self)
 {
     return core_position_get_coords(&self->position);
-}
-
-bool
-core_vehicle_is_line_detected(core_vehicle_t *self)
-{
-    return core_position_is_line_detected(&self->position);
-}
-
-bool
-core_vehicle_is_line_lost(core_vehicle_t *self)
-{
-    return core_position_is_line_lost(&self->position);
 }
 
 int8_t
@@ -177,7 +174,20 @@ core_vehicle_update_command(core_vehicle_t *self, uint16_t command)
 void
 core_vehicle_update_mode(core_vehicle_t *self)
 {
-    core_vehicle_mode_apply(self);
+    core_mode_value_t mode = core_vehicle_get_mode_value(self);
+
+    switch (mode)
+    {
+        case CORE_MODE_LINE_DETECTED:
+            mode_transit_from_line_detected(self);
+            break;
+        case CORE_MODE_LINE_FOLLOWING:
+            mode_transit_from_line_following(self);
+            break;
+        case CORE_MODE_MANUAL:
+        default:
+            mode_transit_from_manual(self);
+    }
 }
 
 core_vehicle_result_t
@@ -206,4 +216,52 @@ init_mode(core_vehicle_t *self)
     stack_push(&mode, CORE_MODE_MANUAL);
 
     self->mode = mode;
+}
+
+static inline void
+mode_transit_from_line_detected(core_vehicle_t *self)
+{
+    if (!core_position_is_line_detected(&self->position))
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+    }
+    else if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_FOLLOW))
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_LINE_FOLLOWING);
+    }
+    else
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_LINE_DETECTED);
+    }
+}
+
+static inline void
+mode_transit_from_line_following(core_vehicle_t *self)
+{
+    if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_BREAK))
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+    }
+    else if (core_position_is_line_lost(&self->position))
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+        core_vehicle_update_command(self, CORE_REMOTE_CONTROL_NONE);
+    }
+    else
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_LINE_FOLLOWING);
+    }
+}
+
+static inline void
+mode_transit_from_manual(core_vehicle_t *self)
+{
+    if (core_position_is_line_detected(&self->position))
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_LINE_DETECTED);
+    }
+    else
+    {
+        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+    }
 }
