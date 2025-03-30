@@ -19,18 +19,22 @@ should_update_motion_while_in_manual_mode(core_motion_direction_t direction,
                                           uint16_t                command)
 {
     // given
+    core_motion_t motion;
+    core_motion_init(&motion);
+    
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
 
     // when
     core_vehicle_update_command(&vehicle, command);
-    core_vehicle_result_t result = core_vehicle_update_motion(&vehicle);
+    core_vehicle_result_t result =
+        core_vehicle_create_motion(&vehicle, &motion);
 
     // then
     TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_CHANGED, result);
-    TEST_ASSERT_EQUAL(direction, core_vehicle_get_motion_direction(&vehicle));
-    TEST_ASSERT_EQUAL(correction, core_vehicle_get_motion_correction(&vehicle));
+    TEST_ASSERT_EQUAL(direction, core_motion_get_direction(&motion));
+    TEST_ASSERT_EQUAL(correction, core_motion_get_correction(&motion));
 }
 
 int

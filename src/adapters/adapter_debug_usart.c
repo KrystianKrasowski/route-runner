@@ -12,7 +12,7 @@ core_port_debug_init(void)
 void
 core_port_debug_apply(core_vehicle_t *vehicle)
 {
-    core_coords_t coords = core_vehicle_get_coords(vehicle);
+    core_coords_t coords = vehicle->position.coords;
 
     uint8_t left_3  = core_coords_get_place(&coords, CORE_COORDS_PLACE_LEFT_3);
     uint8_t left_2  = core_coords_get_place(&coords, CORE_COORDS_PLACE_LEFT_2);
@@ -21,7 +21,7 @@ core_port_debug_apply(core_vehicle_t *vehicle)
     uint8_t right_2 = core_coords_get_place(&coords, CORE_COORDS_PLACE_RIGHT_2);
     uint8_t right_3 = core_coords_get_place(&coords, CORE_COORDS_PLACE_RIGHT_3);
 
-    int8_t correction = core_vehicle_get_motion_correction(vehicle);
+    int8_t correction = vehicle->motion.correction;
 
     printf("Coords. L3: %d, L2: %d, L1: %d, R1: %d, R2: %d, R3: %d, "
            "Correction: %d\n",

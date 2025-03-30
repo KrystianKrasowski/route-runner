@@ -1,8 +1,10 @@
 #include "core/types.h"
 #include "core/vehicle.h"
-#include "core_vehicle_manual_motion_apply.h"
-#include "core_vehicle_tracking_motion_apply.h"
 #include <string.h>
+
+#define KP 0.6
+#define KI 0
+#define KD 3.2
 
 static inline void
 init_mode(core_vehicle_t *self);
@@ -15,6 +17,15 @@ mode_transit_from_line_following(core_vehicle_t *self);
 
 static inline void
 mode_transit_from_manual(core_vehicle_t *self);
+
+static inline core_vehicle_result_t
+motion_create_tracking(core_vehicle_t *self, core_motion_t *result);
+
+static inline core_vehicle_result_t
+motion_create_manual(core_vehicle_t *self, core_motion_t *result);
+
+static inline int8_t
+pid_regulation(core_position_t *position);
 
 void
 core_vehicle_init(core_vehicle_t *self)
@@ -70,80 +81,6 @@ core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords)
     core_position_update_coords(&self->position, coords);
 }
 
-// TODO: Delete
-core_coords_t
-core_vehicle_get_coords(core_vehicle_t *self)
-{
-    return core_position_get_coords(&self->position);
-}
-
-int8_t
-core_vehicle_last_position_error(core_vehicle_t *self)
-{
-    return core_position_last_error(&self->position);
-}
-
-int16_t
-core_vehicle_get_position_errors_sum(core_vehicle_t *self)
-{
-    return core_position_sum_errors(&self->position);
-}
-
-bool
-core_vehicle_is_position_updated(core_vehicle_t *self)
-{
-    return core_position_is_handled(&self->position);
-}
-
-void
-core_vehicle_set_motion(core_vehicle_t *self, core_motion_t motion)
-{
-    self->motion = motion;
-}
-
-bool
-core_vehicle_motion_differs(core_vehicle_t *self, core_motion_t *motion)
-{
-    return !core_motion_equals(&self->motion, motion);
-}
-
-core_motion_direction_t
-core_vehicle_get_motion_direction(core_vehicle_t *self)
-{
-    return core_motion_get_direction(&self->motion);
-}
-
-int8_t
-core_vehicle_get_motion_correction(core_vehicle_t *self)
-{
-    return core_motion_get_correction(&self->motion);
-}
-
-void
-core_vehicle_set_motion_direction(core_vehicle_t         *self,
-                                  core_motion_direction_t direction)
-{
-    core_motion_set_direction(&self->motion, direction);
-}
-
-void
-core_vehicle_set_motion_correction(core_vehicle_t *self, int8_t correction)
-{
-    core_motion_set_correction(&self->motion, correction);
-}
-
-bool
-core_vehicle_is_moving_forward(core_vehicle_t *self)
-{
-    return core_vehicle_get_motion_direction(self) == CORE_MOTION_FORWARD;
-}
-
-bool
-core_vehicle_is_moving_backward(core_vehicle_t *self)
-{
-    return core_vehicle_get_motion_direction(self) == CORE_MOTION_BACKWARD;
-}
-
 void
 core_vehicle_update_command(core_vehicle_t *self, uint16_t command)
 {
@@ -191,21 +128,15 @@ core_vehicle_update_mode(core_vehicle_t *self)
 }
 
 core_vehicle_result_t
-core_vehicle_update_motion(core_vehicle_t *self)
+core_vehicle_create_motion(core_vehicle_t *self, core_motion_t *result)
 {
     switch (core_vehicle_get_mode_value(self))
     {
         case CORE_MODE_LINE_FOLLOWING:
-            return core_vehicle_tracking_motion_apply(self);
+            return motion_create_tracking(self, result);
         default:
-            return core_vehicle_manual_motion_apply(self);
+            return motion_create_manual(self, result);
     }
-}
-
-int8_t
-core_vehicle_update_position_error(core_vehicle_t *self)
-{
-    return core_position_update_error(&self->position);
 }
 
 static inline void
@@ -263,5 +194,87 @@ mode_transit_from_manual(core_vehicle_t *self)
     else
     {
         stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+    }
+}
+
+static inline core_vehicle_result_t
+motion_create_tracking(core_vehicle_t *self, core_motion_t *result)
+{
+    if (!core_position_is_handled(&self->position))
+    {
+        core_motion_set_correction(result, pid_regulation(&self->position));
+        core_motion_set_direction(result, CORE_MOTION_FORWARD);
+
+        self->motion = *result;
+
+        return CORE_VEHICLE_MOTION_CHANGED;
+    }
+    else
+    {
+        return CORE_VEHICLE_MOTION_REMAINS;
+    }
+}
+
+static inline core_vehicle_result_t
+motion_create_manual(core_vehicle_t *self, core_motion_t *result)
+{
+    if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_LEFT))
+    {
+        core_motion_set_correction(result, -50);
+    }
+    else if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_RIGHT))
+    {
+        core_motion_set_correction(result, 50);
+    }
+    else
+    {
+        core_motion_set_correction(result, 0);
+    }
+
+    if (core_vehicle_is_commanded(self, CORE_MOTION_FORWARD))
+    {
+        core_motion_set_direction(result, CORE_MOTION_FORWARD);
+    }
+    else if (core_vehicle_is_commanded(self, CORE_MOTION_BACKWARD))
+    {
+        core_motion_set_direction(result, CORE_MOTION_BACKWARD);
+    }
+    else
+    {
+        core_motion_set_direction(result, CORE_MOTION_NONE);
+        core_motion_set_correction(result, 0);
+    }
+
+    if (core_motion_equals(&self->motion, result))
+    {
+        return CORE_VEHICLE_MOTION_REMAINS;
+    }
+    else
+    {
+        self->motion = *result;
+        return CORE_VEHICLE_MOTION_CHANGED;
+    }
+}
+
+static inline int8_t
+pid_regulation(core_position_t *position)
+{
+    int8_t  previous   = core_position_last_error(position);
+    int8_t  error      = core_position_update_error(position);
+    int16_t all_errors = core_position_sum_errors(position);
+
+    int16_t correction = KP * error + KI * all_errors + KD * (error - previous);
+
+    if (correction > 100)
+    {
+        return 100;
+    }
+    else if (correction < -100)
+    {
+        return -100;
+    }
+    else
+    {
+        return correction;
     }
 }
