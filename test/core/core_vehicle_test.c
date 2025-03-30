@@ -2,6 +2,9 @@
 #include <unity.h>
 #include <unity_config.h>
 
+#define COORDS_ON_LINE  core_coords_create(0, 0, 100, 100, 0, 0)
+#define COORDS_OFF_LINE core_coords_create(0, 0, 0, 0, 0, 0)
+
 void
 setUp(void)
 {
@@ -27,46 +30,83 @@ should_init_vehicle_mode(void)
 }
 
 void
-should_detect_mode_change_on_init(void)
+should_update_command(core_mode_value_t mode,
+                      uint16_t          command,
+                      uint16_t          expected_command)
 {
     // given
     core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_mode_value(&vehicle, mode);
 
     // when
-    core_vehicle_init(&vehicle);
+    core_vehicle_update_commands(&vehicle, command);
 
     // then
-    TEST_ASSERT_TRUE(core_vehicle_is_mode_changed(&vehicle));
+    TEST_ASSERT_EQUAL(expected_command, core_vehicle_get_command(&vehicle));
 }
 
 void
-should_detect_mode_change_on_transition(void)
+should_update_manual_mode(core_coords_t     coords,
+                          core_mode_value_t expected_mode,
+                          bool              mode_changed)
 {
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
-
-    // when
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
-    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
+
+    // when
+    core_vehicle_update_coords(&vehicle, coords);
+    core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_TRUE(core_vehicle_is_mode_changed(&vehicle));
+    TEST_ASSERT_EQUAL(expected_mode, core_vehicle_get_mode_value(&vehicle));
+    TEST_ASSERT_EQUAL(mode_changed, core_vehicle_is_mode_changed(&vehicle));
 }
 
 void
-should_detect_mode_change_without_transition(void)
+should_update_line_detected_mode(uint16_t          commands,
+                                 core_coords_t     coords,
+                                 core_mode_value_t expected_mode,
+                                 bool              mode_changed)
 {
     // given
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
 
     // when
-    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
-    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
+    core_vehicle_update_commands(&vehicle, commands);
+    core_vehicle_update_coords(&vehicle, coords);
+    core_vehicle_update_mode(&vehicle);
 
     // then
-    TEST_ASSERT_FALSE(core_vehicle_is_mode_changed(&vehicle));
+    TEST_ASSERT_EQUAL(expected_mode, core_vehicle_get_mode_value(&vehicle));
+    TEST_ASSERT_EQUAL(mode_changed, core_vehicle_is_mode_changed(&vehicle));
+}
+
+void
+should_update_line_following_mode(uint16_t          commands,
+                                  core_coords_t     coords,
+                                  core_mode_value_t expected_mode,
+                                  uint16_t          expected_commands,
+                                  bool              mode_changed)
+{
+    // given
+    core_vehicle_t vehicle;
+    core_vehicle_init(&vehicle);
+    core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
+
+    // when
+    core_vehicle_update_commands(&vehicle, commands);
+    core_vehicle_update_coords(&vehicle, coords);
+    core_vehicle_update_mode(&vehicle);
+
+    // then
+    TEST_ASSERT_EQUAL(expected_mode, core_vehicle_get_mode_value(&vehicle));
+    TEST_ASSERT_EQUAL(expected_commands, core_vehicle_get_command(&vehicle));
+    TEST_ASSERT_EQUAL(mode_changed, core_vehicle_is_mode_changed(&vehicle));
 }
 
 int
@@ -74,8 +114,108 @@ main(void)
 {
     UNITY_BEGIN();
     RUN_TEST(should_init_vehicle_mode);
-    RUN_TEST(should_detect_mode_change_on_init);
-    RUN_TEST(should_detect_mode_change_on_transition);
-    RUN_TEST(should_detect_mode_change_without_transition);
+
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_NONE,
+                   CORE_REMOTE_CONTROL_NONE);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_FORWARD,
+                   CORE_REMOTE_CONTROL_FORWARD);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_BACKWARD,
+                   CORE_REMOTE_CONTROL_BACKWARD);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_LEFT,
+                   CORE_REMOTE_CONTROL_LEFT);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_RIGHT,
+                   CORE_REMOTE_CONTROL_RIGHT);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_FOLLOW,
+                   CORE_REMOTE_CONTROL_NONE);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_FOLLOW | CORE_REMOTE_CONTROL_FORWARD,
+                   CORE_REMOTE_CONTROL_FORWARD);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_LINE_DETECTED,
+                   CORE_REMOTE_CONTROL_FOLLOW,
+                   CORE_REMOTE_CONTROL_FOLLOW);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_LINE_DETECTED,
+                   CORE_REMOTE_CONTROL_FORWARD,
+                   CORE_REMOTE_CONTROL_FORWARD);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_LINE_FOLLOWING,
+                   CORE_REMOTE_CONTROL_FORWARD,
+                   CORE_REMOTE_CONTROL_NONE);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_LINE_FOLLOWING,
+                   CORE_REMOTE_CONTROL_BACKWARD,
+                   CORE_REMOTE_CONTROL_NONE);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_LINE_FOLLOWING,
+                   CORE_REMOTE_CONTROL_FOLLOW,
+                   CORE_REMOTE_CONTROL_NONE);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_LINE_FOLLOWING,
+                   CORE_REMOTE_CONTROL_BREAK,
+                   CORE_REMOTE_CONTROL_BREAK);
+    RUN_PARAM_TEST(should_update_command,
+                   CORE_MODE_LINE_DETECTED,
+                   CORE_REMOTE_CONTROL_FOLLOW,
+                   CORE_REMOTE_CONTROL_FOLLOW);
+
+    RUN_PARAM_TEST(should_update_manual_mode,
+                   COORDS_ON_LINE,
+                   CORE_MODE_LINE_DETECTED,
+                   true);
+
+    RUN_PARAM_TEST(
+        should_update_manual_mode, COORDS_OFF_LINE, CORE_MODE_MANUAL, false);
+
+    RUN_PARAM_TEST(should_update_line_detected_mode,
+                   CORE_REMOTE_CONTROL_FOLLOW,
+                   COORDS_ON_LINE,
+                   CORE_MODE_LINE_FOLLOWING,
+                   true);
+    RUN_PARAM_TEST(should_update_line_detected_mode,
+                   CORE_REMOTE_CONTROL_NONE,
+                   COORDS_ON_LINE,
+                   CORE_MODE_LINE_DETECTED,
+                   false);
+    RUN_PARAM_TEST(should_update_line_detected_mode,
+                   CORE_REMOTE_CONTROL_NONE,
+                   COORDS_OFF_LINE,
+                   CORE_MODE_MANUAL,
+                   true);
+
+    RUN_PARAM_TEST(should_update_line_following_mode,
+                   CORE_REMOTE_CONTROL_BREAK,
+                   COORDS_ON_LINE,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_BREAK,
+                   true);
+
+    RUN_PARAM_TEST(should_update_line_following_mode,
+                   CORE_REMOTE_CONTROL_FOLLOW,
+                   COORDS_OFF_LINE,
+                   CORE_MODE_MANUAL,
+                   CORE_REMOTE_CONTROL_NONE,
+                   true);
+
+    RUN_PARAM_TEST(should_update_line_following_mode,
+                   CORE_REMOTE_CONTROL_NONE,
+                   COORDS_ON_LINE,
+                   CORE_MODE_LINE_FOLLOWING,
+                   CORE_REMOTE_CONTROL_NONE,
+                   false);
+
     return UNITY_END();
 }

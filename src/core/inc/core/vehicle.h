@@ -42,7 +42,7 @@ void
 core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords);
 
 void
-core_vehicle_update_command(core_vehicle_t *self, uint16_t command);
+core_vehicle_update_commands(core_vehicle_t *self, uint16_t command);
 
 void
 core_vehicle_update_mode(core_vehicle_t *self);

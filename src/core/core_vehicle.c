@@ -63,7 +63,7 @@ core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords)
 }
 
 void
-core_vehicle_update_command(core_vehicle_t *self, uint16_t command)
+core_vehicle_update_commands(core_vehicle_t *self, uint16_t command)
 {
     core_mode_value_t mode               = core_vehicle_get_mode_value(self);
     bool              is_mode_follow     = mode == CORE_MODE_LINE_FOLLOWING;
@@ -147,7 +147,7 @@ mode_transit_from_line_following(core_vehicle_t *self)
     else if (core_position_is_line_lost(&self->position))
     {
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
-        core_vehicle_update_command(self, CORE_REMOTE_CONTROL_NONE);
+        core_vehicle_update_commands(self, CORE_REMOTE_CONTROL_NONE);
     }
     else
     {
