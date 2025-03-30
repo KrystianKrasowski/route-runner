@@ -2,10 +2,6 @@
 #include "core/vehicle.h"
 #include <string.h>
 
-#define KP 0.6
-#define KI 0
-#define KD 3.2
-
 static inline void
 mode_transit_from_line_detected(core_vehicle_t *self);
 
@@ -20,9 +16,6 @@ motion_create_tracking(core_vehicle_t *self, core_motion_t *result);
 
 static inline core_vehicle_result_t
 motion_create_manual(core_vehicle_t *self, core_motion_t *result);
-
-static inline int8_t
-pid_regulation(core_position_t *position);
 
 void
 core_vehicle_init(core_vehicle_t *self)
@@ -178,9 +171,10 @@ mode_transit_from_manual(core_vehicle_t *self)
 static inline core_vehicle_result_t
 motion_create_tracking(core_vehicle_t *self, core_motion_t *result)
 {
-    if (!core_position_is_handled(&self->position))
+    if (!core_position_is_regulated(&self->position))
     {
-        core_motion_set_correction(result, pid_regulation(&self->position));
+        int8_t correction = core_position_regulate(&self->position);
+        core_motion_set_correction(result, correction);
         core_motion_set_direction(result, CORE_MOTION_FORWARD);
 
         self->motion = *result;
@@ -231,28 +225,5 @@ motion_create_manual(core_vehicle_t *self, core_motion_t *result)
     {
         self->motion = *result;
         return CORE_VEHICLE_MOTION_CHANGED;
-    }
-}
-
-static inline int8_t
-pid_regulation(core_position_t *position)
-{
-    int8_t  previous   = core_position_last_error(position);
-    int8_t  error      = core_position_update_error(position);
-    int16_t all_errors = core_position_sum_errors(position);
-
-    int16_t correction = KP * error + KI * all_errors + KD * (error - previous);
-
-    if (correction > 100)
-    {
-        return 100;
-    }
-    else if (correction < -100)
-    {
-        return -100;
-    }
-    else
-    {
-        return correction;
     }
 }

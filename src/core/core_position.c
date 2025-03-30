@@ -1,4 +1,5 @@
 #include "core/position.h"
+#include "core_position_regulator.h"
 #include <string.h>
 
 void
@@ -14,7 +15,7 @@ void
 core_position_update_coords(core_position_t *self, core_coords_t coords)
 {
     self->coords = coords;
-    self->handled = false;
+    self->regulated = false;
 }
 
 core_coords_t
@@ -24,9 +25,9 @@ core_position_get_coords(core_position_t *self)
 }
 
 bool
-core_position_is_handled(core_position_t *self)
+core_position_is_regulated(core_position_t *self)
 {
-    return self->handled;
+    return self->regulated;
 }
 
 bool
@@ -59,7 +60,6 @@ core_position_update_error(core_position_t *self)
     int8_t error = core_position_last_error(self);
     core_coords_compute_mass_center(&self->coords, &error);
     stack_push_rolling(&self->errors, error);
-    self->handled = true;
 
     return error;
 }
@@ -68,4 +68,11 @@ int16_t
 core_position_sum_errors(core_position_t *self)
 {
     return stack_sum(&self->errors);
+}
+
+int8_t
+core_position_regulate(core_position_t *self)
+{
+    self->regulated = true;
+    return core_position_regulate_pid(self);
 }
