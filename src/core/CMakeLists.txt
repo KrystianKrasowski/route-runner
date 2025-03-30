@@ -3,6 +3,7 @@ add_library(core STATIC
     core_motion.c
     core_coords.c
     core_position.c
+    core_mode.c
 )
 
 target_include_directories(core PUBLIC "./inc")

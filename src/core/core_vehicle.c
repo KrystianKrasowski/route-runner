@@ -7,9 +7,6 @@
 #define KD 3.2
 
 static inline void
-init_mode(core_vehicle_t *self);
-
-static inline void
 mode_transit_from_line_detected(core_vehicle_t *self);
 
 static inline void
@@ -31,36 +28,27 @@ void
 core_vehicle_init(core_vehicle_t *self)
 {
     memset(self, 0, sizeof(*self));
-    init_mode(self);
     core_motion_init(&self->motion);
     core_position_init(&self->position);
+    core_mode_init(&self->mode);
 }
 
 core_mode_value_t
 core_vehicle_get_mode_value(core_vehicle_t *self)
 {
-    int16_t value;
-    stack_peek(&self->mode, &value);
-
-    return value;
+    return core_mode_get(&self->mode);
 }
 
 void
 core_vehicle_set_mode_value(core_vehicle_t *self, core_mode_value_t value)
 {
-    stack_push_rolling(&self->mode, (int16_t)value);
+    core_mode_set(&self->mode, value);
 }
 
 bool
 core_vehicle_is_mode_changed(core_vehicle_t *self)
 {
-    int16_t bottom;
-    int16_t top;
-
-    stack_peek_bottom(&self->mode, &bottom);
-    stack_peek(&self->mode, &top);
-
-    return stack_get_length(&self->mode) == 1 || bottom != top;
+    return core_mode_changed(&self->mode);
 }
 
 uint16_t
@@ -140,29 +128,19 @@ core_vehicle_create_motion(core_vehicle_t *self, core_motion_t *result)
 }
 
 static inline void
-init_mode(core_vehicle_t *self)
-{
-    stack_t mode;
-    stack_init(&mode, 2);
-    stack_push(&mode, CORE_MODE_MANUAL);
-
-    self->mode = mode;
-}
-
-static inline void
 mode_transit_from_line_detected(core_vehicle_t *self)
 {
     if (!core_position_is_line_detected(&self->position))
     {
-        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+        core_mode_set(&self->mode, CORE_MODE_MANUAL);
     }
     else if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_FOLLOW))
     {
-        stack_push_rolling(&self->mode, CORE_MODE_LINE_FOLLOWING);
+        core_mode_set(&self->mode, CORE_MODE_LINE_FOLLOWING);
     }
     else
     {
-        stack_push_rolling(&self->mode, CORE_MODE_LINE_DETECTED);
+        core_mode_set(&self->mode, CORE_MODE_LINE_DETECTED);
     }
 }
 
@@ -171,16 +149,16 @@ mode_transit_from_line_following(core_vehicle_t *self)
 {
     if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_BREAK))
     {
-        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+        core_mode_set(&self->mode, CORE_MODE_MANUAL);
     }
     else if (core_position_is_line_lost(&self->position))
     {
-        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+        core_mode_set(&self->mode, CORE_MODE_MANUAL);
         core_vehicle_update_command(self, CORE_REMOTE_CONTROL_NONE);
     }
     else
     {
-        stack_push_rolling(&self->mode, CORE_MODE_LINE_FOLLOWING);
+        core_mode_set(&self->mode, CORE_MODE_LINE_FOLLOWING);
     }
 }
 
@@ -189,11 +167,11 @@ mode_transit_from_manual(core_vehicle_t *self)
 {
     if (core_position_is_line_detected(&self->position))
     {
-        stack_push_rolling(&self->mode, CORE_MODE_LINE_DETECTED);
+        core_mode_set(&self->mode, CORE_MODE_LINE_DETECTED);
     }
     else
     {
-        stack_push_rolling(&self->mode, CORE_MODE_MANUAL);
+        core_mode_set(&self->mode, CORE_MODE_MANUAL);
     }
 }
 
