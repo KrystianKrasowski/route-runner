@@ -23,13 +23,13 @@ should_apply_duty_cycle(int8_t  correction,
     // given
     core_port_motion_init();
 
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
-    core_vehicle_set_motion_direction(&vehicle, CORE_MOTION_FORWARD);
-    core_vehicle_set_motion_correction(&vehicle, correction);
+    core_motion_t motion;
+    core_motion_init(&motion);
+    core_motion_set_direction(&motion, CORE_MOTION_FORWARD);
+    core_motion_set_correction(&motion, correction);
 
     // when
-    core_port_motion_apply(&vehicle);
+    core_port_motion_apply(&motion);
 
     // then
     TEST_ASSERT_EQUAL(expected_left_duty_cycle,

@@ -2,6 +2,7 @@
 #define _CORE_PORTS_H
 
 #include "vehicle.h"
+#include "motion.h"
 #include <stdint.h>
 
 void
@@ -20,7 +21,7 @@ void
 core_port_motion_init(void);
 
 void
-core_port_motion_apply(core_vehicle_t *vehicle);
+core_port_motion_apply(core_motion_t *motion);
 
 void
 core_port_mode_indicator_init(void);

@@ -79,7 +79,7 @@ motion_update(core_vehicle_t *vehicle)
 {
     if (core_vehicle_update_motion(vehicle) == CORE_VEHICLE_MOTION_CHANGED)
     {
-        core_port_motion_apply(vehicle);
+        core_port_motion_apply(&vehicle->motion);
     }
 }
 
