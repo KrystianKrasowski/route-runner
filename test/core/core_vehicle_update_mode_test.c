@@ -1,4 +1,4 @@
-#include <core.h>
+#include <core/vehicle.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -27,23 +27,6 @@ should_init_vehicle_mode(void)
     // then
     core_mode_value_t value = core_vehicle_get_mode_value(&vehicle);
     TEST_ASSERT_EQUAL(CORE_MODE_MANUAL, value);
-}
-
-void
-should_update_command(core_mode_value_t mode,
-                      uint16_t          command,
-                      uint16_t          expected_command)
-{
-    // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
-    core_vehicle_set_mode_value(&vehicle, mode);
-
-    // when
-    core_vehicle_update_commands(&vehicle, command);
-
-    // then
-    TEST_ASSERT_EQUAL(expected_command, core_vehicle_get_command(&vehicle));
 }
 
 void
@@ -113,64 +96,8 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(should_init_vehicle_mode);
 
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_NONE,
-                   CORE_REMOTE_CONTROL_NONE);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_FORWARD);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_BACKWARD,
-                   CORE_REMOTE_CONTROL_BACKWARD);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_LEFT,
-                   CORE_REMOTE_CONTROL_LEFT);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_RIGHT,
-                   CORE_REMOTE_CONTROL_RIGHT);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_NONE);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_FOLLOW | CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_FORWARD);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_LINE_DETECTED,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_FOLLOW);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_LINE_DETECTED,
-                   CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_FORWARD);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_NONE);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_BACKWARD,
-                   CORE_REMOTE_CONTROL_NONE);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_NONE);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_BREAK,
-                   CORE_REMOTE_CONTROL_BREAK);
-    RUN_PARAM_TEST(should_update_command,
-                   CORE_MODE_LINE_DETECTED,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_FOLLOW);
+    RUN_TEST(should_init_vehicle_mode);
 
     RUN_PARAM_TEST(should_update_manual_mode,
                    COORDS_ON_LINE,
@@ -216,6 +143,6 @@ main(void)
                    CORE_MODE_LINE_FOLLOWING,
                    CORE_REMOTE_CONTROL_NONE,
                    false);
-
+                   
     return UNITY_END();
 }

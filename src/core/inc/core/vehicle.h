@@ -4,6 +4,7 @@
 #include "mode.h"
 #include "motion.h"
 #include "position.h"
+#include "types.h"
 #include <stdint.h>
 
 typedef enum

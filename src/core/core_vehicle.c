@@ -65,11 +65,10 @@ core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords)
 void
 core_vehicle_update_commands(core_vehicle_t *self, uint16_t command)
 {
-    core_mode_value_t mode               = core_vehicle_get_mode_value(self);
-    bool              is_mode_follow     = mode == CORE_MODE_LINE_FOLLOWING;
-    bool              is_mode_manual     = mode == CORE_MODE_MANUAL;
-    bool              has_command_break  = command & CORE_REMOTE_CONTROL_BREAK;
-    bool              has_command_follow = command & CORE_REMOTE_CONTROL_FOLLOW;
+    core_mode_value_t mode              = core_vehicle_get_mode_value(self);
+    bool              is_mode_follow    = mode == CORE_MODE_LINE_FOLLOWING;
+    bool              is_mode_manual    = mode == CORE_MODE_MANUAL;
+    bool              has_command_break = command & CORE_REMOTE_CONTROL_BREAK;
 
     if (is_mode_follow && has_command_break)
     {
@@ -79,9 +78,10 @@ core_vehicle_update_commands(core_vehicle_t *self, uint16_t command)
     {
         self->command = CORE_REMOTE_CONTROL_NONE;
     }
-    else if (is_mode_manual && has_command_follow)
+    else if (is_mode_manual)
     {
-        self->command = command - CORE_REMOTE_CONTROL_FOLLOW;
+        self->command =
+            command & ~(CORE_REMOTE_CONTROL_BREAK | CORE_REMOTE_CONTROL_FOLLOW);
     }
     else
     {

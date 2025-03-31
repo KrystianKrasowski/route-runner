@@ -14,14 +14,14 @@ tearDown(void)
 }
 
 void
-should_update_motion_while_in_manual_mode(core_motion_direction_t direction,
-                                          int8_t                  correction,
-                                          uint16_t                command)
+should_create_manual_motion(core_motion_direction_t direction,
+                            int8_t                  correction,
+                            uint16_t                command)
 {
     // given
     core_motion_t motion;
     core_motion_init(&motion);
-    
+
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
@@ -41,27 +41,27 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
+    RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_FORWARD,
                    0,
                    CORE_REMOTE_CONTROL_FORWARD);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
+    RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_FORWARD,
                    -50,
                    CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_LEFT);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
+    RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_FORWARD,
                    50,
                    CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_RIGHT);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
+    RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_BACKWARD,
                    0,
                    CORE_REMOTE_CONTROL_BACKWARD);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
+    RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_BACKWARD,
                    -50,
                    CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_LEFT);
-    RUN_PARAM_TEST(should_update_motion_while_in_manual_mode,
+    RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_BACKWARD,
                    50,
                    CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_RIGHT);
