@@ -1,129 +1,78 @@
 #include "core/position.h"
-#include <stdbool.h>
+#include "core_position_regulator.h"
 #include <string.h>
-
-#define WL3 -100
-#define WL2 -40
-#define WL1 -20
-#define WR1 20
-#define WR2 40
-#define WR3 100
-
-static inline bool
-is_on_line(core_position_t *self);
 
 void
 core_position_init(core_position_t *self)
 {
     memset(self, 0, sizeof(*self));
-}
-
-core_position_status_t
-core_position_get_status(core_position_t *self)
-{
-    if (is_on_line(self))
-    {
-        return CORE_POSITION_ON_LINE;
-    }
-    else
-    {
-        return CORE_POSITION_OFF_LINE;
-    }
-}
-
-core_position_status_t
-core_position_compute_error(core_position_t *self, int8_t *error)
-{
-    int16_t sum = self->left_3 + self->left_2 + self->left_1 + self->right_1 +
-                  self->right_2 + self->right_3;
-
-    if (sum == 0)
-    {
-        return CORE_POSITION_OFF_LINE;
-    }
-
-    int16_t left_3_weight  = WL3 * self->left_3;
-    int16_t left_2_weight  = WL2 * self->left_2;
-    int16_t left_1_weight  = WL1 * self->left_1;
-    int16_t right_1_weight = WR1 * self->right_1;
-    int16_t right_2_weight = WR2 * self->right_2;
-    int16_t right_3_weight = WR3 * self->right_3;
-
-    int16_t weight_sum = left_3_weight + left_2_weight + left_1_weight +
-                         right_1_weight + right_2_weight + right_3_weight;
-
-    *error = weight_sum / sum;
-
-    return CORE_POSITION_ON_LINE;
-}
-
-uint8_t
-core_position_get_by_place(core_position_t *self, core_position_place_t place)
-{
-    switch (place)
-    {
-        case CORE_POSITION_PLACE_LEFT_3:
-            return self->left_3;
-        case CORE_POSITION_PLACE_LEFT_2:
-            return self->left_2;
-        case CORE_POSITION_PLACE_LEFT_1:
-            return self->left_1;
-        case CORE_POSITION_PLACE_RIGHT_1:
-            return self->right_1;
-        case CORE_POSITION_PLACE_RIGHT_2:
-            return self->right_2;
-        case CORE_POSITION_PLACE_RIGHT_3:
-            return self->right_3;
-        default:
-            return 0;
-    }
+    stack_t errors;
+    stack_init(&errors, 20);
+    self->errors = errors;
 }
 
 void
-core_position_set_by_place(core_position_t      *self,
-                           core_position_place_t place,
-                           uint8_t               position)
+core_position_update_coords(core_position_t *self, core_coords_t coords)
 {
-    switch (place)
-    {
-        case CORE_POSITION_PLACE_LEFT_3:
-            self->left_3 = position;
-            break;
-        case CORE_POSITION_PLACE_LEFT_2:
-            self->left_2 = position;
-            break;
-        case CORE_POSITION_PLACE_LEFT_1:
-            self->left_1 = position;
-            break;
-        case CORE_POSITION_PLACE_RIGHT_1:
-            self->right_1 = position;
-            break;
-        case CORE_POSITION_PLACE_RIGHT_2:
-            self->right_2 = position;
-            break;
-        case CORE_POSITION_PLACE_RIGHT_3:
-            self->right_3 = position;
-            break;
-        default:
-            return;
-    }
+    self->coords = coords;
+    self->regulated = false;
+}
+
+core_coords_t
+core_position_get_coords(core_position_t *self)
+{
+    return self->coords;
 }
 
 bool
-core_position_equals(core_position_t *self, core_position_t *other)
+core_position_is_regulated(core_position_t *self)
 {
-    return self->left_1 == other->left_1 && self->left_2 == other->left_2 &&
-           self->left_3 == other->left_3 && self->right_1 == other->right_1 &&
-           self->right_2 == other->right_2 && self->right_3 == other->right_3;
+    return self->regulated;
 }
 
-static inline bool
-is_on_line(core_position_t *self)
+bool
+core_position_is_line_detected(core_position_t *self)
 {
-    return self->left_3 >= CORE_POSITION_DETECTION_TRESHOLD ||
-           self->left_2 >= CORE_POSITION_DETECTION_TRESHOLD ||
-           self->left_1 >= CORE_POSITION_DETECTION_TRESHOLD ||
-           self->right_1 >= CORE_POSITION_DETECTION_TRESHOLD ||
-           self->right_2 >= CORE_POSITION_DETECTION_TRESHOLD ||
-           self->right_3 >= CORE_POSITION_DETECTION_TRESHOLD;
+    return core_coords_get_status(&self->coords) == CORE_COORDS_STATUS_ON_LINE;
+}
+
+bool
+core_position_is_line_lost(core_position_t *self)
+{
+    core_coords_status_t coords_status = core_coords_get_status(&self->coords);
+    int16_t              errors_sum    = core_position_sum_errors(self);
+
+    return coords_status == CORE_COORDS_STATUS_OFF_LINE && errors_sum == 0;
+}
+
+int8_t
+core_position_last_error(core_position_t *self)
+{
+    int16_t error = 0;
+    stack_peek(&self->errors, &error);
+
+    return (int8_t)error;
+}
+
+int8_t
+core_position_update_error(core_position_t *self)
+{
+    int8_t error = core_position_last_error(self);
+    core_coords_compute_mass_center(&self->coords, &error);
+    stack_push_rolling(&self->errors, error);
+
+    return error;
+}
+
+int16_t
+core_position_sum_errors(core_position_t *self)
+{
+    return stack_sum(&self->errors);
+}
+
+int8_t
+core_position_regulate(core_position_t *self)
+{
+    self->regulated = true;
+    return core_position_regulate_pid(self);
 }

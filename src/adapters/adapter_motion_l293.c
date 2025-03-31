@@ -1,4 +1,4 @@
-#include <core/vehicle.h>
+#include <core/motion.h>
 #include <l293.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -45,14 +45,13 @@ core_port_motion_init(void)
 }
 
 void
-core_port_motion_apply(core_vehicle_t *vehicle)
+core_port_motion_apply(core_motion_t *motion)
 {
     l293_disable(&motor_left);
     l293_disable(&motor_right);
 
-    int8_t correction = core_vehicle_get_motion_correction(vehicle);
-    core_motion_direction_t direction =
-        core_vehicle_get_motion_direction(vehicle);
+    int8_t                  correction = core_motion_get_correction(motion);
+    core_motion_direction_t direction  = core_motion_get_direction(motion);
 
     uint8_t duty_cycle_left  = compute_duty_cycle_left(correction);
     uint8_t duty_cycle_right = compute_duty_cycle_right(correction);

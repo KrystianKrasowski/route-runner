@@ -2,24 +2,24 @@
 #include <tim1.h>
 
 void
-core_port_state_indicator_init(void)
+core_port_mode_indicator_init(void)
 {
     tim1_ch1_init();
     tim1_ch1_set_toggles(2);
 }
 
 void
-core_port_state_indicator_apply(core_vehicle_state_t state)
+core_port_mode_indicator_apply(core_mode_value_t value)
 {
-    switch (state)
+    switch (value)
     {
-        case CORE_VEHICLE_STATE_LINE_FOLLOWING:
+        case CORE_MODE_LINE_FOLLOWING:
             tim1_ch1_set_toggles(8);
             break;
-        case CORE_VEHICLE_STATE_LINE_DETECTED:
+        case CORE_MODE_LINE_DETECTED:
             tim1_ch1_set_toggles(4);
             break;
-        case CORE_VEHICLE_STATE_MANUAL:
+        case CORE_MODE_MANUAL:
         default:
             tim1_ch1_set_toggles(2);
     }

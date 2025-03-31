@@ -37,7 +37,8 @@
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "TARGET_ARCH": "test"
+                "TARGET_ARCH": "test",
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         }
     ],
