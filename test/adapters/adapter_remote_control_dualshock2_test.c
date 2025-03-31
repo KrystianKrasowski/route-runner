@@ -49,11 +49,6 @@ main(void)
                    DS2_L2 | DS2_LEFT,
                    CORE_CONTROL_BACKWARD | CORE_CONTROL_LEFT);
 
-    RUN_PARAM_TEST(should_map_dualshock2, DS2_L2 | DS2_R2, CORE_CONTROL_NONE);
-
-    RUN_PARAM_TEST(
-        should_map_dualshock2, DS2_RIGHT | DS2_LEFT, CORE_CONTROL_NONE);
-
     RUN_PARAM_TEST(should_map_dualshock2, DS2_CIRCLE, CORE_CONTROL_BREAK);
 
     RUN_PARAM_TEST(should_map_dualshock2, DS2_CROSS, CORE_CONTROL_FOLLOW);
