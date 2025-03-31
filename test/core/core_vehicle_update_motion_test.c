@@ -1,4 +1,3 @@
-#include <core/types.h>
 #include <core/vehicle.h>
 #include <unity.h>
 #include <unity_config.h>
@@ -16,7 +15,7 @@ tearDown(void)
 void
 should_create_manual_motion(core_motion_direction_t direction,
                             int8_t                  correction,
-                            uint16_t                command)
+                            uint16_t                commands)
 {
     // given
     core_motion_t motion;
@@ -27,7 +26,7 @@ should_create_manual_motion(core_motion_direction_t direction,
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
 
     // when
-    core_vehicle_update_commands(&vehicle, command);
+    core_vehicle_update_control(&vehicle, core_control_create(commands));
     core_vehicle_result_t result =
         core_vehicle_create_motion(&vehicle, &motion);
 
@@ -44,26 +43,26 @@ main(void)
     RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_FORWARD,
                    0,
-                   CORE_REMOTE_CONTROL_FORWARD);
+                   CORE_CONTROL_FORWARD);
     RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_FORWARD,
                    -50,
-                   CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_LEFT);
+                   CORE_CONTROL_FORWARD | CORE_CONTROL_LEFT);
     RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_FORWARD,
                    50,
-                   CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_RIGHT);
+                   CORE_CONTROL_FORWARD | CORE_CONTROL_RIGHT);
     RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_BACKWARD,
                    0,
-                   CORE_REMOTE_CONTROL_BACKWARD);
+                   CORE_CONTROL_BACKWARD);
     RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_BACKWARD,
                    -50,
-                   CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_LEFT);
+                   CORE_CONTROL_BACKWARD | CORE_CONTROL_LEFT);
     RUN_PARAM_TEST(should_create_manual_motion,
                    CORE_MOTION_BACKWARD,
                    50,
-                   CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_RIGHT);
+                   CORE_CONTROL_BACKWARD | CORE_CONTROL_RIGHT);
     return UNITY_END();
 }

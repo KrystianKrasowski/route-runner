@@ -27,38 +27,35 @@ int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_PARAM_TEST(should_map_dualshock2, DS2_NONE, CORE_REMOTE_CONTROL_NONE);
-    RUN_PARAM_TEST(should_map_dualshock2, DS2_R2, CORE_REMOTE_CONTROL_FORWARD);
-    RUN_PARAM_TEST(should_map_dualshock2, DS2_L2, CORE_REMOTE_CONTROL_BACKWARD);
-    RUN_PARAM_TEST(should_map_dualshock2, DS2_RIGHT, CORE_REMOTE_CONTROL_RIGHT);
-    RUN_PARAM_TEST(should_map_dualshock2, DS2_LEFT, CORE_REMOTE_CONTROL_LEFT);
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_NONE, CORE_CONTROL_NONE);
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_R2, CORE_CONTROL_FORWARD);
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_L2, CORE_CONTROL_BACKWARD);
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_RIGHT, CORE_CONTROL_RIGHT);
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_LEFT, CORE_CONTROL_LEFT);
 
     RUN_PARAM_TEST(should_map_dualshock2,
                    DS2_R2 | DS2_RIGHT,
-                   CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_RIGHT);
+                   CORE_CONTROL_FORWARD | CORE_CONTROL_RIGHT);
 
     RUN_PARAM_TEST(should_map_dualshock2,
                    DS2_R2 | DS2_LEFT,
-                   CORE_REMOTE_CONTROL_FORWARD | CORE_REMOTE_CONTROL_LEFT);
+                   CORE_CONTROL_FORWARD | CORE_CONTROL_LEFT);
 
     RUN_PARAM_TEST(should_map_dualshock2,
                    DS2_L2 | DS2_RIGHT,
-                   CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_RIGHT);
+                   CORE_CONTROL_BACKWARD | CORE_CONTROL_RIGHT);
 
     RUN_PARAM_TEST(should_map_dualshock2,
                    DS2_L2 | DS2_LEFT,
-                   CORE_REMOTE_CONTROL_BACKWARD | CORE_REMOTE_CONTROL_LEFT);
+                   CORE_CONTROL_BACKWARD | CORE_CONTROL_LEFT);
+
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_L2 | DS2_R2, CORE_CONTROL_NONE);
 
     RUN_PARAM_TEST(
-        should_map_dualshock2, DS2_L2 | DS2_R2, CORE_REMOTE_CONTROL_NONE);
+        should_map_dualshock2, DS2_RIGHT | DS2_LEFT, CORE_CONTROL_NONE);
 
-    RUN_PARAM_TEST(
-        should_map_dualshock2, DS2_RIGHT | DS2_LEFT, CORE_REMOTE_CONTROL_NONE);
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_CIRCLE, CORE_CONTROL_BREAK);
 
-    RUN_PARAM_TEST(
-        should_map_dualshock2, DS2_CIRCLE, CORE_REMOTE_CONTROL_BREAK);
-
-        RUN_PARAM_TEST(
-            should_map_dualshock2, DS2_CROSS, CORE_REMOTE_CONTROL_FOLLOW);
+    RUN_PARAM_TEST(should_map_dualshock2, DS2_CROSS, CORE_CONTROL_FOLLOW);
     return UNITY_END();
 }

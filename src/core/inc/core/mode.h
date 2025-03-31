@@ -28,4 +28,7 @@ core_mode_get(core_mode_t *self);
 bool
 core_mode_changed(core_mode_t *self);
 
+bool
+core_mode_is(core_mode_t *self, core_mode_value_t value);
+
 #endif

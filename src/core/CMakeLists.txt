@@ -5,6 +5,7 @@ add_library(core STATIC
     core_position.c
     core_position_regulator.c
     core_mode.c
+    core_control.c
 )
 
 target_include_directories(core PUBLIC "./inc")

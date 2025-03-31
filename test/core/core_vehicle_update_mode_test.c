@@ -60,7 +60,7 @@ should_update_line_detected_mode(uint16_t          commands,
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
 
     // when
-    core_vehicle_update_commands(&vehicle, commands);
+    core_vehicle_update_control(&vehicle, core_control_create(commands));
     core_vehicle_update_coords(&vehicle, coords);
     core_vehicle_update_mode(&vehicle);
 
@@ -82,13 +82,13 @@ should_update_line_following_mode(uint16_t          commands,
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
 
     // when
-    core_vehicle_update_commands(&vehicle, commands);
+    core_vehicle_update_control(&vehicle, core_control_create(commands));
     core_vehicle_update_coords(&vehicle, coords);
     core_vehicle_update_mode(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(expected_mode, core_vehicle_get_mode_value(&vehicle));
-    TEST_ASSERT_EQUAL(expected_commands, core_vehicle_get_command(&vehicle));
+    TEST_ASSERT_EQUAL(expected_commands, core_vehicle_get_commands(&vehicle));
     TEST_ASSERT_EQUAL(mode_changed, core_vehicle_is_mode_changed(&vehicle));
 }
 
@@ -108,41 +108,41 @@ main(void)
         should_update_manual_mode, COORDS_OFF_LINE, CORE_MODE_MANUAL, false);
 
     RUN_PARAM_TEST(should_update_line_detected_mode,
-                   CORE_REMOTE_CONTROL_FOLLOW,
+                   CORE_CONTROL_FOLLOW,
                    COORDS_ON_LINE,
                    CORE_MODE_LINE_FOLLOWING,
                    true);
     RUN_PARAM_TEST(should_update_line_detected_mode,
-                   CORE_REMOTE_CONTROL_NONE,
+                   CORE_CONTROL_NONE,
                    COORDS_ON_LINE,
                    CORE_MODE_LINE_DETECTED,
                    false);
     RUN_PARAM_TEST(should_update_line_detected_mode,
-                   CORE_REMOTE_CONTROL_NONE,
+                   CORE_CONTROL_NONE,
                    COORDS_OFF_LINE,
                    CORE_MODE_MANUAL,
                    true);
 
     RUN_PARAM_TEST(should_update_line_following_mode,
-                   CORE_REMOTE_CONTROL_BREAK,
+                   CORE_CONTROL_BREAK,
                    COORDS_ON_LINE,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_BREAK,
+                   CORE_CONTROL_BREAK,
                    true);
 
     RUN_PARAM_TEST(should_update_line_following_mode,
-                   CORE_REMOTE_CONTROL_FOLLOW,
+                   CORE_CONTROL_FOLLOW,
                    COORDS_OFF_LINE,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_NONE,
+                   CORE_CONTROL_NONE,
                    true);
 
     RUN_PARAM_TEST(should_update_line_following_mode,
-                   CORE_REMOTE_CONTROL_NONE,
+                   CORE_CONTROL_NONE,
                    COORDS_ON_LINE,
                    CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_NONE,
+                   CORE_CONTROL_NONE,
                    false);
-                   
+
     return UNITY_END();
 }

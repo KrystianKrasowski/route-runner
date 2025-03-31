@@ -29,36 +29,36 @@ core_port_remote_control_init(void)
 uint16_t
 core_port_remote_control_map(uint16_t raw_command)
 {
-    uint16_t command = CORE_REMOTE_CONTROL_NONE;
+    uint16_t command = CORE_CONTROL_NONE;
 
     if (is_forward(raw_command))
     {
-        command |= CORE_REMOTE_CONTROL_FORWARD;
+        command |= CORE_CONTROL_FORWARD;
     }
 
     if (is_backward(raw_command))
     {
-        command |= CORE_REMOTE_CONTROL_BACKWARD;
+        command |= CORE_CONTROL_BACKWARD;
     }
 
     if (is_right(raw_command))
     {
-        command |= CORE_REMOTE_CONTROL_RIGHT;
+        command |= CORE_CONTROL_RIGHT;
     }
 
     if (is_left(raw_command))
     {
-        command |= CORE_REMOTE_CONTROL_LEFT;
+        command |= CORE_CONTROL_LEFT;
     }
 
     if (is_break(raw_command))
     {
-        command |= CORE_REMOTE_CONTROL_BREAK;
+        command |= CORE_CONTROL_BREAK;
     }
-    
+
     if (is_follow(raw_command))
     {
-        command |= CORE_REMOTE_CONTROL_FOLLOW;
+        command |= CORE_CONTROL_FOLLOW;
     }
 
     return command;

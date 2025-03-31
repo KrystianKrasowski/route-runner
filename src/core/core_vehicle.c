@@ -1,4 +1,3 @@
-#include "core/types.h"
 #include "core/vehicle.h"
 #include <string.h>
 
@@ -24,6 +23,8 @@ core_vehicle_init(core_vehicle_t *self)
     core_motion_init(&self->motion);
     core_position_init(&self->position);
     core_mode_init(&self->mode);
+
+    self->control = core_control_create(CORE_CONTROL_NONE);
 }
 
 core_mode_value_t
@@ -45,15 +46,9 @@ core_vehicle_is_mode_changed(core_vehicle_t *self)
 }
 
 uint16_t
-core_vehicle_get_command(core_vehicle_t *self)
+core_vehicle_get_commands(core_vehicle_t *self)
 {
-    return self->command;
-}
-
-bool
-core_vehicle_is_commanded(core_vehicle_t *self, uint16_t command)
-{
-    return self->command & command;
+    return core_control_get_commands(&self->control);
 }
 
 void
@@ -63,29 +58,30 @@ core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords)
 }
 
 void
-core_vehicle_update_commands(core_vehicle_t *self, uint16_t command)
+core_vehicle_update_control(core_vehicle_t *self, core_control_t control)
 {
-    core_mode_value_t mode              = core_vehicle_get_mode_value(self);
-    bool              is_mode_follow    = mode == CORE_MODE_LINE_FOLLOWING;
-    bool              is_mode_manual    = mode == CORE_MODE_MANUAL;
-    bool              has_command_break = command & CORE_REMOTE_CONTROL_BREAK;
+    bool mode_follow   = core_mode_is(&self->mode, CORE_MODE_LINE_FOLLOWING);
+    bool mode_manual   = core_mode_is(&self->mode, CORE_MODE_MANUAL);
+    bool command_break = core_control_has(&control, CORE_CONTROL_BREAK);
 
-    if (is_mode_follow && has_command_break)
+    if (mode_follow && command_break)
     {
-        self->command = CORE_REMOTE_CONTROL_BREAK;
+        core_control_set_commands(&self->control, CORE_CONTROL_BREAK);
     }
-    else if (is_mode_follow && !has_command_break)
+    else if (mode_follow && !command_break)
     {
-        self->command = CORE_REMOTE_CONTROL_NONE;
+        core_control_set_commands(&self->control, CORE_CONTROL_NONE);
     }
-    else if (is_mode_manual)
+    else if (mode_manual)
     {
-        self->command =
-            command & ~(CORE_REMOTE_CONTROL_BREAK | CORE_REMOTE_CONTROL_FOLLOW);
+        uint16_t truncate_commands = CORE_CONTROL_BREAK | CORE_CONTROL_FOLLOW;
+        core_control_truncate(&control, truncate_commands);
+        
+        self->control = control;
     }
     else
     {
-        self->command = command;
+        self->control = control;
     }
 }
 
@@ -127,7 +123,7 @@ mode_transit_from_line_detected(core_vehicle_t *self)
     {
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
     }
-    else if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_FOLLOW))
+    else if (core_control_has(&self->control, CORE_CONTROL_FOLLOW))
     {
         core_mode_set(&self->mode, CORE_MODE_LINE_FOLLOWING);
     }
@@ -140,14 +136,15 @@ mode_transit_from_line_detected(core_vehicle_t *self)
 static inline void
 mode_transit_from_line_following(core_vehicle_t *self)
 {
-    if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_BREAK))
+    if (core_control_has(&self->control, CORE_CONTROL_BREAK))
     {
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
     }
     else if (core_position_is_line_lost(&self->position))
     {
+        core_control_t control = core_control_create(CORE_CONTROL_NONE);
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
-        core_vehicle_update_commands(self, CORE_REMOTE_CONTROL_NONE);
+        core_vehicle_update_control(self, control);
     }
     else
     {
@@ -190,11 +187,11 @@ motion_create_tracking(core_vehicle_t *self, core_motion_t *result)
 static inline core_vehicle_result_t
 motion_create_manual(core_vehicle_t *self, core_motion_t *result)
 {
-    if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_LEFT))
+    if (core_control_has(&self->control, CORE_CONTROL_LEFT))
     {
         core_motion_set_correction(result, -50);
     }
-    else if (core_vehicle_is_commanded(self, CORE_REMOTE_CONTROL_RIGHT))
+    else if (core_control_has(&self->control, CORE_CONTROL_RIGHT))
     {
         core_motion_set_correction(result, 50);
     }
@@ -203,11 +200,11 @@ motion_create_manual(core_vehicle_t *self, core_motion_t *result)
         core_motion_set_correction(result, 0);
     }
 
-    if (core_vehicle_is_commanded(self, CORE_MOTION_FORWARD))
+    if (core_control_has(&self->control, CORE_CONTROL_FORWARD))
     {
         core_motion_set_direction(result, CORE_MOTION_FORWARD);
     }
-    else if (core_vehicle_is_commanded(self, CORE_MOTION_BACKWARD))
+    else if (core_control_has(&self->control, CORE_CONTROL_BACKWARD))
     {
         core_motion_set_direction(result, CORE_MOTION_BACKWARD);
     }

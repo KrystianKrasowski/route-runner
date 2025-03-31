@@ -1,10 +1,10 @@
 #ifndef _CORE_VEHICLE_H
 #define _CORE_VEHICLE_H
 
+#include "control.h"
 #include "mode.h"
 #include "motion.h"
 #include "position.h"
-#include "types.h"
 #include <stdint.h>
 
 typedef enum
@@ -15,7 +15,7 @@ typedef enum
 
 typedef struct core_vehicle
 {
-    uint16_t        command;
+    core_control_t  control;
     core_motion_t   motion;
     core_mode_t     mode;
     core_position_t position;
@@ -34,16 +34,13 @@ bool
 core_vehicle_is_mode_changed(core_vehicle_t *self);
 
 uint16_t
-core_vehicle_get_command(core_vehicle_t *self);
-
-bool
-core_vehicle_is_commanded(core_vehicle_t *self, uint16_t command);
+core_vehicle_get_commands(core_vehicle_t *self);
 
 void
 core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords);
 
 void
-core_vehicle_update_commands(core_vehicle_t *self, uint16_t command);
+core_vehicle_update_control(core_vehicle_t *self, core_control_t control);
 
 void
 core_vehicle_update_mode(core_vehicle_t *self);

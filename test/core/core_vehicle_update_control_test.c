@@ -14,7 +14,7 @@ tearDown(void)
 
 void
 should_update_command(core_mode_value_t mode,
-                      uint16_t          command,
+                      uint16_t          commands,
                       uint16_t          expected_command)
 {
     // given
@@ -23,10 +23,10 @@ should_update_command(core_mode_value_t mode,
     core_vehicle_set_mode_value(&vehicle, mode);
 
     // when
-    core_vehicle_update_commands(&vehicle, command);
+    core_vehicle_update_control(&vehicle, core_control_create(commands));
 
     // then
-    TEST_ASSERT_EQUAL(expected_command, core_vehicle_get_command(&vehicle));
+    TEST_ASSERT_EQUAL(expected_command, core_vehicle_get_commands(&vehicle));
 }
 
 int
@@ -35,63 +35,63 @@ main(void)
     UNITY_BEGIN();
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_NONE,
-                   CORE_REMOTE_CONTROL_NONE);
+                   CORE_CONTROL_NONE,
+                   CORE_CONTROL_NONE);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_FORWARD);
+                   CORE_CONTROL_FORWARD,
+                   CORE_CONTROL_FORWARD);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_BACKWARD,
-                   CORE_REMOTE_CONTROL_BACKWARD);
+                   CORE_CONTROL_BACKWARD,
+                   CORE_CONTROL_BACKWARD);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_LEFT,
-                   CORE_REMOTE_CONTROL_LEFT);
+                   CORE_CONTROL_LEFT,
+                   CORE_CONTROL_LEFT);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_RIGHT,
-                   CORE_REMOTE_CONTROL_RIGHT);
+                   CORE_CONTROL_RIGHT,
+                   CORE_CONTROL_RIGHT);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_NONE);
+                   CORE_CONTROL_FOLLOW,
+                   CORE_CONTROL_NONE);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_FOLLOW | CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_FORWARD);
+                   CORE_CONTROL_FOLLOW | CORE_CONTROL_FORWARD,
+                   CORE_CONTROL_FORWARD);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_MANUAL,
-                   CORE_REMOTE_CONTROL_BREAK | CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_FORWARD);
+                   CORE_CONTROL_BREAK | CORE_CONTROL_FORWARD,
+                   CORE_CONTROL_FORWARD);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_LINE_DETECTED,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_FOLLOW);
+                   CORE_CONTROL_FOLLOW,
+                   CORE_CONTROL_FOLLOW);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_LINE_DETECTED,
-                   CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_FORWARD);
+                   CORE_CONTROL_FORWARD,
+                   CORE_CONTROL_FORWARD);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_FORWARD,
-                   CORE_REMOTE_CONTROL_NONE);
+                   CORE_CONTROL_FORWARD,
+                   CORE_CONTROL_NONE);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_BACKWARD,
-                   CORE_REMOTE_CONTROL_NONE);
+                   CORE_CONTROL_BACKWARD,
+                   CORE_CONTROL_NONE);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_NONE);
+                   CORE_CONTROL_FOLLOW,
+                   CORE_CONTROL_NONE);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_LINE_FOLLOWING,
-                   CORE_REMOTE_CONTROL_BREAK,
-                   CORE_REMOTE_CONTROL_BREAK);
+                   CORE_CONTROL_BREAK,
+                   CORE_CONTROL_BREAK);
     RUN_PARAM_TEST(should_update_command,
                    CORE_MODE_LINE_DETECTED,
-                   CORE_REMOTE_CONTROL_FOLLOW,
-                   CORE_REMOTE_CONTROL_FOLLOW);
+                   CORE_CONTROL_FOLLOW,
+                   CORE_CONTROL_FOLLOW);
     return UNITY_END();
 }
