@@ -1,6 +1,7 @@
 add_library(core STATIC 
     core_vehicle.c
     core_motion.c
+    core_motion_factory.c
     core_coords.c
     core_position.c
     core_position_regulator.c

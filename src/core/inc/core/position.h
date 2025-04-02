@@ -9,7 +9,6 @@ typedef struct core_position
 {
     core_coords_t coords;
     stack_t       errors;
-    bool          regulated;
 } core_position_t;
 
 void
@@ -20,9 +19,6 @@ core_position_update_coords(core_position_t *self, core_coords_t coords);
 
 core_coords_t
 core_position_get_coords(core_position_t *self);
-
-bool
-core_position_is_regulated(core_position_t *self);
 
 bool
 core_position_is_line_detected(core_position_t *self);

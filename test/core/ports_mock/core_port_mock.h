@@ -20,4 +20,7 @@ core_port_mock_get_modeindicator_applied(void);
 bool
 core_port_mock_verify_mode_indicator_updated(void);
 
+int
+core_port_mock_verify_motion_apply_count(void);
+
 #endif

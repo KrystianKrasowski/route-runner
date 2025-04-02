@@ -77,13 +77,7 @@ mode_update(core_vehicle_t *vehicle)
 static void
 motion_update(core_vehicle_t *vehicle)
 {
-    core_motion_t motion;
-    core_motion_init(&motion);
-    if (core_vehicle_create_motion(vehicle, &motion) ==
-        CORE_VEHICLE_MOTION_CHANGED)
-    {
-        core_port_motion_apply(&motion);
-    }
+    core_vehicle_update_motion(vehicle);
 }
 
 static void

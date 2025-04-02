@@ -2,7 +2,8 @@
 #include <string.h>
 
 static core_motion_t motion_applied;
-static bool          is_motion_applied = false;
+static int           motion_applied_count = 0;
+static bool          is_motion_applied    = false;
 
 static core_mode_value_t mode_value_indicator;
 static bool              is_mode_indicator_updated = false;
@@ -14,10 +15,11 @@ core_port_remote_control_map(uint16_t raw_command)
 }
 
 void
-core_port_motion_apply(core_vehicle_t *vehicle)
+core_port_motion_apply(core_motion_t *motion)
 {
-    motion_applied    = vehicle->motion;
+    motion_applied    = *motion;
     is_motion_applied = true;
+    motion_applied_count++;
 }
 
 void
@@ -47,6 +49,7 @@ core_port_mock_reset(void)
     memset(&motion_applied, 0, sizeof(motion_applied));
     is_motion_applied         = false;
     is_mode_indicator_updated = false;
+    motion_applied_count      = 0;
 }
 
 bool
@@ -71,4 +74,10 @@ bool
 core_port_mock_verify_mode_indicator_updated(void)
 {
     return is_mode_indicator_updated;
+}
+
+int
+core_port_mock_verify_motion_apply_count(void)
+{
+    return motion_applied_count;
 }
