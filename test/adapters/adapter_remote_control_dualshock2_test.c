@@ -17,7 +17,7 @@ void
 should_map_dualshock2(uint16_t dualshock2_command, uint16_t expected_command)
 {
     // when
-    uint16_t actual = core_port_remote_control_map(dualshock2_command);
+    uint16_t actual = core_port_control_command_map(dualshock2_command);
 
     // then
     TEST_ASSERT_EQUAL(expected_command, actual);

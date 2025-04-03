@@ -2,13 +2,13 @@
 #include <dualshock2.h>
 
 void
-core_port_remote_control_init(void)
+core_port_control_init(void)
 {
     dualshock2_init();
 }
 
 uint16_t
-core_port_remote_control_map(uint16_t raw_command)
+core_port_control_command_map(uint16_t raw_command)
 {
     uint16_t command = CORE_CONTROL_NONE;
 

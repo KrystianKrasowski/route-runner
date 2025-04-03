@@ -1,0 +1,10 @@
+#ifndef _CORE_PORTS_MOCK_STATE_INDICATOR_H
+#define _CORE_PORTS_MOCK_STATE_INDICATOR_H
+
+void
+core_port_mock_mode_indicator_init(void);
+
+int
+core_port_mock_mode_indicator_verify_apply_calls(void);
+
+#endif
