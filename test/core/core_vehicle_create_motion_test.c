@@ -1,17 +1,17 @@
 #include <core/vehicle.h>
-#include <core_port_mock.h>
+#include <core_port_mock_motion.h>
 #include <unity.h>
 #include <unity_config.h>
 
 void
 setUp(void)
 {
+    core_port_mock_motion_init();
 }
 
 void
 tearDown(void)
 {
-    core_port_mock_reset();
 }
 
 void
@@ -27,7 +27,7 @@ should_create_manual_motion(core_motion_direction_t direction,
     // when
     core_vehicle_update_control(&vehicle, core_control_create(commands));
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_mock_get_motion_applied();
+    core_motion_t motion = core_port_motion_mock_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(direction, core_motion_get_direction(&motion));
@@ -49,14 +49,14 @@ should_remain_manual_motion_for_same_command(void)
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_motion_mock_verify_apply_calls());
 
     // when
     core_vehicle_update_control(&vehicle, control);
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_motion_mock_verify_apply_calls());
 }
 
 void
@@ -72,7 +72,7 @@ should_create_tracking_motion_going_forward(void)
 
     // when
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_mock_get_motion_applied();
+    core_motion_t motion = core_port_motion_mock_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
@@ -91,7 +91,7 @@ should_create_tracking_motion_turning_left(core_coords_t coords)
 
     // when
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_mock_get_motion_applied();
+    core_motion_t motion = core_port_motion_mock_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
@@ -110,7 +110,7 @@ should_create_tracking_motion_turning_right(core_coords_t coords)
 
     // when
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_mock_get_motion_applied();
+    core_motion_t motion = core_port_motion_mock_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
@@ -133,7 +133,7 @@ should_remain_tracking_motion_without_coords_update(void)
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_motion_mock_verify_apply_calls());
 }
 
 int

@@ -1,5 +1,3 @@
-add_subdirectory(ports_mock)
-
 set(TEST_SUITE
     core_position_test.c
     core_vehicle_create_motion_test.c
@@ -21,7 +19,7 @@ foreach(FILE ${TEST_SUITE})
     target_link_libraries(${TEST_NAME}
         PRIVATE
             core
-            core_port_mock
+            core_ports_mock
             utils
             unity
     )   

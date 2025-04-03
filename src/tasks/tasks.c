@@ -24,7 +24,7 @@ tasks_init(void)
 {
     mq_init();
     core_port_motion_init();
-    core_port_remote_control_init();
+    core_port_control_init();
     core_port_mode_indicator_init();
     core_port_coords_init();
 }
@@ -48,7 +48,7 @@ remote_control_receive(core_vehicle_t *vehicle)
     if (mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message) == MQ_SUCCESS)
     {
         uint16_t raw_command = message.payload.command;
-        uint16_t commands    = core_port_remote_control_map(raw_command);
+        uint16_t commands    = core_port_control_command_map(raw_command);
 
         core_vehicle_update_control(vehicle, core_control_create(commands));
     }

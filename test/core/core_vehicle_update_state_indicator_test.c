@@ -1,17 +1,17 @@
 #include <core/vehicle.h>
-#include <core_port_mock.h>
+#include <core_port_mock_mode_indicator.h>
 #include <unity.h>
 #include <unity_config.h>
 
 void
 setUp(void)
 {
+    core_port_mock_mode_indicator_init();
 }
 
 void
 tearDown(void)
 {
-    core_port_mock_reset();
 }
 
 void
@@ -29,7 +29,7 @@ should_update_state_indicator(core_mode_value_t mode1,
     core_vehicle_update_state_indicator(&vehicle);
 
     // then
-    int actual_count = core_port_mock_verify_state_indicator_apply_calls();
+    int actual_count = core_port_mock_mode_indicator_verify_apply_calls();
     TEST_ASSERT_EQUAL(expected_updates_count, actual_count);
 }
 

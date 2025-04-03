@@ -6,10 +6,10 @@
 #include <stdint.h>
 
 void
-core_port_remote_control_init(void);
+core_port_control_init(void);
 
 uint16_t
-core_port_remote_control_map(uint16_t raw_command);
+core_port_control_command_map(uint16_t raw_command);
 
 void
 core_port_coords_init(void);
