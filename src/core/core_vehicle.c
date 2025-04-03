@@ -132,6 +132,15 @@ core_vehicle_update_motion(core_vehicle_t *self)
     }
 }
 
+void
+core_vehicle_update_state_indicator(core_vehicle_t *self)
+{
+    if (core_mode_changed(&self->mode))
+    {
+        core_port_mode_indicator_apply(core_mode_get(&self->mode));
+    }
+}
+
 static inline void
 mode_transit_from_line_detected(core_vehicle_t *self)
 {

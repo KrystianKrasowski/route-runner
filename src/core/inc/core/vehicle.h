@@ -49,4 +49,7 @@ core_vehicle_update_mode(core_vehicle_t *self);
 void
 core_vehicle_update_motion(core_vehicle_t *self);
 
+void
+core_vehicle_update_state_indicator(core_vehicle_t *self);
+
 #endif

@@ -49,14 +49,14 @@ should_remain_manual_motion_for_same_command(void)
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_count());
+    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
 
     // when
     core_vehicle_update_control(&vehicle, control);
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_count());
+    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
 }
 
 void
@@ -133,7 +133,7 @@ should_remain_tracking_motion_without_coords_update(void)
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_count());
+    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
 }
 
 int
