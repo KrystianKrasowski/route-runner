@@ -4,6 +4,7 @@ add_library(drivers_peripherals INTERFACE
     tim2.h
     tim3.h
     tim6.h
+    tim15.h
     usart2.h
     gpio.h
     adc.h
@@ -25,6 +26,7 @@ if(TARGET_ARCH STREQUAL "stm32f303x8")
         tim2.c
         tim3.c
         tim6.c
+        tim15.c
         usart2.c
         gpio.c
         adc.c
@@ -37,6 +39,7 @@ if(TARGET_ARCH STREQUAL "stm32f303x8")
             drivers_peripherals
         PRIVATE
             utils
+            tasks
             stm32f303x8
     )
 endif()

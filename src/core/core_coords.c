@@ -6,7 +6,7 @@ static int8_t const coordinate_weights[CORE_COORDS_SIZE] = {
     -100, -40, -20, 20, 40, 100};
 
 static inline bool
-is_on_line(core_coords_t *self);
+is_on_route(core_coords_t *self);
 
 core_coords_t
 core_coords_create(
@@ -32,9 +32,9 @@ core_coords_init(core_coords_t *self)
 core_coords_status_t
 core_coords_get_status(core_coords_t *self)
 {
-    if (is_on_line(self))
+    if (is_on_route(self))
     {
-        return CORE_COORDS_STATUS_ON_LINE;
+        return CORE_COORDS_STATUS_ON_ROUTE;
     }
     else
     {
@@ -61,7 +61,7 @@ core_coords_compute_mass_center(core_coords_t *self, int8_t *error)
 
     *error = weight_sum / sum;
 
-    return CORE_COORDS_STATUS_ON_LINE;
+    return CORE_COORDS_STATUS_ON_ROUTE;
 }
 
 uint8_t
@@ -93,7 +93,7 @@ core_coords_equals(core_coords_t *self, core_coords_t *other)
 }
 
 static inline bool
-is_on_line(core_coords_t *self)
+is_on_route(core_coords_t *self)
 {
     for (uint8_t i = 0; i < CORE_COORDS_SIZE; i++)
     {

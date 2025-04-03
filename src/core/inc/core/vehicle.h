@@ -14,6 +14,7 @@ typedef struct core_vehicle
     core_mode_t     mode;
     core_position_t position;
     bool            position_handeled;
+    bool            route_guard_timeout;
 } core_vehicle_t;
 
 void
@@ -48,6 +49,12 @@ core_vehicle_update_mode(core_vehicle_t *self);
 
 void
 core_vehicle_update_motion(core_vehicle_t *self);
+
+void
+core_vehicle_update_route_guard(core_vehicle_t *self);
+
+void
+core_vehicle_timeout_route_guard(core_vehicle_t *self);
 
 void
 core_vehicle_update_state_indicator(core_vehicle_t *self);

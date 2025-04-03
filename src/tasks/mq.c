@@ -3,17 +3,18 @@
 #include <string.h>
 #include <utils/queue.h>
 
-#define QUEUE_TOPICS_SIZE 2
+#define QUEUE_TOPICS_SIZE 3
 
 static queue_t queues[QUEUE_TOPICS_SIZE];
 
 mq_result_t
 mq_init(void)
 {
+    size_t queue_size = sizeof(mq_message_t);
+    
     for (uint8_t i = 0; i < QUEUE_TOPICS_SIZE; i++)
     {
-        queue_result_t result =
-            queue_init(&queues[i], MQ_SIZE, sizeof(mq_message_t));
+        queue_result_t result = queue_init(&queues[i], MQ_SIZE, queue_size);
 
         if (result != QUEUE_SUCCESS)
         {
@@ -72,6 +73,15 @@ mq_create_coords_message(uint8_t coords[])
     message.type = MQ_MESSAGE_TYPE_COORDS;
 
     memcpy(message.payload.coords, coords, sizeof(message.payload.coords));
+
+    return message;
+}
+
+mq_message_t
+mq_create_route_guard_timeout_message(void)
+{
+    mq_message_t message;
+    message.type = MQ_MESSAGE_TYPE_ROUTE_GUARD_TIMEOUT;
 
     return message;
 }

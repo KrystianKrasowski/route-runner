@@ -12,6 +12,7 @@ typedef enum
 {
     MQ_MESSAGE_TYPE_COMMAND,
     MQ_MESSAGE_TYPE_COORDS,
+    MQ_MESSAGE_TYPE_ROUTE_GUARD_TIMEOUT,
 } mq_message_type_t;
 
 typedef union mq_message_payload
@@ -30,6 +31,7 @@ typedef enum
 {
     MQ_TOPIC_REMOTE_CONTROL,
     MQ_TOPIC_COORDS,
+    MQ_TOPIC_ROUTE_GUARD,
 } mq_topic_t;
 
 typedef enum
@@ -57,5 +59,8 @@ mq_create_command_message(uint16_t command);
 
 mq_message_t
 mq_create_coords_message(uint8_t coords[]);
+
+mq_message_t
+mq_create_route_guard_timeout_message(void);
 
 #endif

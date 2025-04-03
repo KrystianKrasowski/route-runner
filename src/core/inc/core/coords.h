@@ -24,7 +24,7 @@ typedef struct
 
 typedef enum
 {
-    CORE_COORDS_STATUS_ON_LINE,
+    CORE_COORDS_STATUS_ON_ROUTE,
     CORE_COORDS_STATUS_OFF_LINE,
 } core_coords_status_t;
 

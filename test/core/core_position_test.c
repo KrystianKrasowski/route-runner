@@ -36,7 +36,7 @@ should_detect_line(uint8_t left3,
 
     // then
     TEST_ASSERT_EQUAL(expected_result,
-                      core_position_is_line_detected(&position));
+                      core_position_is_on_route(&position));
 }
 
 void
