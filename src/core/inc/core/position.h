@@ -21,10 +21,7 @@ core_coords_t
 core_position_get_coords(core_position_t *self);
 
 bool
-core_position_is_line_detected(core_position_t *self);
-
-bool
-core_position_is_line_lost(core_position_t *self);
+core_position_is_on_route(core_position_t *self);
 
 int8_t
 core_position_last_error(core_position_t *self);

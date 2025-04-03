@@ -115,6 +115,36 @@ core_vehicle_update_mode(core_vehicle_t *self)
 }
 
 void
+core_vehicle_update_route_guard(core_vehicle_t *self)
+{
+    bool mode_follow  = core_mode_is(&self->mode, CORE_MODE_LINE_FOLLOWING);
+    bool mode_changed = core_mode_changed(&self->mode);
+    bool on_route     = core_position_is_on_route(&self->position);
+
+    if (mode_follow && mode_changed)
+    {
+        core_port_route_guard_start();
+    }
+
+    if (mode_follow && on_route)
+    {
+        core_port_route_guard_reset();
+    }
+
+    if (!mode_follow && mode_changed)
+    {
+        core_port_route_guard_stop();
+    }
+}
+
+void
+core_vehicle_timeout_route_guard(core_vehicle_t *self)
+{
+    core_port_route_guard_stop();
+    self->route_guard_timeout = true;
+}
+
+void
 core_vehicle_update_motion(core_vehicle_t *self)
 {
     core_motion_t motion = core_motion_create(self);
@@ -144,7 +174,7 @@ core_vehicle_update_state_indicator(core_vehicle_t *self)
 static inline void
 mode_transit_from_line_detected(core_vehicle_t *self)
 {
-    if (!core_position_is_line_detected(&self->position))
+    if (!core_position_is_on_route(&self->position))
     {
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
     }
@@ -165,8 +195,9 @@ mode_transit_from_line_following(core_vehicle_t *self)
     {
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
     }
-    else if (core_position_is_line_lost(&self->position))
+    else if (self->route_guard_timeout)
     {
+        self->route_guard_timeout = false;
         core_control_t control = core_control_create(CORE_CONTROL_NONE);
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
         core_vehicle_update_control(self, control);
@@ -180,7 +211,7 @@ mode_transit_from_line_following(core_vehicle_t *self)
 static inline void
 mode_transit_from_manual(core_vehicle_t *self)
 {
-    if (core_position_is_line_detected(&self->position))
+    if (core_position_is_on_route(&self->position))
     {
         core_mode_set(&self->mode, CORE_MODE_LINE_DETECTED);
     }

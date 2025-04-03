@@ -14,6 +14,12 @@ static void
 mode_update(core_vehicle_t *vehicle);
 
 static void
+route_guard_update(core_vehicle_t *vehicle);
+
+static void
+route_guard_timeout(core_vehicle_t *vehicle);
+
+static void
 motion_update(core_vehicle_t *vehicle);
 
 static void
@@ -27,6 +33,7 @@ tasks_init(void)
     core_port_control_init();
     core_port_mode_indicator_init();
     core_port_coords_init();
+    core_port_route_guard_init();
 }
 
 void
@@ -35,6 +42,8 @@ tasks_run(core_vehicle_t *vehicle)
     remote_control_receive(vehicle);
     coords_receive(vehicle);
     mode_update(vehicle);
+    route_guard_update(vehicle);
+    route_guard_timeout(vehicle);
     motion_update(vehicle);
     state_indicator_update(vehicle);
 }
@@ -72,6 +81,23 @@ static void
 mode_update(core_vehicle_t *vehicle)
 {
     core_vehicle_update_mode(vehicle);
+}
+
+static void
+route_guard_update(core_vehicle_t *vehicle)
+{
+    core_vehicle_update_route_guard(vehicle);
+}
+
+static void
+route_guard_timeout(core_vehicle_t *vehicle)
+{
+    mq_message_t message;
+
+    if (mq_pull(MQ_TOPIC_ROUTE_GUARD, &message) == MQ_SUCCESS)
+    {
+        core_vehicle_timeout_route_guard(vehicle);
+    }
 }
 
 static void

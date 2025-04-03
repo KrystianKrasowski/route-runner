@@ -4,6 +4,7 @@ add_library(adapters STATIC
     adapter_mode_indicator_led.c
     adapter_coords_qtrhd06a.c
     adapter_debug_usart.c
+    adapter_route_guard_tim15.c
 )
 
 target_link_libraries(adapters

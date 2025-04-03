@@ -24,18 +24,9 @@ core_position_get_coords(core_position_t *self)
 }
 
 bool
-core_position_is_line_detected(core_position_t *self)
+core_position_is_on_route(core_position_t *self)
 {
-    return core_coords_get_status(&self->coords) == CORE_COORDS_STATUS_ON_LINE;
-}
-
-bool
-core_position_is_line_lost(core_position_t *self)
-{
-    core_coords_status_t coords_status = core_coords_get_status(&self->coords);
-    int16_t              errors_sum    = core_position_sum_errors(self);
-
-    return coords_status == CORE_COORDS_STATUS_OFF_LINE && errors_sum == 0;
+    return core_coords_get_status(&self->coords) == CORE_COORDS_STATUS_ON_ROUTE;
 }
 
 int8_t

@@ -107,6 +107,7 @@ SPI1_IRQHandler(void)
 __attribute__((weak)) void
 spi_on_response_received_isr(uint8_t response[])
 {
+    (void)response;
 }
 
 static void

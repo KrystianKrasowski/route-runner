@@ -5,7 +5,7 @@
 void
 tim6_init(void)
 {
-    // set clock access to TIM4
+    // set clock access to TIM6
     RCC->APB1ENR |= RCC_APB1ENR_TIM6EN;
 
     // set frequency to 1MHz

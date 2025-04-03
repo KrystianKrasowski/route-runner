@@ -4,6 +4,8 @@ set(TEST_SUITE
     core_vehicle_update_control_test.c
     core_vehicle_update_mode_test.c
     core_vehicle_update_state_indicator_test.c
+    core_vehicle_update_route_guard_test.c
+    core_vehicle_timeout_route_guard_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
