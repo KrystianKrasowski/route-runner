@@ -2,10 +2,15 @@
 #include <string.h>
 
 static core_motion_t motion_applied;
-static bool          is_motion_applied = false;
+static int           motion_applied_count = 0;
+static bool          is_motion_applied    = false;
 
-static core_mode_value_t mode_value_indicator;
-static bool              is_mode_indicator_updated = false;
+struct state_indicator_mock
+{
+    int calls;
+};
+
+static struct state_indicator_mock state_indicator;
 
 uint16_t
 core_port_remote_control_map(uint16_t raw_command)
@@ -14,17 +19,17 @@ core_port_remote_control_map(uint16_t raw_command)
 }
 
 void
-core_port_motion_apply(core_vehicle_t *vehicle)
+core_port_motion_apply(core_motion_t *motion)
 {
-    motion_applied    = vehicle->motion;
+    motion_applied    = *motion;
     is_motion_applied = true;
+    motion_applied_count++;
 }
 
 void
 core_port_mode_indicator_apply(core_mode_value_t value)
 {
-    mode_value_indicator      = value;
-    is_mode_indicator_updated = true;
+    state_indicator.calls++;
 }
 
 core_coords_t
@@ -45,8 +50,9 @@ void
 core_port_mock_reset(void)
 {
     memset(&motion_applied, 0, sizeof(motion_applied));
-    is_motion_applied         = false;
-    is_mode_indicator_updated = false;
+    is_motion_applied     = false;
+    motion_applied_count  = 0;
+    state_indicator.calls = 0;
 }
 
 bool
@@ -61,14 +67,14 @@ core_port_mock_get_motion_applied(void)
     return motion_applied;
 }
 
-core_mode_value_t
-core_port_mock_get_modeindicator_applied(void)
+int
+core_port_mock_verify_motion_apply_calls(void)
 {
-    return mode_value_indicator;
+    return motion_applied_count;
 }
 
-bool
-core_port_mock_verify_mode_indicator_updated(void)
+int
+core_port_mock_verify_state_indicator_apply_calls(void)
 {
-    return is_mode_indicator_updated;
+    return state_indicator.calls;
 }

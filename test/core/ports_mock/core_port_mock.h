@@ -14,10 +14,10 @@ core_port_mock_verify_motion_applied(void);
 core_motion_t
 core_port_mock_get_motion_applied(void);
 
-core_mode_value_t
-core_port_mock_get_modeindicator_applied(void);
+int
+core_port_mock_verify_motion_apply_calls(void);
 
-bool
-core_port_mock_verify_mode_indicator_updated(void);
+int
+core_port_mock_verify_state_indicator_apply_calls(void);
 
 #endif

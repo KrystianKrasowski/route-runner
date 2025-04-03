@@ -1,4 +1,6 @@
+#include "core/ports.h"
 #include "core/vehicle.h"
+#include "core_motion_factory.h"
 #include <string.h>
 
 static inline void
@@ -10,12 +12,6 @@ mode_transit_from_line_following(core_vehicle_t *self);
 static inline void
 mode_transit_from_manual(core_vehicle_t *self);
 
-static inline core_vehicle_result_t
-motion_create_tracking(core_vehicle_t *self, core_motion_t *result);
-
-static inline core_vehicle_result_t
-motion_create_manual(core_vehicle_t *self, core_motion_t *result);
-
 void
 core_vehicle_init(core_vehicle_t *self)
 {
@@ -24,7 +20,8 @@ core_vehicle_init(core_vehicle_t *self)
     core_position_init(&self->position);
     core_mode_init(&self->mode);
 
-    self->control = core_control_create(CORE_CONTROL_NONE);
+    self->control           = core_control_create(CORE_CONTROL_NONE);
+    self->position_handeled = true;
 }
 
 core_mode_value_t
@@ -51,10 +48,23 @@ core_vehicle_get_commands(core_vehicle_t *self)
     return core_control_get_commands(&self->control);
 }
 
+bool
+core_vehicle_has_command(core_vehicle_t *self, core_control_command_t command)
+{
+    return core_control_has(&self->control, command);
+}
+
+int8_t
+core_vehicle_position_regulate(core_vehicle_t *self)
+{
+    return core_position_regulate(&self->position);
+}
+
 void
 core_vehicle_update_coords(core_vehicle_t *self, core_coords_t coords)
 {
     core_position_update_coords(&self->position, coords);
+    self->position_handeled = false;
 }
 
 void
@@ -76,7 +86,7 @@ core_vehicle_update_control(core_vehicle_t *self, core_control_t control)
     {
         uint16_t truncate_commands = CORE_CONTROL_BREAK | CORE_CONTROL_FOLLOW;
         core_control_truncate(&control, truncate_commands);
-        
+
         self->control = control;
     }
     else
@@ -104,15 +114,30 @@ core_vehicle_update_mode(core_vehicle_t *self)
     }
 }
 
-core_vehicle_result_t
-core_vehicle_create_motion(core_vehicle_t *self, core_motion_t *result)
+void
+core_vehicle_update_motion(core_vehicle_t *self)
 {
-    switch (core_vehicle_get_mode_value(self))
+    core_motion_t motion = core_motion_create(self);
+    bool is_mode_follow  = core_mode_is(&self->mode, CORE_MODE_LINE_FOLLOWING);
+    bool motion_differs  = !core_motion_equals(&self->motion, &motion);
+
+    bool is_update_following = is_mode_follow && !self->position_handeled;
+    bool is_update_manual    = !is_mode_follow && motion_differs;
+
+    if (is_update_following || is_update_manual)
     {
-        case CORE_MODE_LINE_FOLLOWING:
-            return motion_create_tracking(self, result);
-        default:
-            return motion_create_manual(self, result);
+        self->motion            = motion;
+        self->position_handeled = true;
+        core_port_motion_apply(&self->motion);
+    }
+}
+
+void
+core_vehicle_update_state_indicator(core_vehicle_t *self)
+{
+    if (core_mode_changed(&self->mode))
+    {
+        core_port_mode_indicator_apply(core_mode_get(&self->mode));
     }
 }
 
@@ -162,65 +187,5 @@ mode_transit_from_manual(core_vehicle_t *self)
     else
     {
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
-    }
-}
-
-static inline core_vehicle_result_t
-motion_create_tracking(core_vehicle_t *self, core_motion_t *result)
-{
-    if (!core_position_is_regulated(&self->position))
-    {
-        int8_t correction = core_position_regulate(&self->position);
-        core_motion_set_correction(result, correction);
-        core_motion_set_direction(result, CORE_MOTION_FORWARD);
-
-        self->motion = *result;
-
-        return CORE_VEHICLE_MOTION_CHANGED;
-    }
-    else
-    {
-        return CORE_VEHICLE_MOTION_REMAINS;
-    }
-}
-
-static inline core_vehicle_result_t
-motion_create_manual(core_vehicle_t *self, core_motion_t *result)
-{
-    if (core_control_has(&self->control, CORE_CONTROL_LEFT))
-    {
-        core_motion_set_correction(result, -50);
-    }
-    else if (core_control_has(&self->control, CORE_CONTROL_RIGHT))
-    {
-        core_motion_set_correction(result, 50);
-    }
-    else
-    {
-        core_motion_set_correction(result, 0);
-    }
-
-    if (core_control_has(&self->control, CORE_CONTROL_FORWARD))
-    {
-        core_motion_set_direction(result, CORE_MOTION_FORWARD);
-    }
-    else if (core_control_has(&self->control, CORE_CONTROL_BACKWARD))
-    {
-        core_motion_set_direction(result, CORE_MOTION_BACKWARD);
-    }
-    else
-    {
-        core_motion_set_direction(result, CORE_MOTION_NONE);
-        core_motion_set_correction(result, 0);
-    }
-
-    if (core_motion_equals(&self->motion, result))
-    {
-        return CORE_VEHICLE_MOTION_REMAINS;
-    }
-    else
-    {
-        self->motion = *result;
-        return CORE_VEHICLE_MOTION_CHANGED;
     }
 }

@@ -1,4 +1,5 @@
 #include <core/vehicle.h>
+#include <core_port_mock.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -10,6 +11,7 @@ setUp(void)
 void
 tearDown(void)
 {
+    core_port_mock_reset();
 }
 
 void
@@ -18,20 +20,16 @@ should_create_manual_motion(core_motion_direction_t direction,
                             uint16_t                commands)
 {
     // given
-    core_motion_t motion;
-    core_motion_init(&motion);
-
     core_vehicle_t vehicle;
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
 
     // when
     core_vehicle_update_control(&vehicle, core_control_create(commands));
-    core_vehicle_result_t result =
-        core_vehicle_create_motion(&vehicle, &motion);
+    core_vehicle_update_motion(&vehicle);
+    core_motion_t motion = core_port_mock_get_motion_applied();
 
     // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_CHANGED, result);
     TEST_ASSERT_EQUAL(direction, core_motion_get_direction(&motion));
     TEST_ASSERT_EQUAL(correction, core_motion_get_correction(&motion));
 }
@@ -40,34 +38,31 @@ void
 should_remain_manual_motion_for_same_command(void)
 {
     // given
-    core_motion_t         motion;
-    core_vehicle_t        vehicle;
-    core_vehicle_result_t result;
-    core_control_t        control = core_control_create(CORE_CONTROL_FORWARD);
+    core_vehicle_t vehicle;
+    core_control_t control = core_control_create(CORE_CONTROL_FORWARD);
 
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
 
     // when
     core_vehicle_update_control(&vehicle, control);
-    result = core_vehicle_create_motion(&vehicle, &motion);
+    core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_CHANGED, result);
+    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
 
     // when
     core_vehicle_update_control(&vehicle, control);
-    result = core_vehicle_create_motion(&vehicle, &motion);
+    core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_REMAINS, result);
+    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
 }
 
 void
 should_create_tracking_motion_going_forward(void)
 {
     // given
-    core_motion_t  motion;
     core_vehicle_t vehicle;
 
     core_vehicle_init(&vehicle);
@@ -76,11 +71,10 @@ should_create_tracking_motion_going_forward(void)
                                core_coords_create(0, 0, 100, 100, 0, 0));
 
     // when
-    core_vehicle_result_t result =
-        core_vehicle_create_motion(&vehicle, &motion);
+    core_vehicle_update_motion(&vehicle);
+    core_motion_t motion = core_port_mock_get_motion_applied();
 
     // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_CHANGED, result);
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
     TEST_ASSERT_EQUAL(0, core_motion_get_correction(&motion));
 }
@@ -89,7 +83,6 @@ void
 should_create_tracking_motion_turning_left(core_coords_t coords)
 {
     // given
-    core_motion_t  motion;
     core_vehicle_t vehicle;
 
     core_vehicle_init(&vehicle);
@@ -97,11 +90,10 @@ should_create_tracking_motion_turning_left(core_coords_t coords)
     core_vehicle_update_coords(&vehicle, coords);
 
     // when
-    core_vehicle_result_t result =
-        core_vehicle_create_motion(&vehicle, &motion);
+    core_vehicle_update_motion(&vehicle);
+    core_motion_t motion = core_port_mock_get_motion_applied();
 
     // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_CHANGED, result);
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
     TEST_ASSERT_LESS_THAN(0, core_motion_get_correction(&motion));
 }
@@ -110,7 +102,6 @@ void
 should_create_tracking_motion_turning_right(core_coords_t coords)
 {
     // given
-    core_motion_t  motion;
     core_vehicle_t vehicle;
 
     core_vehicle_init(&vehicle);
@@ -118,11 +109,10 @@ should_create_tracking_motion_turning_right(core_coords_t coords)
     core_vehicle_update_coords(&vehicle, coords);
 
     // when
-    core_vehicle_result_t result =
-        core_vehicle_create_motion(&vehicle, &motion);
+    core_vehicle_update_motion(&vehicle);
+    core_motion_t motion = core_port_mock_get_motion_applied();
 
     // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_CHANGED, result);
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
     TEST_ASSERT_GREATER_THAN(0, core_motion_get_correction(&motion));
 }
@@ -131,26 +121,19 @@ void
 should_remain_tracking_motion_without_coords_update(void)
 {
     // given
-    core_motion_t         motion;
     core_vehicle_t        vehicle;
-    core_vehicle_result_t result;
 
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
     core_vehicle_update_coords(&vehicle,
-                               core_coords_create(0, 0, 100, 100, 0, 0));
+                               core_coords_create(0, 0, 90, 100, 0, 0));
 
     // when
-    result = core_vehicle_create_motion(&vehicle, &motion);
+    core_vehicle_update_motion(&vehicle);
+    core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_CHANGED, result);
-
-    // when
-    result = core_vehicle_create_motion(&vehicle, &motion);
-
-    // then
-    TEST_ASSERT_EQUAL(CORE_VEHICLE_MOTION_REMAINS, result);
+    TEST_ASSERT_EQUAL(1, core_port_mock_verify_motion_apply_calls());
 }
 
 int

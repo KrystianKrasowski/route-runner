@@ -15,19 +15,12 @@ void
 core_position_update_coords(core_position_t *self, core_coords_t coords)
 {
     self->coords = coords;
-    self->regulated = false;
 }
 
 core_coords_t
 core_position_get_coords(core_position_t *self)
 {
     return self->coords;
-}
-
-bool
-core_position_is_regulated(core_position_t *self)
-{
-    return self->regulated;
 }
 
 bool
@@ -73,6 +66,5 @@ core_position_sum_errors(core_position_t *self)
 int8_t
 core_position_regulate(core_position_t *self)
 {
-    self->regulated = true;
     return core_position_regulate_pid(self);
 }
