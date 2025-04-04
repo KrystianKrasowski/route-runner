@@ -58,7 +58,7 @@ should_update_line_detected_mode(uint16_t          commands,
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_DETECTED);
 
     // when
-    core_vehicle_update_control(&vehicle, core_control_create(commands));
+    core_vehicle_update_control(&vehicle, core_control(commands));
     core_vehicle_update_coords(&vehicle, coords);
     core_vehicle_update_mode(&vehicle);
 
@@ -80,7 +80,7 @@ should_update_line_following_mode(uint16_t          commands,
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
 
     // when
-    core_vehicle_update_control(&vehicle, core_control_create(commands));
+    core_vehicle_update_control(&vehicle, core_control(commands));
     core_vehicle_update_coords(&vehicle, coords);
     core_vehicle_update_mode(&vehicle);
 

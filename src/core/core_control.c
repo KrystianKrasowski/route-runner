@@ -5,7 +5,7 @@ static inline bool
 are_valid(uint16_t commands);
 
 core_control_t
-core_control_create(uint16_t commands)
+core_control(uint16_t commands)
 {
     core_control_t control;
 

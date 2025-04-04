@@ -1,5 +1,16 @@
 #include "core/motion.h"
 
+core_motion_t
+core_motion(core_motion_direction_t direction, int8_t correction)
+{
+    core_motion_t motion;
+    core_motion_init(&motion);
+    core_motion_set_direction(&motion, direction);
+    core_motion_set_correction(&motion, correction);
+
+    return motion;
+}
+
 void
 core_motion_init(core_motion_t *self)
 {

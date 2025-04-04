@@ -20,7 +20,7 @@ core_vehicle_init(core_vehicle_t *self)
     core_position_init(&self->position);
     core_mode_init(&self->mode);
 
-    self->control           = core_control_create(CORE_CONTROL_NONE);
+    self->control           = core_control(CORE_CONTROL_NONE);
     self->position_handeled = true;
 }
 
@@ -34,6 +34,18 @@ void
 core_vehicle_set_mode_value(core_vehicle_t *self, core_mode_value_t value)
 {
     core_mode_set(&self->mode, value);
+}
+
+core_mode_t
+core_vehicle_get_mode(core_vehicle_t *self)
+{
+    return self->mode;
+}
+
+void
+core_vehicle_set_mode(core_vehicle_t *self, core_mode_t mode)
+{
+    self->mode = mode;
 }
 
 bool
@@ -138,7 +150,7 @@ core_vehicle_update_route_guard(core_vehicle_t *self)
 }
 
 void
-core_vehicle_timeout_route_guard(core_vehicle_t *self)
+core_vehicle_timeout_route_guard_old(core_vehicle_t *self)
 {
     core_port_route_guard_stop();
     self->route_guard_timeout = true;
@@ -171,6 +183,85 @@ core_vehicle_update_state_indicator(core_vehicle_t *self)
     }
 }
 
+void
+core_vehicle_apply_manual_motion(core_vehicle_t *self, core_control_t control)
+{
+    bool is_following    = core_mode_is(&self->mode, CORE_MODE_LINE_FOLLOWING);
+    bool is_break        = core_control_has(&control, CORE_CONTROL_BREAK);
+    core_motion_t motion = core_motion_create_by_control(&control);
+
+    if (!is_following || is_break)
+    {
+        core_port_motion_apply(&motion);
+    }
+}
+
+void
+core_vehicle_apply_following_motion(core_vehicle_t *self, core_coords_t coords)
+{
+    bool is_following = core_mode_is(&self->mode, CORE_MODE_LINE_FOLLOWING);
+
+    if (is_following)
+    {
+        core_position_update_coords(&self->position, coords);
+        core_motion_t motion = core_motion_create_by_position(&self->position);
+        core_port_motion_apply(&motion);
+    }
+}
+
+void
+core_vehicle_timeout_route_guard(core_vehicle_t *self)
+{
+    self->mode           = core_mode(CORE_MODE_MANUAL);
+    core_motion_t motion = core_motion(CORE_MOTION_NONE, 0);
+    core_port_motion_apply(&motion);
+    core_port_mode_indicator_apply(CORE_MODE_MANUAL);
+    core_port_route_guard_stop();
+}
+
+void
+core_vehicle_change_mode_by_control(core_vehicle_t *self,
+                                    core_control_t  control)
+{
+    core_mode_t mode = core_mode_compute_by_control(&self->mode, control);
+
+    if (!core_mode_equals(&self->mode, &mode))
+    {
+        core_port_mode_indicator_apply(core_mode_get(&mode));
+
+        if (core_mode_is(&mode, CORE_MODE_LINE_FOLLOWING))
+        {
+            core_port_route_guard_start();
+        }
+        else
+        {
+            core_port_route_guard_stop();
+        }
+    }
+
+    self->mode = mode;
+}
+
+void
+core_vehicle_change_mode_by_coords(core_vehicle_t *self, core_coords_t coords)
+{
+    core_mode_t mode       = core_mode_compute_by_coords(&self->mode, coords);
+    bool is_mode_following = core_mode_is(&mode, CORE_MODE_LINE_FOLLOWING);
+    bool is_on_route       = core_coords_are_on_route(&coords);
+
+    if (is_mode_following && is_on_route)
+    {
+        core_port_route_guard_reset();
+    }
+
+    if (!core_mode_equals(&self->mode, &mode))
+    {
+        core_port_mode_indicator_apply(core_mode_get(&mode));
+    }
+
+    self->mode = mode;
+}
+
 static inline void
 mode_transit_from_line_detected(core_vehicle_t *self)
 {
@@ -198,7 +289,7 @@ mode_transit_from_line_following(core_vehicle_t *self)
     else if (self->route_guard_timeout)
     {
         self->route_guard_timeout = false;
-        core_control_t control = core_control_create(CORE_CONTROL_NONE);
+        core_control_t control    = core_control(CORE_CONTROL_NONE);
         core_mode_set(&self->mode, CORE_MODE_MANUAL);
         core_vehicle_update_control(self, control);
     }

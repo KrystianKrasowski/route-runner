@@ -29,7 +29,7 @@ typedef enum
 } core_coords_status_t;
 
 core_coords_t
-core_coords_create(
+core_coords(
     uint8_t l3, uint8_t l2, uint8_t l1, uint8_t r1, uint8_t r2, uint8_t r3);
 
 void
@@ -51,5 +51,8 @@ core_coords_set_place(core_coords_t      *self,
 
 bool
 core_coords_equals(core_coords_t *self, core_coords_t *other);
+
+bool
+core_coords_are_on_route(core_coords_t *self);
 
 #endif

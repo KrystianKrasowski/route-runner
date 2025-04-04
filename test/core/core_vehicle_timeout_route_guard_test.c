@@ -22,7 +22,7 @@ should_stop_route_guard_on_timeout(void)
     core_vehicle_init(&vehicle);
 
     // when
-    core_vehicle_timeout_route_guard(&vehicle);
+    core_vehicle_timeout_route_guard_old(&vehicle);
 
     // then
     TEST_ASSERT_EQUAL(1, core_port_mock_route_guard_verify_stop_calls());

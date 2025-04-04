@@ -17,6 +17,9 @@ typedef struct
     int8_t                  correction;
 } core_motion_t;
 
+core_motion_t
+core_motion(core_motion_direction_t direction, int8_t correction);
+
 void
 core_motion_init(core_motion_t *self);
 

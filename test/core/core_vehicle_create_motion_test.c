@@ -25,9 +25,9 @@ should_create_manual_motion(core_motion_direction_t direction,
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
 
     // when
-    core_vehicle_update_control(&vehicle, core_control_create(commands));
+    core_vehicle_update_control(&vehicle, core_control(commands));
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_motion_mock_get_applied();
+    core_motion_t motion = core_port_mock_motion_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(direction, core_motion_get_direction(&motion));
@@ -39,7 +39,7 @@ should_remain_manual_motion_for_same_command(void)
 {
     // given
     core_vehicle_t vehicle;
-    core_control_t control = core_control_create(CORE_CONTROL_FORWARD);
+    core_control_t control = core_control(CORE_CONTROL_FORWARD);
 
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_MANUAL);
@@ -49,14 +49,14 @@ should_remain_manual_motion_for_same_command(void)
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_motion_mock_verify_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_mock_motion_verify_apply_calls());
 
     // when
     core_vehicle_update_control(&vehicle, control);
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_motion_mock_verify_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_mock_motion_verify_apply_calls());
 }
 
 void
@@ -68,11 +68,11 @@ should_create_tracking_motion_going_forward(void)
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
     core_vehicle_update_coords(&vehicle,
-                               core_coords_create(0, 0, 100, 100, 0, 0));
+                               core_coords(0, 0, 100, 100, 0, 0));
 
     // when
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_motion_mock_get_applied();
+    core_motion_t motion = core_port_mock_motion_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
@@ -91,7 +91,7 @@ should_create_tracking_motion_turning_left(core_coords_t coords)
 
     // when
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_motion_mock_get_applied();
+    core_motion_t motion = core_port_mock_motion_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
@@ -110,7 +110,7 @@ should_create_tracking_motion_turning_right(core_coords_t coords)
 
     // when
     core_vehicle_update_motion(&vehicle);
-    core_motion_t motion = core_port_motion_mock_get_applied();
+    core_motion_t motion = core_port_mock_motion_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(CORE_MOTION_FORWARD, core_motion_get_direction(&motion));
@@ -126,14 +126,14 @@ should_remain_tracking_motion_without_coords_update(void)
     core_vehicle_init(&vehicle);
     core_vehicle_set_mode_value(&vehicle, CORE_MODE_LINE_FOLLOWING);
     core_vehicle_update_coords(&vehicle,
-                               core_coords_create(0, 0, 90, 100, 0, 0));
+                               core_coords(0, 0, 90, 100, 0, 0));
 
     // when
     core_vehicle_update_motion(&vehicle);
     core_vehicle_update_motion(&vehicle);
 
     // then
-    TEST_ASSERT_EQUAL(1, core_port_motion_mock_verify_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_mock_motion_verify_apply_calls());
 }
 
 int
@@ -170,46 +170,46 @@ main(void)
     RUN_TEST(should_create_tracking_motion_going_forward);
 
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(0, 20, 100, 80, 0, 0));
+                   core_coords(0, 20, 100, 80, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(0, 40, 100, 60, 0, 0));
+                   core_coords(0, 40, 100, 60, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(0, 60, 100, 40, 0, 0));
+                   core_coords(0, 60, 100, 40, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(0, 80, 100, 20, 0, 0));
+                   core_coords(0, 80, 100, 20, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(0, 100, 100, 0, 0, 0));
+                   core_coords(0, 100, 100, 0, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(20, 100, 80, 0, 0, 0));
+                   core_coords(20, 100, 80, 0, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(40, 100, 60, 0, 0, 0));
+                   core_coords(40, 100, 60, 0, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(60, 100, 40, 0, 0, 0));
+                   core_coords(60, 100, 40, 0, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(80, 100, 20, 0, 0, 0));
+                   core_coords(80, 100, 20, 0, 0, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_left,
-                   core_coords_create(100, 100, 0, 0, 0, 0));
+                   core_coords(100, 100, 0, 0, 0, 0));
 
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 80, 100, 20, 0));
+                   core_coords(0, 0, 80, 100, 20, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 60, 100, 40, 0));
+                   core_coords(0, 0, 60, 100, 40, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 40, 100, 60, 0));
+                   core_coords(0, 0, 40, 100, 60, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 20, 100, 80, 0));
+                   core_coords(0, 0, 20, 100, 80, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 0, 100, 100, 0));
+                   core_coords(0, 0, 0, 100, 100, 0));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 0, 80, 100, 20));
+                   core_coords(0, 0, 0, 80, 100, 20));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 0, 60, 100, 40));
+                   core_coords(0, 0, 0, 60, 100, 40));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 0, 40, 100, 60));
+                   core_coords(0, 0, 0, 40, 100, 60));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 0, 20, 100, 80));
+                   core_coords(0, 0, 0, 20, 100, 80));
     RUN_PARAM_TEST(should_create_tracking_motion_turning_right,
-                   core_coords_create(0, 0, 0, 0, 100, 100));
+                   core_coords(0, 0, 0, 0, 100, 100));
 
     RUN_TEST(should_remain_tracking_motion_without_coords_update);
 

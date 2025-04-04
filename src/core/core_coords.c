@@ -1,15 +1,11 @@
 #include "core/coords.h"
-#include <stdbool.h>
 #include <string.h>
 
 static int8_t const coordinate_weights[CORE_COORDS_SIZE] = {
     -100, -40, -20, 20, 40, 100};
 
-static inline bool
-is_on_route(core_coords_t *self);
-
 core_coords_t
-core_coords_create(
+core_coords(
     uint8_t l3, uint8_t l2, uint8_t l1, uint8_t r1, uint8_t r2, uint8_t r3)
 {
     core_coords_t coords;
@@ -32,7 +28,7 @@ core_coords_init(core_coords_t *self)
 core_coords_status_t
 core_coords_get_status(core_coords_t *self)
 {
-    if (is_on_route(self))
+    if (core_coords_are_on_route(self))
     {
         return CORE_COORDS_STATUS_ON_ROUTE;
     }
@@ -92,8 +88,8 @@ core_coords_equals(core_coords_t *self, core_coords_t *other)
     return true;
 }
 
-static inline bool
-is_on_route(core_coords_t *self)
+bool
+core_coords_are_on_route(core_coords_t *self)
 {
     for (uint8_t i = 0; i < CORE_COORDS_SIZE; i++)
     {

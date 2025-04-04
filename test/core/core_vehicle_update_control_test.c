@@ -23,7 +23,7 @@ should_update_command(core_mode_value_t mode,
     core_vehicle_set_mode_value(&vehicle, mode);
 
     // when
-    core_vehicle_update_control(&vehicle, core_control_create(commands));
+    core_vehicle_update_control(&vehicle, core_control(commands));
 
     // then
     TEST_ASSERT_EQUAL(expected_command, core_vehicle_get_commands(&vehicle));

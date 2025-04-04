@@ -21,7 +21,7 @@ typedef struct core_control
 } core_control_t;
 
 core_control_t
-core_control_create(uint16_t commands);
+core_control(uint16_t commands);
 
 uint16_t
 core_control_get_commands(core_control_t *self);
