@@ -7,6 +7,7 @@
 void
 setUp(void)
 {
+    core_port_motion_init();
     tim3_mock_reset();
 }
 
@@ -21,12 +22,7 @@ should_apply_duty_cycle(int8_t  correction,
                         uint8_t expected_right_duty_cycle)
 {
     // given
-    core_port_motion_init();
-
-    core_motion_t motion;
-    core_motion_init(&motion);
-    core_motion_set_direction(&motion, CORE_MOTION_FORWARD);
-    core_motion_set_correction(&motion, correction);
+    core_motion_t motion = core_motion(CORE_MOTION_FORWARD, correction);
 
     // when
     core_port_motion_apply(&motion);

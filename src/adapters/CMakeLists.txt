@@ -3,7 +3,6 @@ add_library(adapters STATIC
     adapter_motion_l293.c
     adapter_mode_indicator_led.c
     adapter_coords_qtrhd06a.c
-    adapter_debug_usart.c
     adapter_route_guard_tim15.c
 )
 

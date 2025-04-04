@@ -14,19 +14,12 @@ core_port_coords_init(void)
 core_coords_t
 core_port_coords_map(uint8_t *raw)
 {
-    core_coords_t coords;
-
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_LEFT_3, normalize(raw[0]));
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_LEFT_2, normalize(raw[1]));
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_LEFT_1, normalize(raw[2]));
-    core_coords_set_place(
-        &coords, CORE_COORDS_PLACE_RIGHT_1, normalize(raw[3]));
-    core_coords_set_place(
-        &coords, CORE_COORDS_PLACE_RIGHT_2, normalize(raw[4]));
-    core_coords_set_place(
-        &coords, CORE_COORDS_PLACE_RIGHT_3, normalize(raw[5]));
-
-    return coords;
+    return core_coords(normalize(raw[0]),
+                       normalize(raw[1]),
+                       normalize(raw[2]),
+                       normalize(raw[3]),
+                       normalize(raw[4]),
+                       normalize(raw[5]));
 }
 
 static uint8_t

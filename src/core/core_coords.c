@@ -1,38 +1,28 @@
 #include "core/coords.h"
-#include <stdbool.h>
 #include <string.h>
 
 static int8_t const coordinate_weights[CORE_COORDS_SIZE] = {
     -100, -40, -20, 20, 40, 100};
 
-static inline bool
-is_on_route(core_coords_t *self);
-
 core_coords_t
-core_coords_create(
+core_coords(
     uint8_t l3, uint8_t l2, uint8_t l1, uint8_t r1, uint8_t r2, uint8_t r3)
 {
     core_coords_t coords;
-    core_coords_init(&coords);
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_LEFT_3, l3);
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_LEFT_2, l2);
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_LEFT_1, l1);
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_RIGHT_1, r1);
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_RIGHT_2, r2);
-    core_coords_set_place(&coords, CORE_COORDS_PLACE_RIGHT_3, r3);
+    memset(&coords, 0, sizeof(coords));
+    coords.coordinates[0] = l3;
+    coords.coordinates[1] = l2;
+    coords.coordinates[2] = l1;
+    coords.coordinates[3] = r1;
+    coords.coordinates[4] = r2;
+    coords.coordinates[5] = r3;
     return coords;
-}
-
-void
-core_coords_init(core_coords_t *self)
-{
-    memset(self, 0, sizeof(*self));
 }
 
 core_coords_status_t
 core_coords_get_status(core_coords_t *self)
 {
-    if (is_on_route(self))
+    if (core_coords_are_on_route(self))
     {
         return CORE_COORDS_STATUS_ON_ROUTE;
     }
@@ -64,20 +54,6 @@ core_coords_compute_mass_center(core_coords_t *self, int8_t *error)
     return CORE_COORDS_STATUS_ON_ROUTE;
 }
 
-uint8_t
-core_coords_get_place(core_coords_t *self, core_coords_place_t place)
-{
-    return self->coordinates[place];
-}
-
-void
-core_coords_set_place(core_coords_t      *self,
-                      core_coords_place_t place,
-                      uint8_t             value)
-{
-    self->coordinates[place] = value;
-}
-
 bool
 core_coords_equals(core_coords_t *self, core_coords_t *other)
 {
@@ -92,8 +68,8 @@ core_coords_equals(core_coords_t *self, core_coords_t *other)
     return true;
 }
 
-static inline bool
-is_on_route(core_coords_t *self)
+bool
+core_coords_are_on_route(core_coords_t *self)
 {
     for (uint8_t i = 0; i < CORE_COORDS_SIZE; i++)
     {

@@ -1,6 +1,22 @@
 #include "utils/stack.h"
 #include <string.h>
 
+stack_t
+stack(uint8_t size)
+{
+    if (size > STACK_MAX_SIZE)
+    {
+        size = STACK_MAX_SIZE;
+    }
+
+    stack_t stack;
+    memset(&stack, 0, sizeof(stack));
+    stack.size = size;
+    stack.top  = -1;
+    
+    return stack;
+}
+
 stack_result_t
 stack_init(stack_t *self, uint8_t size)
 {
@@ -11,7 +27,7 @@ stack_init(stack_t *self, uint8_t size)
 
     memset(self->elements, 0, sizeof(self->elements));
     self->size = size;
-    self->top = -1;
+    self->top  = -1;
 
     return STACK_SUCCESS;
 }
@@ -38,7 +54,7 @@ stack_peek(stack_t *self, int16_t *element)
     }
 
     *element = self->elements[self->top];
-    
+
     return STACK_SUCCESS;
 }
 

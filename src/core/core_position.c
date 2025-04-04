@@ -2,25 +2,20 @@
 #include "core_position_regulator.h"
 #include <string.h>
 
-void
-core_position_init(core_position_t *self)
+core_position_t
+core_position(core_coords_t coords, stack_t errors)
 {
-    memset(self, 0, sizeof(*self));
-    stack_t errors;
-    stack_init(&errors, 20);
-    self->errors = errors;
+    core_position_t position;
+    position.coords = coords;
+    position.errors = errors;
+
+    return position;
 }
 
 void
 core_position_update_coords(core_position_t *self, core_coords_t coords)
 {
     self->coords = coords;
-}
-
-core_coords_t
-core_position_get_coords(core_position_t *self)
-{
-    return self->coords;
 }
 
 bool

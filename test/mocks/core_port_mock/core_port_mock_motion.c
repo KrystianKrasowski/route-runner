@@ -25,19 +25,19 @@ core_port_mock_motion_init(void)
 }
 
 bool
-core_port_motion_mock_verify_applied(void)
+core_port_mock_motion_verify_applied(void)
 {
     return mock.calls > 0;
 }
 
 core_motion_t
-core_port_motion_mock_get_applied(void)
+core_port_mock_motion_get_applied(void)
 {
     return *mock.applied_motion;
 }
 
 int
-core_port_motion_mock_verify_apply_calls(void)
+core_port_mock_motion_verify_apply_calls(void)
 {
     return mock.calls;
 }
