@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define STACK_MAX_SIZE 100
+#define STACK_MAX_SIZE 50
 
 typedef enum
 {
@@ -21,6 +21,9 @@ typedef struct stack
     int8_t  top;
     uint8_t size;
 } stack_t;
+
+stack_t
+stack(uint8_t size);
 
 stack_result_t
 stack_init(stack_t *self, uint8_t size);

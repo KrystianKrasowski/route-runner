@@ -5,9 +5,12 @@
 #include <unity.h>
 #include <unity_config.h>
 
+static core_vehicle_t vehicle;
+
 void
 setUp(void)
 {
+    vehicle = VEHICLE;
     core_port_mock_mode_indicator_init();
     core_port_mock_route_guard_init();
 }
@@ -23,8 +26,6 @@ should_change_mode(core_mode_t    current_mode,
                    core_mode_t    expected_mode)
 {
     // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
     core_vehicle_set_mode(&vehicle, current_mode);
 
     // when
@@ -40,8 +41,6 @@ void
 should_keep_mode(core_mode_t mode, core_control_t control)
 {
     // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
     core_vehicle_set_mode(&vehicle, mode);
 
     // when
@@ -60,8 +59,6 @@ should_handle_route_guard(core_mode_t    mode,
                           int            guard_stop)
 {
     // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
     core_vehicle_set_mode(&vehicle, mode);
 
     // when

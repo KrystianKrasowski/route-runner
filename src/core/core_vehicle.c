@@ -3,12 +3,14 @@
 #include "core_motion_factory.h"
 #include <string.h>
 
-void
-core_vehicle_init(core_vehicle_t *self)
+core_vehicle_t
+core_vehicle(core_mode_t mode, core_position_t position)
 {
-    memset(self, 0, sizeof(*self));
-    core_position_init(&self->position);
-    core_mode_init(&self->mode);
+    core_vehicle_t vehicle;
+    vehicle.mode = mode;
+    vehicle.position = position;
+
+    return vehicle;
 }
 
 core_mode_t

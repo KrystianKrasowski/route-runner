@@ -9,12 +9,9 @@ create_manual_correction(core_control_t *control);
 core_motion_t
 core_motion_create_by_control(core_control_t *control)
 {
-    core_motion_t           motion;
     int8_t                  correction = create_manual_correction(control);
     core_motion_direction_t direction  = create_manual_direction(control);
-
-    core_motion_set_correction(&motion, correction);
-    core_motion_set_direction(&motion, direction);
+    core_motion_t           motion     = core_motion(direction, correction);
 
     return motion;
 }
@@ -22,11 +19,9 @@ core_motion_create_by_control(core_control_t *control)
 core_motion_t
 core_motion_create_by_position(core_position_t *position)
 {
-    core_motion_t motion;
 
-    int8_t correction = core_position_regulate(position);
-    core_motion_set_correction(&motion, correction);
-    core_motion_set_direction(&motion, CORE_MOTION_FORWARD);
+    int8_t        correction = core_position_regulate(position);
+    core_motion_t motion     = core_motion(CORE_MOTION_FORWARD, correction);
 
     return motion;
 }

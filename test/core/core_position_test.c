@@ -1,3 +1,4 @@
+#include "core_fixtures.h"
 #include <core/position.h>
 #include <unity.h>
 #include <unity_config.h>
@@ -5,9 +6,12 @@
 #define ON_THE_LINE  (CORE_COORDS_LINE_DETECTION_TRESHOLD)
 #define OFF_THE_LINE (CORE_COORDS_LINE_DETECTION_TRESHOLD - 1)
 
+static core_position_t position;
+
 void
 setUp(void)
 {
+    position = POSITION_STARTING;
 }
 
 void
@@ -24,10 +28,6 @@ should_detect_line(uint8_t left3,
                    uint8_t right3,
                    bool    expected_result)
 {
-    // given
-    core_position_t position;
-    core_position_init(&position);
-
     // when
     core_coords_t coords =
         core_coords(left3, left2, left1, right1, right2, right3);
@@ -47,10 +47,6 @@ should_compute_position_error(uint8_t left3,
                               uint8_t right3,
                               int16_t expected_error)
 {
-    // given
-    core_position_t position;
-    core_position_init(&position);
-
     // when
     core_coords_t coords =
         core_coords(left3, left2, left1, right1, right2, right3);
@@ -68,9 +64,6 @@ should_set_last_error_when_drifting_off_line(void)
     // given
     core_coords_t last_on_line = core_coords(5, 0, 0, 0, 0, 0);
     core_coords_t lost_line    = core_coords(0, 0, 0, 0, 0, 0);
-
-    core_position_t position;
-    core_position_init(&position);
 
     core_position_update_coords(&position, last_on_line);
     core_position_update_error(&position);

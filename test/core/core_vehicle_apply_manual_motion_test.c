@@ -4,9 +4,12 @@
 #include <unity.h>
 #include <unity_config.h>
 
+static core_vehicle_t vehicle;
+
 void
 setUp(void)
 {
+    vehicle = VEHICLE;
     core_port_mock_motion_init();
 }
 
@@ -18,10 +21,6 @@ tearDown(void)
 void
 should_apply_manual_motion(core_control_t control, core_motion_t expected)
 {
-    // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
-
     // when
     core_vehicle_apply_manual_motion(&vehicle, control);
 
@@ -36,8 +35,6 @@ void
 should_not_apply_manual_motion_while_following(core_control_t control)
 {
     // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
     core_vehicle_set_mode(&vehicle, MODE_LINE_FOLLOWING);
 
     // when
@@ -51,8 +48,6 @@ void
 should_apply_manual_motion_on_following_break(void)
 {
     // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
     core_vehicle_set_mode(&vehicle, MODE_LINE_FOLLOWING);
 
     // when

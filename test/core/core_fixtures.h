@@ -30,4 +30,11 @@
 
 #define MOTION_NONE core_motion(CORE_MOTION_NONE, 0)
 
+#define STACK_EMPTY(size) stack(size)
+
+#define POSITION_STARTING core_position(COORDS_OFF_ROUTE, STACK_EMPTY(20))
+
+#define VEHICLE                                                                \
+    core_vehicle(MODE_MANUAL, core_position(COORDS_OFF_ROUTE, STACK_EMPTY(20)))
+
 #endif

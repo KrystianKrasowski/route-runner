@@ -23,17 +23,8 @@ core_mode(core_mode_value_t value);
 bool
 core_mode_equals(core_mode_t *self, core_mode_t *other);
 
-void
-core_mode_init(core_mode_t *self);
-
-void
-core_mode_set(core_mode_t *self, core_mode_value_t value);
-
 core_mode_value_t
 core_mode_get(core_mode_t *self);
-
-bool
-core_mode_changed(core_mode_t *self);
 
 bool
 core_mode_is(core_mode_t *self, core_mode_value_t value);

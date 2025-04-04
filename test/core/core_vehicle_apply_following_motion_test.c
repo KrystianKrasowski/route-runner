@@ -4,9 +4,13 @@
 #include <unity.h>
 #include <unity_config.h>
 
+static core_vehicle_t vehicle;
+
 void
 setUp(void)
 {
+    vehicle = VEHICLE;
+
     core_port_mock_motion_init();
 }
 
@@ -19,8 +23,6 @@ void
 should_apply_following_motion(core_mode_t mode, int expected_apply_count)
 {
     // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
     core_vehicle_set_mode(&vehicle, mode);
 
     // when

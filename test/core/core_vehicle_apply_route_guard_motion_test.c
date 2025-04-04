@@ -6,9 +6,12 @@
 #include <unity.h>
 #include <unity_config.h>
 
+static core_vehicle_t vehicle;
+
 void
 setUp(void)
 {
+    vehicle = VEHICLE;
     core_port_mock_motion_init();
     core_port_mock_mode_indicator_init();
     core_port_mock_route_guard_init();
@@ -22,10 +25,6 @@ tearDown(void)
 void
 should_reset_to_manual_mode(void)
 {
-    // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
-
     // when
     core_vehicle_timeout_route_guard(&vehicle);
 
@@ -38,10 +37,6 @@ should_reset_to_manual_mode(void)
 void
 should_apply_stop_motion(void)
 {
-    // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
-
     // when
     core_vehicle_timeout_route_guard(&vehicle);
 
@@ -55,10 +50,6 @@ should_apply_stop_motion(void)
 void
 should_reset_state_indicator(void)
 {
-    // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
-
     // when
     core_vehicle_timeout_route_guard(&vehicle);
 
@@ -72,10 +63,6 @@ should_reset_state_indicator(void)
 void
 should_stop_route_guard(void)
 {
-    // given
-    core_vehicle_t vehicle;
-    core_vehicle_init(&vehicle);
-
     // when
     core_vehicle_timeout_route_guard(&vehicle);
 

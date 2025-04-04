@@ -5,8 +5,7 @@ core_mode_t
 core_mode(core_mode_value_t value)
 {
     core_mode_t mode;
-    core_mode_init(&mode);
-    core_mode_set(&mode, value);
+    mode.value = value;
 
     return mode;
 }
@@ -15,19 +14,6 @@ bool
 core_mode_equals(core_mode_t *self, core_mode_t *other)
 {
     return self->value == other->value;
-}
-
-void
-core_mode_init(core_mode_t *self)
-{
-    memset(self, 0, sizeof(*self));
-    self->value = CORE_MODE_MANUAL;
-}
-
-void
-core_mode_set(core_mode_t *self, core_mode_value_t value)
-{
-    self->value = value;
 }
 
 core_mode_value_t

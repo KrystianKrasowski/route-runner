@@ -13,8 +13,8 @@ typedef struct core_vehicle
     core_position_t position;
 } core_vehicle_t;
 
-void
-core_vehicle_init(core_vehicle_t *self);
+core_vehicle_t
+core_vehicle(core_mode_t mode, core_position_t position);
 
 core_mode_t
 core_vehicle_get_mode(core_vehicle_t *self);
