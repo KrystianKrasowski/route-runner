@@ -23,16 +23,7 @@ typedef struct core_control
 core_control_t
 core_control(uint16_t commands);
 
-uint16_t
-core_control_get_commands(core_control_t *self);
-
-void
-core_control_set_commands(core_control_t *self, uint16_t commands);
-
 bool
 core_control_has(core_control_t *self, core_control_command_t command);
-
-void
-core_control_truncate(core_control_t *self, uint16_t commands);
 
 #endif

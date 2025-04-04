@@ -17,9 +17,6 @@ core_position_init(core_position_t *self);
 void
 core_position_update_coords(core_position_t *self, core_coords_t coords);
 
-core_coords_t
-core_position_get_coords(core_position_t *self);
-
 bool
 core_position_is_on_route(core_position_t *self);
 

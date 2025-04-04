@@ -17,12 +17,6 @@ core_position_update_coords(core_position_t *self, core_coords_t coords)
     self->coords = coords;
 }
 
-core_coords_t
-core_position_get_coords(core_position_t *self)
-{
-    return self->coords;
-}
-
 bool
 core_position_is_on_route(core_position_t *self)
 {

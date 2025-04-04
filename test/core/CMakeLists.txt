@@ -1,11 +1,5 @@
 set(TEST_SUITE
     core_position_test.c
-    core_vehicle_create_motion_test.c
-    core_vehicle_update_control_test.c
-    core_vehicle_update_mode_test.c
-    core_vehicle_update_state_indicator_test.c
-    core_vehicle_update_route_guard_test.c
-    core_vehicle_timeout_route_guard_test.c
     core_vehicle_apply_manual_motion_test.c
     core_vehicle_change_mode_by_control_test.c
     core_vehicle_apply_following_motion_test.c

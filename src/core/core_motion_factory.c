@@ -7,18 +7,6 @@ static inline int8_t
 create_manual_correction(core_control_t *control);
 
 core_motion_t
-core_motion_create(core_vehicle_t *vehicle)
-{
-    switch (core_vehicle_get_mode_value(vehicle))
-    {
-        case CORE_MODE_LINE_FOLLOWING:
-            return core_motion_create_by_position(&vehicle->position);
-        default:
-            return core_motion_create_by_control(&vehicle->control);
-    }
-}
-
-core_motion_t
 core_motion_create_by_control(core_control_t *control)
 {
     core_motion_t           motion;

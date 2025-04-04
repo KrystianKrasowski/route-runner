@@ -4,7 +4,6 @@
 #include "control.h"
 #include "coords.h"
 #include <stdbool.h>
-#include <utils/stack.h>
 
 typedef enum
 {
@@ -15,8 +14,7 @@ typedef enum
 
 typedef struct core_mode
 {
-    stack_t value;
-    core_mode_value_t mode_value;
+    core_mode_value_t value;
 } core_mode_t;
 
 core_mode_t
