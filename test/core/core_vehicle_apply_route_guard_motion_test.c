@@ -2,7 +2,6 @@
 #include <core/vehicle.h>
 #include <core_port_mock_mode_indicator.h>
 #include <core_port_mock_motion.h>
-#include <core_port_mock_route_guard.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -14,7 +13,6 @@ setUp(void)
     vehicle = VEHICLE;
     core_port_mock_motion_init();
     core_port_mock_mode_indicator_init();
-    core_port_mock_route_guard_init();
 }
 
 void
@@ -60,17 +58,6 @@ should_reset_state_indicator(void)
     TEST_ASSERT_EQUAL(1, core_port_mock_mode_indicator_verify_apply_calls());
 }
 
-void
-should_stop_route_guard(void)
-{
-    // when
-    core_vehicle_timeout_route_guard(&vehicle);
-
-    // then
-    
-    TEST_ASSERT_EQUAL(1, core_port_mock_route_guard_verify_stop_calls());
-}
-
 int
 main(void)
 {
@@ -78,6 +65,5 @@ main(void)
     RUN_TEST(should_reset_to_manual_mode);
     RUN_TEST(should_apply_stop_motion);
     RUN_TEST(should_reset_state_indicator);
-    RUN_TEST(should_stop_route_guard);
     return UNITY_END();
 }

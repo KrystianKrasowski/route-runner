@@ -58,7 +58,6 @@ core_vehicle_timeout_route_guard(core_vehicle_t *self)
     core_motion_t motion = core_motion(CORE_MOTION_NONE, 0);
     core_port_motion_apply(&motion);
     core_port_mode_indicator_apply(CORE_MODE_MANUAL);
-    core_port_route_guard_stop();
 }
 
 void
@@ -70,15 +69,6 @@ core_vehicle_change_mode_by_control(core_vehicle_t *self,
     if (!core_mode_equals(&self->mode, &mode))
     {
         core_port_mode_indicator_apply(core_mode_get(&mode));
-
-        if (core_mode_is(&mode, CORE_MODE_LINE_FOLLOWING))
-        {
-            core_port_route_guard_start();
-        }
-        else
-        {
-            core_port_route_guard_stop();
-        }
     }
 
     self->mode = mode;
@@ -90,11 +80,6 @@ core_vehicle_change_mode_by_coords(core_vehicle_t *self, core_coords_t coords)
     core_mode_t mode       = core_mode_compute_by_coords(&self->mode, coords);
     bool is_mode_following = core_mode_is(&mode, CORE_MODE_LINE_FOLLOWING);
     bool is_on_route       = core_coords_are_on_route(&coords);
-
-    if (is_mode_following && is_on_route)
-    {
-        core_port_route_guard_reset();
-    }
 
     if (!core_mode_equals(&self->mode, &mode))
     {

@@ -1,7 +1,6 @@
 #include "core_fixtures.h"
 #include <core/vehicle.h>
 #include <core_port_mock_mode_indicator.h>
-#include <core_port_mock_route_guard.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -12,7 +11,6 @@ setUp(void)
 {
     vehicle = VEHICLE;
     core_port_mock_mode_indicator_init();
-    core_port_mock_route_guard_init();
 }
 
 void
@@ -52,22 +50,6 @@ should_keep_mode(core_mode_t mode, core_coords_t coords)
     TEST_ASSERT_EQUAL(0, core_port_mock_mode_indicator_verify_apply_calls());
 }
 
-void
-should_handle_route_guard(core_mode_t   mode,
-                          core_coords_t coords,
-                          int           guard_reset)
-{
-    // given
-    core_vehicle_set_mode(&vehicle, mode);
-
-    // when
-    core_vehicle_change_mode_by_coords(&vehicle, coords);
-
-    // then
-    TEST_ASSERT_EQUAL(guard_reset,
-                      core_port_mock_route_guard_verify_reset_calls());
-}
-
 int
 main(void)
 {
@@ -80,17 +62,6 @@ main(void)
     RUN_PARAM_TEST(should_keep_mode, MODE_LINE_DETECTED, COORDS_ON_ROUTE);
     RUN_PARAM_TEST(should_keep_mode, MODE_LINE_FOLLOWING, COORDS_ON_ROUTE);
     RUN_PARAM_TEST(should_keep_mode, MODE_LINE_FOLLOWING, COORDS_OFF_ROUTE);
-
-    RUN_PARAM_TEST(
-        should_handle_route_guard, MODE_LINE_FOLLOWING, COORDS_ON_ROUTE, 1);
-    RUN_PARAM_TEST(
-        should_handle_route_guard, MODE_LINE_FOLLOWING, COORDS_OFF_ROUTE, 0);
-    RUN_PARAM_TEST(
-        should_handle_route_guard, MODE_LINE_DETECTED, COORDS_ON_ROUTE, 0);
-    RUN_PARAM_TEST(
-        should_handle_route_guard, MODE_LINE_DETECTED, COORDS_OFF_ROUTE, 0);
-    RUN_PARAM_TEST(should_handle_route_guard, MODE_MANUAL, COORDS_ON_ROUTE, 0);
-    RUN_PARAM_TEST(should_handle_route_guard, MODE_MANUAL, COORDS_OFF_ROUTE, 0);
 
     return UNITY_END();
 }

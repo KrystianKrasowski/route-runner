@@ -29,16 +29,4 @@ core_port_mode_indicator_init(void);
 void
 core_port_mode_indicator_apply(core_mode_value_t value);
 
-void
-core_port_route_guard_init(void);
-
-void
-core_port_route_guard_start(void);
-
-void
-core_port_route_guard_reset(void);
-
-void
-core_port_route_guard_stop(void);
-
 #endif
