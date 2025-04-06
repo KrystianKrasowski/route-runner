@@ -7,7 +7,7 @@ core_vehicle_t
 core_vehicle(core_mode_t mode, core_position_t position)
 {
     core_vehicle_t vehicle;
-    vehicle.mode = mode;
+    vehicle.mode     = mode;
     vehicle.position = position;
 
     return vehicle;
@@ -28,9 +28,9 @@ core_vehicle_set_mode(core_vehicle_t *self, core_mode_t mode)
 void
 core_vehicle_apply_manual_motion(core_vehicle_t *self, core_control_t control)
 {
-    bool is_following    = core_mode_is_tracking(&self->mode);
-    bool is_break        = core_control_has(&control, CORE_CONTROL_BREAK);
-    core_motion_t motion = core_motion_create_by_control(&control);
+    bool          is_following = core_mode_is_tracking(&self->mode);
+    bool          is_break     = core_control_has(&control, CORE_CONTROL_BREAK);
+    core_motion_t motion       = core_motion_create_by_control(&control);
 
     if (!is_following || is_break)
     {
@@ -77,9 +77,7 @@ core_vehicle_change_mode_by_control(core_vehicle_t *self,
 void
 core_vehicle_change_mode_by_coords(core_vehicle_t *self, core_coords_t coords)
 {
-    core_mode_t mode       = core_mode_compute_by_coords(&self->mode, coords);
-    bool is_mode_following = core_mode_is_tracking(&mode);
-    bool is_on_route       = core_coords_are_on_route(&coords);
+    core_mode_t mode = core_mode_compute_by_coords(&self->mode, coords);
 
     if (!core_mode_equals(&self->mode, &mode))
     {
