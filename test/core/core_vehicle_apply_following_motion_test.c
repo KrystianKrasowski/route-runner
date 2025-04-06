@@ -38,9 +38,9 @@ main(void)
 {
     UNITY_BEGIN();
     RUN_PARAM_TEST(
-        should_apply_following_motion, core_mode(CORE_MODE_LINE_FOLLOWING), 1);
+        should_apply_following_motion, core_mode(CORE_MODE_FOLLOWING), 1);
     RUN_PARAM_TEST(
-        should_apply_following_motion, core_mode(CORE_MODE_LINE_DETECTED), 0);
+        should_apply_following_motion, core_mode(CORE_MODE_DETECTED), 0);
     RUN_PARAM_TEST(
         should_apply_following_motion, core_mode(CORE_MODE_MANUAL), 0);
     return UNITY_END();
