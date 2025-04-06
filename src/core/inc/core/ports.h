@@ -24,21 +24,9 @@ void
 core_port_motion_apply(core_motion_t *motion);
 
 void
-core_port_mode_indicator_init(void);
+core_port_mode_init(void);
 
 void
-core_port_mode_indicator_apply(core_mode_value_t value);
-
-void
-core_port_route_guard_init(void);
-
-void
-core_port_route_guard_start(void);
-
-void
-core_port_route_guard_reset(void);
-
-void
-core_port_route_guard_stop(void);
+core_port_mode_changed(core_mode_t *value);
 
 #endif

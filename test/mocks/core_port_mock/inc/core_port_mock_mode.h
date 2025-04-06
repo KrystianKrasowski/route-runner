@@ -4,15 +4,15 @@
 #include <core/mode.h>
 
 void
-core_port_mock_mode_indicator_init(void);
+core_port_mock_mode_init(void);
 
 int
-core_port_mock_mode_indicator_verify_apply_calls(void);
+core_port_mock_mode_verify_changed_calls(void);
 
 core_mode_value_t
 core_port_mock_mode_indicator_get_applied_mode_value(void);
 
 core_mode_t
-core_port_mock_mode_indicator_get_applied_mode(void);
+core_port_mock_mode_get_changed_mode(void);
 
 #endif
