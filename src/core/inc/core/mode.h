@@ -10,6 +10,7 @@ typedef enum
     CORE_MODE_MANUAL,
     CORE_MODE_DETECTED,
     CORE_MODE_FOLLOWING,
+    CORE_MODE_RECOVERING,
 } core_mode_value_t;
 
 typedef struct core_mode
@@ -27,7 +28,7 @@ core_mode_value_t
 core_mode_get(core_mode_t *self);
 
 bool
-core_mode_is_following(core_mode_t *self);
+core_mode_is_tracking(core_mode_t *self);
 
 core_mode_t
 core_mode_compute_by_control(core_mode_t *self, core_control_t control);

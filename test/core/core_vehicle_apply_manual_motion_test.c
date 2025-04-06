@@ -35,7 +35,7 @@ void
 should_not_apply_manual_motion_while_following(core_control_t control)
 {
     // given
-    core_vehicle_set_mode(&vehicle, MODE_LINE_FOLLOWING);
+    core_vehicle_set_mode(&vehicle, MODE_FOLLOWING);
 
     // when
     core_vehicle_apply_manual_motion(&vehicle, control);
@@ -48,7 +48,7 @@ void
 should_apply_manual_motion_on_following_break(void)
 {
     // given
-    core_vehicle_set_mode(&vehicle, MODE_LINE_FOLLOWING);
+    core_vehicle_set_mode(&vehicle, MODE_FOLLOWING);
 
     // when
     core_control_t control = CONTROL_BREAK;

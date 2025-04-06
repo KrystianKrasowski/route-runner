@@ -8,9 +8,10 @@
 #define COORDS_ON_ROUTE  core_coords(0, 0, 100, 100, 0, 0)
 #define COORDS_OFF_ROUTE core_coords(0, 0, 0, 0, 0, 0)
 
-#define MODE_MANUAL         core_mode(CORE_MODE_MANUAL)
-#define MODE_LINE_DETECTED  core_mode(CORE_MODE_DETECTED)
-#define MODE_LINE_FOLLOWING core_mode(CORE_MODE_FOLLOWING)
+#define MODE_MANUAL     core_mode(CORE_MODE_MANUAL)
+#define MODE_DETECTED   core_mode(CORE_MODE_DETECTED)
+#define MODE_FOLLOWING  core_mode(CORE_MODE_FOLLOWING)
+#define MODE_RECOVERING core_mode(CORE_MODE_RECOVERING)
 
 #define CONTROL_NONE     core_control(CORE_CONTROL_NONE)
 #define CONTROL_FORWARD  core_control(CORE_CONTROL_FORWARD)
