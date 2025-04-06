@@ -19,9 +19,17 @@ core_motion_create_by_control(core_control_t *control)
 core_motion_t
 core_motion_create_by_position(core_position_t *position)
 {
+    core_motion_t motion;
 
-    int8_t        correction = core_position_regulate(position);
-    core_motion_t motion     = core_motion(CORE_MOTION_FORWARD, correction);
+    if (core_position_is_on_finish(position))
+    {
+        motion = core_motion(CORE_MOTION_NONE, 0);
+    }
+    else
+    {
+        int8_t correction = core_position_regulate(position);
+        motion            = core_motion(CORE_MOTION_FORWARD, correction);
+    }
 
     return motion;
 }

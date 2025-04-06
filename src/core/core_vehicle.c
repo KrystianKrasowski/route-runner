@@ -41,9 +41,7 @@ core_vehicle_apply_manual_motion(core_vehicle_t *self, core_control_t control)
 void
 core_vehicle_apply_following_motion(core_vehicle_t *self, core_coords_t coords)
 {
-    bool is_following = core_mode_is_tracking(&self->mode);
-
-    if (is_following)
+    if (core_mode_is_tracking(&self->mode) || core_coords_is_on_finish(&coords))
     {
         core_position_update_coords(&self->position, coords);
         core_motion_t motion = core_motion_create_by_position(&self->position);

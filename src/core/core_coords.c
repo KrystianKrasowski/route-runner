@@ -19,20 +19,7 @@ core_coords(
     return coords;
 }
 
-core_coords_status_t
-core_coords_get_status(core_coords_t *self)
-{
-    if (core_coords_are_on_route(self))
-    {
-        return CORE_COORDS_STATUS_ON_ROUTE;
-    }
-    else
-    {
-        return CORE_COORDS_STATUS_OFF_LINE;
-    }
-}
-
-core_coords_status_t
+void
 core_coords_compute_mass_center(core_coords_t *self, int8_t *error)
 {
     int16_t sum        = 0;
@@ -44,14 +31,11 @@ core_coords_compute_mass_center(core_coords_t *self, int8_t *error)
         weight_sum += coordinate_weights[i] * self->coordinates[i];
     }
 
-    if (sum == 0)
+    if (sum != 0)
     {
-        return CORE_COORDS_STATUS_OFF_LINE;
+        *error = weight_sum / sum;
     }
 
-    *error = weight_sum / sum;
-
-    return CORE_COORDS_STATUS_ON_ROUTE;
 }
 
 bool
@@ -69,7 +53,7 @@ core_coords_equals(core_coords_t *self, core_coords_t *other)
 }
 
 bool
-core_coords_are_on_route(core_coords_t *self)
+core_coords_is_on_route(core_coords_t *self)
 {
     for (uint8_t i = 0; i < CORE_COORDS_SIZE; i++)
     {
@@ -80,4 +64,13 @@ core_coords_are_on_route(core_coords_t *self)
     }
 
     return false;
+}
+
+bool
+core_coords_is_on_finish(core_coords_t *self)
+{
+    return self->coordinates[0] >= CORE_COORDS_LINE_DETECTION_TRESHOLD &&
+           self->coordinates[2] < CORE_COORDS_LINE_DETECTION_TRESHOLD &&
+           self->coordinates[3] < CORE_COORDS_LINE_DETECTION_TRESHOLD &&
+           self->coordinates[5] >= CORE_COORDS_LINE_DETECTION_TRESHOLD;
 }

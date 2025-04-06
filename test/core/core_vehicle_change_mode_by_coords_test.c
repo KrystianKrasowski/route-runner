@@ -62,6 +62,10 @@ main(void)
         should_change_mode, MODE_FOLLOWING, COORDS_OFF_ROUTE, MODE_RECOVERING);
     RUN_PARAM_TEST(
         should_change_mode, MODE_RECOVERING, COORDS_ON_ROUTE, MODE_FOLLOWING);
+    RUN_PARAM_TEST(
+        should_change_mode, MODE_FOLLOWING, COORDS_ON_FINISH, MODE_MANUAL);
+    RUN_PARAM_TEST(
+        should_change_mode, MODE_RECOVERING, COORDS_ON_FINISH, MODE_MANUAL);
     RUN_PARAM_TEST(should_keep_mode, MODE_MANUAL, COORDS_OFF_ROUTE);
     RUN_PARAM_TEST(should_keep_mode, MODE_DETECTED, COORDS_ON_ROUTE);
     RUN_PARAM_TEST(should_keep_mode, MODE_FOLLOWING, COORDS_ON_ROUTE);

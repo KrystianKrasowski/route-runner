@@ -4,8 +4,8 @@
 
 typedef struct
 {
-    core_motion_t *applied_motion;
-    int            calls;
+    core_motion_t applied_motion;
+    int           calls;
 } mock_motion_t;
 
 static mock_motion_t mock;
@@ -13,14 +13,14 @@ static mock_motion_t mock;
 void
 core_port_motion_apply(core_motion_t *motion)
 {
-    mock.applied_motion = motion;
+    mock.applied_motion = *motion;
     mock.calls++;
 }
 
 void
 core_port_mock_motion_init(void)
 {
-    mock.applied_motion = NULL;
+    mock.applied_motion = core_motion(-1, -127);
     mock.calls          = 0;
 }
 
@@ -33,7 +33,7 @@ core_port_mock_motion_verify_applied(void)
 core_motion_t
 core_port_mock_motion_get_applied(void)
 {
-    return *mock.applied_motion;
+    return mock.applied_motion;
 }
 
 int
