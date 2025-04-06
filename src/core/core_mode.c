@@ -75,13 +75,18 @@ core_mode_compute_by_control(core_mode_t *self, core_control_t control)
 core_mode_t
 core_mode_compute_by_coords(core_mode_t *self, core_coords_t coords)
 {
-    bool is_on_route = core_coords_are_on_route(&coords);
+    bool is_on_route = core_coords_is_on_route(&coords);
+    bool is_on_finish = core_coords_is_on_finish(&coords);
 
     if (core_mode_is_manual(self) && is_on_route)
     {
         return core_mode(CORE_MODE_DETECTED);
     }
     else if (core_mode_is_detected(self) && !is_on_route)
+    {
+        return core_mode(CORE_MODE_MANUAL);
+    }
+    else if (core_mode_is_tracking(self) && is_on_finish)
     {
         return core_mode(CORE_MODE_MANUAL);
     }

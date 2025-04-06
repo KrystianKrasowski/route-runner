@@ -7,6 +7,7 @@
 
 #define COORDS_ON_ROUTE  core_coords(0, 0, 100, 100, 0, 0)
 #define COORDS_OFF_ROUTE core_coords(0, 0, 0, 0, 0, 0)
+#define COORDS_ON_FINISH core_coords(5, 0, 0, 0 ,0 ,5)
 
 #define MODE_MANUAL     core_mode(CORE_MODE_MANUAL)
 #define MODE_DETECTED   core_mode(CORE_MODE_DETECTED)

@@ -21,7 +21,13 @@ core_position_update_coords(core_position_t *self, core_coords_t coords)
 bool
 core_position_is_on_route(core_position_t *self)
 {
-    return core_coords_get_status(&self->coords) == CORE_COORDS_STATUS_ON_ROUTE;
+    return core_coords_is_on_route(&self->coords);
+}
+
+bool
+core_position_is_on_finish(core_position_t *self)
+{
+    return core_coords_is_on_finish(&self->coords);
 }
 
 int8_t

@@ -20,6 +20,9 @@ core_position_update_coords(core_position_t *self, core_coords_t coords);
 bool
 core_position_is_on_route(core_position_t *self);
 
+bool
+core_position_is_on_finish(core_position_t *self);
+
 int8_t
 core_position_last_error(core_position_t *self);
 
