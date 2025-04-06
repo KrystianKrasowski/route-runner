@@ -1,6 +1,6 @@
 #include "core_fixtures.h"
 #include <core/vehicle.h>
-#include <core_port_mock_mode_indicator.h>
+#include <core_port_mock_mode.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -10,7 +10,7 @@ void
 setUp(void)
 {
     vehicle = VEHICLE;
-    core_port_mock_mode_indicator_init();
+    core_port_mock_mode_init();
 }
 
 void
@@ -28,10 +28,10 @@ should_change_mode(core_mode_t mode, core_coords_t coords, core_mode_t expected)
     core_vehicle_change_mode_by_coords(&vehicle, coords);
 
     // then
-    core_mode_t actual = core_port_mock_mode_indicator_get_applied_mode();
+    core_mode_t actual = core_port_mock_mode_get_changed_mode();
 
     TEST_ASSERT_TRUE(core_mode_equals(&expected, &actual));
-    TEST_ASSERT_EQUAL(1, core_port_mock_mode_indicator_verify_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_mock_mode_verify_changed_calls());
 }
 
 void
@@ -47,7 +47,7 @@ should_keep_mode(core_mode_t mode, core_coords_t coords)
     core_mode_t actual = core_vehicle_get_mode(&vehicle);
 
     TEST_ASSERT_TRUE(core_mode_equals(&mode, &actual));
-    TEST_ASSERT_EQUAL(0, core_port_mock_mode_indicator_verify_apply_calls());
+    TEST_ASSERT_EQUAL(0, core_port_mock_mode_verify_changed_calls());
 }
 
 int

@@ -1,6 +1,6 @@
 #include "core_fixtures.h"
 #include <core/vehicle.h>
-#include <core_port_mock_mode_indicator.h>
+#include <core_port_mock_mode.h>
 #include <core_port_mock_motion.h>
 #include <unity.h>
 #include <unity_config.h>
@@ -12,7 +12,7 @@ setUp(void)
 {
     vehicle = VEHICLE;
     core_port_mock_motion_init();
-    core_port_mock_mode_indicator_init();
+    core_port_mock_mode_init();
 }
 
 void
@@ -52,10 +52,10 @@ should_reset_state_indicator(void)
     core_vehicle_timeout_route_guard(&vehicle);
 
     // then
-    core_mode_t actual   = core_port_mock_mode_indicator_get_applied_mode();
+    core_mode_t actual   = core_port_mock_mode_get_changed_mode();
     core_mode_t expected = MODE_MANUAL;
     TEST_ASSERT_TRUE(core_mode_equals(&expected, &actual));
-    TEST_ASSERT_EQUAL(1, core_port_mock_mode_indicator_verify_apply_calls());
+    TEST_ASSERT_EQUAL(1, core_port_mock_mode_verify_changed_calls());
 }
 
 int
