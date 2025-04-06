@@ -29,6 +29,18 @@ core_mode_is_tracking(core_mode_t *self)
            CORE_MODE_RECOVERING == self->value;
 }
 
+bool
+core_mode_is_detected(core_mode_t *self)
+{
+    return CORE_MODE_DETECTED == self->value;
+}
+
+bool
+core_mode_is_manual(core_mode_t *self)
+{
+    return CORE_MODE_MANUAL == self->value;
+}
+
 core_mode_t
 core_mode_compute_by_control(core_mode_t *self, core_control_t control)
 {

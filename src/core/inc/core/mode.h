@@ -30,6 +30,12 @@ core_mode_get(core_mode_t *self);
 bool
 core_mode_is_tracking(core_mode_t *self);
 
+bool
+core_mode_is_detected(core_mode_t *self);
+
+bool
+core_mode_is_manual(core_mode_t *self);
+
 core_mode_t
 core_mode_compute_by_control(core_mode_t *self, core_control_t control);
 

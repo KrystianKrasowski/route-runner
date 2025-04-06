@@ -19,7 +19,7 @@ tasks_init(void)
     mq_init();
     core_port_motion_init();
     core_port_control_init();
-    core_port_mode_indicator_init();
+    core_port_mode_init();
     core_port_coords_init();
 }
 
