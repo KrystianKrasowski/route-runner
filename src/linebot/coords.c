@@ -1,5 +1,6 @@
 #include "coords.h"
 #include <string.h>
+#include <utils/pool.h>
 
 #define COORDS_POOL_SIZE          2
 #define COORDS_SIZE               6
@@ -10,20 +11,16 @@ typedef struct
     uint8_t coordinates[COORDS_SIZE];
 } coords_instance_t;
 
-typedef struct
-{
-    coords_instance_t instances[COORDS_POOL_SIZE];
-    bool              in_use[COORDS_POOL_SIZE];
-} coords_pool_t;
+static int8_t const COORDS_WEIGHTS[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
 
-static int8_t const coords_weights[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
+POOL_DECLARE(coords, coords_instance_t, 2)
 
 static coords_pool_t pool;
 
 void
 coords_init(void)
 {
-    memset(&pool, 0, sizeof(pool));
+    coords_pool_init(&pool);
 }
 
 linebot_result_t
@@ -35,34 +32,23 @@ coords_new(uint8_t const            l3,
            uint8_t const            r3,
            linebot_coords_t * const handle)
 {
-    linebot_result_t result;
-    uint8_t          index = COORDS_POOL_SIZE;
+    linebot_result_t result = LINEBOT_OBJECT_POOL_ERROR;
 
-    for (uint8_t i = 0; i < COORDS_POOL_SIZE; i++)
+    if (coords_pool_alloc(&pool, handle))
     {
-        if (false == pool.in_use[i])
+        coords_instance_t *coords = coords_pool_get(&pool, *handle);
+
+        if (coords)
         {
-            index = i;
-            break;
+            coords->coordinates[0] = l3;
+            coords->coordinates[1] = l2;
+            coords->coordinates[2] = l1;
+            coords->coordinates[3] = r1;
+            coords->coordinates[4] = r2;
+            coords->coordinates[5] = r3;
+
+            result = LINEBOT_SUCCESS;
         }
-    }
-
-    if (index < COORDS_POOL_SIZE)
-    {
-        pool.in_use[index]                   = true;
-        pool.instances[index].coordinates[0] = l3;
-        pool.instances[index].coordinates[1] = l2;
-        pool.instances[index].coordinates[2] = l1;
-        pool.instances[index].coordinates[3] = r1;
-        pool.instances[index].coordinates[4] = r2;
-        pool.instances[index].coordinates[5] = r3;
-
-        *handle = index;
-        result  = LINEBOT_SUCCESS;
-    }
-    else
-    {
-        result = LINEBOT_ERROR;
     }
 
     return result;
@@ -71,57 +57,78 @@ coords_new(uint8_t const            l3,
 void
 coords_release(linebot_coords_t const self)
 {
-    pool.in_use[self] = false;
+    coords_pool_free(&pool, self);
 }
 
 void
 coords_copy(linebot_coords_t const self, linebot_coords_t const other)
 {
-    memcpy(pool.instances[self].coordinates,
-           pool.instances[other].coordinates,
-           sizeof(pool.instances[self].coordinates));
+    coords_instance_t *instance_self  = coords_pool_get(&pool, self);
+    coords_instance_t *instance_other = coords_pool_get(&pool, other);
+
+    if (instance_self && instance_other)
+    {
+        memcpy(instance_self->coordinates,
+               instance_other->coordinates,
+               sizeof(instance_self->coordinates));
+    }
 }
 
 bool
 coords_is_on_route(linebot_coords_t const self)
 {
-    for (uint8_t i = 0; i < COORDS_POOL_SIZE; i++)
+    bool               on_route = false;
+    coords_instance_t *instance;
+
+    if (instance = coords_pool_get(&pool, self))
     {
-        if (pool.instances[self].coordinates[i] >= COORDS_DETECTION_TRESHOLD)
+        for (uint8_t i = 0; i < COORDS_POOL_SIZE; i++)
         {
-            return true;
+            if (instance->coordinates[i] >= COORDS_DETECTION_TRESHOLD)
+            {
+                on_route = true;
+                break;
+            }
         }
     }
 
-    return false;
+    return on_route;
 }
 
 bool
 coords_is_on_finish(linebot_coords_t const self)
 {
-    coords_instance_t instance = pool.instances[self];
+    bool               on_finish = false;
+    coords_instance_t *instance  = coords_pool_get(&pool, self);
 
-    return instance.coordinates[0] >= COORDS_DETECTION_TRESHOLD &&
-           instance.coordinates[2] < COORDS_DETECTION_TRESHOLD &&
-           instance.coordinates[3] < COORDS_DETECTION_TRESHOLD &&
-           instance.coordinates[5] >= COORDS_DETECTION_TRESHOLD;
+    if (instance)
+    {
+        on_finish = instance->coordinates[0] >= COORDS_DETECTION_TRESHOLD &&
+                    instance->coordinates[2] < COORDS_DETECTION_TRESHOLD &&
+                    instance->coordinates[3] < COORDS_DETECTION_TRESHOLD &&
+                    instance->coordinates[5] >= COORDS_DETECTION_TRESHOLD;
+    }
+
+    return on_finish;
 }
 
 void
 coords_compute_mass_center(linebot_coords_t const self, int8_t *value)
 {
-    int16_t           sum        = 0;
-    int16_t           weight_sum = 0;
-    coords_instance_t instance   = pool.instances[self];
+    int16_t            sum, weight_sum = 0;
+    coords_instance_t *instance;
 
-    for (uint8_t i = 0; i < COORDS_SIZE; i++)
+    if (instance = coords_pool_get(&pool, self))
     {
-        sum += instance.coordinates[i];
-        weight_sum += coords_weights[i] * instance.coordinates[i];
-    }
+        for (uint8_t i = 0; i < COORDS_SIZE; i++)
+        {
+            sum += instance->coordinates[i];
+            weight_sum += COORDS_WEIGHTS[i] * instance->coordinates[i];
+        }
 
-    if (sum != 0)
-    {
-        *value = weight_sum / sum;
+        if (sum != 0)
+        {
+            *value = weight_sum / sum;
+        }
     }
 }

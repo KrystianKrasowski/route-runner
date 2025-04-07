@@ -28,6 +28,7 @@ typedef enum
 {
     LINEBOT_SUCCESS,
     LINEBOT_ERROR,
+    LINEBOT_OBJECT_POOL_ERROR,
     LINEBOT_MODE_CHANGED,
 } linebot_result_t;
 
