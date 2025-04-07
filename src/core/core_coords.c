@@ -1,7 +1,7 @@
 #include "core/coords.h"
 #include <string.h>
 
-static int8_t const coordinate_weights[CORE_COORDS_SIZE] = {
+static int8_t const coords_weights[CORE_COORDS_SIZE] = {
     -100, -40, -20, 20, 40, 100};
 
 core_coords_t
@@ -28,7 +28,7 @@ core_coords_compute_mass_center(core_coords_t *self, int8_t *error)
     for (uint8_t i = 0; i < CORE_COORDS_SIZE; i++)
     {
         sum += self->coordinates[i];
-        weight_sum += coordinate_weights[i] * self->coordinates[i];
+        weight_sum += coords_weights[i] * self->coordinates[i];
     }
 
     if (sum != 0)
