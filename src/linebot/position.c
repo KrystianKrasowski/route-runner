@@ -52,6 +52,13 @@ position_update_coords(position_t const self, linebot_coords_t const coords)
     coords_copy(instance->coords, coords);
 }
 
+bool
+position_is_on_finish(position_t const self)
+{
+    position_instance_t *instance = position_pool_get(&pool, self);
+    return coords_is_on_finish(instance->coords);
+}
+
 int8_t
 position_last_error(position_t const self)
 {

@@ -17,6 +17,9 @@ position_new(linebot_coords_t   coords,
 void
 position_update_coords(position_t const self, linebot_coords_t const coords);
 
+bool
+position_is_on_finish(position_t const self);
+
 int8_t
 position_last_error(position_t const self);
 

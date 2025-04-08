@@ -24,7 +24,7 @@ should_change_mode(linebot_mode_t current_mode,
                    linebot_mode_t expected_mode)
 {
     // given
-    linebot = linebot_fixture_acquire(current_mode);
+    linebot = fixtures_linebot_acquire(current_mode);
 
     // when
     linebot_change_mode_by_control(linebot, commands);
@@ -38,7 +38,7 @@ void
 should_keep_mode(linebot_mode_t current_mode, uint16_t commands)
 {
     // given
-    linebot = linebot_fixture_acquire(current_mode);
+    linebot = fixtures_linebot_acquire(current_mode);
 
     // when
     linebot_change_mode_by_control(linebot, commands);

@@ -1,5 +1,6 @@
 #include "motion.h"
 #include <string.h>
+#include <utils/pool.h>
 
 #define MOTION_POOL_SIZE 3
 
@@ -9,47 +10,29 @@ typedef struct
     int8_t                     correction;
 } motion_instance_t;
 
-typedef struct
-{
-    motion_instance_t instances[MOTION_POOL_SIZE];
-    bool              in_use[MOTION_POOL_SIZE];
-} motion_pool_t;
+POOL_DECLARE(motion, motion_instance_t, 3)
 
 static motion_pool_t pool;
 
 void
 motion_init(void)
 {
-    memset(&pool, 0, sizeof(pool));
+    motion_pool_init(&pool);
 }
 
-linebot_result_t
-motion_new_instance(linebot_motion_t * const handle)
+bool
+motion_new(linebot_motion_direction_t direction,
+           int8_t                     correction,
+           linebot_motion_t * const   handle)
 {
-    linebot_result_t result;
-    uint8_t          index = MOTION_POOL_SIZE;
+    bool result = false;
 
-    for (uint8_t i = 0; i < MOTION_POOL_SIZE; i++)
+    if (motion_pool_alloc(&pool, handle))
     {
-        if (false == pool.in_use[i])
-        {
-            index = i;
-            break;
-        }
-    }
-
-    if (index < MOTION_POOL_SIZE)
-    {
-        pool.in_use[index]               = true;
-        pool.instances[index].correction = 0;
-        pool.instances[index].direction  = LINEBOT_MOTION_NONE;
-
-        *handle = index;
-        result  = LINEBOT_OK;
-    }
-    else
-    {
-        result = LINEBOT_ERROR;
+        motion_instance_t *motion = motion_pool_get(&pool, *handle);
+        motion->direction = direction;
+        motion->correction = correction;
+        result = true;
     }
 
     return result;
@@ -58,30 +41,19 @@ motion_new_instance(linebot_motion_t * const handle)
 void
 motion_release(linebot_motion_t const self)
 {
-    pool.in_use[self] = false;
-}
-
-void
-motion_set_direction(linebot_motion_t const           self,
-                     linebot_motion_direction_t const direction)
-{
-    pool.instances[self].direction = direction;
+    motion_pool_free(&pool, self);
 }
 
 linebot_motion_direction_t
 motion_get_direction(linebot_motion_t const self)
 {
-    return pool.instances[self].direction;
-}
-
-void
-motion_set_correction(linebot_motion_t const self, int8_t const correction)
-{
-    pool.instances[self].correction = correction;
+    motion_instance_t *motion = motion_pool_get(&pool, self);
+    return motion->direction;
 }
 
 int8_t
 motion_get_correction(linebot_motion_t const self)
 {
-    return pool.instances[self].correction;
+    motion_instance_t *motion = motion_pool_get(&pool, self);
+    return motion->correction;
 }

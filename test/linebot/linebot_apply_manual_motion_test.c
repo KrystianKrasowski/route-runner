@@ -24,16 +24,15 @@ should_apply_manual_motion(uint16_t                   commands,
                            int8_t                     correction)
 {
     // given
-    linebot = linebot_fixture_acquire(LINEBOT_MODE_MANUAL);
+    linebot = fixtures_linebot_acquire(LINEBOT_MODE_MANUAL);
 
     // when
     linebot_apply_manual_motion(linebot, commands);
 
     // then
-    linebot_motion_t actual = linebot_port_mock_motion_get_applied();
     TEST_ASSERT_EQUAL(1, linebot_port_mock_motion_verify_apply_calls());
-    TEST_ASSERT_EQUAL(direction, linebot_get_motion_direction(actual));
-    TEST_ASSERT_EQUAL(correction, linebot_get_motion_correction(actual));
+    TEST_ASSERT_EQUAL(direction, linebot_port_mock_motion_get_direction());
+    TEST_ASSERT_EQUAL(correction, linebot_port_mock_motion_get_correction());
 }
 
 void
@@ -41,7 +40,7 @@ should_not_apply_manual_motion_while_tracking(linebot_mode_t mode,
                                               uint16_t       commands)
 {
     // given
-    linebot = linebot_fixture_acquire(mode);
+    linebot = fixtures_linebot_acquire(mode);
 
     // when
     linebot_apply_manual_motion(linebot, commands);
@@ -54,17 +53,16 @@ void
 should_apply_manual_motion_on_tracking_break(linebot_mode_t mode)
 {
     // given
-    linebot = linebot_fixture_acquire(mode);
+    linebot = fixtures_linebot_acquire(mode);
 
     // when
     linebot_apply_manual_motion(linebot, LINEBOT_COMMAND_BREAK);
 
     // then
-    linebot_motion_t actual = linebot_port_mock_motion_get_applied();
     TEST_ASSERT_EQUAL(1, linebot_port_mock_motion_verify_apply_calls());
     TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,
-                      linebot_get_motion_direction(actual));
-    TEST_ASSERT_EQUAL(0, linebot_get_motion_correction(actual));
+                      linebot_port_mock_motion_get_direction());
+    TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_get_correction());
 }
 
 int

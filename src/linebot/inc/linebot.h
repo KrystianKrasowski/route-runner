@@ -38,12 +38,23 @@ typedef enum
     LINEBOT_MOTION_BACKWARD,
 } linebot_motion_direction_t;
 
+// TODO: should provide some handle from generic pool util. With uint8_t one can
+// provide different object's handle value!
 typedef uint8_t linebot_t;
 typedef uint8_t linebot_coords_t;
 typedef uint8_t linebot_motion_t;
 
 void
 linebot_init(void);
+
+bool
+linebot_new_coords(uint8_t const            l3,
+                   uint8_t const            l2,
+                   uint8_t const            l1,
+                   uint8_t const            r1,
+                   uint8_t const            r2,
+                   uint8_t const            r3,
+                   linebot_coords_t * const handle);
 
 bool
 linebot_new(linebot_mode_t    mode,

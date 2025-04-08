@@ -22,7 +22,7 @@ coords_init(void)
     coords_pool_init(&pool);
 }
 
-linebot_result_t
+bool
 coords_new(uint8_t const            l3,
            uint8_t const            l2,
            uint8_t const            l1,
@@ -31,7 +31,7 @@ coords_new(uint8_t const            l3,
            uint8_t const            r3,
            linebot_coords_t * const handle)
 {
-    linebot_result_t result = LINEBOT_OBJECT_POOL_ERROR;
+    bool result = false;
 
     if (coords_pool_alloc(&pool, handle))
     {
@@ -45,8 +45,7 @@ coords_new(uint8_t const            l3,
             coords->coordinates[3] = r1;
             coords->coordinates[4] = r2;
             coords->coordinates[5] = r3;
-
-            result = LINEBOT_OK;
+            result                 = true;
         }
     }
 
@@ -79,7 +78,7 @@ coords_is_on_route(linebot_coords_t const self)
     bool               on_route = false;
     coords_instance_t *instance;
 
-    if (instance = coords_pool_get(&pool, self))
+    if ((instance = coords_pool_get(&pool, self)))
     {
         for (uint8_t i = 0; i < COORDS_SIZE; i++)
         {
@@ -117,7 +116,7 @@ coords_compute_mass_center(linebot_coords_t const self, int8_t *value)
     int16_t            sum, weight_sum = 0;
     coords_instance_t *instance;
 
-    if (instance = coords_pool_get(&pool, self))
+    if ((instance = coords_pool_get(&pool, self)))
     {
         for (uint8_t i = 0; i < COORDS_SIZE; i++)
         {

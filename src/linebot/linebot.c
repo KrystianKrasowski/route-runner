@@ -42,6 +42,18 @@ linebot_init(void)
 }
 
 bool
+linebot_new_coords(uint8_t const            l3,
+                   uint8_t const            l2,
+                   uint8_t const            l1,
+                   uint8_t const            r1,
+                   uint8_t const            r2,
+                   uint8_t const            r3,
+                   linebot_coords_t * const handle)
+{
+    return coords_new(l3, l2, l1, r1, r2, r3, handle);
+}
+
+bool
 linebot_new(linebot_mode_t    mode,
             linebot_coords_t  coords,
             uint8_t           errsize,
@@ -72,9 +84,8 @@ linebot_apply_manual_motion(linebot_t const self, uint16_t const commands)
     if (!is_tracking_route(self) || is_break)
     {
         linebot_motion_t motion;
-        result = motion_create_by_commands(valid_commands, &motion);
 
-        if (result == LINEBOT_OK)
+        if (motion_create_by_commands(valid_commands, &motion))
         {
             linebot_port_motion_apply(motion);
             motion_release(motion);
@@ -110,9 +121,8 @@ linebot_apply_following_motion(linebot_t const        self,
         linebot_motion_t    motion;
 
         position_update_coords(linebot->position, coords);
-        result = motion_create_by_position(linebot->position, &motion);
 
-        if (result == LINEBOT_OK)
+        if (motion_create_by_position(linebot->position, &motion))
         {
             linebot_port_motion_apply(motion);
             motion_release(motion);

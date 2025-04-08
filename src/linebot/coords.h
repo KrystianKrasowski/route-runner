@@ -6,7 +6,7 @@
 void
 coords_init(void);
 
-linebot_result_t
+bool
 coords_new(uint8_t const            l3,
            uint8_t const            l2,
            uint8_t const            l1,
