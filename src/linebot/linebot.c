@@ -20,6 +20,9 @@ static linebot_pool_t pool;
 static linebot_result_t
 set_mode(linebot_t const self, linebot_mode_t mode);
 
+static bool
+is_tracking_route(linebot_t const self);
+
 static uint16_t
 validate_commands(uint16_t commands);
 
@@ -64,10 +67,9 @@ linebot_apply_manual_motion(linebot_t const self, uint16_t const commands)
 {
     linebot_result_t result         = LINEBOT_OK;
     uint16_t         valid_commands = validate_commands(commands);
-    bool             is_tracking    = linebot_is_tracking_route(self);
     bool             is_break       = valid_commands & LINEBOT_COMMAND_BREAK;
 
-    if (!is_tracking || is_break)
+    if (!is_tracking_route(self) || is_break)
     {
         linebot_motion_t motion;
         result = motion_create_by_commands(valid_commands, &motion);
@@ -102,7 +104,7 @@ linebot_apply_following_motion(linebot_t const        self,
 {
     linebot_result_t result = LINEBOT_OK;
 
-    if (linebot_is_tracking_route(self) || coords_is_on_finish(coords))
+    if (is_tracking_route(self) || coords_is_on_finish(coords))
     {
         linebot_instance_t *linebot = linebot_pool_get(&pool, self);
         linebot_motion_t    motion;
@@ -153,39 +155,11 @@ linebot_timeout_route_guard(linebot_t const self)
     return result;
 }
 
-bool
-linebot_is_remote_controlled(linebot_t const self)
+linebot_mode_t
+linebot_get_mode(linebot_t const self)
 {
     linebot_instance_t *linebot = linebot_pool_get(&pool, self);
-    return mode_is_manual(linebot->mode);
-}
-
-bool
-linebot_is_route_detected(linebot_t const self)
-{
-    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
-    return mode_is_route_detected(linebot->mode);
-}
-
-bool
-linebot_is_tracking_route(linebot_t const self)
-{
-    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
-    return mode_is_tracking_route(linebot->mode);
-}
-
-bool
-linebot_is_following_route(linebot_t const self)
-{
-    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
-    return mode_is_following_route(linebot->mode);
-}
-
-bool
-linebot_is_recovering_route(linebot_t const self)
-{
-    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
-    return mode_is_recovering_route(linebot->mode);
+    return linebot->mode;
 }
 
 linebot_motion_direction_t
@@ -213,6 +187,13 @@ set_mode(linebot_t const self, linebot_mode_t mode)
     }
 
     return result;
+}
+
+static bool
+is_tracking_route(linebot_t const self)
+{
+    return linebot_get_mode(self) == LINEBOT_MODE_FOLLOWING ||
+           linebot_get_mode(self) == LINEBOT_MODE_RECOVERING;
 }
 
 static uint16_t

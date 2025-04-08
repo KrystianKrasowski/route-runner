@@ -68,20 +68,8 @@ linebot_change_mode_by_coords(linebot_t const        self,
 linebot_result_t
 linebot_timeout_route_guard(linebot_t const self);
 
-bool
-linebot_is_remote_controlled(linebot_t const self);
-
-bool
-linebot_is_route_detected(linebot_t const self);
-
-bool
-linebot_is_tracking_route(linebot_t const self);
-
-bool
-linebot_is_following_route(linebot_t const self);
-
-bool
-linebot_is_recovering_route(linebot_t const self);
+linebot_mode_t
+linebot_get_mode(linebot_t const self);
 
 linebot_motion_direction_t
 linebot_get_motion_direction(linebot_motion_t const self);
