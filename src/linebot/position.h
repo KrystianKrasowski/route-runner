@@ -9,8 +9,10 @@ typedef uint8_t position_t;
 void
 position_init(void);
 
-linebot_result_t
-position_new_instance(position_t * const handle);
+bool
+position_new(linebot_coords_t   coords,
+             uint8_t            errsize,
+             position_t * const handle);
 
 void
 position_update_coords(position_t const self, linebot_coords_t const coords);

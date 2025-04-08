@@ -15,7 +15,7 @@
                                                                                \
     static inline void name##_pool_init(name##_pool_t *pool)                   \
     {                                                                          \
-        memset(pool, 0, sizeof(type));                                         \
+        memset(pool, 0, sizeof(*pool));                                        \
     }                                                                          \
                                                                                \
     static inline bool name##_pool_alloc(name##_pool_t *pool, uint8_t *handle) \
@@ -46,7 +46,7 @@
         return instance;                                                       \
     }                                                                          \
                                                                                \
-    static inline void name##_pool_free(name##_pool_t *pool, uint8_t handle)  \
+    static inline void name##_pool_free(name##_pool_t *pool, uint8_t handle)   \
     {                                                                          \
         if (handle < size)                                                     \
         {                                                                      \

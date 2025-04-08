@@ -12,7 +12,7 @@ motion_create_by_commands(uint16_t const           commands,
 {
     linebot_result_t result = motion_new_instance(handle);
 
-    if (result == LINEBOT_SUCCESS)
+    if (result == LINEBOT_OK)
     {
         motion_set_direction(*handle, create_manual_direction(commands));
         motion_set_correction(*handle, create_manual_correction(commands));
@@ -27,7 +27,7 @@ motion_create_by_position(position_t const         position,
 {
     linebot_result_t result = motion_new_instance(handle);
 
-    if (result == LINEBOT_SUCCESS)
+    if (result == LINEBOT_OK)
     {
         int8_t correction = position_regulate(position);
         motion_set_direction(*handle, LINEBOT_MOTION_FORWARD);
@@ -42,7 +42,7 @@ motion_create_standby(linebot_motion_t * const handle)
 {
     linebot_result_t result = motion_new_instance(handle);
 
-    if (result == LINEBOT_SUCCESS)
+    if (result == LINEBOT_OK)
     {
         motion_set_direction(*handle, LINEBOT_MOTION_NONE);
         motion_set_correction(*handle, 0);

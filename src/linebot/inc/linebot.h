@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <utils/stack.h>
 
 typedef enum
 {
@@ -26,7 +25,7 @@ typedef enum
 
 typedef enum
 {
-    LINEBOT_SUCCESS,
+    LINEBOT_OK,
     LINEBOT_ERROR,
     LINEBOT_OBJECT_POOL_ERROR,
     LINEBOT_MODE_CHANGED,
@@ -46,8 +45,11 @@ typedef uint8_t linebot_motion_t;
 void
 linebot_init(void);
 
-linebot_result_t
-linebot_new_instance(linebot_t * const handle);
+bool
+linebot_new(linebot_mode_t    mode,
+            linebot_coords_t  coords,
+            uint8_t           errors_size,
+            linebot_t * const handle);
 
 linebot_result_t
 linebot_apply_manual_motion(linebot_t const self, uint16_t const commands);
@@ -81,15 +83,11 @@ linebot_is_following_route(linebot_t const self);
 bool
 linebot_is_recovering_route(linebot_t const self);
 
-bool
-linebot_motion_equals(linebot_motion_t const self,
-                      linebot_motion_t const other);
-
 linebot_motion_direction_t
-linebot_motion_get_direction(linebot_motion_t const self);
+linebot_get_motion_direction(linebot_motion_t const self);
 
 int8_t
-linebot_motion_get_correction(linebot_motion_t const self);
+linebot_get_motion_correction(linebot_motion_t const self);
 
 void
 linebot_port_control_init(void);

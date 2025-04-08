@@ -45,7 +45,7 @@ motion_new_instance(linebot_motion_t * const handle)
         pool.instances[index].direction  = LINEBOT_MOTION_NONE;
 
         *handle = index;
-        result  = LINEBOT_SUCCESS;
+        result  = LINEBOT_OK;
     }
     else
     {

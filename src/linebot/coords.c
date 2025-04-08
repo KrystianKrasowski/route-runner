@@ -2,7 +2,6 @@
 #include <string.h>
 #include <utils/pool.h>
 
-#define COORDS_POOL_SIZE          2
 #define COORDS_SIZE               6
 #define COORDS_DETECTION_TRESHOLD 3
 
@@ -47,7 +46,7 @@ coords_new(uint8_t const            l3,
             coords->coordinates[4] = r2;
             coords->coordinates[5] = r3;
 
-            result = LINEBOT_SUCCESS;
+            result = LINEBOT_OK;
         }
     }
 
@@ -82,7 +81,7 @@ coords_is_on_route(linebot_coords_t const self)
 
     if (instance = coords_pool_get(&pool, self))
     {
-        for (uint8_t i = 0; i < COORDS_POOL_SIZE; i++)
+        for (uint8_t i = 0; i < COORDS_SIZE; i++)
         {
             if (instance->coordinates[i] >= COORDS_DETECTION_TRESHOLD)
             {
