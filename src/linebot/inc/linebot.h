@@ -27,7 +27,7 @@ typedef enum
 {
     LINEBOT_OK,
     LINEBOT_ERROR,
-    LINEBOT_OBJECT_POOL_ERROR,
+    LINEBOT_ERROR_OBJECT_POOL,
     LINEBOT_MODE_CHANGED,
 } linebot_result_t;
 
@@ -77,7 +77,7 @@ linebot_change_mode_by_coords(linebot_t const        self,
                               linebot_coords_t const coords);
 
 linebot_result_t
-linebot_timeout_route_guard(linebot_t const self);
+linebot_stop(linebot_t const self);
 
 linebot_mode_t
 linebot_get_mode(linebot_t const self);

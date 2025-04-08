@@ -3,6 +3,7 @@ set(TEST_SUITE
     linebot_change_mode_by_control_test.c
     linebot_apply_following_motion_test.c
     linebot_change_mode_by_coords_test.c
+    linebot_stop_test.c
 )
 
 # extract some function here

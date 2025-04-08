@@ -90,6 +90,10 @@ linebot_apply_manual_motion(linebot_t const self, uint16_t const commands)
             linebot_port_motion_apply(motion);
             motion_release(motion);
         }
+        else
+        {
+            result = LINEBOT_ERROR_OBJECT_POOL;
+        }
     }
 
     return result;
@@ -127,6 +131,10 @@ linebot_apply_following_motion(linebot_t const        self,
             linebot_port_motion_apply(motion);
             motion_release(motion);
         }
+        else
+        {
+            result = LINEBOT_ERROR_OBJECT_POOL;
+        }
     }
 
     return result;
@@ -148,18 +156,22 @@ linebot_change_mode_by_coords(linebot_t const        self,
 }
 
 linebot_result_t
-linebot_timeout_route_guard(linebot_t const self)
+linebot_stop(linebot_t const self)
 {
     linebot_motion_t motion;
-    linebot_result_t result = motion_create_standby(&motion);
+    linebot_result_t result = LINEBOT_OK;
 
-    if (result == LINEBOT_OK)
+    if (motion_create_standby(&motion))
     {
         linebot_mode_t new_mode = LINEBOT_MODE_MANUAL;
         set_mode(self, new_mode);
         linebot_port_mode_changed(new_mode);
         linebot_port_motion_apply(motion);
         motion_release(motion);
+    }
+    else
+    {
+        result = LINEBOT_ERROR_OBJECT_POOL;
     }
 
     return result;
