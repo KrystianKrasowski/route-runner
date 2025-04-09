@@ -12,6 +12,9 @@ position_new(linebot_coords_t   coords,
              position_t * const handle);
 
 void
+position_free(position_t const self);
+
+void
 position_update_coords(position_t const self, linebot_coords_t const coords);
 
 bool

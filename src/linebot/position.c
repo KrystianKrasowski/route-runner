@@ -1,3 +1,4 @@
+
 #include "position.h"
 #include "coords.h"
 #include "position_regulator.h"
@@ -44,6 +45,14 @@ position_new(linebot_coords_t   coords,
     }
 
     return result;
+}
+
+void
+position_free(position_t const self)
+{
+    position_instance_t *instance = position_pool_get(&pool, self);
+    linebot_free_coords(instance->coords);
+    position_pool_free(&pool, self);
 }
 
 void

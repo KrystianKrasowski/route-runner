@@ -12,12 +12,12 @@ setUp(void)
 {
     linebot_port_mock_mode_init();
     linebot_port_mock_motion_init();
-    linebot_init();
 }
 
 void
 tearDown(void)
 {
+    linebot_free(linebot);
 }
 
 void

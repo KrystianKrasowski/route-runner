@@ -64,9 +64,12 @@ linebot_new(linebot_mode_t    mode,
 }
 
 void
-linebot_free(linebot_t linebot)
+linebot_free(linebot_t self)
 {
-    linebot_pool_free(&pool, linebot);
+    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
+
+    position_free(linebot->position);
+    linebot_pool_free(&pool, self);
 }
 
 linebot_result_t

@@ -4,18 +4,20 @@
 #include <unity.h>
 #include <unity_config.h>
 
-static linebot_t linebot;
+static linebot_t        linebot;
+static linebot_coords_t new_coords;
 
 void
 setUp(void)
 {
     linebot_port_mock_motion_init();
-    linebot_init();
 }
 
 void
 tearDown(void)
 {
+    linebot_free(linebot);
+    linebot_free_coords(new_coords);
 }
 
 void
@@ -25,8 +27,8 @@ should_apply_following_motion(linebot_mode_t mode, int calls)
     linebot = fixtures_linebot_acquire(mode);
 
     // when
-    linebot_coords_t coords = fixtures_coords_acquire_on_route();
-    linebot_apply_following_motion(linebot, coords);
+    new_coords = fixtures_coords_acquire(COORDS_ON_ROUTE);
+    linebot_apply_following_motion(linebot, new_coords);
 
     // then
     TEST_ASSERT_EQUAL(calls, linebot_port_mock_motion_verify_apply_calls());
@@ -39,8 +41,8 @@ should_finish_tracking(void)
     linebot = fixtures_linebot_acquire(LINEBOT_MODE_MANUAL);
 
     // when
-    linebot_coords_t coords = fixtures_coords_acquire_on_finish();
-    linebot_apply_following_motion(linebot, coords);
+    new_coords = fixtures_coords_acquire(COORDS_ON_FINISH);
+    linebot_apply_following_motion(linebot, new_coords);
 
     // then
     TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,
