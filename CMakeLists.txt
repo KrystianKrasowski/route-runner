@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(route-runner VERSION 0.7.0)
+project(route-runner VERSION 0.7.1)
 
 enable_language(C ASM)
 

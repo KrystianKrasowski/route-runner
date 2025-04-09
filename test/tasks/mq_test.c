@@ -46,9 +46,9 @@ should_dequeue_in_FIFO_order(void)
     mq_push(TOPIC, mq_create_command_message(33));
 
     // when
-    mq_message_t message1 = {};
-    mq_message_t message2 = {};
-    mq_message_t message3 = {};
+    mq_message_t message1;
+    mq_message_t message2;
+    mq_message_t message3;
 
     mq_pull(TOPIC, &message1);
     mq_pull(TOPIC, &message2);

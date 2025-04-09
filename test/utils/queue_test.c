@@ -166,8 +166,7 @@ should_enqueue_circular(void)
 {
     // given
     queue_t        queue;
-    queue_result_t result;
-    uint16_t       actual_1, actual_2, actual_3;
+    uint16_t       actual_1;
 
     uint16_t element_1 = 111;
     uint16_t element_2 = 222;
@@ -192,8 +191,6 @@ should_clear(void)
 {
     // given
     queue_t        queue;
-    queue_result_t result;
-
     uint16_t element_1 = 111;
     uint16_t element_2 = 222;
     uint16_t element_3 = 333;
