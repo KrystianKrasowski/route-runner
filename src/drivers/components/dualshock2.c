@@ -48,6 +48,6 @@ spi_on_response_received_isr(uint8_t response[])
     {
         last_command         = command;
         mq_message_t message = mq_create_command_message(command);
-        mq_push(MQ_TOPIC_REMOTE_CONTROL, message);
+        mq_push(MQ_TOPIC_REMOTE_CONTROL, &message);
     }
 }

@@ -56,7 +56,7 @@ should_successfully_push_element_on_stack(void)
     TEST_ASSERT_EQUAL(STACK_SUCCESS, result);
     TEST_ASSERT_EQUAL(0, stack_get_top_index(&stack));
 
-    uint16_t expected_element;
+    int16_t expected_element;
     stack_get_element(&stack, 0, &expected_element);
     TEST_ASSERT_EQUAL(100, expected_element);
 }
@@ -111,12 +111,12 @@ should_successfully_roll_while_pushing_on_stack(void)
     stack_push_rolling(&stack, 500);
 
     // then
-    uint16_t bottom;
+    int16_t bottom;
     stack_peek_bottom(&stack, &bottom);
     TEST_ASSERT_EQUAL(300, bottom);
 
     // when
-    uint16_t top;
+    int16_t top;
     stack_pop(&stack, &top);
     TEST_ASSERT_EQUAL(500, top);
 }
@@ -137,7 +137,7 @@ should_successfully_pop_from_stack(void)
     TEST_ASSERT_EQUAL(2, stack_get_top_index(&stack));
 
     // when
-    uint16_t last_in;
+    int16_t last_in;
     stack_result_t result = stack_pop(&stack, &last_in);
 
     // then
@@ -155,7 +155,7 @@ should_fail_while_popping_from_empty_stack(void)
     stack_init(&stack, 3);
 
     // when
-    uint16_t last_in;
+    int16_t last_in;
     stack_result_t result = stack_pop(&stack, &last_in);
 
     TEST_ASSERT_EQUAL(STACK_EMPTY, result);
@@ -172,7 +172,7 @@ should_successfully_peek_stack(void)
     stack_push(&stack, 300);
 
     // when
-    uint16_t element;
+    int16_t element;
     stack_result_t result = stack_peek(&stack, &element);
 
     // then
@@ -189,7 +189,7 @@ should_fail_while_peeking_empty_stack(void)
     stack_init(&stack, 3);
 
     // when
-    uint16_t element;
+    int16_t element;
     stack_result_t result = stack_peek(&stack, &element);
 
     // then

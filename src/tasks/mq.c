@@ -5,30 +5,25 @@
 
 #define QUEUE_TOPICS_SIZE 3
 
-static queue_t queues[QUEUE_TOPICS_SIZE];
+QUEUE_DECLARE(message, mq_message_t, MQ_SIZE)
+
+static message_queue_t topics[QUEUE_TOPICS_SIZE];
 
 mq_result_t
 mq_init(void)
 {
-    size_t queue_size = sizeof(mq_message_t);
-    
     for (uint8_t i = 0; i < QUEUE_TOPICS_SIZE; i++)
     {
-        queue_result_t result = queue_init(&queues[i], MQ_SIZE, queue_size);
-
-        if (result != QUEUE_SUCCESS)
-        {
-            return MQ_INIT_ERROR;
-        }
+        message_queue_init(&topics[i]);
     }
 
     return MQ_SUCCESS;
 }
 
 mq_result_t
-mq_push(mq_topic_t const topic, mq_message_t message)
+mq_push(mq_topic_t const topic, mq_message_t *message)
 {
-    if (queue_push(&queues[topic], &message) == QUEUE_SUCCESS)
+    if (message_queue_push(&topics[topic], message) == QUEUE_SUCCESS)
     {
         return MQ_SUCCESS;
     }
@@ -41,7 +36,7 @@ mq_push(mq_topic_t const topic, mq_message_t message)
 mq_result_t
 mq_pull(mq_topic_t const topic, mq_message_t *message)
 {
-    if (queue_pull(&queues[topic], message) == QUEUE_SUCCESS)
+    if (message_queue_pull(&topics[topic], message) == QUEUE_SUCCESS)
     {
         return MQ_SUCCESS;
     }
@@ -54,14 +49,15 @@ mq_pull(mq_topic_t const topic, mq_message_t *message)
 void
 mq_clear(mq_topic_t const topic)
 {
-    queue_clear(&queues[topic]);
+    message_queue_clear(&topics[topic]);
 }
 
 mq_message_t
 mq_create_command_message(uint16_t command)
 {
-    mq_message_t message = {.type    = MQ_MESSAGE_TYPE_COMMAND,
-                            .payload = {.command = command}};
+    mq_message_t message;
+    message.type            = MQ_MESSAGE_TYPE_COMMAND;
+    message.payload.command = command;
 
     return message;
 }
@@ -71,7 +67,6 @@ mq_create_coords_message(uint8_t coords[])
 {
     mq_message_t message;
     message.type = MQ_MESSAGE_TYPE_COORDS;
-
     memcpy(message.payload.coords, coords, sizeof(message.payload.coords));
 
     return message;

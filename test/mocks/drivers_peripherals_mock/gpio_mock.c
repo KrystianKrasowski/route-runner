@@ -40,5 +40,5 @@ void
 gpio_mock_reset(void)
 {
     memset(&mock.initialized_pins, 0, GPIO_MOCK_BUFFER_SIZE);
-    memset(&mock.states, 0, GPIO_MOCK_BUFFER_SIZE);
+    memset(&mock.states, 0, sizeof(mock.states));
 }

@@ -15,13 +15,18 @@ typedef enum
     MQ_MESSAGE_TYPE_ROUTE_GUARD_TIMEOUT,
 } mq_message_type_t;
 
-typedef union mq_message_payload
+typedef struct
+{
+    uint8_t coordinates[6];
+} mq_coordinates_t;
+
+typedef union
 {
     uint16_t command;
     uint8_t  coords[6];
 } mq_message_payload_t;
 
-typedef struct mq_message
+typedef struct
 {
     mq_message_type_t    type;
     mq_message_payload_t payload;
@@ -46,7 +51,7 @@ mq_result_t
 mq_init(void);
 
 mq_result_t
-mq_push(mq_topic_t const topic, mq_message_t message);
+mq_push(mq_topic_t const topic, mq_message_t *message);
 
 mq_result_t
 mq_pull(mq_topic_t const topic, mq_message_t *message);
