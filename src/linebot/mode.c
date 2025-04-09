@@ -1,4 +1,5 @@
 #include "mode.h"
+#include "command.h"
 #include "coords.h"
 
 bool
@@ -36,14 +37,11 @@ mode_change_by_commands(linebot_mode_t const self, uint16_t const commands)
 {
     linebot_mode_t new_mode = self;
 
-    bool is_command_follow = commands & LINEBOT_COMMAND_FOLLOW;
-    bool is_command_break  = commands & LINEBOT_COMMAND_BREAK;
-
-    if (linebot_mode_is_detected(self) && is_command_follow)
+    if (linebot_mode_is_detected(self) && command_has_follow(commands))
     {
         new_mode = LINEBOT_MODE_FOLLOWING;
     }
-    else if (linebot_mode_is_tracking(self) && is_command_break)
+    else if (linebot_mode_is_tracking(self) && command_has_break(commands))
     {
         new_mode = LINEBOT_MODE_MANUAL;
     }

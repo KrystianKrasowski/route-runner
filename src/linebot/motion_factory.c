@@ -1,5 +1,5 @@
 #include "motion_factory.h"
-#include <linebot/command.h>
+#include "command.h"
 
 static inline linebot_motion_direction_t
 create_manual_direction(uint16_t const commands);
@@ -47,11 +47,11 @@ create_manual_direction(uint16_t const commands)
 {
     linebot_motion_direction_t direction;
 
-    if (commands & LINEBOT_COMMAND_FORWARD)
+    if (command_has_forward(commands))
     {
         direction = LINEBOT_MOTION_FORWARD;
     }
-    else if (commands & LINEBOT_COMMAND_BACKWARD)
+    else if (command_has_backward(commands))
     {
         direction = LINEBOT_MOTION_BACKWARD;
     }
@@ -68,11 +68,11 @@ create_manual_correction(uint16_t const commands)
 {
     int8_t correction;
 
-    if (commands & LINEBOT_COMMAND_LEFT)
+    if (command_has_left(commands) && command_has_move(commands))
     {
         correction = -50;
     }
-    else if (commands & LINEBOT_COMMAND_RIGHT)
+    else if (command_has_right(commands) && command_has_move(commands))
     {
         correction = 50;
     }

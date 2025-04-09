@@ -6,6 +6,7 @@ add_library(linebot STATIC
     position_regulator.c
     coords.c
     mode.c
+    command.c
 )
 
 target_include_directories(linebot PUBLIC "./inc")
