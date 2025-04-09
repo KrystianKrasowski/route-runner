@@ -7,7 +7,7 @@ add_library(adapters STATIC
 
 target_link_libraries(adapters
     PRIVATE
-        core
+        linebot
         drivers_components
         drivers_peripherals
 )

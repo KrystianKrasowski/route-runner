@@ -1,19 +1,22 @@
-#include <core.h>
 #include <gpio_mock.h>
+#include <linebot/port.h>
 #include <tim3_mock.h>
 #include <unity.h>
 #include <unity_config.h>
 
+static linebot_motion_t motion;
+
 void
 setUp(void)
 {
-    core_port_motion_init();
+    linebot_port_motion_init();
     tim3_mock_reset();
 }
 
 void
 tearDown(void)
 {
+    linebot_motion_free(motion);
 }
 
 void
@@ -22,10 +25,10 @@ should_apply_duty_cycle(int8_t  correction,
                         uint8_t expected_right_duty_cycle)
 {
     // given
-    core_motion_t motion = core_motion(CORE_MOTION_FORWARD, correction);
+    linebot_motion_new(LINEBOT_MOTION_FORWARD, correction, &motion);
 
     // when
-    core_port_motion_apply(&motion);
+    linebot_port_motion_apply(motion);
 
     // then
     TEST_ASSERT_EQUAL(expected_left_duty_cycle,

@@ -1,13 +1,16 @@
 set(TEST_SUITE
-    adapter_control_dualshock2_test.c
-    adapter_motion_l293_test.c
-    adapter_mode_indicator_and_guard_test.c
+    linebot_apply_manual_motion_test.c
+    linebot_change_mode_by_control_test.c
+    linebot_apply_following_motion_test.c
+    linebot_change_mode_by_coords_test.c
+    linebot_stop_test.c
 )
 
+# extract some function here
 foreach(FILE ${TEST_SUITE})
     get_filename_component(TEST_NAME ${FILE} NAME_WE)
 
-    add_executable(${TEST_NAME} ${FILE})
+    add_executable(${TEST_NAME} fixtures.c ${FILE})
 
     target_include_directories(${TEST_NAME}
         PRIVATE
@@ -17,9 +20,8 @@ foreach(FILE ${TEST_SUITE})
     target_link_libraries(${TEST_NAME}
         PRIVATE
             linebot
-            adapters
-            drivers_components
-            drivers_peripherals_mock
+            linebot_ports_mock
+            utils
             unity
     )   
 
