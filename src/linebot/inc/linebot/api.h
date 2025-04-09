@@ -9,9 +9,7 @@
 typedef enum
 {
     LINEBOT_OK,
-    LINEBOT_ERROR,
     LINEBOT_ERROR_OBJECT_POOL,
-    LINEBOT_MODE_CHANGED,
 } linebot_result_t;
 
 typedef uint8_t linebot_t;
