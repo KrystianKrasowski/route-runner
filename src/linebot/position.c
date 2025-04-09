@@ -16,12 +16,7 @@ typedef struct
 POOL_DECLARE(position, position_instance_t, 1)
 
 static position_pool_t pool;
-
-void
-position_init(void)
-{
-    memset(&pool, 0, sizeof(pool));
-}
+static bool            pool_initialized = false;
 
 bool
 position_new(linebot_coords_t   coords,
@@ -29,6 +24,12 @@ position_new(linebot_coords_t   coords,
              position_t * const handle)
 {
     bool result = false;
+
+    if (!pool_initialized)
+    {
+        pool_initialized = true;
+        position_pool_init(&pool);
+    }
 
     if (position_pool_alloc(&pool, handle))
     {

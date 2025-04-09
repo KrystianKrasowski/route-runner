@@ -1,7 +1,7 @@
 #ifndef _LINEBOT_PORTS_MOCK_MOTION_H
 #define _LINEBOT_PORTS_MOCK_MOTION_H
 
-#include <linebot.h>
+#include <linebot/motion.h>
 
 void
 linebot_port_mock_motion_init(void);

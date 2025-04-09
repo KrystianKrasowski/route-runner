@@ -1,4 +1,4 @@
-add_subdirectory(core)
+# add_subdirectory(core)
 add_subdirectory(linebot)
 add_subdirectory(utils)
 add_subdirectory(drivers)

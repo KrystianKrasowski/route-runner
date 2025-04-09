@@ -1,22 +1,7 @@
-#ifndef _LINEBOT_COORDS_H
-#define _LINEBOT_COORDS_H
+#ifndef _COORDS_H
+#define _COORDS_H
 
-#include <linebot.h>
-
-void
-coords_init(void);
-
-bool
-coords_new(uint8_t const            l3,
-           uint8_t const            l2,
-           uint8_t const            l1,
-           uint8_t const            r1,
-           uint8_t const            r2,
-           uint8_t const            r3,
-           linebot_coords_t * const handle);
-
-void
-coords_release(linebot_coords_t const self);
+#include <linebot/coords.h>
 
 void
 coords_copy(linebot_coords_t const self, linebot_coords_t const other);

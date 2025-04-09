@@ -1,9 +1,9 @@
 #include "coords.h"
 #include "mode.h"
-#include "motion.h"
 #include "motion_factory.h"
 #include "position.h"
-#include <linebot.h>
+#include <linebot/api.h>
+#include <linebot/port.h>
 #include <string.h>
 #include <utils/pool.h>
 
@@ -16,11 +16,12 @@ typedef struct
 POOL_DECLARE(linebot, linebot_instance_t, 1)
 
 static linebot_pool_t pool;
+static bool           pool_initialized = false;
 
 static linebot_result_t
 set_mode(linebot_t const self, linebot_mode_t mode);
 
-static bool
+static inline bool
 is_tracking_route(linebot_t const self);
 
 static uint16_t
@@ -33,24 +34,6 @@ linebot_init(void)
     linebot_port_coords_init();
     linebot_port_motion_init();
     linebot_port_control_init();
-
-    memset(&pool, 0, sizeof(pool));
-
-    position_init();
-    motion_init();
-    coords_init();
-}
-
-bool
-linebot_new_coords(uint8_t const            l3,
-                   uint8_t const            l2,
-                   uint8_t const            l1,
-                   uint8_t const            r1,
-                   uint8_t const            r2,
-                   uint8_t const            r3,
-                   linebot_coords_t * const handle)
-{
-    return coords_new(l3, l2, l1, r1, r2, r3, handle);
 }
 
 bool
@@ -63,6 +46,12 @@ linebot_new(linebot_mode_t    mode,
     position_t position;
     bool       position_created = position_new(coords, errsize, &position);
 
+    if (!pool_initialized)
+    {
+        pool_initialized = true;
+        linebot_pool_init(&pool);
+    }
+
     if (linebot_pool_alloc(&pool, handle) && position_created)
     {
         linebot_instance_t *instance = linebot_pool_get(&pool, *handle);
@@ -72,6 +61,12 @@ linebot_new(linebot_mode_t    mode,
     }
 
     return linebot_created;
+}
+
+void
+linebot_free(linebot_t linebot)
+{
+    linebot_pool_free(&pool, linebot);
 }
 
 linebot_result_t
@@ -88,7 +83,7 @@ linebot_apply_manual_motion(linebot_t const self, uint16_t const commands)
         if (motion_create_by_commands(valid_commands, &motion))
         {
             linebot_port_motion_apply(motion);
-            motion_release(motion);
+            linebot_motion_free(motion);
         }
         else
         {
@@ -129,7 +124,7 @@ linebot_apply_following_motion(linebot_t const        self,
         if (motion_create_by_position(linebot->position, &motion))
         {
             linebot_port_motion_apply(motion);
-            motion_release(motion);
+            linebot_motion_free(motion);
         }
         else
         {
@@ -167,7 +162,7 @@ linebot_stop(linebot_t const self)
         set_mode(self, new_mode);
         linebot_port_mode_changed(new_mode);
         linebot_port_motion_apply(motion);
-        motion_release(motion);
+        linebot_motion_free(motion);
     }
     else
     {
@@ -182,18 +177,6 @@ linebot_get_mode(linebot_t const self)
 {
     linebot_instance_t *linebot = linebot_pool_get(&pool, self);
     return linebot->mode;
-}
-
-linebot_motion_direction_t
-linebot_get_motion_direction(linebot_motion_t const self)
-{
-    return motion_get_direction(self);
-}
-
-int8_t
-linebot_get_motion_correction(linebot_motion_t const self)
-{
-    return motion_get_correction(self);
 }
 
 static linebot_result_t
@@ -211,11 +194,11 @@ set_mode(linebot_t const self, linebot_mode_t mode)
     return result;
 }
 
-static bool
+static inline bool
 is_tracking_route(linebot_t const self)
 {
-    return linebot_get_mode(self) == LINEBOT_MODE_FOLLOWING ||
-           linebot_get_mode(self) == LINEBOT_MODE_RECOVERING;
+    linebot_mode_t mode = linebot_get_mode(self);
+    return linebot_mode_is_tracking(mode);
 }
 
 static uint16_t

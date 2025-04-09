@@ -1,13 +1,10 @@
-#ifndef _LINEBOT_POSITION_H
-#define _LINEBOT_POSITION_H
+#ifndef _POSITION_H
+#define _POSITION_H
 
-#include <linebot.h>
+#include <linebot/coords.h>
 #include <stdint.h>
 
 typedef uint8_t position_t;
-
-void
-position_init(void);
 
 bool
 position_new(linebot_coords_t   coords,

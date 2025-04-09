@@ -16,7 +16,7 @@ foreach(FILE ${TEST_SUITE})
 
     target_link_libraries(${TEST_NAME}
         PRIVATE
-            core
+            linebot
             adapters
             drivers_components
             drivers_peripherals_mock

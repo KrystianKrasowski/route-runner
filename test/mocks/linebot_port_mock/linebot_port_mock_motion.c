@@ -18,8 +18,8 @@ linebot_port_motion_init(void)
 void
 linebot_port_motion_apply(linebot_motion_t motion)
 {
-    mock.applied_direction  = linebot_get_motion_direction(motion);
-    mock.applied_correction = linebot_get_motion_correction(motion);
+    mock.applied_direction  = linebot_motion_get_direction(motion);
+    mock.applied_correction = linebot_motion_get_correction(motion);
     mock.calls++;
 }
 

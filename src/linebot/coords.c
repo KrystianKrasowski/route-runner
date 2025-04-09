@@ -10,28 +10,29 @@ typedef struct
     uint8_t coordinates[COORDS_SIZE];
 } coords_instance_t;
 
-static int8_t const COORDS_WEIGHTS[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
-
 POOL_DECLARE(coords, coords_instance_t, 2)
 
-static coords_pool_t pool;
+static int8_t const COORDS_WEIGHTS[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
 
-void
-coords_init(void)
-{
-    coords_pool_init(&pool);
-}
+static coords_pool_t pool;
+static bool          pool_initialized;
 
 bool
-coords_new(uint8_t const            l3,
-           uint8_t const            l2,
-           uint8_t const            l1,
-           uint8_t const            r1,
-           uint8_t const            r2,
-           uint8_t const            r3,
-           linebot_coords_t * const handle)
+linebot_new_coords(uint8_t const            l3,
+                   uint8_t const            l2,
+                   uint8_t const            l1,
+                   uint8_t const            r1,
+                   uint8_t const            r2,
+                   uint8_t const            r3,
+                   linebot_coords_t * const handle)
 {
     bool result = false;
+
+    if (!pool_initialized)
+    {
+        pool_initialized = true;
+        coords_pool_init(&pool);
+    }
 
     if (coords_pool_alloc(&pool, handle))
     {
@@ -53,7 +54,7 @@ coords_new(uint8_t const            l3,
 }
 
 void
-coords_release(linebot_coords_t const self)
+linebot_free_coords(linebot_coords_t const self)
 {
     coords_pool_free(&pool, self);
 }
@@ -113,7 +114,8 @@ coords_is_on_finish(linebot_coords_t const self)
 void
 coords_compute_mass_center(linebot_coords_t const self, int8_t *value)
 {
-    int16_t            sum, weight_sum = 0;
+    int16_t            sum        = 0;
+    int16_t            weight_sum = 0;
     coords_instance_t *instance;
 
     if ((instance = coords_pool_get(&pool, self)))

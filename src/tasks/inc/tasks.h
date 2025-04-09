@@ -1,12 +1,12 @@
 #ifndef _SEQUENCER_H
 #define _SEQUENCER_H
 
-#include <core/vehicle.h>
+#include <linebot/api.h>
 
 void
 tasks_init(void);
 
 void
-tasks_run(core_vehicle_t *vehicle);
+tasks_run(linebot_t linebot);
 
 #endif

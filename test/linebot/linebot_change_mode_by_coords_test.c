@@ -1,5 +1,5 @@
 #include "fixtures.h"
-#include <linebot.h>
+#include <linebot/api.h>
 #include <linebot_port_mock_mode.h>
 #include <unity.h>
 #include <unity_config.h>

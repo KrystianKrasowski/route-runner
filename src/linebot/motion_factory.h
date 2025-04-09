@@ -1,8 +1,8 @@
 #ifndef _LINEBOT_MOTION_FACTORY_H
 #define _LINEBOT_MOTION_FACTORY_H
 
-#include "motion.h"
-#include <linebot.h>
+#include "position.h"
+#include <linebot/motion.h>
 
 bool
 motion_create_by_commands(uint16_t const           commands,

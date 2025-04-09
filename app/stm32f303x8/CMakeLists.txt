@@ -11,7 +11,7 @@ add_executable(${MAIN_EXECUTABLE}
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
         tasks
-        core
+        linebot
         adapters
         drivers_components
         drivers_stm32f303x8

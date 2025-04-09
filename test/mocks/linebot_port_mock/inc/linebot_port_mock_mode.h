@@ -1,7 +1,7 @@
 #ifndef _LINEBOT_PORTS_MOCK_MODE_H
 #define _LINEBOT_PORTS_MOCK_MODE_H
 
-#include <linebot.h>
+#include <linebot/port.h>
 
 void
 linebot_port_mock_mode_init(void);
