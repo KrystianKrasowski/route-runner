@@ -1,22 +1,8 @@
 #ifndef _QUEUE_H
 #define _QUEUE_H
 
-#include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
-
-#define QUEUE_MAX_SIZE         5
-#define QUEUE_MAX_CAPACITY     (QUEUE_MAX_SIZE + 1)
-#define QUEUE_ELEMENT_MAX_SIZE 100
-
-typedef struct queue
-{
-    uint8_t elements[QUEUE_MAX_CAPACITY][QUEUE_ELEMENT_MAX_SIZE];
-    uint8_t capacity;
-    size_t  element_size;
-    uint8_t head;
-    uint8_t tail;
-} queue_t;
+#include <string.h>
 
 typedef enum
 {
@@ -27,22 +13,64 @@ typedef enum
     QUEUE_EMPTY,
 } queue_result_t;
 
-queue_result_t
-queue_init(queue_t *self, uint8_t capacity, size_t element_size);
-
-queue_result_t
-queue_push(queue_t *self, void *element);
-
-queue_result_t
-queue_pull(queue_t *self, void *element);
-
-void
-queue_clear(queue_t *self);
-
-uint8_t
-queue_get_head(queue_t *self);
-
-uint8_t
-queue_get_tail(queue_t *self);
+#define QUEUE_DECLARE(name, type, size)                                        \
+    typedef struct                                                             \
+    {                                                                          \
+        type    elements[size + 1];                                            \
+        uint8_t capacity;                                                      \
+        uint8_t head;                                                          \
+        uint8_t tail;                                                          \
+    } name##_queue_t;                                                          \
+                                                                               \
+    static inline void name##_queue_init(name##_queue_t *self)                 \
+    {                                                                          \
+        memset(self->elements, 0, sizeof(self->elements));                     \
+        self->capacity = size + 1;                                             \
+        self->head     = 0;                                                    \
+        self->tail     = 0;                                                    \
+    }                                                                          \
+                                                                               \
+    static inline queue_result_t name##_queue_push(name##_queue_t *self,       \
+                                                   type           *element)    \
+    {                                                                          \
+        queue_result_t result = QUEUE_SUCCESS;                                 \
+                                                                               \
+        uint8_t next = (self->tail + 1) % self->capacity;                      \
+                                                                               \
+        if (next == self->head)                                                \
+        {                                                                      \
+            result = QUEUE_FULL;                                               \
+        }                                                                      \
+        else                                                                   \
+        {                                                                      \
+            self->elements[self->tail] = *element;                             \
+            self->tail                 = next;                                 \
+        }                                                                      \
+                                                                               \
+        return result;                                                         \
+    }                                                                          \
+                                                                               \
+    static inline queue_result_t name##_queue_pull(name##_queue_t *self,       \
+                                                   type           *element)    \
+    {                                                                          \
+        queue_result_t result = QUEUE_SUCCESS;                                 \
+                                                                               \
+        if (self->head == self->tail)                                          \
+        {                                                                      \
+            result = QUEUE_EMPTY;                                              \
+        }                                                                      \
+        else                                                                   \
+        {                                                                      \
+            *element   = self->elements[self->head];                           \
+            self->head = (self->head + 1) % self->capacity;                    \
+        }                                                                      \
+                                                                               \
+        return result;                                                         \
+    }                                                                          \
+                                                                               \
+    static inline void name##_queue_clear(name##_queue_t *self)                \
+    {                                                                          \
+        name##_queue_init(self);                                               \
+    }
 
 #endif

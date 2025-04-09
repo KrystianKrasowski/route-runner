@@ -52,5 +52,5 @@ adc_sequence_complete_isr(uint16_t value[])
     coords[5] = r3 / 10;
 
     mq_message_t message = mq_create_coords_message(coords);
-    mq_push(MQ_TOPIC_COORDS, message);
+    mq_push(MQ_TOPIC_COORDS, &message);
 }
