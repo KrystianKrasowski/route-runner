@@ -14,9 +14,9 @@ static motion_pool_t pool;
 static bool          pool_initialized = false;
 
 bool
-linebot_motion_new(linebot_motion_direction_t direction,
-                   int8_t                     correction,
-                   linebot_motion_t * const   handle)
+linebot_motion_new(linebot_motion_direction_t const direction,
+                   int8_t const                     correction,
+                   linebot_motion_t * const         handle)
 {
     bool result = false;
 

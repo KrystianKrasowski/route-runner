@@ -15,7 +15,7 @@ typedef uint8_t linebot_motion_t;
 
 bool
 linebot_motion_new(linebot_motion_direction_t const direction,
-                   int8_t                           correction,
+                   int8_t const                     correction,
                    linebot_motion_t * const         handle);
 
 void
