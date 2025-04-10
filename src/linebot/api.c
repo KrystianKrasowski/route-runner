@@ -16,17 +16,14 @@ typedef struct
 
 POOL_DECLARE(linebot, linebot_instance_t, 1)
 
-
 static linebot_pool_t pool;
 static bool           pool_initialized = false;
-
 
 static bool
 set_mode(linebot_t const self, linebot_mode_t mode);
 
 static inline bool
 is_tracking_route(linebot_t const self);
-
 
 void
 linebot_init(void)

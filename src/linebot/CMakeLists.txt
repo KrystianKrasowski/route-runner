@@ -1,5 +1,5 @@
 add_library(linebot STATIC 
-    linebot.c
+    api.c
     motion.c
     motion_factory.c
     position.c
@@ -8,6 +8,8 @@ add_library(linebot STATIC
     mode.c
     command.c
 )
+
+set_property(TARGET linebot PROPERTY C_STANDARD 23)
 
 target_include_directories(linebot PUBLIC "./inc")
 

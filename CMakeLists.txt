@@ -4,11 +4,11 @@ project(route-runner VERSION 0.7.2)
 
 enable_language(C ASM)
 
+include(${CMAKE_SOURCE_DIR}/cmake/compile-common-options.cmake)
 include(FetchContent)
 
 # For some reason this has to be defined in a top level CMakeLists.txt
 if(TARGET_ARCH STREQUAL "test")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections")
     include(CTest)
     enable_testing()
     include(${CMAKE_SOURCE_DIR}/cmake/dependencies-test.cmake)
