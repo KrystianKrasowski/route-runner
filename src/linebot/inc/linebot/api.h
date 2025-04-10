@@ -45,7 +45,7 @@ linebot_init(void);
  * @param errors_size Size of the measured route drift errors
  * @param handle Pointer to the handle of Linebot context object
  * @return true Linebot object created successfully
- * @return false Linebot object cannot be created
+ * @return false Linebot object pool failure
  */
 bool
 linebot_new(linebot_mode_t    mode,
@@ -54,7 +54,7 @@ linebot_new(linebot_mode_t    mode,
             linebot_t * const handle);
 
 /**
- * @brief Releases a Linebot object by a given handle
+ * @brief Return linebot object to the pool
  *
  * @param linebot Handle to a linebot object
  */
