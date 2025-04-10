@@ -44,39 +44,53 @@ void
 // cppcheck-suppress unusedFunction
 linebot_free(linebot_t self)
 {
-    linebot_instance_t const *linebot = linebot_pool_get(&pool, self);
+    linebot_instance_t const *instance;
 
-    position_free(linebot->position);
-    linebot_pool_free(&pool, self);
+    if ((instance = linebot_pool_get(&pool, self)))
+    {
+        position_free(instance->position);
+        linebot_pool_free(&pool, self);
+    }
 }
 
 linebot_mode_t
 linebot_get_mode(linebot_t const self)
 {
-    linebot_instance_t const *linebot = linebot_pool_get(&pool, self);
-    return linebot->mode;
+    linebot_instance_t const *instance = linebot_pool_get(&pool, self);
+    return instance->mode;
 }
 
 bool
 linebot_update_mode(linebot_t const self, linebot_mode_t mode)
 {
-    bool                result  = false;
-    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
+    bool                result   = false;
+    linebot_instance_t *instance = linebot_pool_get(&pool, self);
 
-    if (linebot->mode != mode)
+    if (instance->mode != mode)
     {
-        linebot->mode = mode;
-        result        = true;
+        instance->mode = mode;
+        result         = true;
     }
 
     return result;
 }
 
-position_t
-linebot_get_position(linebot_t const self)
+linebot_result_t
+linebot_get_position(linebot_t const self, position_t * const position)
 {
-    linebot_instance_t const *linebot = linebot_pool_get(&pool, self);
-    return linebot->position;
+    linebot_result_t          result = LINEBOT_OK;
+    linebot_instance_t const *instance;
+
+    if ((instance = linebot_pool_get(&pool, self)))
+    {
+        *position = instance->position;
+    }
+    else
+    {
+        result = LINEBOT_ERROR_OBJECT_POOL;
+    }
+
+    return result;
 }
 
 bool

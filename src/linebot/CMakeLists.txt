@@ -1,5 +1,9 @@
 add_library(linebot STATIC 
     api.c
+    api_apply_manual_motion.c
+    api_change_mode.c
+    api_apply_tracking_motion.c
+    api_stop.c
     motion.c
     motion_factory.c
     position.c

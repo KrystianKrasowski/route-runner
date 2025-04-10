@@ -4,8 +4,8 @@
 #include "position.h"
 #include <linebot/api.h>
 
-position_t
-linebot_get_position(linebot_t const self);
+linebot_result_t
+linebot_get_position(linebot_t const self, position_t * const position);
 
 bool
 linebot_update_mode(linebot_t const self, linebot_mode_t mode);
