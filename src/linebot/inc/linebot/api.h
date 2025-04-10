@@ -40,12 +40,12 @@ linebot_init(void);
 /**
  * @brief Produces a handle to a Linebot context object.
  *
- * @param mode Starting mode
- * @param coords Starting coords
- * @param errors_size Size of the measured route drift errors
- * @param handle Pointer to the handle of Linebot context object
- * @return true Linebot object created successfully
- * @return false Linebot object pool failure
+ * @param mode starting mode
+ * @param coords starting coords
+ * @param errors_size size of the measured route drift errors
+ * @param handle pointer to the handle of linebot instance
+ * @return true linebot object successfully instantiated
+ * @return false linebot object instantiation failed
  */
 bool
 linebot_new(linebot_mode_t    mode,
@@ -54,9 +54,9 @@ linebot_new(linebot_mode_t    mode,
             linebot_t * const handle);
 
 /**
- * @brief Return linebot object to the pool
+ * @brief Release linebot instance
  *
- * @param linebot Handle to a linebot object
+ * @param linebot handle to a linebot instance
  */
 void
 linebot_free(linebot_t linebot);
@@ -64,7 +64,7 @@ linebot_free(linebot_t linebot);
 /**
  * @brief Returns current Linebot mode.
  *
- * @param self Handle to a linebot object
+ * @param self handle to a linebot instance
  * @return linebot_mode_t
  */
 linebot_mode_t
@@ -77,7 +77,7 @@ linebot_get_mode(linebot_t const self);
  * modes. If the vehicle is in tracking mode the manual motion will not be
  * applied, unless the break command occurs.
  *
- * @param self Handle to a linebot object
+ * @param self handle to a linebot instance
  * @param commands The commands given by external control
  * @return linebot_result_t
  */
@@ -91,7 +91,7 @@ linebot_apply_manual_motion(linebot_t const self, uint16_t const commands);
  * * `detected` -> `following` (a subset of `tracking`)
  * * `tracking` -> `manual`
  *
- * @param self Handle to a linebot object
+ * @param self handle to a linebot instance
  * @param commands The commands given by external control
  * @return linebot_result_t
  */
@@ -104,7 +104,7 @@ linebot_change_mode_by_control(linebot_t const self, uint16_t const commands);
  * Note that the tracking motion is applied only for tracking mode, unless
  * linebot meets the finish position.
  *
- * @param self Handle to a linebot object
+ * @param self handle to a linebot instance
  * @param coords The route coordinates by external source
  * @return linebot_result_t
  */
@@ -122,7 +122,7 @@ linebot_apply_tracking_motion(linebot_t const        self,
  * * `following` -> `recovering`
  * * `recovering` -> `following`
  *
- * @param self Handle to a linebot object
+ * @param self handle to a linebot instance
  * @param coords The route coordinates by external source
  * @return linebot_result_t
  */
@@ -133,7 +133,7 @@ linebot_change_mode_by_coords(linebot_t const        self,
 /**
  * @brief Stops linebot immediately.
  *
- * @param self
+ * @param self handle to a linebot instance
  * @return linebot_result_t
  */
 linebot_result_t
