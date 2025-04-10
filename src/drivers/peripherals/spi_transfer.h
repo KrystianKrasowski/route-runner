@@ -44,7 +44,7 @@ spi_transfer_result_t
 spi_transfer_put_rx(spi_transfer_t volatile *self, uint8_t byte);
 
 uint8_t
-spi_transfer_get_size(spi_transfer_t volatile *self);
+spi_transfer_get_size(spi_transfer_t volatile const *self);
 
 void
 spi_transfer_get_response(spi_transfer_t volatile *self, uint8_t response[]);

@@ -1,4 +1,4 @@
-#include "utils/stack.h"
+#include <utils/stack.h>
 #include <string.h>
 
 stack_t
@@ -18,21 +18,7 @@ stack(uint8_t size)
 }
 
 stack_result_t
-stack_init(stack_t *self, uint8_t size)
-{
-    if (size > STACK_MAX_SIZE)
-    {
-        return STACK_SIZE_EXCEEDED;
-    }
-
-    memset(self->elements, 0, sizeof(self->elements));
-    self->size = size;
-    self->top  = -1;
-
-    return STACK_SUCCESS;
-}
-
-stack_result_t
+// cppcheck-suppress unusedFunction
 stack_pop(stack_t *self, int16_t *element)
 {
     if (stack_is_empty(self))
@@ -46,7 +32,7 @@ stack_pop(stack_t *self, int16_t *element)
 }
 
 stack_result_t
-stack_peek(stack_t *self, int16_t *element)
+stack_peek(stack_t const *self, int16_t *element)
 {
     if (stack_is_empty(self))
     {
@@ -59,19 +45,7 @@ stack_peek(stack_t *self, int16_t *element)
 }
 
 stack_result_t
-stack_peek_bottom(stack_t *self, int16_t *element)
-{
-    if (stack_is_empty(self))
-    {
-        return STACK_EMPTY;
-    }
-
-    *element = self->elements[0];
-
-    return STACK_SUCCESS;
-}
-
-stack_result_t
+// cppcheck-suppress unusedFunction
 stack_push(stack_t *self, int16_t element)
 {
     if (self->top >= self->size - 1)
@@ -103,37 +77,36 @@ stack_push_rolling(stack_t *self, int16_t element)
 }
 
 bool
-stack_is_empty(stack_t *self)
+// cppcheck-suppress staticFunction
+stack_is_empty(stack_t const *self)
 {
     return self->top == -1;
 }
 
 bool
-stack_is_full(stack_t *self)
+// cppcheck-suppress unusedFunction
+stack_is_full(stack_t const *self)
 {
     return self->top == self->size - 1;
 }
 
-int8_t
-stack_get_top_index(stack_t *self)
-{
-    return self->top;
-}
-
 uint8_t
-stack_get_size(stack_t *self)
+// cppcheck-suppress unusedFunction
+stack_get_size(stack_t const *self)
 {
     return self->size;
 }
 
 uint8_t
-stack_get_length(stack_t *self)
+// cppcheck-suppress unusedFunction
+stack_get_length(stack_t const *self)
 {
     return self->top + 1;
 }
 
 stack_result_t
-stack_get_element(stack_t *self, uint8_t index, int16_t *element)
+// cppcheck-suppress unusedFunction
+stack_get_element(stack_t const *self, uint8_t index, int16_t *element)
 {
     if (index > self->top)
     {
@@ -146,7 +119,7 @@ stack_get_element(stack_t *self, uint8_t index, int16_t *element)
 }
 
 int16_t
-stack_sum(stack_t *self)
+stack_sum(stack_t const *self)
 {
     int16_t sum = 0;
 

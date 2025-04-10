@@ -91,6 +91,7 @@ spi_transmittion_start(spi_request_t *request)
 }
 
 void
+// cppcheck-suppress unusedFunction
 SPI1_IRQHandler(void)
 {
     if (SPI1->SR & SPI_SR_TXE)
@@ -105,7 +106,7 @@ SPI1_IRQHandler(void)
 }
 
 __attribute__((weak)) void
-spi_on_response_received_isr(uint8_t response[])
+spi_on_response_received_isr(uint8_t const response[])
 {
     (void)response;
 }

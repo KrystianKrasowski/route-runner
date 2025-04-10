@@ -24,6 +24,7 @@ tim2_ch1_init(void)
 }
 
 void
+// cppcheck-suppress unusedFunction
 TIM2_IRQHandler(void)
 {
     if (TIM2->SR & TIM_SR_CC1IF)

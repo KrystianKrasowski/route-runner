@@ -15,7 +15,7 @@ void
 linebot_port_coords_init(void);
 
 linebot_coords_t
-linebot_port_coords_map(uint8_t *raw);
+linebot_port_coords_map(uint8_t const *raw);
 
 void
 linebot_port_motion_init(void);

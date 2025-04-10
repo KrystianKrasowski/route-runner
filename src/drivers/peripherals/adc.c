@@ -63,6 +63,7 @@ adc_on(void)
 }
 
 void
+// cppcheck-suppress unusedFunction
 adc_off(void)
 {
     tim6_stop();
@@ -78,12 +79,14 @@ adc_start(void)
 }
 
 void
+// cppcheck-suppress staticFunction
 adc_stop(void)
 {
     ADC1->CR |= ADC_CR_ADSTP;
 }
 
 void
+// cppcheck-suppress unusedFunction
 DMA1_Channel1_IRQHandler(void)
 {
     if (DMA1->ISR & DMA_ISR_TCIF1)
@@ -94,7 +97,7 @@ DMA1_Channel1_IRQHandler(void)
 }
 
 __attribute__((weak)) void
-adc_sequence_complete_isr(uint16_t value[])
+adc_sequence_complete_isr(uint16_t const value[])
 {
     (void)value;
 }
@@ -185,6 +188,7 @@ enable_advreg(void)
 }
 
 static inline void
+// cppcheck-suppress unusedFunction
 advreg_disable()
 {
     ADC1->CR &= ~(ADC_CR_ADVREGEN_1 | ADC_CR_ADVREGEN_0);

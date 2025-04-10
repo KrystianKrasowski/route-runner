@@ -21,7 +21,7 @@ static bool            pool_initialized = false;
 
 bool
 position_new(linebot_coords_t   coords,
-             uint8_t            errors_size,
+             uint8_t            errsize,
              position_t * const handle)
 {
     bool result = false;
@@ -39,7 +39,7 @@ position_new(linebot_coords_t   coords,
         if (position)
         {
             position->coords = coords;
-            position->errors = stack(errors_size);
+            position->errors = stack(errsize);
             result           = true;
         }
     }

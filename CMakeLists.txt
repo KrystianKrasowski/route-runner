@@ -5,6 +5,7 @@ project(route-runner VERSION 0.7.2)
 enable_language(C ASM)
 
 include(${CMAKE_SOURCE_DIR}/cmake/compile-common-options.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 include(FetchContent)
 
 # For some reason this has to be defined in a top level CMakeLists.txt

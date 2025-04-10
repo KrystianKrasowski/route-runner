@@ -62,9 +62,10 @@ linebot_new(linebot_mode_t    mode,
 }
 
 void
+// cppcheck-suppress unusedFunction
 linebot_free(linebot_t self)
 {
-    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
+    linebot_instance_t const *linebot = linebot_pool_get(&pool, self);
 
     position_free(linebot->position);
     linebot_pool_free(&pool, self);
@@ -115,7 +116,7 @@ linebot_apply_following_motion(linebot_t const        self,
 
     if (is_tracking_route(self) || coords_is_on_finish(coords))
     {
-        linebot_instance_t *linebot = linebot_pool_get(&pool, self);
+        linebot_instance_t const *linebot = linebot_pool_get(&pool, self);
         linebot_motion_t    motion;
 
         position_update_coords(linebot->position, coords);
@@ -138,7 +139,7 @@ linebot_result_t
 linebot_change_mode_by_coords(linebot_t const        self,
                               linebot_coords_t const coords)
 {
-    linebot_instance_t *linebot  = linebot_pool_get(&pool, self);
+    linebot_instance_t const *linebot  = linebot_pool_get(&pool, self);
     linebot_mode_t      new_mode = mode_change_by_coords(linebot->mode, coords);
 
     if (set_mode(self, new_mode))
@@ -172,9 +173,10 @@ linebot_stop(linebot_t const self)
 }
 
 linebot_mode_t
+// cppcheck-suppress staticFunction
 linebot_get_mode(linebot_t const self)
 {
-    linebot_instance_t *linebot = linebot_pool_get(&pool, self);
+    linebot_instance_t const *linebot = linebot_pool_get(&pool, self);
     return linebot->mode;
 }
 
