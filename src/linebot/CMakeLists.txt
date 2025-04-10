@@ -6,7 +6,8 @@ add_library(linebot STATIC
     position_regulator.c
     coords.c
     mode.c
-    command.c
+    "command.c"
+    linebot.c
 )
 
 set_property(TARGET linebot PROPERTY C_STANDARD 11)
