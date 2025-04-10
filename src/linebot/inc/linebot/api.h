@@ -1,8 +1,6 @@
 /**
  * @brief The public API for controlling line following robot.
  *
- * @copyright Copyright (c) 2025
- *
  */
 
 #ifndef _LINEBOT_API_H

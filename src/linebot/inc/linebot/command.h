@@ -1,6 +1,18 @@
+/**
+ * @brief Linebot available commands
+ * 
+ */
+
 #ifndef _LINEBOT_COMMAND_H
 #define _LINEBOT_COMMAND_H
 
+/**
+ * @brief Linebot available commands
+ * 
+ * The commands are usually passed as uint16_t value which can be bitwise tested
+ * using these enumeration constants
+ * 
+ */
 typedef enum
 {
     LINEBOT_COMMAND_NONE     = 0,
