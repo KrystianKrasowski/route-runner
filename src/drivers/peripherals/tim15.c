@@ -43,6 +43,7 @@ tim15_stop()
 }
 
 void
+// cppcheck-suppress unusedFunction
 TIM15_IRQHandler(void)
 {
     if (TIM15->SR & TIM_SR_UIF)

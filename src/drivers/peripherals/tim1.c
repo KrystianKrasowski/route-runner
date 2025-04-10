@@ -65,6 +65,7 @@ tim1_ch1_set_toggles(uint8_t count)
 }
 
 void
+// cppcheck-suppress unusedFunction
 TIM1_CC_IRQHandler(void)
 {
     if (TIM1->SR & TIM_SR_CC1IF)

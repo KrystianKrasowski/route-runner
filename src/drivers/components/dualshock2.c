@@ -1,9 +1,9 @@
 #include "dualshock2.h"
-#include "gpio.h"
-#include "spi.h"
-#include "tim2.h"
+#include <gpio.h>
 #include <mq.h>
+#include <spi.h>
 #include <stdint.h>
+#include <tim2.h>
 
 static spi_request_t request = {
     .payload       = {0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
@@ -30,7 +30,7 @@ tim2_ch1_compare_isr(void)
 }
 
 void
-spi_on_response_received_isr(uint8_t response[])
+spi_on_response_received_isr(uint8_t const response[])
 {
     uint16_t command;
 

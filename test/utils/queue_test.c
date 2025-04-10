@@ -143,10 +143,11 @@ should_enqueue_circular(void)
 
     // when
     result = dummy_queue_push(&queue, &element_4);
+    TEST_ASSERT_EQUAL(QUEUE_FULL, result);
 
     // when
     dummy_queue_pull(&queue, &actual_1);
-    result = dummy_queue_push(&queue, &element_2);
+    result = dummy_queue_push(&queue, &element_4);
 
     // then
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);

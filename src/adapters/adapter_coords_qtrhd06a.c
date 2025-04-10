@@ -11,7 +11,7 @@ linebot_port_coords_init(void)
 }
 
 linebot_coords_t
-linebot_port_coords_map(uint8_t *raw)
+linebot_port_coords_map(uint8_t const *raw)
 {
     linebot_coords_t coords;
 

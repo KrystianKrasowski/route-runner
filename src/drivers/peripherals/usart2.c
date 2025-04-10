@@ -8,6 +8,7 @@ static uint16_t
 compute_usart_bd(uint32_t periphery_clock, uint32_t baud_rate);
 
 int
+// cppcheck-suppress unusedFunction
 __io_putchar(int ch)
 {
     usart2_tx_write(ch);
@@ -41,6 +42,7 @@ usart2_tx_init(void)
 }
 
 void
+// cppcheck-suppress staticFunction
 usart2_tx_write(int chr)
 {
     // make sure the transmit data register is empty

@@ -1,57 +1,85 @@
 # Route Runner
 
+## Table of contents
+
+- [Overview](#overview)
+- [Usage](#usage)
+    - [Command referene](#command-reference)
+    - [Dualshock 2 command mapping](#command---dualshock2-mapping)
+    - [Modes reference](#modes-reference)
+    - [LED modes mapping](#modes---led-indicator-mapping)
+- [Hardware](#hardware)
+    - [Power supply](#power-supply)
+    - [GPIO usage summary](#gpio-usage-summary)
+    - [Other peripherals usage summary](#other-peripheral-usage-summary)
+    - [Electrical schematics](#electrical-schematics)
+- [Software](#software)
+    - [Build and flash](#build-and-flash)
+    - [Application architecture](#application-architecture)
+
+## Overview
 Route runner is a name of the line following robot project. It is built using the following components:
 * STM32 NUCLEO-F303 board as a microcontroller
-* 2 DC motors driven by simple L293D component
+* 2 DC motors driven by simple L293D driver
 * Pololu's QTR-HD-06A line sensor
 * Dualshock2 remote control
-* 1 status indicator LED
+* 1 mode indicator LED
 * Two LM2596 step-down voltage converters with the following settings:
-    * 6V for the motors
+    * 7V for the motors
     * 5V for the MCU and L293D logic
 
 For the power details visit the [Power supply](#power-supply) section
 
 ## Usage
-* Turn on the device using ON/OFF switch. State indicator displays MANUAL CONTROL state.
-* Place the vehicle on the black line so that it aligns with its vertical axis. State indicator displays LINE DETECTED state. 
-* Start line following by issuing START FOLLOWING command. State indicator displays LINE FOLLOWING state.
+* Turn on the device using ON/OFF switch. Mode indicator displays MANUAL CONTROL mode.
+* Place the vehicle or simply run it on the black line. Mode indicator displays DETECTED state. 
+* Start line following by issuing START TRACKING command. Mode indicator displays TRACKING state.
 
 ### Command reference
-* MANUAL CONTROL - control vehicle freely with remote control
-* START FOLLOWING - vehicle follows the line with PID control
+* FORWARD - move forward
+* BACKWARD - move backward
+* RIGHT - turn right
+* LEFT - turn left
+* FOLLOW - start tracking the route
+* BREAK - stop stracking
 
-### Command - dualshock2 remote mapping
-* MANUAL CONTROL - CIRCLE
-* START FOLLOWING - CROSS
+### Command - dualshock2 mapping
+* FORWARD - R2
+* BACKWARD - L2
+* RIGHT - R2 or L2 + RIGHT
+* LEFT - R2 or L2 + LEFT
+* FOLLOW - CROSS
+* BREAK - CIRCLE
 
-### State reference
-* MANUAL CONTROL
-* LINE DETECTED
-* LINE FOLLOWING
+### Modes reference
+* MANUAL - vehicle can be manually controlled
+* DETECTED - vehicle sees the route beneath
+* TRACKING - either FOLLOWING or RECOVERING
+* FOLLOWING - vehicle sees and follows the route
+* RECOVERING - vehicle does not see but still tries to get back on the route
 
-### State - LED indicator mapping
-* MANUAL CONTROL - single short blink per second
-* LINE DETECTED - LED constant on
-* LINE FOLLOWING - 4 short blinks per second
-* ERROR - single long blink per second
+> Note that the RECOVERING mode lasts only for 500ms unless route runner gets back on the route. After that time the vehicle will stop tracking.
+
+### Modes - LED indicator mapping
+* MANUAL - single short blink per second
+* DETECTED - LED constant on
+* TRACKING - 4 short blinks per second
 
 short blink is a sequence `on -> off` with 250ms duration
-long blink is a sequence `on -> off` with 1s duration
 
-## Technical info
+## Hardware
 * The line sensor is positioned at 4mm above the surface and the calibration is hardcoded.
 
 
 ### Power supply
 The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage equal to 7.4V (3.7V each). The power buses are distributed as follows:
-* 6V power bus provided by one of the LM2596 voltage converter. Used by L293D for DC motor inputs.
+* 7V power bus provided by one of the LM2596 voltage converter. Used by L293D for DC motor inputs. Note that due to quite high voltage drops on L293D the effective voltage for DC motors whould oscilate around ~5V. This is not impressive and is the area to implrove in the further project iterations.
 * 5V power bus provided by the second LM2596 voltage converter. Used by L293D logic and the MCU
 * 3.3V power bus provided by MCU. Used by the Dualshock2 receiver and state indicator
 * 3.3V analog power bus provided by MCU. Used by line sensor
 * Common GND bus for all components
 
-### Pin usage summary
+### GPIO usage summary
 * Motion:
     * **PB0** (D3) - PWM (tim3, ch3) for left motor
     * PB6 (D5) - A1 for right motor
@@ -74,20 +102,23 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
 * Status indicator
     * **PA8** (D9)
 
-### Peripherals usage summary
+### Other peripheral usage summary
 * TIM2 channel 1 - timer for (dualshock2) MANUAL CONTROL communication trigger
 * TIM3 channel 4 - timer for PWM signal for left motor (PB1)
 * TIM3 channel 3 - timer for PWM signal for right motor (PB0)
 * TIM1 channel 1 - timer for (LED) status indicator (by toggle on compare)
 * TIM6 - timer trigger for ADC conversion by TRGO, every 1ms
 * TIM15 - off route guard
+* ADC in dual mode with DMA controller for conversions readings
 
 Pins in **bold** are unchangeable. *Italic* pin change may implicate other changes.
 
-### Electrical wiring diagram
+### Electrical schematics
 ![schematic](./doc/img/schematic.png)
 
-## Development
+## Software
+
+### Build and flash
 
 ```bash
 # build
@@ -97,6 +128,17 @@ cmake --build build/Debug
 
 # flash
 st-flash write build/Debug/app/route-runner.bin 0x08000000
-
-
 ```
+
+### Application architecture
+
+#### Big picture
+![bit-picture](./doc/img/architecture-1.png)
+
+Software architecture is inspired by the onion pattern. The main goal of this approach was to be abe to embed the domain into any other MCU platform, wherher to use RTOS or bare metal, with or without STM32 HAL, etc. Any infrastructure change must not imply the domain logic changes.
+
+#### Library dependencies diagram
+![lib-dependency](./doc/img/architecture-2.png)
+
+#### Components diagram
+![components](./doc/img//architecture-3.png)

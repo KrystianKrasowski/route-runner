@@ -69,13 +69,15 @@ l293_disable(l293_t *self)
 }
 
 void
+// cppcheck-suppress unusedFunction
 l293_stop_running(l293_t *self)
 {
     l293_disable(self);
     l293_set_stop(self);
 }
 
-void
+void 
+// cppcheck-suppress unusedFunction
 l293_stop(l293_t *self)
 {
     l293_set_stop(self);

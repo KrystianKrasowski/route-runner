@@ -22,15 +22,15 @@ void
 tim3_enable(void);
 
 void
-tim3_pwm_init(tim3_pwm_t *self);
+tim3_pwm_init(tim3_pwm_t const *self);
 
 void
-tim3_pwm_run(tim3_pwm_t *self);
+tim3_pwm_run(tim3_pwm_t const *self);
 
 void
-tim3_pwm_stop(tim3_pwm_t *self);
+tim3_pwm_stop(tim3_pwm_t const *self);
 
 void
-tim3_pwm_set_duty_cycle(tim3_pwm_t *self, uint8_t duty_cycle);
+tim3_pwm_set_duty_cycle(tim3_pwm_t const *self, uint8_t duty_cycle);
 
 #endif

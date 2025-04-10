@@ -20,6 +20,6 @@ void
 spi_transmittion_start(spi_request_t *request);
 
 __attribute__((weak)) void
-spi_on_response_received_isr(uint8_t response[]);
+spi_on_response_received_isr(uint8_t const response[]);
 
 #endif

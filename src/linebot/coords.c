@@ -62,8 +62,8 @@ linebot_free_coords(linebot_coords_t const self)
 void
 coords_copy(linebot_coords_t const self, linebot_coords_t const other)
 {
-    coords_instance_t *instance_self  = coords_pool_get(&pool, self);
-    coords_instance_t *instance_other = coords_pool_get(&pool, other);
+    coords_instance_t       *instance_self  = coords_pool_get(&pool, self);
+    coords_instance_t const *instance_other = coords_pool_get(&pool, other);
 
     if (instance_self && instance_other)
     {
@@ -76,8 +76,8 @@ coords_copy(linebot_coords_t const self, linebot_coords_t const other)
 bool
 coords_is_on_route(linebot_coords_t const self)
 {
-    bool               on_route = false;
-    coords_instance_t *instance;
+    bool                     on_route = false;
+    coords_instance_t const *instance;
 
     if ((instance = coords_pool_get(&pool, self)))
     {
@@ -97,8 +97,8 @@ coords_is_on_route(linebot_coords_t const self)
 bool
 coords_is_on_finish(linebot_coords_t const self)
 {
-    bool               on_finish = false;
-    coords_instance_t *instance  = coords_pool_get(&pool, self);
+    bool                     on_finish = false;
+    coords_instance_t const *instance  = coords_pool_get(&pool, self);
 
     if (instance)
     {
@@ -114,12 +114,13 @@ coords_is_on_finish(linebot_coords_t const self)
 void
 coords_compute_mass_center(linebot_coords_t const self, int8_t *value)
 {
-    int16_t            sum        = 0;
-    int16_t            weight_sum = 0;
-    coords_instance_t *instance;
+    coords_instance_t const *instance;
 
     if ((instance = coords_pool_get(&pool, self)))
     {
+        int16_t sum        = 0;
+        int16_t weight_sum = 0;
+
         for (uint8_t i = 0; i < COORDS_SIZE; i++)
         {
             sum += instance->coordinates[i];

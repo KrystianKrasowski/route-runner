@@ -46,13 +46,13 @@ linebot_motion_free(linebot_motion_t const self)
 linebot_motion_direction_t
 linebot_motion_get_direction(linebot_motion_t const self)
 {
-    motion_instance_t *motion = motion_pool_get(&pool, self);
+    motion_instance_t const *motion = motion_pool_get(&pool, self);
     return motion->direction;
 }
 
 int8_t
 linebot_motion_get_correction(linebot_motion_t const self)
 {
-    motion_instance_t *motion = motion_pool_get(&pool, self);
+    motion_instance_t const *motion = motion_pool_get(&pool, self);
     return motion->correction;
 }
