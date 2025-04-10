@@ -7,7 +7,7 @@ add_library(drivers_components STATIC
     qtrhd06a.c
 )
 
-set_property(TARGET drivers_components PROPERTY C_STANDARD 23)
+set_property(TARGET drivers_components PROPERTY C_STANDARD 11)
 
 target_include_directories(drivers_components PUBLIC "./")
 

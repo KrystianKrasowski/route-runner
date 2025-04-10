@@ -9,7 +9,7 @@ add_library(linebot STATIC
     command.c
 )
 
-set_property(TARGET linebot PROPERTY C_STANDARD 23)
+set_property(TARGET linebot PROPERTY C_STANDARD 11)
 
 target_include_directories(linebot PUBLIC "./inc")
 

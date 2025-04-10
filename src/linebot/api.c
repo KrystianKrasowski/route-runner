@@ -109,7 +109,7 @@ linebot_change_mode_by_control(linebot_t const self, uint16_t const commands)
 }
 
 linebot_result_t
-linebot_apply_following_motion(linebot_t const        self,
+linebot_apply_tracking_motion(linebot_t const        self,
                                linebot_coords_t const coords)
 {
     linebot_result_t result = LINEBOT_OK;

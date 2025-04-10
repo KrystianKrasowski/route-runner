@@ -1,6 +1,6 @@
 add_library(tasks STATIC tasks.c mq.c)
 
-set_property(TARGET tasks PROPERTY C_STANDARD 23)
+set_property(TARGET tasks PROPERTY C_STANDARD 11)
 
 target_include_directories(tasks PUBLIC "./inc")
 
