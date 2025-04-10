@@ -1,7 +1,6 @@
 #include <linebot/api.h>
 #include <linebot/port.h>
 #include <mq.h>
-#include <string.h>
 #include <tasks.h>
 
 static void
@@ -31,7 +30,6 @@ static void
 handle_control(linebot_t linebot)
 {
     mq_message_t message;
-    memset(&message, 0, sizeof(message));
 
     if (mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message) == MQ_SUCCESS)
     {
@@ -47,7 +45,6 @@ static void
 handle_coordinates(linebot_t linebot)
 {
     mq_message_t message;
-    memset(&message, 0, sizeof(message));
 
     if (mq_pull(MQ_TOPIC_COORDS, &message) == MQ_SUCCESS)
     {
