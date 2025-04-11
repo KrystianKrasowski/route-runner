@@ -8,7 +8,8 @@
 typedef enum
 {
     LINEBOT_OK,
-    LINEBOT_ERROR_OBJECT_POOL,
+    LINEBOT_ERR_POOL_EXCEEDED,
+    LINEBOT_ERR_NULL_POINTER,
 } linebot_result_t;
 
 #endif

@@ -16,8 +16,8 @@ setUp(void)
 void
 tearDown(void)
 {
-    linebot_free(linebot);
-    linebot_free_coords(new_coords);
+    linebot_release(linebot);
+    linebot_coords_release(new_coords);
 }
 
 void

@@ -17,7 +17,7 @@ setUp(void)
 void
 tearDown(void)
 {
-    linebot_free(linebot);
+    linebot_release(linebot);
 }
 
 void

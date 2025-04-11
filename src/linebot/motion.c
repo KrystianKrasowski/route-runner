@@ -1,4 +1,4 @@
-#include <linebot/motion.h>
+#include "motion.h"
 #include <string.h>
 #include <utils/pool.h>
 
@@ -11,34 +11,35 @@ typedef struct
 POOL_DECLARE(motion, motion_instance_t, 1)
 
 static motion_pool_t pool;
-static bool          pool_initialized = false;
 
-bool
-linebot_motion_new(linebot_motion_direction_t const direction,
-                   int8_t const                     correction,
-                   linebot_motion_t * const         handle)
+void
+motion_init(void)
 {
-    bool result = false;
+    motion_pool_init(&pool);
+}
 
-    if (!pool_initialized)
-    {
-        pool_initialized = true;
-        motion_pool_init(&pool);
-    }
+linebot_result_t
+linebot_motion_acquire(linebot_motion_direction_t const direction,
+                       int8_t const                     correction,
+                       linebot_motion_t * const         handle)
+{
+    linebot_result_t result = LINEBOT_ERR_POOL_EXCEEDED;
 
     if (motion_pool_alloc(&pool, handle))
     {
         motion_instance_t *motion = motion_pool_get(&pool, *handle);
-        motion->direction         = direction;
-        motion->correction        = correction;
-        result                    = true;
+
+        motion->direction  = direction;
+        motion->correction = correction;
+
+        result = true;
     }
 
     return result;
 }
 
 void
-linebot_motion_free(linebot_motion_t const self)
+linebot_motion_release(linebot_motion_t const self)
 {
     motion_pool_free(&pool, self);
 }

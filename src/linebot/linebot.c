@@ -1,4 +1,7 @@
 #include "linebot.h"
+#include "coords.h"
+#include "motion.h"
+#include "position.h"
 #include <linebot/api.h>
 #include <utils/pool.h>
 
@@ -11,52 +14,59 @@ typedef struct
 POOL_DECLARE(linebot, linebot_instance_t, 1)
 
 static linebot_pool_t pool;
-static bool           pool_initialized = false;
 
 void
 linebot_init(void)
 {
-    // TODO implement library initialization:
-    //  - init object pools
-    //  - instantiate linebot context
+    coords_init();
+    position_init();
+    motion_init();
+    linebot_pool_init(&pool);
 }
 
-bool
-linebot_new(linebot_mode_t    mode,
-            linebot_coords_t  coords,
-            uint8_t           errsize,
-            linebot_t * const handle)
+linebot_result_t
+linebot_acquire(linebot_mode_t    mode,
+                linebot_coords_t  coords,
+                uint8_t           errsize,
+                linebot_t * const handle)
 {
-    bool       linebot_created = false;
-    position_t position;
-    bool       position_created = position_new(coords, errsize, &position);
+    position_t       position;
+    linebot_result_t result = position_acquire(coords, errsize, &position);
 
-    if (!pool_initialized)
-    {
-        pool_initialized = true;
-        linebot_pool_init(&pool);
-    }
-
-    if (linebot_pool_alloc(&pool, handle) && position_created)
+    if (linebot_pool_alloc(&pool, handle) && LINEBOT_OK == result)
     {
         linebot_instance_t *instance = linebot_pool_get(&pool, *handle);
-        instance->mode               = mode;
-        instance->position           = position;
-        linebot_created              = true;
+
+        instance->mode     = mode;
+        instance->position = position;
     }
 
-    return linebot_created;
+    return result;
+}
+
+linebot_result_t
+linebot_acquire_default(linebot_t * const handle)
+{
+    linebot_coords_t coords;
+    linebot_result_t result = linebot_coords_acquire(0, 0, 0, 0, 0, 0, &coords);
+
+    if (LINEBOT_OK == result)
+    {
+        result = linebot_acquire(LINEBOT_MODE_MANUAL, coords, 20, handle);
+    }
+
+    return result;
 }
 
 void
 // cppcheck-suppress unusedFunction
-linebot_free(linebot_t self)
+linebot_release(linebot_t self)
 {
     linebot_instance_t const *instance;
 
     if ((instance = linebot_pool_get(&pool, self)))
     {
-        position_free(instance->position);
+        position_release(instance->position);
         linebot_pool_free(&pool, self);
     }
 }
@@ -95,7 +105,7 @@ linebot_get_position(linebot_t const self, position_t * const position)
     }
     else
     {
-        result = LINEBOT_ERROR_OBJECT_POOL;
+        result = LINEBOT_ERR_POOL_EXCEEDED;
     }
 
     return result;

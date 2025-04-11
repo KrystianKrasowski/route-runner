@@ -6,13 +6,16 @@
 
 typedef uint8_t position_t;
 
-bool
-position_new(linebot_coords_t   coords,
+void
+position_init(void);
+
+linebot_result_t
+position_acquire(linebot_coords_t   coords,
              uint8_t            errsize,
              position_t * const handle);
 
 void
-position_free(position_t const self);
+position_release(position_t const self);
 
 void
 position_update_coords(position_t const self, linebot_coords_t const coords);

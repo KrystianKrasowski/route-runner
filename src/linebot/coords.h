@@ -4,6 +4,9 @@
 #include <linebot/coords.h>
 
 void
+coords_init(void);
+
+void
 coords_copy(linebot_coords_t const self, linebot_coords_t const other);
 
 bool

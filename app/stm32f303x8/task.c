@@ -33,7 +33,7 @@ task_handle_route_tracking(linebot_t const linebot)
         (void)adapters_coords_map(raw_coords, &coords);
         (void)linebot_change_mode_by_coords(linebot, coords);
         (void)linebot_apply_tracking_motion(linebot, coords);
-        (void)linebot_free_coords(coords);
+        (void)linebot_coords_release(coords);
     }
 }
 

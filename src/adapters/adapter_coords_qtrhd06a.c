@@ -14,7 +14,7 @@ adapters_coords_init(void)
 linebot_result_t
 adapters_coords_map(uint8_t const *raw, linebot_coords_t *coords)
 {
-    return linebot_new_coords(normalize(raw[0]),
+    return linebot_coords_acquire(normalize(raw[0]),
                               normalize(raw[1]),
                               normalize(raw[2]),
                               normalize(raw[3]),

@@ -29,11 +29,11 @@ create_and_apply_motion(uint16_t const commands)
     if (motion_create_by_commands(commands, &motion))
     {
         linebot_port_motion_apply(motion);
-        linebot_motion_free(motion);
+        linebot_motion_release(motion);
     }
     else
     {
-        result = LINEBOT_ERROR_OBJECT_POOL;
+        result = LINEBOT_ERR_POOL_EXCEEDED;
     }
 
     return result;

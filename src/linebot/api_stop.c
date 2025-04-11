@@ -17,11 +17,11 @@ linebot_stop(linebot_t const self)
         linebot_update_mode(self, new_mode);
         linebot_port_mode_changed(new_mode);
         linebot_port_motion_apply(motion);
-        linebot_motion_free(motion);
+        linebot_motion_release(motion);
     }
     else
     {
-        result = LINEBOT_ERROR_OBJECT_POOL;
+        result = LINEBOT_ERR_POOL_EXCEEDED;
     }
 
     return result;

@@ -53,11 +53,11 @@ create_and_apply_motion(position_t const position)
     if (motion_create_by_position(position, &motion))
     {
         linebot_port_motion_apply(motion);
-        linebot_motion_free(motion);
+        linebot_motion_release(motion);
     }
     else
     {
-        result = LINEBOT_ERROR_OBJECT_POOL;
+        result = LINEBOT_ERR_POOL_EXCEEDED;
     }
 
     return result;

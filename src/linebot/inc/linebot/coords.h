@@ -31,10 +31,10 @@ typedef uint8_t linebot_coords_t;
  * @param handle pointer to the handle of coords object
  *
  * @return LINEBOT_OK coords object successfully instantiated
- * @return LINEBOT_ERROR_OBJECT_POOL coords object instantiation failed
+ * @return LINEBOT_ERR_POOL_EXCEEDED coords object instantiation failed
  */
 linebot_result_t
-linebot_new_coords(uint8_t const            l3,
+linebot_coords_acquire(uint8_t const            l3,
                    uint8_t const            l2,
                    uint8_t const            l1,
                    uint8_t const            r1,
@@ -48,6 +48,6 @@ linebot_new_coords(uint8_t const            l3,
  * @param coords handle to a coords instance
  */
 void
-linebot_free_coords(linebot_coords_t const coords);
+linebot_coords_release(linebot_coords_t const coords);
 
 #endif

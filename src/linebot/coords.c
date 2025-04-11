@@ -15,46 +15,43 @@ POOL_DECLARE(coords, coords_instance_t, 2)
 static int8_t const COORDS_WEIGHTS[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
 
 static coords_pool_t pool;
-static bool          pool_initialized;
+
+void
+coords_init(void)
+{
+    coords_pool_init(&pool);
+}
 
 linebot_result_t
-linebot_new_coords(uint8_t const            l3,
-                   uint8_t const            l2,
-                   uint8_t const            l1,
-                   uint8_t const            r1,
-                   uint8_t const            r2,
-                   uint8_t const            r3,
-                   linebot_coords_t * const handle)
+linebot_coords_acquire(uint8_t const            l3,
+                       uint8_t const            l2,
+                       uint8_t const            l1,
+                       uint8_t const            r1,
+                       uint8_t const            r2,
+                       uint8_t const            r3,
+                       linebot_coords_t * const handle)
 {
-    bool result = false;
-
-    if (!pool_initialized)
-    {
-        pool_initialized = true;
-        coords_pool_init(&pool);
-    }
+    linebot_result_t result = LINEBOT_ERR_POOL_EXCEEDED;
 
     if (coords_pool_alloc(&pool, handle))
     {
         coords_instance_t *coords = coords_pool_get(&pool, *handle);
 
-        if (coords)
-        {
-            coords->coordinates[0] = l3;
-            coords->coordinates[1] = l2;
-            coords->coordinates[2] = l1;
-            coords->coordinates[3] = r1;
-            coords->coordinates[4] = r2;
-            coords->coordinates[5] = r3;
-            result                 = true;
-        }
+        coords->coordinates[0] = l3;
+        coords->coordinates[1] = l2;
+        coords->coordinates[2] = l1;
+        coords->coordinates[3] = r1;
+        coords->coordinates[4] = r2;
+        coords->coordinates[5] = r3;
+
+        result = LINEBOT_OK;
     }
 
     return result;
 }
 
 void
-linebot_free_coords(linebot_coords_t const self)
+linebot_coords_release(linebot_coords_t const self)
 {
     coords_pool_free(&pool, self);
 }

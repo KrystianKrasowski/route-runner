@@ -6,6 +6,7 @@
 #ifndef _LINEBOT_MOTION_H
 #define _LINEBOT_MOTION_H
 
+#include <linebot/result.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -35,13 +36,13 @@ typedef uint8_t linebot_motion_t;
  * @param direction direction in which linebot moves
  * @param correction steering value
  * @param handle pointed to the handle of motion object
- * @return true motion object successfully instantiated
- * @return false motion object instantiation falied
+ * @return LINEBOT_OK motion object successfully instantiated
+ * @return LINEBOT_ERR_POOL_EXCEEDED motion object instantiation falied
  */
-bool
-linebot_motion_new(linebot_motion_direction_t const direction,
-                   int8_t const                     correction,
-                   linebot_motion_t * const         handle);
+linebot_result_t
+linebot_motion_acquire(linebot_motion_direction_t const direction,
+                       int8_t const                     correction,
+                       linebot_motion_t * const         handle);
 
 /**
  * @brief Release motion instance
@@ -49,20 +50,20 @@ linebot_motion_new(linebot_motion_direction_t const direction,
  * @param motion handle to a motion instance
  */
 void
-linebot_motion_free(linebot_motion_t motion);
+linebot_motion_release(linebot_motion_t motion);
 
 /**
  * @brief Returns motion direction
- * 
+ *
  * @param self handle to a motion instance
- * @return linebot_motion_direction_t 
+ * @return linebot_motion_direction_t
  */
 linebot_motion_direction_t
 linebot_motion_get_direction(linebot_motion_t const self);
 
 /**
  * @brief Returns motion correction
- * 
+ *
  * @param self handle to a motion instance
  * @return int8_t steering value
  */
