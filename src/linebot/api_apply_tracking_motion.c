@@ -11,7 +11,7 @@ update_position_coordinates(linebot_t const        self,
                             position_t * const     position);
 
 static inline linebot_result_t
-create_and_apply_motion(linebot_coords_t const coords);
+create_and_apply_motion(position_t const position);
 
 linebot_result_t
 linebot_apply_tracking_motion(linebot_t const        self,

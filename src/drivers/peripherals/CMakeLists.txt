@@ -42,7 +42,7 @@ if(TARGET_ARCH STREQUAL "stm32f303x8")
             drivers_peripherals
         PRIVATE
             utils
-            tasks
+            mq
             stm32f303x8
     )
 endif()

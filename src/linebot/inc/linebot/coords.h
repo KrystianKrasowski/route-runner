@@ -6,6 +6,7 @@
 #ifndef _LINEBOT_COORDS_H
 #define _LINEBOT_COORDS_H
 
+#include "result.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -28,10 +29,11 @@ typedef uint8_t linebot_coords_t;
  * @param r2 middle detection on the right side of the route
  * @param r3 furthest from center detection on the right side of the route
  * @param handle pointer to the handle of coords object
- * @return true coords object successfully instantiated
- * @return false coords object instantiation failed
+ *
+ * @return LINEBOT_OK coords object successfully instantiated
+ * @return LINEBOT_ERROR_OBJECT_POOL coords object instantiation failed
  */
-bool
+linebot_result_t
 linebot_new_coords(uint8_t const            l3,
                    uint8_t const            l2,
                    uint8_t const            l1,

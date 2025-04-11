@@ -1,3 +1,4 @@
+#include <adapters.h>
 #include <linebot/port.h>
 #include <tim1.h>
 #include <tim15.h>
@@ -18,7 +19,7 @@ static inline void
 stop_route_guard(linebot_mode_t const mode);
 
 void
-linebot_port_mode_init(void)
+adapters_mode_init(void)
 {
     tim1_ch1_init();
     tim1_ch1_set_toggles(2);

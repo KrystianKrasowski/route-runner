@@ -10,16 +10,7 @@
 #include "coords.h"
 #include "mode.h"
 #include "motion.h"
-
-/**
- * @brief The result returned by api use cases
- *
- */
-typedef enum
-{
-    LINEBOT_OK,
-    LINEBOT_ERROR_OBJECT_POOL,
-} linebot_result_t;
+#include "result.h"
 
 /**
  * @brief Linebot API context object handle.

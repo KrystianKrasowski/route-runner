@@ -1,3 +1,4 @@
+#include <adapters.h>
 #include <gpio_mock.h>
 #include <linebot/port.h>
 #include <tim3_mock.h>
@@ -9,7 +10,7 @@ static linebot_motion_t motion;
 void
 setUp(void)
 {
-    linebot_port_motion_init();
+    adapters_motion_init();
     tim3_mock_reset();
 }
 

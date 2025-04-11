@@ -1,3 +1,4 @@
+#include <adapters.h>
 #include <dualshock2.h>
 #include <linebot/command.h>
 #include <linebot/port.h>
@@ -7,7 +8,6 @@
 void
 setUp(void)
 {
-    linebot_port_control_init();
 }
 
 void
@@ -19,7 +19,7 @@ void
 should_map_dualshock2(uint16_t dualshock2_command, uint16_t expected_command)
 {
     // when
-    uint16_t actual = linebot_port_control_command_map(dualshock2_command);
+    uint16_t actual = adapters_control_map(dualshock2_command);
 
     // then
     TEST_ASSERT_EQUAL(expected_command, actual);

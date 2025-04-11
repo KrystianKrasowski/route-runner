@@ -13,6 +13,14 @@ POOL_DECLARE(linebot, linebot_instance_t, 1)
 static linebot_pool_t pool;
 static bool           pool_initialized = false;
 
+void
+linebot_init(void)
+{
+    // TODO implement library initialization:
+    //  - init object pools
+    //  - instantiate linebot context
+}
+
 bool
 linebot_new(linebot_mode_t    mode,
             linebot_coords_t  coords,

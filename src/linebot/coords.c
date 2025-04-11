@@ -17,7 +17,7 @@ static int8_t const COORDS_WEIGHTS[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
 static coords_pool_t pool;
 static bool          pool_initialized;
 
-bool
+linebot_result_t
 linebot_new_coords(uint8_t const            l3,
                    uint8_t const            l2,
                    uint8_t const            l1,

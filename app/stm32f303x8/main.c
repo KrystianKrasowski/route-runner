@@ -1,12 +1,21 @@
+#include "task.h"
+#include <adapters.h>
 #include <linebot/api.h>
+#include <mq.h>
 #include <sysclock.h>
-#include <tasks.h>
 
 int
 main(void)
 {
     sysclock_init();
-    tasks_init();
+
+    mq_init();
+
+    adapters_mode_init();
+    adapters_coords_init();
+    adapters_control_init();
+    adapters_motion_init();
+
     linebot_init();
 
     linebot_coords_t coords;
@@ -17,6 +26,8 @@ main(void)
 
     while (1)
     {
-        tasks_run(linebot);
+        task_handle_manual_control(linebot);
+        task_handle_route_tracking(linebot);
+        task_handle_immediate_stop(linebot);
     }
 }

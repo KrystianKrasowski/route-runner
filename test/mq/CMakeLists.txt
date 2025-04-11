@@ -14,7 +14,7 @@ foreach(FILE ${TEST_SUITE})
 
     target_link_libraries(${TEST_NAME}
         PRIVATE
-            tasks
+            mq
             unity
     )
     add_test(${TEST_NAME} ${TEST_NAME})

@@ -19,7 +19,7 @@ foreach(FILE ${TEST_SUITE})
             drivers_components
             drivers_peripherals_mock
             unity
-            tasks
+            mq
     )   
 
     add_test(${TEST_NAME} ${TEST_NAME})
