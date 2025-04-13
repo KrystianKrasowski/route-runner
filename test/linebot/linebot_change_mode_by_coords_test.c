@@ -30,11 +30,13 @@ should_change_mode(linebot_mode_t         current_mode,
     new_coords = fixtures_coords_acquire(coords_type);
 
     // when
+    linebot_mode_t actual_mode;
     linebot_change_mode_by_coords(linebot, new_coords);
+    linebot_get_mode(linebot, &actual_mode);
 
     // then
     linebot_mode_t applied_mode = linebot_port_mock_mode_get_changed_mode();
-    TEST_ASSERT_EQUAL(expected_mode, linebot_get_mode(linebot));
+    TEST_ASSERT_EQUAL(expected_mode, actual_mode);
     TEST_ASSERT_EQUAL(expected_mode, applied_mode);
     TEST_ASSERT_EQUAL(1, linebot_port_mock_mode_verify_changed_calls());
 }
@@ -47,10 +49,12 @@ should_keep_mode(linebot_mode_t mode, fixtures_coords_type_t coords_type)
     new_coords = fixtures_coords_acquire(coords_type);
 
     // when
+    linebot_mode_t actual_mode;
     linebot_change_mode_by_coords(linebot, new_coords);
+    linebot_get_mode(linebot, &actual_mode);
 
     // then
-    TEST_ASSERT_EQUAL(mode, linebot_get_mode(linebot));
+    TEST_ASSERT_EQUAL(mode, actual_mode);
     TEST_ASSERT_EQUAL(0, linebot_port_mock_mode_verify_changed_calls());
 }
 

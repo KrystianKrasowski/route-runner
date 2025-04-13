@@ -6,6 +6,9 @@
 void
 coords_init(void);
 
+bool
+coords_is_valid(linebot_coords_t const self, linebot_result_t * const result);
+
 void
 coords_copy(linebot_coords_t const self, linebot_coords_t const other);
 

@@ -3,7 +3,7 @@
 #include <usart2.h>
 
 void
-linebot_port_motion_init(void)
+adapters_motion_init(void)
 {
     usart2_tx_init();
 }

@@ -27,11 +27,13 @@ should_change_mode(linebot_mode_t current_mode,
     linebot = fixtures_linebot_acquire(current_mode);
 
     // when
+    linebot_mode_t actual_mode;
     linebot_change_mode_by_control(linebot, commands);
+    linebot_get_mode(linebot, &actual_mode);
 
     // then
     TEST_ASSERT_EQUAL(expected_mode, linebot_port_mock_mode_get_changed_mode());
-    TEST_ASSERT_EQUAL(expected_mode, linebot_get_mode(linebot));
+    TEST_ASSERT_EQUAL(expected_mode, actual_mode);
 }
 
 void
@@ -41,11 +43,13 @@ should_keep_mode(linebot_mode_t current_mode, uint16_t commands)
     linebot = fixtures_linebot_acquire(current_mode);
 
     // when
+    linebot_mode_t actual_mode;
     linebot_change_mode_by_control(linebot, commands);
+    linebot_get_mode(linebot, &actual_mode);
 
     // then
     TEST_ASSERT_EQUAL(0, linebot_port_mock_mode_verify_changed_calls());
-    TEST_ASSERT_EQUAL(current_mode, linebot_get_mode(linebot));
+    TEST_ASSERT_EQUAL(current_mode, actual_mode);
 }
 
 int

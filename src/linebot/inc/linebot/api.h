@@ -34,7 +34,7 @@ linebot_init(void);
  * @param coords starting coords
  * @param errors_size size of the measured route drift errors
  * @param handle pointer to the handle of linebot instance
- * 
+ *
  * @return LINEBOT_OK linebot object successfully instantiated
  * @return LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
  */
@@ -48,7 +48,7 @@ linebot_acquire(linebot_mode_t    mode,
  * @brief Produces a handle to a Linebot context object with default values.
  *
  * @param handle pointer to the handle of linebot instance
- * 
+ *
  * @return LINEBOT_OK linebot object successfully instantiated
  * @return LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
  */
@@ -61,17 +61,19 @@ linebot_acquire_default(linebot_t * const handle);
  * @param linebot handle to a linebot instance
  */
 void
-linebot_release(linebot_t linebot);
+linebot_release(linebot_t const linebot);
 
 /**
  * @brief Returns current Linebot mode.
  *
  * @param self handle to a linebot instance
- * 
- * @return linebot_mode_t
+ * @param mode pointer to a mode value
+ *
+ * @return LINEBOT_OK
+ * @return LINEBOT_ERR_NULL_POINTER
  */
-linebot_mode_t
-linebot_get_mode(linebot_t const self);
+linebot_result_t
+linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
 
 /**
  * @brief Apply new motion to the given commands.
@@ -82,7 +84,7 @@ linebot_get_mode(linebot_t const self);
  *
  * @param self handle to a linebot instance
  * @param commands The commands given by external control
- * 
+ *
  * @return linebot_result_t
  */
 linebot_result_t
@@ -97,7 +99,7 @@ linebot_apply_manual_motion(linebot_t const self, uint16_t const commands);
  *
  * @param self handle to a linebot instance
  * @param commands The commands given by external control
- * 
+ *
  * @return linebot_result_t
  */
 linebot_result_t
@@ -111,7 +113,7 @@ linebot_change_mode_by_control(linebot_t const self, uint16_t const commands);
  *
  * @param self handle to a linebot instance
  * @param coords The route coordinates by external source
- * 
+ *
  * @return linebot_result_t
  */
 linebot_result_t
@@ -130,7 +132,7 @@ linebot_apply_tracking_motion(linebot_t const        self,
  *
  * @param self handle to a linebot instance
  * @param coords The route coordinates by external source
- * 
+ *
  * @return linebot_result_t
  */
 linebot_result_t
@@ -141,7 +143,7 @@ linebot_change_mode_by_coords(linebot_t const        self,
  * @brief Stops linebot immediately.
  *
  * @param self handle to a linebot instance
- * 
+ *
  * @return linebot_result_t
  */
 linebot_result_t

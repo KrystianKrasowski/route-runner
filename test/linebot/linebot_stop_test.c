@@ -27,12 +27,14 @@ should_stop(linebot_mode_t mode)
     linebot = fixtures_linebot_acquire(mode);
 
     // when
+    linebot_mode_t actual_mode;
     linebot_stop(linebot);
+    linebot_get_mode(linebot, &actual_mode);
 
     // then
-    linebot_mode_t applied = linebot_port_mock_mode_get_changed_mode();
-    TEST_ASSERT_EQUAL(LINEBOT_MODE_MANUAL, linebot_get_mode(linebot));
-    TEST_ASSERT_EQUAL(LINEBOT_MODE_MANUAL, applied);
+    linebot_mode_t applied_mode = linebot_port_mock_mode_get_changed_mode();
+    TEST_ASSERT_EQUAL(LINEBOT_MODE_MANUAL, actual_mode);
+    TEST_ASSERT_EQUAL(LINEBOT_MODE_MANUAL, applied_mode);
     TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_get_correction());
     TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,
                       linebot_port_mock_motion_get_direction());

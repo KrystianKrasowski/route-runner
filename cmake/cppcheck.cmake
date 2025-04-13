@@ -10,6 +10,7 @@ if(CPPCHECK_EXECUTABLE)
                 --check-level=exhaustive
                 --inline-suppr
                 ${CMAKE_SOURCE_DIR}/app/stm32f303x8/main.c
+                ${CMAKE_SOURCE_DIR}/app/stm32f303x8/task.c
                 ${CMAKE_SOURCE_DIR}/src
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Running cppcheck on project sources..."

@@ -1,8 +1,6 @@
-add_library(linebot STATIC 
-    api_apply_manual_motion.c
-    api_change_mode.c
-    api_apply_tracking_motion.c
-    api_stop.c
+add_library(linebot STATIC
+    api.c
+    context.c
     motion.c
     motion_factory.c
     position.c
@@ -10,7 +8,6 @@ add_library(linebot STATIC
     coords.c
     mode.c
     "command.c"
-    linebot.c
 )
 
 set_property(TARGET linebot PROPERTY C_STANDARD 11)
