@@ -4,15 +4,13 @@
 #include "position.h"
 #include <linebot/motion.h>
 
-bool
-motion_create_by_commands(uint16_t const           commands,
-                          linebot_motion_t * const handle);
+linebot_motion_t
+motion_create_by_commands(uint16_t const commands);
 
-bool
-motion_create_by_position(position_t const         position,
-                          linebot_motion_t * const handle);
+linebot_motion_t
+motion_create_by_position(position_t const position);
 
-bool
-motion_create_standby(linebot_motion_t * const handle);
+linebot_motion_t
+motion_create_standby(void);
 
 #endif

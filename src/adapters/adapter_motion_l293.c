@@ -34,7 +34,7 @@ static linebot_motion_direction_t
 flip_direction(linebot_motion_direction_t direction);
 
 void
-linebot_port_motion_init(void)
+adapters_motion_init(void)
 {
     l293_t channel_left  = l293_create_channel_left();
     l293_t channel_right = l293_create_channel_right();

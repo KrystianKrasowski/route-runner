@@ -1,3 +1,4 @@
+#include <adapters.h>
 #include <gpio_mock.h>
 #include <linebot/port.h>
 #include <tim3_mock.h>
@@ -9,14 +10,14 @@ static linebot_motion_t motion;
 void
 setUp(void)
 {
-    linebot_port_motion_init();
+    adapters_motion_init();
     tim3_mock_reset();
 }
 
 void
 tearDown(void)
 {
-    linebot_motion_free(motion);
+    linebot_motion_release(motion);
 }
 
 void
@@ -25,7 +26,7 @@ should_apply_duty_cycle(int8_t  correction,
                         uint8_t expected_right_duty_cycle)
 {
     // given
-    linebot_motion_new(LINEBOT_MOTION_FORWARD, correction, &motion);
+    linebot_motion_acquire(LINEBOT_MOTION_FORWARD, correction, &motion);
 
     // when
     linebot_port_motion_apply(motion);

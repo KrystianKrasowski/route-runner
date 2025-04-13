@@ -12,6 +12,8 @@ add_library(drivers_peripherals INTERFACE
     systick.h
 )
 
+set_property(TARGET drivers_peripherals PROPERTY C_STANDARD 11)
+
 target_include_directories(drivers_peripherals 
     INTERFACE 
         "./"
@@ -33,13 +35,14 @@ if(TARGET_ARCH STREQUAL "stm32f303x8")
         sysclock.c
         systick.c
     )
+    set_property(TARGET drivers_stm32f303x8 PROPERTY C_STANDARD 11)
 
     target_link_libraries(drivers_stm32f303x8
         PUBLIC
             drivers_peripherals
         PRIVATE
             utils
-            tasks
+            mq
             stm32f303x8
     )
 endif()

@@ -7,39 +7,43 @@ create_manual_direction(uint16_t const commands);
 static inline int8_t
 create_manual_correction(uint16_t const commands);
 
-bool
-motion_create_by_commands(uint16_t const           commands,
-                          linebot_motion_t * const handle)
+linebot_motion_t
+motion_create_by_commands(uint16_t const commands)
 {
+    linebot_motion_t           motion;
     linebot_motion_direction_t direction  = create_manual_direction(commands);
     int8_t                     correction = create_manual_correction(commands);
 
-    return linebot_motion_new(direction, correction, handle);
+    (void)linebot_motion_acquire(direction, correction, &motion);
+
+    return motion;
 }
 
-bool
-motion_create_by_position(position_t const         position,
-                          linebot_motion_t * const handle)
+linebot_motion_t
+motion_create_by_position(position_t const position)
 {
-    bool result = false;
+    linebot_motion_t motion;
 
     if (position_is_on_finish(position))
     {
-        result = linebot_motion_new(LINEBOT_MOTION_NONE, 0, handle);
+        (void)linebot_motion_acquire(LINEBOT_MOTION_NONE, 0, &motion);
     }
     else
     {
-        int8_t correction = position_regulate(position);
-        result = linebot_motion_new(LINEBOT_MOTION_FORWARD, correction, handle);
+        int8_t correct = position_regulate(position);
+        (void)linebot_motion_acquire(LINEBOT_MOTION_FORWARD, correct, &motion);
     }
 
-    return result;
+    return motion;
 }
 
-bool
-motion_create_standby(linebot_motion_t * const handle)
+linebot_motion_t
+motion_create_standby(void)
 {
-    return linebot_motion_new(LINEBOT_MOTION_NONE, 0, handle);
+    linebot_motion_t motion;
+    (void)linebot_motion_acquire(LINEBOT_MOTION_NONE, 0, &motion);
+
+    return motion;
 }
 
 static inline linebot_motion_direction_t

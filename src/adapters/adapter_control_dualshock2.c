@@ -1,44 +1,45 @@
+#include <adapters.h>
 #include <linebot/command.h>
 #include <linebot/port.h>
 #include <dualshock2.h>
 
 void
-linebot_port_control_init(void)
+adapters_control_init(void)
 {
     dualshock2_init();
 }
 
 uint16_t
-linebot_port_control_command_map(uint16_t const raw_command)
+adapters_control_map(uint16_t const raw)
 {
     uint16_t command = LINEBOT_COMMAND_NONE;
 
-    if (raw_command & DS2_R2)
+    if (raw & DS2_R2)
     {
         command |= LINEBOT_COMMAND_FORWARD;
     }
 
-    if (raw_command & DS2_L2)
+    if (raw & DS2_L2)
     {
         command |= LINEBOT_COMMAND_BACKWARD;
     }
 
-    if (raw_command & DS2_RIGHT)
+    if (raw & DS2_RIGHT)
     {
         command |= LINEBOT_COMMAND_RIGHT;
     }
 
-    if (raw_command & DS2_LEFT)
+    if (raw & DS2_LEFT)
     {
         command |= LINEBOT_COMMAND_LEFT;
     }
 
-    if (raw_command & DS2_CIRCLE)
+    if (raw & DS2_CIRCLE)
     {
         command |= LINEBOT_COMMAND_BREAK;
     }
 
-    if (raw_command & DS2_CROSS)
+    if (raw & DS2_CROSS)
     {
         command |= LINEBOT_COMMAND_FOLLOW;
     }

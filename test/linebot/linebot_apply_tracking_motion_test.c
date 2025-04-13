@@ -16,8 +16,8 @@ setUp(void)
 void
 tearDown(void)
 {
-    linebot_free(linebot);
-    linebot_free_coords(new_coords);
+    linebot_release(linebot);
+    linebot_coords_release(new_coords);
 }
 
 void
@@ -28,7 +28,7 @@ should_apply_following_motion(linebot_mode_t mode, int calls)
 
     // when
     new_coords = fixtures_coords_acquire(COORDS_ON_ROUTE);
-    linebot_apply_following_motion(linebot, new_coords);
+    linebot_apply_tracking_motion(linebot, new_coords);
 
     // then
     TEST_ASSERT_EQUAL(calls, linebot_port_mock_motion_verify_apply_calls());
@@ -42,7 +42,7 @@ should_finish_tracking(void)
 
     // when
     new_coords = fixtures_coords_acquire(COORDS_ON_FINISH);
-    linebot_apply_following_motion(linebot, new_coords);
+    linebot_apply_tracking_motion(linebot, new_coords);
 
     // then
     TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,

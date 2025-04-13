@@ -5,12 +5,13 @@ add_executable(${MAIN_EXECUTABLE}
     syscalls.c
     sysmem.c
     system_stm32f3xx.c
+    task.c
     main.c
 )
 
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
-        tasks
+        mq
         linebot
         adapters
         drivers_components

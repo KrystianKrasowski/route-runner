@@ -7,10 +7,12 @@ add_library(drivers_components STATIC
     qtrhd06a.c
 )
 
+set_property(TARGET drivers_components PROPERTY C_STANDARD 11)
+
 target_include_directories(drivers_components PUBLIC "./")
 
 target_link_libraries(drivers_components 
     PRIVATE
         drivers_peripherals
-        tasks
+        mq
 )

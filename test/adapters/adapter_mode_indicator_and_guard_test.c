@@ -1,3 +1,4 @@
+#include <adapters.h>
 #include <linebot/port.h>
 #include <tim15_mock.h>
 #include <tim1_mock.h>
@@ -20,7 +21,7 @@ void
 should_init_tim1(void)
 {
     // when
-    linebot_port_mode_init();
+    adapters_mode_init();
 
     // then
     TEST_ASSERT_EQUAL(1, tim1_ch1_mock_verify_init_calls());
@@ -30,7 +31,7 @@ void
 should_init_default_indicator(void)
 {
     // when
-    linebot_port_mode_init();
+    adapters_mode_init();
 
     // then
     TEST_ASSERT_EQUAL(2, tim1_ch1_mock_get_applied_toggles());
@@ -40,7 +41,7 @@ void
 should_init_tim15(void)
 {
     // when
-    linebot_port_mode_init();
+    adapters_mode_init();
 
     // then
     TEST_ASSERT_EQUAL(1, tim15_mock_verify_init_calls());

@@ -12,7 +12,7 @@ qtrhd06a_init(void)
 }
 
 void
-adc_sequence_complete_isr(uint16_t value[])
+adc_sequence_complete_isr(uint16_t const value[])
 {
     uint16_t l3 = 0;
     uint16_t l2 = 0;

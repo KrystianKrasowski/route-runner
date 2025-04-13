@@ -21,6 +21,7 @@ linebot_mode_is_tracking(linebot_mode_t const self)
 }
 
 bool
+// cppcheck-suppress staticFunction
 linebot_mode_is_following(linebot_mode_t const self)
 {
     return self == LINEBOT_MODE_FOLLOWING;

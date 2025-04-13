@@ -1,13 +1,16 @@
-add_library(linebot STATIC 
-    linebot.c
+add_library(linebot STATIC
+    api.c
+    context.c
     motion.c
     motion_factory.c
     position.c
     position_regulator.c
     coords.c
     mode.c
-    command.c
+    "command.c"
 )
+
+set_property(TARGET linebot PROPERTY C_STANDARD 11)
 
 target_include_directories(linebot PUBLIC "./inc")
 

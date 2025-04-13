@@ -17,41 +17,38 @@ typedef struct
 POOL_DECLARE(position, position_instance_t, 1)
 
 static position_pool_t pool;
-static bool            pool_initialized = false;
 
-bool
-position_new(linebot_coords_t   coords,
-             uint8_t            errors_size,
-             position_t * const handle)
+void
+position_init(void)
 {
-    bool result = false;
+    position_pool_init(&pool);
+}
 
-    if (!pool_initialized)
-    {
-        pool_initialized = true;
-        position_pool_init(&pool);
-    }
+linebot_result_t
+position_acquire(linebot_coords_t   coords,
+                 uint8_t            errsize,
+                 position_t * const handle)
+{
+    bool result = LINEBOT_ERR_POOL_EXCEEDED;
 
     if (position_pool_alloc(&pool, handle))
     {
         position_instance_t *position = position_pool_get(&pool, *handle);
 
-        if (position)
-        {
-            position->coords = coords;
-            position->errors = stack(errors_size);
-            result           = true;
-        }
+        position->coords = coords;
+        position->errors = stack(errsize);
+
+        result = LINEBOT_OK;
     }
 
     return result;
 }
 
 void
-position_free(position_t const self)
+position_release(position_t const self)
 {
     position_instance_t *instance = position_pool_get(&pool, self);
-    linebot_free_coords(instance->coords);
+    linebot_coords_release(instance->coords);
     position_pool_free(&pool, self);
 }
 
