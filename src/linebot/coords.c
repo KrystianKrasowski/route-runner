@@ -85,7 +85,7 @@ bool
 coords_is_on_route(linebot_coords_t const self)
 {
     bool                     on_route = false;
-    coords_instance_t const *instance;
+    coords_instance_t const *instance = coords_pool_get(&pool, self);
 
     for (uint8_t i = 0; i < COORDS_SIZE; i++)
     {
@@ -116,7 +116,7 @@ coords_is_on_finish(linebot_coords_t const self)
 void
 coords_compute_mass_center(linebot_coords_t const self, int8_t *value)
 {
-    coords_instance_t const *instance;
+    coords_instance_t const *instance = coords_pool_get(&pool, self);
 
     int16_t sum        = 0;
     int16_t weight_sum = 0;
