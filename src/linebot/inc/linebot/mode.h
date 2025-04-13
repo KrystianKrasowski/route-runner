@@ -23,9 +23,10 @@ typedef enum
 /**
  * @brief Verifies manual mode.
  * 
- * @param self mode value
- * @return true 
- * @return false 
+ * @param[in] self mode value
+ * 
+ * @retval true 
+ * @retval false 
  */
 bool
 linebot_mode_is_manual(linebot_mode_t const self);
@@ -33,9 +34,10 @@ linebot_mode_is_manual(linebot_mode_t const self);
 /**
  * @brief Verifies route detected mode.
  * 
- * @param self mode value
- * @return true 
- * @return false 
+ * @param[in] self mode value
+ * 
+ * @retval true 
+ * @retval false 
  */
 bool
 linebot_mode_is_detected(linebot_mode_t const self);
@@ -45,9 +47,10 @@ linebot_mode_is_detected(linebot_mode_t const self);
  * 
  * Both `following` and `recovering` are considered `tracking`.
  * 
- * @param self mode value
- * @return true 
- * @return false 
+ * @param[in] self mode value
+ * 
+ * @retval true 
+ * @retval false 
  */
 bool
 linebot_mode_is_tracking(linebot_mode_t const self);
@@ -55,9 +58,10 @@ linebot_mode_is_tracking(linebot_mode_t const self);
 /**
  * @brief Verifies following mode.
  * 
- * @param self mode value
- * @return true 
- * @return false 
+ * @param[in] self mode value
+ * 
+ * @retval true 
+ * @retval false 
  */
 bool
 linebot_mode_is_following(linebot_mode_t const self);
@@ -65,9 +69,10 @@ linebot_mode_is_following(linebot_mode_t const self);
 /**
  * @brief Verifies recovering mode.
  * 
- * @param self mode value
- * @return true 
- * @return false 
+ * @param[in][in] self mode value
+ * 
+ * @retval true 
+ * @retval false 
  */
 bool
 linebot_mode_is_recovering(linebot_mode_t const self);

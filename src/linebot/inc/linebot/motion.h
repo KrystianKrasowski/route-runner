@@ -33,11 +33,12 @@ typedef uint8_t linebot_motion_t;
  * The steering value determines linebot turns. It allowes values from the
  * <-100,100> range. Edge values means the hardest turns.
  *
- * @param direction direction in which linebot moves
- * @param correction steering value
- * @param handle pointed to the handle of motion object
- * @return LINEBOT_OK motion object successfully instantiated
- * @return LINEBOT_ERR_POOL_EXCEEDED motion object instantiation falied
+ * @param[in] direction direction in which linebot moves
+ * @param[in] correction steering value
+ * @param[out] handle handle of motion object
+ * 
+ * @retval LINEBOT_OK
+ * @retval LINEBOT_ERR_POOL_EXCEEDED
  */
 linebot_result_t
 linebot_motion_acquire(linebot_motion_direction_t const direction,
@@ -47,7 +48,7 @@ linebot_motion_acquire(linebot_motion_direction_t const direction,
 /**
  * @brief Release motion instance
  *
- * @param motion handle to a motion instance
+ * @param[in] motion handle to a motion instance
  */
 void
 linebot_motion_release(linebot_motion_t motion);
@@ -55,7 +56,8 @@ linebot_motion_release(linebot_motion_t motion);
 /**
  * @brief Returns motion direction
  *
- * @param self handle to a motion instance
+ * @param[in] self handle to a motion instance
+ * 
  * @return linebot_motion_direction_t
  */
 linebot_motion_direction_t
@@ -64,7 +66,8 @@ linebot_motion_get_direction(linebot_motion_t const self);
 /**
  * @brief Returns motion correction
  *
- * @param self handle to a motion instance
+ * @param[in] self handle to a motion instance
+ * 
  * @return int8_t steering value
  */
 int8_t

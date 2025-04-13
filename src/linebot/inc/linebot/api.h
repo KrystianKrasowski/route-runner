@@ -21,22 +21,22 @@ typedef uint8_t linebot_t;
 /**
  * @brief Initializes Linebot library.
  *
- * Need to be called before anything else, due to object pools initializations.
+ * Need to be called before any use case, due to object pools initialization.
  *
  */
 void
 linebot_init(void);
 
 /**
- * @brief Produces a handle to a Linebot context object.
+ * @brief Produces a handle to a linebot context object.
  *
- * @param mode starting mode
- * @param coords starting coords
- * @param errors_size size of the measured route drift errors
- * @param handle pointer to the handle of linebot instance
+ * @param[in] mode starting mode
+ * @param[in] coords starting coords
+ * @param[in] errors_size size of the measured route drift errors collection
+ * @param[out] handle handle of linebot instance
  *
- * @return LINEBOT_OK linebot object successfully instantiated
- * @return LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
+ * @retval LINEBOT_OK linebot object successfully instantiated
+ * @retval LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
  */
 linebot_result_t
 linebot_acquire(linebot_mode_t    mode,
@@ -47,10 +47,10 @@ linebot_acquire(linebot_mode_t    mode,
 /**
  * @brief Produces a handle to a Linebot context object with default values.
  *
- * @param handle pointer to the handle of linebot instance
+ * @param[out] handle handle of linebot instance
  *
- * @return LINEBOT_OK linebot object successfully instantiated
- * @return LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
+ * @retval LINEBOT_OK linebot object successfully instantiated
+ * @retval LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
  */
 linebot_result_t
 linebot_acquire_default(linebot_t * const handle);
@@ -58,7 +58,7 @@ linebot_acquire_default(linebot_t * const handle);
 /**
  * @brief Release linebot instance
  *
- * @param linebot handle to a linebot instance
+ * @param[in] linebot handle to a linebot instance
  */
 void
 linebot_release(linebot_t const linebot);
@@ -66,11 +66,11 @@ linebot_release(linebot_t const linebot);
 /**
  * @brief Returns current Linebot mode.
  *
- * @param self handle to a linebot instance
- * @param mode pointer to a mode value
+ * @param[in] self handle to a linebot instance
+ * @param[out] mode mode value
  *
- * @return LINEBOT_OK
- * @return LINEBOT_ERR_NULL_POINTER
+ * @retval LINEBOT_OK
+ * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
 linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
@@ -82,10 +82,11 @@ linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
  * modes. If the vehicle is in tracking mode the manual motion will not be
  * applied, unless the break command occurs.
  *
- * @param self handle to a linebot instance
- * @param commands The commands given by external control
+ * @param[in] self handle to a linebot instance
+ * @param[in] commands commands given by external control
  *
- * @return linebot_result_t
+ * @retval LINEBOT_OK
+ * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
 linebot_apply_manual_motion(linebot_t const self, uint16_t const commands);
@@ -97,10 +98,11 @@ linebot_apply_manual_motion(linebot_t const self, uint16_t const commands);
  * * `detected` -> `following` (a subset of `tracking`)
  * * `tracking` -> `manual`
  *
- * @param self handle to a linebot instance
- * @param commands The commands given by external control
+ * @param[in] self handle to a linebot instance
+ * @param[in] commands The commands given by external control
  *
- * @return linebot_result_t
+ * @retval LINEBOT_OK
+ * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
 linebot_change_mode_by_control(linebot_t const self, uint16_t const commands);
@@ -111,10 +113,11 @@ linebot_change_mode_by_control(linebot_t const self, uint16_t const commands);
  * Note that the tracking motion is applied only for tracking mode, unless
  * linebot meets the finish position.
  *
- * @param self handle to a linebot instance
- * @param coords The route coordinates by external source
+ * @param[in] self handle to a linebot instance
+ * @param[in] coords The route coordinates by external source
  *
- * @return linebot_result_t
+ * @retval LINEBOT_OK
+ * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
 linebot_apply_tracking_motion(linebot_t const        self,
@@ -130,10 +133,11 @@ linebot_apply_tracking_motion(linebot_t const        self,
  * * `following` -> `recovering`
  * * `recovering` -> `following`
  *
- * @param self handle to a linebot instance
- * @param coords The route coordinates by external source
+ * @param[in] self handle to a linebot instance
+ * @param[in] coords The route coordinates by external source
  *
- * @return linebot_result_t
+ * @retval LINEBOT_OK
+ * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
 linebot_change_mode_by_coords(linebot_t const        self,
@@ -142,9 +146,10 @@ linebot_change_mode_by_coords(linebot_t const        self,
 /**
  * @brief Stops linebot immediately.
  *
- * @param self handle to a linebot instance
+ * @param[in] self handle to a linebot instance
  *
- * @return linebot_result_t
+ * @retval LINEBOT_OK
+ * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
 linebot_stop(linebot_t const self);
