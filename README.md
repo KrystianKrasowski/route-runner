@@ -139,6 +139,3 @@ Software architecture is inspired by the onion pattern. The main goal of this ap
 
 #### Library dependencies diagram
 ![lib-dependency](./doc/img/architecture-2.png)
-
-#### Components diagram
-![components](./doc/img//architecture-3.png)
