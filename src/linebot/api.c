@@ -15,10 +15,10 @@ static inline void
 apply_manual_motion(linebot_t const self, uint16_t const commands);
 
 static inline void
-apply_tracking_motion(linebot_t const self, linebot_coords_t const coords);
+change_mode_by_coords(linebot_t const self, linebot_coords_t const coords);
 
 static inline void
-change_mode_by_coords(linebot_t const self, linebot_coords_t const coords);
+apply_tracking_motion(linebot_t const self, linebot_coords_t const coords);
 
 static inline void
 stop(linebot_t const self);
@@ -99,21 +99,7 @@ linebot_handle_manual_control(linebot_t const self, uint16_t const commands)
 }
 
 linebot_result_t
-linebot_apply_tracking_motion(linebot_t const        self,
-                              linebot_coords_t const coords)
-{
-    linebot_result_t result;
-
-    if (context_is_valid(self, &result) && coords_is_valid(coords, &result))
-    {
-        apply_tracking_motion(self, coords);
-    }
-
-    return result;
-}
-
-linebot_result_t
-linebot_change_mode_by_coords(linebot_t const        self,
+linebot_handle_route_tracking(linebot_t const        self,
                               linebot_coords_t const coords)
 {
     linebot_result_t result;
@@ -121,6 +107,7 @@ linebot_change_mode_by_coords(linebot_t const        self,
     if (context_is_valid(self, &result) && coords_is_valid(coords, &result))
     {
         change_mode_by_coords(self, coords);
+        apply_tracking_motion(self, coords);
     }
 
     return result;
@@ -164,6 +151,18 @@ apply_manual_motion(linebot_t const self, uint16_t const commands)
 }
 
 static inline void
+change_mode_by_coords(linebot_t const self, linebot_coords_t const coords)
+{
+    linebot_mode_t mode     = context_get_mode(self);
+    linebot_mode_t new_mode = mode_change_by_coords(mode, coords);
+
+    if (context_update_mode(self, new_mode))
+    {
+        linebot_port_mode_changed(new_mode);
+    }
+}
+
+static inline void
 apply_tracking_motion(linebot_t const self, linebot_coords_t const coords)
 {
     if (context_is_tracking_route(self) || coords_is_on_finish(coords))
@@ -174,18 +173,6 @@ apply_tracking_motion(linebot_t const self, linebot_coords_t const coords)
         linebot_motion_t motion = motion_create_by_position(position);
         linebot_port_motion_apply(motion);
         linebot_motion_release(motion);
-    }
-}
-
-static inline void
-change_mode_by_coords(linebot_t const self, linebot_coords_t const coords)
-{
-    linebot_mode_t mode     = context_get_mode(self);
-    linebot_mode_t new_mode = mode_change_by_coords(mode, coords);
-
-    if (context_update_mode(self, new_mode))
-    {
-        linebot_port_mode_changed(new_mode);
     }
 }
 

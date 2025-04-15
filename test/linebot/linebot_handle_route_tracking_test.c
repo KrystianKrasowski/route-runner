@@ -1,6 +1,7 @@
 #include "fixtures.h"
 #include <linebot/api.h>
 #include <linebot_port_mock_mode.h>
+#include <linebot_port_mock_motion.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -11,6 +12,7 @@ void
 setUp(void)
 {
     linebot_port_mock_mode_init();
+    linebot_port_mock_motion_init();
 }
 
 void
@@ -31,7 +33,7 @@ should_change_mode(linebot_mode_t         current_mode,
 
     // when
     linebot_mode_t actual_mode;
-    linebot_change_mode_by_coords(linebot, new_coords);
+    linebot_handle_route_tracking(linebot, new_coords);
     linebot_get_mode(linebot, &actual_mode);
 
     // then
@@ -50,12 +52,43 @@ should_keep_mode(linebot_mode_t mode, fixtures_coords_type_t coords_type)
 
     // when
     linebot_mode_t actual_mode;
-    linebot_change_mode_by_coords(linebot, new_coords);
+    linebot_handle_route_tracking(linebot, new_coords);
     linebot_get_mode(linebot, &actual_mode);
 
     // then
     TEST_ASSERT_EQUAL(mode, actual_mode);
     TEST_ASSERT_EQUAL(0, linebot_port_mock_mode_verify_changed_calls());
+}
+
+void
+should_apply_following_motion(linebot_mode_t mode, int calls)
+{
+    // given
+    linebot = fixtures_linebot_acquire(mode);
+
+    // when
+    new_coords = fixtures_coords_acquire(COORDS_ON_ROUTE);
+    linebot_handle_route_tracking(linebot, new_coords);
+
+    // then
+    TEST_ASSERT_EQUAL(calls, linebot_port_mock_motion_verify_apply_calls());
+}
+
+void
+should_finish_tracking(void)
+{
+    // given
+    linebot = fixtures_linebot_acquire(LINEBOT_MODE_MANUAL);
+
+    // when
+    new_coords = fixtures_coords_acquire(COORDS_ON_FINISH);
+    linebot_handle_route_tracking(linebot, new_coords);
+
+    // then
+    TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,
+                      linebot_port_mock_motion_get_direction());
+    TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_get_correction());
+    TEST_ASSERT_EQUAL(1, linebot_port_mock_motion_verify_apply_calls());
 }
 
 int
@@ -100,6 +133,13 @@ main(void)
     RUN_PARAM_TEST(should_keep_mode, LINEBOT_MODE_FOLLOWING, COORDS_ON_ROUTE);
 
     RUN_PARAM_TEST(should_keep_mode, LINEBOT_MODE_RECOVERING, COORDS_OFF_ROUTE);
+
+    RUN_PARAM_TEST(should_apply_following_motion, LINEBOT_MODE_FOLLOWING, 1);
+    RUN_PARAM_TEST(should_apply_following_motion, LINEBOT_MODE_RECOVERING, 1);
+    RUN_PARAM_TEST(should_apply_following_motion, LINEBOT_MODE_DETECTED, 0);
+    RUN_PARAM_TEST(should_apply_following_motion, LINEBOT_MODE_MANUAL, 0);
+
+    RUN_TEST(should_finish_tracking);
 
     return UNITY_END();
 }
