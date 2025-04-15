@@ -67,9 +67,9 @@ should_receive_spi_transmission(uint8_t response[], uint16_t expected_command)
 
     // then
     mq_message_t message;
-    mq_result_t  status = mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message);
+    int  status = mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message);
 
-    TEST_ASSERT_EQUAL(MQ_SUCCESS, status);
+    TEST_ASSERT_EQUAL(0, status);
     TEST_ASSERT_DS2_COMMANDS(expected_command, message.payload.command);
 }
 

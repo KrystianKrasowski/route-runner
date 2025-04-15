@@ -1,17 +1,9 @@
 #ifndef _QUEUE_H
 #define _QUEUE_H
 
+#include <errno.h>
 #include <stdint.h>
 #include <string.h>
-
-typedef enum
-{
-    QUEUE_SUCCESS,
-    QUEUE_SIZE_TOO_LARGE,
-    QUEUE_ELEMENT_SIZE_TOO_LARGE,
-    QUEUE_FULL,
-    QUEUE_EMPTY,
-} queue_result_t;
 
 #define QUEUE_DECLARE(name, type, size)                                        \
     typedef struct                                                             \
@@ -30,16 +22,16 @@ typedef enum
         p_self->tail     = 0;                                                  \
     }                                                                          \
                                                                                \
-    static inline queue_result_t name##_queue_push(name##_queue_t *p_self,     \
-                                                   type           *p_element)  \
+    static inline int name##_queue_push(name##_queue_t *p_self,                \
+                                        type           *p_element)             \
     {                                                                          \
-        queue_result_t result = QUEUE_SUCCESS;                                 \
+        int result = 0;                                                        \
                                                                                \
         uint8_t next = (p_self->tail + 1) % p_self->capacity;                  \
                                                                                \
         if (next == p_self->head)                                              \
         {                                                                      \
-            result = QUEUE_FULL;                                               \
+            result = -ENOBUFS;                                                 \
         }                                                                      \
         else                                                                   \
         {                                                                      \
@@ -50,14 +42,14 @@ typedef enum
         return result;                                                         \
     }                                                                          \
                                                                                \
-    static inline queue_result_t name##_queue_pull(name##_queue_t *p_self,     \
-                                                   type           *p_element)  \
+    static inline int name##_queue_pull(name##_queue_t *p_self,                \
+                                        type           *p_element)             \
     {                                                                          \
-        queue_result_t result = QUEUE_SUCCESS;                                 \
+        int result = 0;                                                        \
                                                                                \
         if (p_self->head == p_self->tail)                                      \
         {                                                                      \
-            result = QUEUE_EMPTY;                                              \
+            result = -ENODATA;                                                 \
         }                                                                      \
         else                                                                   \
         {                                                                      \
