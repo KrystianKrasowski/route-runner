@@ -76,7 +76,7 @@ linebot_result_t
 linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
 
 /**
- * @brief Apply new motion to the given commands.
+ * @brief Apply new motion for the given commands.
  *
  * Note that the manual motion application is limited to the certain linebot
  * modes. If the vehicle is in tracking mode the manual motion will not be
@@ -89,26 +89,10 @@ linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
  * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
-linebot_apply_manual_motion(linebot_t const self, uint16_t const commands);
+linebot_handle_manual_control(linebot_t const self, uint16_t const commands);
 
 /**
- * @brief Change mode to the given commands.
- *
- * Possible mode transitions are:
- * * `detected` -> `following` (a subset of `tracking`)
- * * `tracking` -> `manual`
- *
- * @param[in] self handle to a linebot instance
- * @param[in] commands The commands given by external control
- *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_NULL_POINTER
- */
-linebot_result_t
-linebot_change_mode_by_control(linebot_t const self, uint16_t const commands);
-
-/**
- * @brief Apply new motion to the given route coordinates.
+ * @brief Apply new motion for the given route coordinates.
  *
  * Note that the tracking motion is applied only for tracking mode, unless
  * linebot meets the finish position.
@@ -120,27 +104,7 @@ linebot_change_mode_by_control(linebot_t const self, uint16_t const commands);
  * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
-linebot_apply_tracking_motion(linebot_t const        self,
-                              linebot_coords_t const coords);
-
-/**
- * @brief Change mode to the given route coordinates.
- *
- * Possible mode transitions are:
- * * `manual` -> `detected`
- * * `detected` -> `manual`
- * * `tracking` -> `manual`
- * * `following` -> `recovering`
- * * `recovering` -> `following`
- *
- * @param[in] self handle to a linebot instance
- * @param[in] coords The route coordinates by external source
- *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_NULL_POINTER
- */
-linebot_result_t
-linebot_change_mode_by_coords(linebot_t const        self,
+linebot_handle_route_tracking(linebot_t const        self,
                               linebot_coords_t const coords);
 
 /**
@@ -152,6 +116,6 @@ linebot_change_mode_by_coords(linebot_t const        self,
  * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
-linebot_stop(linebot_t const self);
+linebot_handle_immediate_stop(linebot_t const self);
 
 #endif

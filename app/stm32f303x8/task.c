@@ -14,8 +14,7 @@ task_handle_manual_control(linebot_t const linebot)
         uint16_t commands    = adapters_control_map(raw_command);
 
         // TODO: Handle failures
-        (void)linebot_change_mode_by_control(linebot, commands);
-        (void)linebot_apply_manual_motion(linebot, commands);
+        (void)linebot_handle_manual_control(linebot, commands);
     }
 }
 
@@ -31,8 +30,7 @@ task_handle_route_tracking(linebot_t const linebot)
 
         // TODO: Handle failures
         (void)adapters_coords_map(raw_coords, &coords);
-        (void)linebot_change_mode_by_coords(linebot, coords);
-        (void)linebot_apply_tracking_motion(linebot, coords);
+        (void)linebot_handle_route_tracking(linebot, coords);
         (void)linebot_coords_release(coords);
     }
 }
@@ -45,6 +43,6 @@ task_handle_immediate_stop(linebot_t const linebot)
     if (mq_pull(MQ_TOPIC_ROUTE_GUARD, &message) == MQ_SUCCESS)
     {
         // TODO: Handle failures
-        (void)linebot_stop(linebot);
+        (void)linebot_handle_immediate_stop(linebot);
     }
 }

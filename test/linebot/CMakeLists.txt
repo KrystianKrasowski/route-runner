@@ -1,9 +1,7 @@
 set(TEST_SUITE
-    linebot_apply_manual_motion_test.c
-    linebot_change_mode_by_control_test.c
-    linebot_apply_tracking_motion_test.c
-    linebot_change_mode_by_coords_test.c
-    linebot_stop_test.c
+    linebot_handle_manual_control_test.c
+    linebot_handle_route_tracking_test.c
+    linebot_handle_immediate_stop_test.c
 )
 
 # extract some function here

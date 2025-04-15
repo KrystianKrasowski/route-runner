@@ -28,7 +28,7 @@ should_stop(linebot_mode_t mode)
 
     // when
     linebot_mode_t actual_mode;
-    linebot_stop(linebot);
+    linebot_handle_immediate_stop(linebot);
     linebot_get_mode(linebot, &actual_mode);
 
     // then

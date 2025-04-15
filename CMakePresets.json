@@ -18,22 +18,21 @@
             }
         },
         {
-            "name": "Debug",
+            "name": "debug",
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "Release",
+            "name": "release",
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
-            "name": "Test",
-            "displayName": "Unit tests build for native host",
+            "name": "test",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
@@ -44,18 +43,22 @@
     ],
     "buildPresets": [
         {
-            "name": "Debug",
-            "configurePreset": "Debug"
+            "name": "debug",
+            "configurePreset": "debug"
         },
         {
-            "name": "Release",
-            "configurePreset": "Release"
+            "name": "release",
+            "configurePreset": "release"
+        },
+        {
+            "name": "test",
+            "configurePreset": "test"
         }
     ],
     "testPresets": [
         {
-            "name": "Unit Tests",
-            "configurePreset": "Test",
+            "name": "test",
+            "configurePreset": "test",
             "output": {
                 "outputOnFailure": true
             }
