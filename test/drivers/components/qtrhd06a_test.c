@@ -42,10 +42,10 @@ should_average_adc_conversions(void)
 
     // when
     adc_sequence_complete_isr(conversions);
-    mq_result_t status = mq_pull(MQ_TOPIC_COORDS, &message);
+    int status = mq_pull(MQ_TOPIC_COORDS, &message);
 
     // then
-    TEST_ASSERT_EQUAL(MQ_SUCCESS, status);
+    TEST_ASSERT_EQUAL(0, status);
     TEST_ASSERT_EQUAL(MQ_MESSAGE_TYPE_COORDS, message.type);
     TEST_ASSERT_EQUAL(25, message.payload.coords[0]);
     TEST_ASSERT_EQUAL(113, message.payload.coords[1]);

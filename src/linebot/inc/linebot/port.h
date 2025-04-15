@@ -17,10 +17,10 @@
  *
  * Can serve as DC motor driver
  *
- * @param[in] motion linebot motion
+ * @param[in] h_motion handle to linebot motion
  */
 void
-linebot_port_motion_apply(linebot_motion_t const motion);
+linebot_port_motion_apply(linebot_motion_t const h_motion);
 
 /**
  * @brief Triggers an event on linebot motion change to be handled by

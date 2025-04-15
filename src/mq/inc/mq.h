@@ -39,22 +39,14 @@ typedef enum
     MQ_TOPIC_ROUTE_GUARD,
 } mq_topic_t;
 
-typedef enum
-{
-    MQ_SUCCESS,
-    MQ_INIT_ERROR,
-    MQ_FULL,
-    MQ_EMPTY,
-} mq_result_t;
-
-mq_result_t
+void
 mq_init(void);
 
-mq_result_t
-mq_push(mq_topic_t const topic, mq_message_t *message);
+int
+mq_push(mq_topic_t const topic, mq_message_t *p_message);
 
-mq_result_t
-mq_pull(mq_topic_t const topic, mq_message_t *message);
+int
+mq_pull(mq_topic_t const topic, mq_message_t *p_message);
 
 void
 mq_clear(mq_topic_t const topic);
@@ -63,7 +55,7 @@ mq_message_t
 mq_create_command_message(uint16_t const command);
 
 mq_message_t
-mq_create_coords_message(uint8_t const coords[]);
+mq_create_coords_message(uint8_t const p_coords[]);
 
 mq_message_t
 mq_create_route_guard_timeout_message(void);

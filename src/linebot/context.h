@@ -7,14 +7,14 @@
 void
 context_init(void);
 
-linebot_t
+int
 context_acquire(linebot_mode_t    mode,
-                    linebot_coords_t  coords,
-                    uint8_t           errsize,
-                    linebot_t * const handle);
-                    
-bool
-context_is_valid(linebot_t const self, linebot_result_t * const result);
+                linebot_coords_t  coords,
+                uint8_t           errsize,
+                linebot_t * const handle);
+
+int
+context_validate(linebot_t const self);
 
 void
 context_release(linebot_t const self);

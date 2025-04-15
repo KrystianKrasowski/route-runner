@@ -21,29 +21,29 @@ should_enqueue_elements(void)
     dummy_queue_t queue;
     dummy_queue_init(&queue);
 
-    uint16_t       element;
-    queue_result_t result;
+    uint16_t element;
+    int      result;
 
     // when
     element = 111;
     result  = dummy_queue_push(&queue, &element);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
+    TEST_ASSERT_EQUAL(0, result);
 
     // when
     element = 222;
     result  = dummy_queue_push(&queue, &element);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
+    TEST_ASSERT_EQUAL(0, result);
 
     // when
     element = 333;
     result  = dummy_queue_push(&queue, &element);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
+    TEST_ASSERT_EQUAL(0, result);
 }
 
 void
@@ -62,20 +62,20 @@ should_not_enqueue_on_full(void)
     dummy_queue_push(&queue, &element_3);
 
     // when
-    uint16_t       element_4 = 444;
-    queue_result_t result    = dummy_queue_push(&queue, &element_4);
+    uint16_t element_4 = 444;
+    int      result    = dummy_queue_push(&queue, &element_4);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_FULL, result);
+    TEST_ASSERT_EQUAL(-ENOBUFS, result);
 }
 
 void
 should_dequeue_elements(void)
 {
     // given
-    dummy_queue_t  queue;
-    queue_result_t result;
-    uint16_t       actual_1, actual_2, actual_3;
+    dummy_queue_t queue;
+    int           result;
+    uint16_t      actual_1, actual_2, actual_3;
 
     uint16_t element_1 = 111;
     uint16_t element_2 = 222;
@@ -90,21 +90,21 @@ should_dequeue_elements(void)
     result = dummy_queue_pull(&queue, &actual_1);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
+    TEST_ASSERT_EQUAL(0, result);
     TEST_ASSERT_EQUAL(111, actual_1);
 
     // when
     result = dummy_queue_pull(&queue, &actual_2);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
+    TEST_ASSERT_EQUAL(0, result);
     TEST_ASSERT_EQUAL(222, actual_2);
 
     // when
     result = dummy_queue_pull(&queue, &actual_3);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
+    TEST_ASSERT_EQUAL(0, result);
     TEST_ASSERT_EQUAL(333, actual_3);
 }
 
@@ -116,20 +116,20 @@ should_not_dequeue_on_empty(void)
     dummy_queue_init(&queue);
 
     // when
-    uint16_t       element;
-    queue_result_t result = dummy_queue_pull(&queue, &element);
+    uint16_t element;
+    int      result = dummy_queue_pull(&queue, &element);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_EMPTY, result);
+    TEST_ASSERT_EQUAL(-ENODATA, result);
 }
 
 void
 should_enqueue_circular(void)
 {
     // given
-    dummy_queue_t  queue;
-    uint16_t       actual_1;
-    queue_result_t result;
+    dummy_queue_t queue;
+    uint16_t      actual_1;
+    int           result;
 
     uint16_t element_1 = 111;
     uint16_t element_2 = 222;
@@ -143,14 +143,14 @@ should_enqueue_circular(void)
 
     // when
     result = dummy_queue_push(&queue, &element_4);
-    TEST_ASSERT_EQUAL(QUEUE_FULL, result);
+    TEST_ASSERT_EQUAL(-ENOBUFS, result);
 
     // when
     dummy_queue_pull(&queue, &actual_1);
     result = dummy_queue_push(&queue, &element_4);
 
     // then
-    TEST_ASSERT_EQUAL(QUEUE_SUCCESS, result);
+    TEST_ASSERT_EQUAL(0, result);
 }
 
 int

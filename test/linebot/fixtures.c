@@ -7,7 +7,7 @@ fixtures_linebot_acquire(linebot_mode_t const mode)
     linebot_t        linebot;
     linebot_coords_t coords = fixtures_coords_acquire(COORDS_OFF_ROUTE);
 
-    assert(linebot_acquire(mode, coords, 20, &linebot) == LINEBOT_OK);
+    assert(linebot_acquire(mode, coords, 20, &linebot) >= 0);
 
     return linebot;
 }
@@ -15,7 +15,7 @@ fixtures_linebot_acquire(linebot_mode_t const mode)
 linebot_coords_t
 fixtures_coords_acquire(fixtures_coords_type_t const type)
 {
-    linebot_result_t result;
+    int              result;
     linebot_coords_t coords;
 
     switch (type)
@@ -32,7 +32,7 @@ fixtures_coords_acquire(fixtures_coords_type_t const type)
             break;
     }
 
-    assert(LINEBOT_OK == result);
+    assert(result >= 0);
 
     return coords;
 }

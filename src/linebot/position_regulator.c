@@ -5,11 +5,11 @@
 #define KD 3.2
 
 int8_t
-position_regulate_pid(position_t const position)
+position_regulate_pid(position_t const h_position)
 {
-    int8_t  previous   = position_last_error(position);
-    int8_t  error      = position_update_error(position);
-    int16_t all_errors = position_sum_errors(position);
+    int8_t  previous   = position_last_error(h_position);
+    int8_t  error      = position_update_error(h_position);
+    int16_t all_errors = position_sum_errors(h_position);
 
     int16_t correction = KP * error + KI * all_errors + KD * (error - previous);
 

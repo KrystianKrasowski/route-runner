@@ -5,23 +5,24 @@
 #include "motion.h"
 #include "motion_factory.h"
 #include "position.h"
+#include <errno.h>
 #include <linebot/api.h>
 #include <linebot/port.h>
 
 static inline void
-change_mode_by_control(linebot_t const self, uint16_t const commands);
+change_mode_by_control(linebot_t const h_self, uint16_t const commands);
 
 static inline void
-apply_manual_motion(linebot_t const self, uint16_t const commands);
+apply_manual_motion(linebot_t const h_self, uint16_t const commands);
 
 static inline void
-change_mode_by_coords(linebot_t const self, linebot_coords_t const coords);
+change_mode_by_coords(linebot_t const h_self, linebot_coords_t const coords);
 
 static inline void
-apply_tracking_motion(linebot_t const self, linebot_coords_t const coords);
+apply_tracking_motion(linebot_t const h_self, linebot_coords_t const coords);
 
 static inline void
-stop(linebot_t const self);
+stop_immediately(linebot_t const h_self);
 
 void
 linebot_init(void)
@@ -32,158 +33,193 @@ linebot_init(void)
     context_init();
 }
 
-linebot_result_t
+int
 // cppcheck-suppress staticFunction
 linebot_acquire(linebot_mode_t    mode,
                 linebot_coords_t  coords,
                 uint8_t           errsize,
-                linebot_t * const handle)
+                linebot_t * const ph_self)
 {
-    linebot_result_t result;
+    bool b_coords_valid = coords_validate(coords) >= 0;
 
-    if (coords_is_valid(coords, &result))
+    if (!b_coords_valid)
     {
-        result = context_acquire(mode, coords, errsize, handle);
+        return -EINVAL;
     }
 
-    return result;
+    bool b_acquired = context_acquire(mode, coords, errsize, ph_self) >= 0;
+
+    if (!b_acquired)
+    {
+        return -ENOMEM;
+    }
+
+    return 0;
 }
 
-linebot_result_t
-linebot_acquire_default(linebot_t * const handle)
+int
+linebot_acquire_default(linebot_t * const ph_self)
 {
     linebot_coords_t coords;
-    linebot_result_t result = linebot_coords_acquire(0, 0, 0, 0, 0, 0, &coords);
+    bool b_acquired = linebot_coords_acquire(0, 0, 0, 0, 0, 0, &coords) >= 0;
 
-    if (LINEBOT_OK == result)
+    if (!b_acquired)
     {
-        result = linebot_acquire(LINEBOT_MODE_MANUAL, coords, 20, handle);
+        return -ENOMEM;
     }
 
-    return result;
+    b_acquired = linebot_acquire(LINEBOT_MODE_MANUAL, coords, 20, ph_self) >= 0;
+
+    if (!b_acquired)
+    {
+        return -ENOMEM;
+    }
+
+    return 0;
 }
 
 void
 // cppcheck-suppress unusedFunction
-linebot_release(linebot_t const self)
+linebot_release(linebot_t const h_self)
 {
-    context_release(self);
+    context_release(h_self);
 }
 
-linebot_result_t
+int
 // cppcheck-suppress unusedFunction
-linebot_get_mode(linebot_t const self, linebot_mode_t * const mode)
+linebot_get_mode(linebot_t const h_self, linebot_mode_t * const p_mode)
 {
-    linebot_result_t result;
+    int  result          = 0;
+    bool b_context_valid = context_validate(h_self) >= 0;
 
-    if (context_is_valid(self, &result))
+    if (b_context_valid)
     {
-        *mode = context_get_mode(self);
+        *p_mode = context_get_mode(h_self);
+    }
+    else
+    {
+        result = -EINVAL;
     }
 
     return result;
 }
 
-linebot_result_t
-linebot_handle_manual_control(linebot_t const self, uint16_t const commands)
+int
+linebot_handle_manual_control(linebot_t const h_self, uint16_t const commands)
 {
-    linebot_result_t result;
+    int  result          = 0;
+    bool b_context_valid = context_validate(h_self) >= 0;
 
-    if (context_is_valid(self, &result))
+    if (b_context_valid)
     {
-        change_mode_by_control(self, commands);
-        apply_manual_motion(self, commands);
+        change_mode_by_control(h_self, commands);
+        apply_manual_motion(h_self, commands);
+    }
+    else
+    {
+        result = -EINVAL;
     }
 
     return result;
 }
 
-linebot_result_t
-linebot_handle_route_tracking(linebot_t const        self,
-                              linebot_coords_t const coords)
+int
+linebot_handle_route_tracking(linebot_t const        h_self,
+                              linebot_coords_t const h_coords)
 {
-    linebot_result_t result;
+    int  result          = 0;
+    bool b_coords_valid  = coords_validate(h_coords) >= 0;
+    bool b_context_valid = context_validate(h_self) >= 0;
 
-    if (context_is_valid(self, &result) && coords_is_valid(coords, &result))
+    if (b_coords_valid && b_context_valid)
     {
-        change_mode_by_coords(self, coords);
-        apply_tracking_motion(self, coords);
+        change_mode_by_coords(h_self, h_coords);
+        apply_tracking_motion(h_self, h_coords);
+    }
+    else
+    {
+        result = -EINVAL;
     }
 
     return result;
 }
 
-linebot_result_t
-linebot_handle_immediate_stop(linebot_t const self)
+int
+linebot_handle_immediate_stop(linebot_t const h_self)
 {
-    linebot_result_t result;
+    int  result          = 0;
+    bool b_context_valid = context_validate(h_self) >= 0;
 
-    if (context_is_valid(self, &result))
+    if (b_context_valid)
     {
-        stop(self);
+        stop_immediately(h_self);
+    }
+    else
+    {
+        result = -EINVAL;
     }
 
     return result;
 }
 
 static inline void
-change_mode_by_control(linebot_t const self, uint16_t const commands)
+change_mode_by_control(linebot_t const h_self, uint16_t const commands)
 {
-    linebot_mode_t mode     = context_get_mode(self);
+    linebot_mode_t mode     = context_get_mode(h_self);
     linebot_mode_t new_mode = mode_change_by_commands(mode, commands);
 
-    if (context_update_mode(self, new_mode))
+    if (context_update_mode(h_self, new_mode))
     {
         linebot_port_mode_changed(new_mode);
     }
 }
 
 static inline void
-apply_manual_motion(linebot_t const self, uint16_t const commands)
+apply_manual_motion(linebot_t const h_self, uint16_t const commands)
 {
-    if (!context_is_tracking_route(self) || command_has_break(commands))
+    if (!context_is_tracking_route(h_self) || command_has_break(commands))
     {
-        linebot_motion_t motion = motion_create_by_commands(commands);
+        linebot_motion_t h_motion = motion_create_by_commands(commands);
 
-        linebot_port_motion_apply(motion);
-        linebot_motion_release(motion);
+        linebot_port_motion_apply(h_motion);
+        linebot_motion_release(h_motion);
     }
 }
 
 static inline void
-change_mode_by_coords(linebot_t const self, linebot_coords_t const coords)
+change_mode_by_coords(linebot_t const h_self, linebot_coords_t const coords)
 {
-    linebot_mode_t mode     = context_get_mode(self);
+    linebot_mode_t mode     = context_get_mode(h_self);
     linebot_mode_t new_mode = mode_change_by_coords(mode, coords);
 
-    if (context_update_mode(self, new_mode))
+    if (context_update_mode(h_self, new_mode))
     {
         linebot_port_mode_changed(new_mode);
     }
 }
 
 static inline void
-apply_tracking_motion(linebot_t const self, linebot_coords_t const coords)
+apply_tracking_motion(linebot_t const h_self, linebot_coords_t const coords)
 {
-    if (context_is_tracking_route(self) || coords_is_on_finish(coords))
+    if (context_is_tracking_route(h_self) || coords_is_on_finish(coords))
     {
-        position_t position = context_get_position(self);
+        position_t position = context_get_position(h_self);
         position_update_coords(position, coords);
 
-        linebot_motion_t motion = motion_create_by_position(position);
-        linebot_port_motion_apply(motion);
-        linebot_motion_release(motion);
+        linebot_motion_t h_motion = motion_create_by_position(position);
+        linebot_port_motion_apply(h_motion);
+        linebot_motion_release(h_motion);
     }
 }
 
 static inline void
-stop(linebot_t const self)
+stop_immediately(linebot_t const h_self)
 {
     linebot_mode_t   new_mode = LINEBOT_MODE_MANUAL;
-    linebot_motion_t motion   = motion_create_standby();
+    linebot_motion_t h_motion   = motion_create_standby();
 
-    context_update_mode(self, new_mode);
+    context_update_mode(h_self, new_mode);
     linebot_port_mode_changed(new_mode);
-    linebot_port_motion_apply(motion);
-    linebot_motion_release(motion);
+    linebot_port_motion_apply(h_motion);
+    linebot_motion_release(h_motion);
 }

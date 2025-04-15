@@ -2,7 +2,6 @@
 #define _ADAPTERS_H
 
 #include <linebot/coords.h>
-#include <linebot/result.h>
 #include <stdint.h>
 
 void
@@ -14,7 +13,7 @@ adapters_control_map(uint16_t raw);
 void
 adapters_coords_init(void);
 
-linebot_result_t
+int
 adapters_coords_map(uint8_t const *raw, linebot_coords_t *coords);
 
 void

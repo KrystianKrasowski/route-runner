@@ -1,5 +1,6 @@
 #include "context.h"
 #include "position.h"
+#include <errno.h>
 #include <linebot/api.h>
 #include <utils/pool.h>
 
@@ -19,42 +20,45 @@ context_init(void)
     linebot_pool_init(&pool);
 }
 
-linebot_t
+int
 context_acquire(linebot_mode_t    mode,
                 linebot_coords_t  coords,
                 uint8_t           errsize,
                 linebot_t * const handle)
 {
-    linebot_result_t result = LINEBOT_ERR_POOL_EXCEEDED;
+    int result = 0;
 
     if (linebot_pool_alloc(&pool, handle))
     {
         position_t position;
-        position_acquire(coords, errsize, &position);
+
+        // no need to verify result in module-private function
+        (void)position_acquire(coords, errsize, &position);
 
         linebot_instance_t *instance = linebot_pool_get(&pool, *handle);
 
         instance->mode     = mode;
         instance->position = position;
-
-        result = LINEBOT_OK;
+    }
+    else
+    {
+        result = -ENOMEM;
     }
 
     return result;
 }
 
-bool
-context_is_valid(linebot_t const self, linebot_result_t * const result)
+int
+context_validate(linebot_t const self)
 {
-    bool valid = true;
+    int result = 0;
 
     if (!linebot_pool_get(&pool, self))
     {
-        *result = LINEBOT_ERR_NULL_POINTER;
-        valid   = false;
+        result = -EINVAL;
     }
 
-    return valid;
+    return result;
 }
 
 void
@@ -85,16 +89,16 @@ context_get_position(linebot_t const self)
 bool
 context_update_mode(linebot_t const self, linebot_mode_t mode)
 {
-    bool                result   = false;
-    linebot_instance_t *instance = linebot_pool_get(&pool, self);
+    bool                b_changed = false;
+    linebot_instance_t *instance  = linebot_pool_get(&pool, self);
 
     if (instance->mode != mode)
     {
         instance->mode = mode;
-        result         = true;
+        b_changed      = true;
     }
 
-    return result;
+    return b_changed;
 }
 
 bool

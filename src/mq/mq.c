@@ -9,41 +9,25 @@ QUEUE_DECLARE(message, mq_message_t, MQ_SIZE)
 
 static message_queue_t topics[QUEUE_TOPICS_SIZE];
 
-mq_result_t
+void
 mq_init(void)
 {
     for (uint8_t i = 0; i < QUEUE_TOPICS_SIZE; i++)
     {
         message_queue_init(&topics[i]);
     }
-
-    return MQ_SUCCESS;
 }
 
-mq_result_t
-mq_push(mq_topic_t const topic, mq_message_t *message)
+int
+mq_push(mq_topic_t const topic, mq_message_t *p_message)
 {
-    if (message_queue_push(&topics[topic], message) == QUEUE_SUCCESS)
-    {
-        return MQ_SUCCESS;
-    }
-    else
-    {
-        return MQ_FULL;
-    }
+    return message_queue_push(&topics[topic], p_message);
 }
 
-mq_result_t
-mq_pull(mq_topic_t const topic, mq_message_t *message)
+int
+mq_pull(mq_topic_t const topic, mq_message_t *p_message)
 {
-    if (message_queue_pull(&topics[topic], message) == QUEUE_SUCCESS)
-    {
-        return MQ_SUCCESS;
-    }
-    else
-    {
-        return MQ_EMPTY;
-    }
+    return message_queue_pull(&topics[topic], p_message);
 }
 
 void
@@ -64,11 +48,11 @@ mq_create_command_message(uint16_t const command)
 }
 
 mq_message_t
-mq_create_coords_message(uint8_t const coords[])
+mq_create_coords_message(uint8_t const p_coords[])
 {
     mq_message_t message;
     message.type = MQ_MESSAGE_TYPE_COORDS;
-    memcpy(message.payload.coords, coords, sizeof(message.payload.coords));
+    memcpy(message.payload.coords, p_coords, sizeof(message.payload.coords));
 
     return message;
 }
