@@ -28,16 +28,16 @@ position_init(void)
 int
 position_acquire(linebot_coords_t   coords,
                  uint8_t            errsize,
-                 position_t * const handle)
+                 position_t * const ph_self)
 {
     int result = -ENOMEM;
 
-    if (position_pool_alloc(&pool, handle))
+    if (position_pool_alloc(&pool, ph_self))
     {
-        position_instance_t *position = position_pool_get(&pool, *handle);
+        position_instance_t *p_self = position_pool_get(&pool, *ph_self);
 
-        position->coords = coords;
-        position->errors = stack(errsize);
+        p_self->coords = coords;
+        p_self->errors = stack(errsize);
 
         result = 0;
     }
@@ -46,60 +46,60 @@ position_acquire(linebot_coords_t   coords,
 }
 
 void
-position_release(position_t const self)
+position_release(position_t const h_self)
 {
-    position_instance_t *instance = position_pool_get(&pool, self);
-    linebot_coords_release(instance->coords);
-    position_pool_free(&pool, self);
+    position_instance_t *p_self = position_pool_get(&pool, h_self);
+    linebot_coords_release(p_self->coords);
+    position_pool_free(&pool, h_self);
 }
 
 void
-position_update_coords(position_t const self, linebot_coords_t const coords)
+position_update_coords(position_t const h_self, linebot_coords_t const h_coords)
 {
-    position_instance_t *instance = position_pool_get(&pool, self);
-    coords_copy(instance->coords, coords);
+    position_instance_t *p_self = position_pool_get(&pool, h_self);
+    coords_copy(p_self->coords, h_coords);
 }
 
 bool
-position_is_on_finish(position_t const self)
+position_is_on_finish(position_t const h_self)
 {
-    position_instance_t *instance = position_pool_get(&pool, self);
-    return coords_is_on_finish(instance->coords);
+    position_instance_t *p_self = position_pool_get(&pool, h_self);
+    return coords_is_on_finish(p_self->coords);
 }
 
 int8_t
-position_last_error(position_t const self)
+position_last_error(position_t const h_self)
 {
-    int16_t              error    = 0;
-    position_instance_t *instance = position_pool_get(&pool, self);
-    stack_peek(&instance->errors, &error);
+    int16_t              error  = 0;
+    position_instance_t *p_self = position_pool_get(&pool, h_self);
+    stack_peek(&p_self->errors, &error);
 
     return (int8_t)error;
 }
 
 int8_t
-position_update_error(position_t const self)
+position_update_error(position_t const h_self)
 {
-    int8_t               error    = position_last_error(self);
-    position_instance_t *instance = position_pool_get(&pool, self);
+    int8_t               error  = position_last_error(h_self);
+    position_instance_t *p_self = position_pool_get(&pool, h_self);
 
-    coords_compute_mass_center(instance->coords, &error);
-    stack_push_rolling(&instance->errors, error);
+    coords_compute_mass_center(p_self->coords, &error);
+    stack_push_rolling(&p_self->errors, error);
 
     return error;
 }
 
 int16_t
-position_sum_errors(position_t const self)
+position_sum_errors(position_t const h_self)
 {
-    position_instance_t *instance = position_pool_get(&pool, self);
-    int16_t              sum      = stack_sum(&instance->errors);
+    position_instance_t *p_self = position_pool_get(&pool, h_self);
+    int16_t              sum    = stack_sum(&p_self->errors);
 
     return sum;
 }
 
 int8_t
-position_regulate(position_t const self)
+position_regulate(position_t const h_self)
 {
-    return position_regulate_pid(self);
+    return position_regulate_pid(h_self);
 }

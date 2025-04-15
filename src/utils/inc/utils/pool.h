@@ -13,19 +13,20 @@
         bool used[size];                                                       \
     } name##_pool_t;                                                           \
                                                                                \
-    static inline void name##_pool_init(name##_pool_t *pool)                   \
+    static inline void name##_pool_init(name##_pool_t *p_pool)                 \
     {                                                                          \
-        memset(pool, 0, sizeof(*pool));                                        \
+        memset(p_pool, 0, sizeof(*p_pool));                                    \
     }                                                                          \
                                                                                \
-    static inline bool name##_pool_alloc(name##_pool_t *pool, uint8_t *handle) \
+    static inline bool name##_pool_alloc(name##_pool_t *p_pool,                \
+                                         uint8_t       *ph_obj)                \
     {                                                                          \
         for (uint8_t i = 0; i < size; i++)                                     \
         {                                                                      \
-            if (!pool->used[i])                                                \
+            if (!p_pool->used[i])                                              \
             {                                                                  \
-                pool->used[i] = true;                                          \
-                *handle       = i;                                             \
+                p_pool->used[i] = true;                                        \
+                *ph_obj         = i;                                           \
                                                                                \
                 return true;                                                   \
             }                                                                  \
@@ -34,23 +35,23 @@
         return false;                                                          \
     }                                                                          \
                                                                                \
-    static inline type *name##_pool_get(name##_pool_t *pool, uint8_t handle)   \
+    static inline type *name##_pool_get(name##_pool_t *p_pool, uint8_t h_obj)  \
     {                                                                          \
         type *instance = NULL;                                                 \
                                                                                \
-        if (handle < size && pool->used[handle])                               \
+        if (h_obj < size && p_pool->used[h_obj])                               \
         {                                                                      \
-            instance = &pool->objects[handle];                                 \
+            instance = &p_pool->objects[h_obj];                                \
         }                                                                      \
                                                                                \
         return instance;                                                       \
     }                                                                          \
                                                                                \
-    static inline void name##_pool_free(name##_pool_t *pool, uint8_t handle)   \
+    static inline void name##_pool_free(name##_pool_t *p_pool, uint8_t h_obj)  \
     {                                                                          \
-        if (handle < size)                                                     \
+        if (h_obj < size)                                                      \
         {                                                                      \
-            pool->used[handle] = false;                                        \
+            p_pool->used[h_obj] = false;                                       \
         }                                                                      \
     }
 

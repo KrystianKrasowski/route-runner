@@ -19,113 +19,113 @@ stack(uint8_t size)
 
 stack_result_t
 // cppcheck-suppress unusedFunction
-stack_pop(stack_t *self, int16_t *element)
+stack_pop(stack_t *p_self, int16_t *p_element)
 {
-    if (stack_is_empty(self))
+    if (stack_is_empty(p_self))
     {
         return STACK_EMPTY;
     }
 
-    *element = self->elements[self->top--];
+    *p_element = p_self->elements[p_self->top--];
 
     return STACK_SUCCESS;
 }
 
 stack_result_t
-stack_peek(stack_t const *self, int16_t *element)
+stack_peek(stack_t const *p_self, int16_t *p_element)
 {
-    if (stack_is_empty(self))
+    if (stack_is_empty(p_self))
     {
         return STACK_EMPTY;
     }
 
-    *element = self->elements[self->top];
+    *p_element = p_self->elements[p_self->top];
 
     return STACK_SUCCESS;
 }
 
 stack_result_t
 // cppcheck-suppress unusedFunction
-stack_push(stack_t *self, int16_t element)
+stack_push(stack_t *p_self, int16_t element)
 {
-    if (self->top >= self->size - 1)
+    if (p_self->top >= p_self->size - 1)
     {
         return STACK_FULL;
     }
 
-    self->elements[++self->top] = element;
+    p_self->elements[++p_self->top] = element;
 
     return STACK_SUCCESS;
 }
 
 void
-stack_push_rolling(stack_t *self, int16_t element)
+stack_push_rolling(stack_t *p_self, int16_t element)
 {
-    if (self->top >= self->size - 1)
+    if (p_self->top >= p_self->size - 1)
     {
-        for (uint8_t i = 1; i < self->size; i++)
+        for (uint8_t i = 1; i < p_self->size; i++)
         {
-            self->elements[i - 1] = self->elements[i];
+            p_self->elements[i - 1] = p_self->elements[i];
         }
 
-        self->elements[self->size - 1] = element;
+        p_self->elements[p_self->size - 1] = element;
     }
     else
     {
-        self->elements[++self->top] = element;
+        p_self->elements[++p_self->top] = element;
     }
 }
 
 bool
 // cppcheck-suppress staticFunction
-stack_is_empty(stack_t const *self)
+stack_is_empty(stack_t const *p_self)
 {
-    return self->top == -1;
+    return p_self->top == -1;
 }
 
 bool
 // cppcheck-suppress unusedFunction
-stack_is_full(stack_t const *self)
+stack_is_full(stack_t const *p_self)
 {
-    return self->top == self->size - 1;
+    return p_self->top == p_self->size - 1;
 }
 
 uint8_t
 // cppcheck-suppress unusedFunction
-stack_get_size(stack_t const *self)
+stack_get_size(stack_t const *p_self)
 {
-    return self->size;
+    return p_self->size;
 }
 
 uint8_t
 // cppcheck-suppress unusedFunction
-stack_get_length(stack_t const *self)
+stack_get_length(stack_t const *p_self)
 {
-    return self->top + 1;
+    return p_self->top + 1;
 }
 
 stack_result_t
 // cppcheck-suppress unusedFunction
-stack_get_element(stack_t const *self, uint8_t index, int16_t *element)
+stack_get_element(stack_t const *p_self, uint8_t index, int16_t *p_element)
 {
-    if (index > self->top)
+    if (index > p_self->top)
     {
         return STACK_ELEMENT_OUT_OF_BOUNDS;
     }
 
-    *element = self->elements[index];
+    *p_element = p_self->elements[index];
 
     return STACK_SUCCESS;
 }
 
 int16_t
-stack_sum(stack_t const *self)
+stack_sum(stack_t const *p_self)
 {
     int16_t sum = 0;
 
-    for (uint8_t i = 0; i <= self->top; i++)
+    for (uint8_t i = 0; i <= p_self->top; i++)
     {
-        sum += self->elements[i];
+        sum += p_self->elements[i];
     }
 
     return sum;

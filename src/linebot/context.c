@@ -89,16 +89,16 @@ context_get_position(linebot_t const self)
 bool
 context_update_mode(linebot_t const self, linebot_mode_t mode)
 {
-    bool                result   = false;
-    linebot_instance_t *instance = linebot_pool_get(&pool, self);
+    bool                b_changed = false;
+    linebot_instance_t *instance  = linebot_pool_get(&pool, self);
 
     if (instance->mode != mode)
     {
         instance->mode = mode;
-        result         = true;
+        b_changed      = true;
     }
 
-    return result;
+    return b_changed;
 }
 
 bool

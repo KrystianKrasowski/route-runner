@@ -27,7 +27,7 @@ typedef uint8_t linebot_coords_t;
  * @param[in] r1 nearset to center detection on the right side of the route
  * @param[in] r2 middle detection on the right side of the route
  * @param[in] r3 furthest from center detection on the right side of the route
- * @param[out] handle handle of coords object
+ * @param[out] ph_self pointer to a handle of a coords object
  *
  * @retval 0 OK
  * @retval -12 ENOMEM
@@ -39,14 +39,14 @@ linebot_coords_acquire(uint8_t const            l3,
                        uint8_t const            r1,
                        uint8_t const            r2,
                        uint8_t const            r3,
-                       linebot_coords_t * const handle);
+                       linebot_coords_t * const ph_self);
 
 /**
  * @brief Release coords instance
  *
- * @param[in] coords handle to a coords instance
+ * @param[in] h_self handle to a coords instance
  */
 void
-linebot_coords_release(linebot_coords_t const coords);
+linebot_coords_release(linebot_coords_t const h_self);
 
 #endif

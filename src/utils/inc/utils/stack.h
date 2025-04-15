@@ -26,33 +26,33 @@ stack_t
 stack(uint8_t size);
 
 stack_result_t
-stack_pop(stack_t *self, int16_t *element);
+stack_pop(stack_t *p_self, int16_t *p_element);
 
 stack_result_t
-stack_peek(stack_t const *self, int16_t *element);
+stack_peek(stack_t const *p_self, int16_t *p_element);
 
 stack_result_t
-stack_push(stack_t *self, int16_t element);
+stack_push(stack_t *p_self, int16_t element);
 
 void
-stack_push_rolling(stack_t *self, int16_t element);
+stack_push_rolling(stack_t *p_self, int16_t element);
 
 bool
-stack_is_empty(stack_t const *self);
+stack_is_empty(stack_t const *p_self);
 
 bool
-stack_is_full(stack_t const *self);
+stack_is_full(stack_t const *p_self);
 
 uint8_t
-stack_get_size(stack_t const *self);
+stack_get_size(stack_t const *p_self);
 
 uint8_t
-stack_get_length(stack_t const *self);
+stack_get_length(stack_t const *p_self);
 
 stack_result_t
-stack_get_element(stack_t const *self, uint8_t index, int16_t *element);
+stack_get_element(stack_t const *p_self, uint8_t index, int16_t *p_element);
 
 int16_t
-stack_sum(stack_t const *self);
+stack_sum(stack_t const *p_self);
 
 #endif

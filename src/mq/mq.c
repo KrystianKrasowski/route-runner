@@ -21,9 +21,9 @@ mq_init(void)
 }
 
 mq_result_t
-mq_push(mq_topic_t const topic, mq_message_t *message)
+mq_push(mq_topic_t const topic, mq_message_t *p_message)
 {
-    if (message_queue_push(&topics[topic], message) == QUEUE_SUCCESS)
+    if (message_queue_push(&topics[topic], p_message) == QUEUE_SUCCESS)
     {
         return MQ_SUCCESS;
     }
@@ -34,9 +34,9 @@ mq_push(mq_topic_t const topic, mq_message_t *message)
 }
 
 mq_result_t
-mq_pull(mq_topic_t const topic, mq_message_t *message)
+mq_pull(mq_topic_t const topic, mq_message_t *p_message)
 {
-    if (message_queue_pull(&topics[topic], message) == QUEUE_SUCCESS)
+    if (message_queue_pull(&topics[topic], p_message) == QUEUE_SUCCESS)
     {
         return MQ_SUCCESS;
     }
@@ -64,11 +64,11 @@ mq_create_command_message(uint16_t const command)
 }
 
 mq_message_t
-mq_create_coords_message(uint8_t const coords[])
+mq_create_coords_message(uint8_t const p_coords[])
 {
     mq_message_t message;
     message.type = MQ_MESSAGE_TYPE_COORDS;
-    memcpy(message.payload.coords, coords, sizeof(message.payload.coords));
+    memcpy(message.payload.coords, p_coords, sizeof(message.payload.coords));
 
     return message;
 }

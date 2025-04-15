@@ -22,55 +22,55 @@ typedef enum
         uint8_t tail;                                                          \
     } name##_queue_t;                                                          \
                                                                                \
-    static inline void name##_queue_init(name##_queue_t *self)                 \
+    static inline void name##_queue_init(name##_queue_t *p_self)               \
     {                                                                          \
-        memset(self->elements, 0, sizeof(self->elements));                     \
-        self->capacity = size + 1;                                             \
-        self->head     = 0;                                                    \
-        self->tail     = 0;                                                    \
+        memset(p_self->elements, 0, sizeof(p_self->elements));                 \
+        p_self->capacity = size + 1;                                           \
+        p_self->head     = 0;                                                  \
+        p_self->tail     = 0;                                                  \
     }                                                                          \
                                                                                \
-    static inline queue_result_t name##_queue_push(name##_queue_t *self,       \
-                                                   type           *element)    \
+    static inline queue_result_t name##_queue_push(name##_queue_t *p_self,     \
+                                                   type           *p_element)  \
     {                                                                          \
         queue_result_t result = QUEUE_SUCCESS;                                 \
                                                                                \
-        uint8_t next = (self->tail + 1) % self->capacity;                      \
+        uint8_t next = (p_self->tail + 1) % p_self->capacity;                  \
                                                                                \
-        if (next == self->head)                                                \
+        if (next == p_self->head)                                              \
         {                                                                      \
             result = QUEUE_FULL;                                               \
         }                                                                      \
         else                                                                   \
         {                                                                      \
-            self->elements[self->tail] = *element;                             \
-            self->tail                 = next;                                 \
+            p_self->elements[p_self->tail] = *p_element;                       \
+            p_self->tail                   = next;                             \
         }                                                                      \
                                                                                \
         return result;                                                         \
     }                                                                          \
                                                                                \
-    static inline queue_result_t name##_queue_pull(name##_queue_t *self,       \
-                                                   type           *element)    \
+    static inline queue_result_t name##_queue_pull(name##_queue_t *p_self,     \
+                                                   type           *p_element)  \
     {                                                                          \
         queue_result_t result = QUEUE_SUCCESS;                                 \
                                                                                \
-        if (self->head == self->tail)                                          \
+        if (p_self->head == p_self->tail)                                      \
         {                                                                      \
             result = QUEUE_EMPTY;                                              \
         }                                                                      \
         else                                                                   \
         {                                                                      \
-            *element   = self->elements[self->head];                           \
-            self->head = (self->head + 1) % self->capacity;                    \
+            *p_element   = p_self->elements[p_self->head];                     \
+            p_self->head = (p_self->head + 1) % p_self->capacity;              \
         }                                                                      \
                                                                                \
         return result;                                                         \
     }                                                                          \
                                                                                \
-    static inline void name##_queue_clear(name##_queue_t *self)                \
+    static inline void name##_queue_clear(name##_queue_t *p_self)              \
     {                                                                          \
-        name##_queue_init(self);                                               \
+        name##_queue_init(p_self);                                             \
     }
 
 #endif

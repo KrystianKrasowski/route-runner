@@ -4,6 +4,6 @@
 #include "position.h"
 
 int8_t
-position_regulate_pid(position_t const position);
+position_regulate_pid(position_t const h_position);
 
 #endif

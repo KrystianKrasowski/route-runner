@@ -34,7 +34,7 @@ typedef uint8_t linebot_motion_t;
  *
  * @param[in] direction direction in which linebot moves
  * @param[in] correction steering value
- * @param[out] handle handle of motion object
+ * @param[out] ph_self handle of motion object
  * 
  * @retval 0 OK
  * @retval -12 ENOMEM
@@ -42,34 +42,34 @@ typedef uint8_t linebot_motion_t;
 int
 linebot_motion_acquire(linebot_motion_direction_t const direction,
                        int8_t const                     correction,
-                       linebot_motion_t * const         handle);
+                       linebot_motion_t * const         ph_self);
 
 /**
  * @brief Release motion instance
  *
- * @param[in] motion handle to a motion instance
+ * @param[in] h_self handle to a motion instance
  */
 void
-linebot_motion_release(linebot_motion_t motion);
+linebot_motion_release(linebot_motion_t h_self);
 
 /**
  * @brief Returns motion direction
  *
- * @param[in] self handle to a motion instance
+ * @param[in] h_self handle to a motion instance
  * 
  * @return linebot_motion_direction_t
  */
 linebot_motion_direction_t
-linebot_motion_get_direction(linebot_motion_t const self);
+linebot_motion_get_direction(linebot_motion_t const h_self);
 
 /**
  * @brief Returns motion correction
  *
- * @param[in] self handle to a motion instance
+ * @param[in] h_self handle to a motion instance
  * 
  * @return int8_t steering value
  */
 int8_t
-linebot_motion_get_correction(linebot_motion_t const self);
+linebot_motion_get_correction(linebot_motion_t const h_self);
 
 #endif

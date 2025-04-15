@@ -10,15 +10,15 @@ int
 coords_validate(linebot_coords_t const h_self);
 
 void
-coords_copy(linebot_coords_t const self, linebot_coords_t const other);
+coords_copy(linebot_coords_t const h_self, linebot_coords_t const h_other);
 
 bool
-coords_is_on_route(linebot_coords_t const self);
+coords_is_on_route(linebot_coords_t const h_self);
 
 bool
-coords_is_on_finish(linebot_coords_t const self);
+coords_is_on_finish(linebot_coords_t const h_self);
 
 void
-coords_compute_mass_center(linebot_coords_t const self, int8_t *value);
+coords_compute_mass_center(linebot_coords_t const h_self, int8_t *p_value);
 
 #endif
