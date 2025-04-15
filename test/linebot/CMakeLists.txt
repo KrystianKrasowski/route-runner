@@ -1,7 +1,7 @@
 set(TEST_SUITE
     linebot_handle_manual_control_test.c
     linebot_handle_route_tracking_test.c
-    linebot_stop_test.c
+    linebot_handle_immediate_stop_test.c
 )
 
 # extract some function here

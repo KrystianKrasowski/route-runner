@@ -43,6 +43,6 @@ task_handle_immediate_stop(linebot_t const linebot)
     if (mq_pull(MQ_TOPIC_ROUTE_GUARD, &message) == MQ_SUCCESS)
     {
         // TODO: Handle failures
-        (void)linebot_stop(linebot);
+        (void)linebot_handle_immediate_stop(linebot);
     }
 }

@@ -116,6 +116,6 @@ linebot_handle_route_tracking(linebot_t const        self,
  * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
-linebot_stop(linebot_t const self);
+linebot_handle_immediate_stop(linebot_t const self);
 
 #endif
