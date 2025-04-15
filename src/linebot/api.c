@@ -5,6 +5,7 @@
 #include "motion.h"
 #include "motion_factory.h"
 #include "position.h"
+#include <errno.h>
 #include <linebot/api.h>
 #include <linebot/port.h>
 
@@ -21,7 +22,7 @@ static inline void
 apply_tracking_motion(linebot_t const self, linebot_coords_t const coords);
 
 static inline void
-stop(linebot_t const self);
+stop_immediately(linebot_t const self);
 
 void
 linebot_init(void)
@@ -32,35 +33,49 @@ linebot_init(void)
     context_init();
 }
 
-linebot_result_t
+int
 // cppcheck-suppress staticFunction
 linebot_acquire(linebot_mode_t    mode,
                 linebot_coords_t  coords,
                 uint8_t           errsize,
                 linebot_t * const handle)
 {
-    linebot_result_t result;
+    bool b_coords_valid = coords_validate(coords) >= 0;
 
-    if (coords_is_valid(coords, &result))
+    if (!b_coords_valid)
     {
-        result = context_acquire(mode, coords, errsize, handle);
+        return -EINVAL;
     }
 
-    return result;
+    bool b_acquired = context_acquire(mode, coords, errsize, handle) >= 0;
+
+    if (!b_acquired)
+    {
+        return -ENOMEM;
+    }
+
+    return 0;
 }
 
-linebot_result_t
+int
 linebot_acquire_default(linebot_t * const handle)
 {
     linebot_coords_t coords;
-    linebot_result_t result = linebot_coords_acquire(0, 0, 0, 0, 0, 0, &coords);
+    bool b_acquired = linebot_coords_acquire(0, 0, 0, 0, 0, 0, &coords) >= 0;
 
-    if (LINEBOT_OK == result)
+    if (!b_acquired)
     {
-        result = linebot_acquire(LINEBOT_MODE_MANUAL, coords, 20, handle);
+        return -ENOMEM;
     }
 
-    return result;
+    b_acquired = linebot_acquire(LINEBOT_MODE_MANUAL, coords, 20, handle) >= 0;
+
+    if (!b_acquired)
+    {
+        return -ENOMEM;
+    }
+
+    return 0;
 }
 
 void
@@ -70,57 +85,78 @@ linebot_release(linebot_t const self)
     context_release(self);
 }
 
-linebot_result_t
+int
 // cppcheck-suppress unusedFunction
 linebot_get_mode(linebot_t const self, linebot_mode_t * const mode)
 {
-    linebot_result_t result;
+    int  result          = 0;
+    bool b_context_valid = context_validate(self) >= 0;
 
-    if (context_is_valid(self, &result))
+    if (b_context_valid)
     {
         *mode = context_get_mode(self);
+    }
+    else
+    {
+        result = -EINVAL;
     }
 
     return result;
 }
 
-linebot_result_t
+int
 linebot_handle_manual_control(linebot_t const self, uint16_t const commands)
 {
-    linebot_result_t result;
+    int  result          = 0;
+    bool b_context_valid = context_validate(self) >= 0;
 
-    if (context_is_valid(self, &result))
+    if (b_context_valid)
     {
         change_mode_by_control(self, commands);
         apply_manual_motion(self, commands);
     }
-
-    return result;
-}
-
-linebot_result_t
-linebot_handle_route_tracking(linebot_t const        self,
-                              linebot_coords_t const coords)
-{
-    linebot_result_t result;
-
-    if (context_is_valid(self, &result) && coords_is_valid(coords, &result))
+    else
     {
-        change_mode_by_coords(self, coords);
-        apply_tracking_motion(self, coords);
+        result = -EINVAL;
     }
 
     return result;
 }
 
-linebot_result_t
+int
+linebot_handle_route_tracking(linebot_t const        self,
+                              linebot_coords_t const h_coords)
+{
+    int  result          = 0;
+    bool b_coords_valid  = coords_validate(h_coords) >= 0;
+    bool b_context_valid = context_validate(self) >= 0;
+
+    if (b_coords_valid && b_context_valid)
+    {
+        change_mode_by_coords(self, h_coords);
+        apply_tracking_motion(self, h_coords);
+    }
+    else
+    {
+        result = -EINVAL;
+    }
+
+    return result;
+}
+
+int
 linebot_handle_immediate_stop(linebot_t const self)
 {
-    linebot_result_t result;
+    int  result          = 0;
+    bool b_context_valid = context_validate(self) >= 0;
 
-    if (context_is_valid(self, &result))
+    if (b_context_valid)
     {
-        stop(self);
+        stop_immediately(self);
+    }
+    else
+    {
+        result = -EINVAL;
     }
 
     return result;
@@ -177,7 +213,7 @@ apply_tracking_motion(linebot_t const self, linebot_coords_t const coords)
 }
 
 static inline void
-stop(linebot_t const self)
+stop_immediately(linebot_t const self)
 {
     linebot_mode_t   new_mode = LINEBOT_MODE_MANUAL;
     linebot_motion_t motion   = motion_create_standby();

@@ -6,7 +6,6 @@
 #ifndef _LINEBOT_MOTION_H
 #define _LINEBOT_MOTION_H
 
-#include <linebot/result.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -37,10 +36,10 @@ typedef uint8_t linebot_motion_t;
  * @param[in] correction steering value
  * @param[out] handle handle of motion object
  * 
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_POOL_EXCEEDED
+ * @retval 0 OK
+ * @retval -12 ENOMEM
  */
-linebot_result_t
+int
 linebot_motion_acquire(linebot_motion_direction_t const direction,
                        int8_t const                     correction,
                        linebot_motion_t * const         handle);

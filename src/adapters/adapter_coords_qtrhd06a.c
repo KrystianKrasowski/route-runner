@@ -11,7 +11,7 @@ adapters_coords_init(void)
     qtrhd06a_init();
 }
 
-linebot_result_t
+int
 adapters_coords_map(uint8_t const *raw, linebot_coords_t *coords)
 {
     return linebot_coords_acquire(normalize(raw[0]),

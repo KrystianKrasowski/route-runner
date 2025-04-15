@@ -10,7 +10,6 @@
 #include "coords.h"
 #include "mode.h"
 #include "motion.h"
-#include "result.h"
 
 /**
  * @brief Linebot API context object handle.
@@ -35,10 +34,11 @@ linebot_init(void);
  * @param[in] errors_size size of the measured route drift errors collection
  * @param[out] handle handle of linebot instance
  *
- * @retval LINEBOT_OK linebot object successfully instantiated
- * @retval LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
+ * @retval 0 OK linebot object successfully instantiated
+ * @retval -12 ENOMEM linebot object instantiation failed due to pool exhaustion
+ * @retval -22 EINVAL invalid input argument(s)
  */
-linebot_result_t
+int
 linebot_acquire(linebot_mode_t    mode,
                 linebot_coords_t  coords,
                 uint8_t           errors_size,
@@ -49,10 +49,10 @@ linebot_acquire(linebot_mode_t    mode,
  *
  * @param[out] handle handle of linebot instance
  *
- * @retval LINEBOT_OK linebot object successfully instantiated
- * @retval LINEBOT_ERR_POOL_EXCEEDED linebot object instantiation failed
+ * @retval 0 OK linebot object successfully instantiated
+ * @retval -12 ENOMEM linebot object instantiation failed due to pool exhaustion
  */
-linebot_result_t
+int
 linebot_acquire_default(linebot_t * const handle);
 
 /**
@@ -69,10 +69,10 @@ linebot_release(linebot_t const linebot);
  * @param[in] self handle to a linebot instance
  * @param[out] mode mode value
  *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_NULL_POINTER
+ * @retval 0 OK
+ * @retval -22 EINVAL Invalid linebot handle
  */
-linebot_result_t
+int
 linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
 
 /**
@@ -85,10 +85,10 @@ linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
  * @param[in] self handle to a linebot instance
  * @param[in] commands commands given by external control
  *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_NULL_POINTER
+ * @retval 0 OK
+ * @retval -22 EINVAL Invalid linebot handle
  */
-linebot_result_t
+int
 linebot_handle_manual_control(linebot_t const self, uint16_t const commands);
 
 /**
@@ -100,10 +100,10 @@ linebot_handle_manual_control(linebot_t const self, uint16_t const commands);
  * @param[in] self handle to a linebot instance
  * @param[in] coords The route coordinates by external source
  *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_NULL_POINTER
+ * @retval 0 OK
+ * @retval -22 EINVAL Invalid linebot handle
  */
-linebot_result_t
+int
 linebot_handle_route_tracking(linebot_t const        self,
                               linebot_coords_t const coords);
 
@@ -112,10 +112,10 @@ linebot_handle_route_tracking(linebot_t const        self,
  *
  * @param[in] self handle to a linebot instance
  *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_NULL_POINTER
+ * @retval 0 OK
+ * @retval -22 EINVAL Invalid linebot handle
  */
-linebot_result_t
+int
 linebot_handle_immediate_stop(linebot_t const self);
 
 #endif

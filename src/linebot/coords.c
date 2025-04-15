@@ -1,4 +1,5 @@
 #include "coords.h"
+#include <errno.h>
 #include <string.h>
 #include <utils/pool.h>
 
@@ -16,29 +17,30 @@ static int8_t const COORDS_WEIGHTS[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
 
 static coords_pool_t pool;
 
-linebot_result_t
+int
 linebot_coords_acquire(uint8_t const            l3,
                        uint8_t const            l2,
                        uint8_t const            l1,
                        uint8_t const            r1,
                        uint8_t const            r2,
                        uint8_t const            r3,
-                       linebot_coords_t * const handle)
+                       linebot_coords_t * const ph_coords)
 {
-    linebot_result_t result = LINEBOT_ERR_POOL_EXCEEDED;
+    int  result         = -ENOMEM;
+    bool b_is_allocated = coords_pool_alloc(&pool, ph_coords);
 
-    if (coords_pool_alloc(&pool, handle))
+    if (b_is_allocated)
     {
-        coords_instance_t *coords = coords_pool_get(&pool, *handle);
+        coords_instance_t *p_coords = coords_pool_get(&pool, *ph_coords);
 
-        coords->coordinates[0] = l3;
-        coords->coordinates[1] = l2;
-        coords->coordinates[2] = l1;
-        coords->coordinates[3] = r1;
-        coords->coordinates[4] = r2;
-        coords->coordinates[5] = r3;
+        p_coords->coordinates[0] = l3;
+        p_coords->coordinates[1] = l2;
+        p_coords->coordinates[2] = l1;
+        p_coords->coordinates[3] = r1;
+        p_coords->coordinates[4] = r2;
+        p_coords->coordinates[5] = r3;
 
-        result = LINEBOT_OK;
+        result = 0;
     }
 
     return result;
@@ -56,18 +58,17 @@ coords_init(void)
     coords_pool_init(&pool);
 }
 
-bool
-coords_is_valid(linebot_coords_t const self, linebot_result_t * const result)
+int
+coords_validate(linebot_coords_t const h_self)
 {
-    bool valid = true;
+    int result = 0;
 
-    if (!coords_pool_get(&pool, self))
+    if (!coords_pool_get(&pool, h_self))
     {
-        *result = LINEBOT_ERR_NULL_POINTER;
-        valid   = false;
+        result = -EINVAL;
     }
 
-    return valid;
+    return result;
 }
 
 void

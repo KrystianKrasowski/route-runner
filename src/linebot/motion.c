@@ -18,14 +18,15 @@ motion_init(void)
     motion_pool_init(&pool);
 }
 
-linebot_result_t
+int
 linebot_motion_acquire(linebot_motion_direction_t const direction,
                        int8_t const                     correction,
                        linebot_motion_t * const         handle)
 {
-    linebot_result_t result = LINEBOT_ERR_POOL_EXCEEDED;
+    int  result      = 0;
+    bool b_allocated = motion_pool_alloc(&pool, handle);
 
-    if (motion_pool_alloc(&pool, handle))
+    if (b_allocated)
     {
         motion_instance_t *motion = motion_pool_get(&pool, *handle);
 

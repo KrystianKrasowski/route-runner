@@ -2,6 +2,7 @@
 #include "position.h"
 #include "coords.h"
 #include "position_regulator.h"
+#include <errno.h>
 #include <string.h>
 #include <utils/pool.h>
 #include <utils/stack.h>
@@ -24,12 +25,12 @@ position_init(void)
     position_pool_init(&pool);
 }
 
-linebot_result_t
+int
 position_acquire(linebot_coords_t   coords,
                  uint8_t            errsize,
                  position_t * const handle)
 {
-    bool result = LINEBOT_ERR_POOL_EXCEEDED;
+    int result = -ENOMEM;
 
     if (position_pool_alloc(&pool, handle))
     {
@@ -38,7 +39,7 @@ position_acquire(linebot_coords_t   coords,
         position->coords = coords;
         position->errors = stack(errsize);
 
-        result = LINEBOT_OK;
+        result = 0;
     }
 
     return result;

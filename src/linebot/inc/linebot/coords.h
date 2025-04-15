@@ -6,7 +6,6 @@
 #ifndef _LINEBOT_COORDS_H
 #define _LINEBOT_COORDS_H
 
-#include "result.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -30,10 +29,10 @@ typedef uint8_t linebot_coords_t;
  * @param[in] r3 furthest from center detection on the right side of the route
  * @param[out] handle handle of coords object
  *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_POOL_EXCEEDED
+ * @retval 0 OK
+ * @retval -12 ENOMEM
  */
-linebot_result_t
+int
 linebot_coords_acquire(uint8_t const            l3,
                        uint8_t const            l2,
                        uint8_t const            l1,

@@ -9,7 +9,7 @@ typedef uint8_t position_t;
 void
 position_init(void);
 
-linebot_result_t
+int
 position_acquire(linebot_coords_t   coords,
              uint8_t            errsize,
              position_t * const handle);
