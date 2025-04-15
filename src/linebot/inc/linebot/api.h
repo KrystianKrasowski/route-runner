@@ -89,23 +89,7 @@ linebot_get_mode(linebot_t const self, linebot_mode_t * const mode);
  * @retval LINEBOT_ERR_NULL_POINTER
  */
 linebot_result_t
-linebot_apply_manual_motion(linebot_t const self, uint16_t const commands);
-
-/**
- * @brief Change mode to the given commands.
- *
- * Possible mode transitions are:
- * * `detected` -> `following` (a subset of `tracking`)
- * * `tracking` -> `manual`
- *
- * @param[in] self handle to a linebot instance
- * @param[in] commands The commands given by external control
- *
- * @retval LINEBOT_OK
- * @retval LINEBOT_ERR_NULL_POINTER
- */
-linebot_result_t
-linebot_change_mode_by_control(linebot_t const self, uint16_t const commands);
+linebot_handle_manual_control(linebot_t const self, uint16_t const commands);
 
 /**
  * @brief Apply new motion to the given route coordinates.

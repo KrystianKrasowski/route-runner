@@ -14,8 +14,7 @@ task_handle_manual_control(linebot_t const linebot)
         uint16_t commands    = adapters_control_map(raw_command);
 
         // TODO: Handle failures
-        (void)linebot_change_mode_by_control(linebot, commands);
-        (void)linebot_apply_manual_motion(linebot, commands);
+        (void)linebot_handle_manual_control(linebot, commands);
     }
 }
 

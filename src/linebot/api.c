@@ -9,10 +9,10 @@
 #include <linebot/port.h>
 
 static inline void
-apply_manual_motion(linebot_t const self, uint16_t const commands);
+change_mode_by_control(linebot_t const self, uint16_t const commands);
 
 static inline void
-change_mode_by_control(linebot_t const self, uint16_t const commands);
+apply_manual_motion(linebot_t const self, uint16_t const commands);
 
 static inline void
 apply_tracking_motion(linebot_t const self, linebot_coords_t const coords);
@@ -85,26 +85,14 @@ linebot_get_mode(linebot_t const self, linebot_mode_t * const mode)
 }
 
 linebot_result_t
-linebot_apply_manual_motion(linebot_t const self, uint16_t const commands)
-{
-    linebot_result_t result;
-
-    if (context_is_valid(self, &result))
-    {
-        apply_manual_motion(self, commands);
-    }
-
-    return result;
-}
-
-linebot_result_t
-linebot_change_mode_by_control(linebot_t const self, uint16_t const commands)
+linebot_handle_manual_control(linebot_t const self, uint16_t const commands)
 {
     linebot_result_t result;
 
     if (context_is_valid(self, &result))
     {
         change_mode_by_control(self, commands);
+        apply_manual_motion(self, commands);
     }
 
     return result;
@@ -152,18 +140,6 @@ linebot_stop(linebot_t const self)
 }
 
 static inline void
-apply_manual_motion(linebot_t const self, uint16_t const commands)
-{
-    if (!context_is_tracking_route(self) || command_has_break(commands))
-    {
-        linebot_motion_t motion = motion_create_by_commands(commands);
-
-        linebot_port_motion_apply(motion);
-        linebot_motion_release(motion);
-    }
-}
-
-static inline void
 change_mode_by_control(linebot_t const self, uint16_t const commands)
 {
     linebot_mode_t mode     = context_get_mode(self);
@@ -172,6 +148,18 @@ change_mode_by_control(linebot_t const self, uint16_t const commands)
     if (context_update_mode(self, new_mode))
     {
         linebot_port_mode_changed(new_mode);
+    }
+}
+
+static inline void
+apply_manual_motion(linebot_t const self, uint16_t const commands)
+{
+    if (!context_is_tracking_route(self) || command_has_break(commands))
+    {
+        linebot_motion_t motion = motion_create_by_commands(commands);
+
+        linebot_port_motion_apply(motion);
+        linebot_motion_release(motion);
     }
 }
 
