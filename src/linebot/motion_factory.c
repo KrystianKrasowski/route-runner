@@ -20,17 +20,17 @@ motion_create_by_commands(uint16_t const commands)
 }
 
 linebot_motion_t
-motion_create_by_position(position_t const position)
+motion_create_by_position(position_t const h_position)
 {
     linebot_motion_t h_motion;
 
-    if (position_is_on_finish(position))
+    if (position_is_on_finish(h_position))
     {
         (void)linebot_motion_acquire(LINEBOT_MOTION_NONE, 0, &h_motion);
     }
     else
     {
-        int8_t correction = position_regulate(position);
+        int8_t correction = position_regulate(h_position);
         (void)linebot_motion_acquire(
             LINEBOT_MOTION_FORWARD, correction, &h_motion);
     }
