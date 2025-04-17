@@ -67,10 +67,11 @@ should_receive_spi_transmission(uint8_t response[], uint16_t expected_command)
 
     // then
     mq_message_t message;
-    int  status = mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message);
+    int          status = mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message);
 
     TEST_ASSERT_EQUAL(0, status);
-    TEST_ASSERT_DS2_COMMANDS(expected_command, message.payload.command);
+    TEST_ASSERT_DS2_COMMANDS(expected_command,
+                             dualshock2_parse_commands(message.payload));
 }
 
 int
@@ -101,7 +102,7 @@ main(void)
         should_receive_spi_transmission,
         (uint8_t[]){0xff, 0x41, 0x5a, 0xf7, 0xff, 0xff, 0xff, 0xff, 0xff},
         DS2_START);
-    
+
     RUN_PARAM_TEST(
         should_receive_spi_transmission,
         (uint8_t[]){0xff, 0x41, 0x5a, 0xef, 0xff, 0xff, 0xff, 0xff, 0xff},

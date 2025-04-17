@@ -38,30 +38,12 @@ mq_clear(mq_topic_t const topic)
 }
 
 mq_message_t
-mq_create_command_message(uint16_t const command)
+mq_create_message(void const *p_payload, size_t size)
 {
     mq_message_t message;
-    message.type            = MQ_MESSAGE_TYPE_COMMAND;
-    message.payload.command = command;
+    memcpy(&message.payload, p_payload, size);
+    message.size = size;
 
     return message;
 }
 
-mq_message_t
-mq_create_coords_message(uint8_t const p_coords[])
-{
-    mq_message_t message;
-    message.type = MQ_MESSAGE_TYPE_COORDS;
-    memcpy(message.payload.coords, p_coords, sizeof(message.payload.coords));
-
-    return message;
-}
-
-mq_message_t
-mq_create_route_guard_timeout_message(void)
-{
-    mq_message_t message;
-    message.type = MQ_MESSAGE_TYPE_ROUTE_GUARD_TIMEOUT;
-
-    return message;
-}

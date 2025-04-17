@@ -2,8 +2,15 @@
 #include <dualshock2.h>
 #include <linebot/command.h>
 #include <linebot/port.h>
+#include <string.h>
 #include <unity.h>
 #include <unity_config.h>
+
+static inline void
+uint16_t_to_byte_buffer(uint16_t const *p_value, uint8_t *p_byte_buffer)
+{
+    memcpy(p_byte_buffer, p_value, sizeof(*p_value));
+}
 
 void
 setUp(void)
@@ -18,8 +25,12 @@ tearDown(void)
 void
 should_map_dualshock2(uint16_t dualshock2_command, uint16_t expected_command)
 {
+    // given
+    uint8_t buffer[2];
+    uint16_t_to_byte_buffer(&dualshock2_command, buffer);
+
     // when
-    uint16_t actual = adapters_control_map(dualshock2_command);
+    uint16_t actual = adapters_control_parse(buffer);
 
     // then
     TEST_ASSERT_EQUAL(expected_command, actual);

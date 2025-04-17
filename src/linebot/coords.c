@@ -116,15 +116,15 @@ coords_is_on_finish(linebot_coords_t const h_self)
 void
 coords_compute_mass_center(linebot_coords_t const h_self, int8_t *p_value)
 {
-    coords_instance_t const *instance = coords_pool_get(&pool, h_self);
+    coords_instance_t const *p_self = coords_pool_get(&pool, h_self);
 
     int16_t sum        = 0;
     int16_t weight_sum = 0;
 
     for (uint8_t i = 0; i < COORDS_SIZE; i++)
     {
-        sum += instance->coordinates[i];
-        weight_sum += COORDS_WEIGHTS[i] * instance->coordinates[i];
+        sum += p_self->coordinates[i];
+        weight_sum += COORDS_WEIGHTS[i] * p_self->coordinates[i];
     }
 
     if (sum != 0)

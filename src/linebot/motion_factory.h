@@ -8,7 +8,7 @@ linebot_motion_t
 motion_create_by_commands(uint16_t const commands);
 
 linebot_motion_t
-motion_create_by_position(position_t const position);
+motion_create_by_position(position_t const h_position);
 
 linebot_motion_t
 motion_create_standby(void);

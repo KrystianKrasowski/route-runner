@@ -16,10 +16,10 @@ static inline void
 apply_manual_motion(linebot_t const h_self, uint16_t const commands);
 
 static inline void
-change_mode_by_coords(linebot_t const h_self, linebot_coords_t const coords);
+change_mode_by_coords(linebot_t const h_self, linebot_coords_t const h_coords);
 
 static inline void
-apply_tracking_motion(linebot_t const h_self, linebot_coords_t const coords);
+apply_tracking_motion(linebot_t const h_self, linebot_coords_t const h_coords);
 
 static inline void
 stop_immediately(linebot_t const h_self);
@@ -112,8 +112,8 @@ linebot_handle_manual_control(linebot_t const h_self, uint16_t const commands)
 
     if (b_context_valid)
     {
-        change_mode_by_control(h_self, commands);
         apply_manual_motion(h_self, commands);
+        change_mode_by_control(h_self, commands);
     }
     else
     {
@@ -133,8 +133,8 @@ linebot_handle_route_tracking(linebot_t const        h_self,
 
     if (b_coords_valid && b_context_valid)
     {
-        change_mode_by_coords(h_self, h_coords);
         apply_tracking_motion(h_self, h_coords);
+        change_mode_by_coords(h_self, h_coords);
     }
     else
     {
@@ -187,10 +187,10 @@ apply_manual_motion(linebot_t const h_self, uint16_t const commands)
 }
 
 static inline void
-change_mode_by_coords(linebot_t const h_self, linebot_coords_t const coords)
+change_mode_by_coords(linebot_t const h_self, linebot_coords_t const h_coords)
 {
     linebot_mode_t mode     = context_get_mode(h_self);
-    linebot_mode_t new_mode = mode_change_by_coords(mode, coords);
+    linebot_mode_t new_mode = mode_change_by_coords(mode, h_coords);
 
     if (context_update_mode(h_self, new_mode))
     {
@@ -199,14 +199,14 @@ change_mode_by_coords(linebot_t const h_self, linebot_coords_t const coords)
 }
 
 static inline void
-apply_tracking_motion(linebot_t const h_self, linebot_coords_t const coords)
+apply_tracking_motion(linebot_t const h_self, linebot_coords_t const h_coords)
 {
-    if (context_is_tracking_route(h_self) || coords_is_on_finish(coords))
+    if (context_is_tracking_route(h_self))
     {
-        position_t position = context_get_position(h_self);
-        position_update_coords(position, coords);
+        position_t h_position = context_get_position(h_self);
+        position_update_coords(h_position, h_coords);
 
-        linebot_motion_t h_motion = motion_create_by_position(position);
+        linebot_motion_t h_motion = motion_create_by_position(h_position);
         linebot_port_motion_apply(h_motion);
         linebot_motion_release(h_motion);
     }
@@ -216,7 +216,7 @@ static inline void
 stop_immediately(linebot_t const h_self)
 {
     linebot_mode_t   new_mode = LINEBOT_MODE_MANUAL;
-    linebot_motion_t h_motion   = motion_create_standby();
+    linebot_motion_t h_motion = motion_create_standby();
 
     context_update_mode(h_self, new_mode);
     linebot_port_mode_changed(new_mode);

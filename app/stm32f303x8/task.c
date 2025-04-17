@@ -10,8 +10,7 @@ task_handle_manual_control(linebot_t const linebot)
 
     if (mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message) >= 0)
     {
-        uint16_t raw_command = message.payload.command;
-        uint16_t commands    = adapters_control_map(raw_command);
+        uint16_t commands = adapters_control_parse(message.payload);
 
         // TODO: Handle failures
         (void)linebot_handle_manual_control(linebot, commands);
@@ -26,10 +25,9 @@ task_handle_route_tracking(linebot_t const linebot)
     if (mq_pull(MQ_TOPIC_COORDS, &message) >= 0)
     {
         linebot_coords_t coords;
-        uint8_t         *raw_coords = message.payload.coords;
 
         // TODO: Handle failures
-        (void)adapters_coords_map(raw_coords, &coords);
+        (void)adapters_coords_parse(message.payload, &coords);
         (void)linebot_handle_route_tracking(linebot, coords);
         (void)linebot_coords_release(coords);
     }

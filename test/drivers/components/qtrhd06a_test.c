@@ -45,14 +45,16 @@ should_average_adc_conversions(void)
     int status = mq_pull(MQ_TOPIC_COORDS, &message);
 
     // then
+    uint8_t expected_coords[6];
+    qtrhd06a_parse_values(message.payload, expected_coords);
+
     TEST_ASSERT_EQUAL(0, status);
-    TEST_ASSERT_EQUAL(MQ_MESSAGE_TYPE_COORDS, message.type);
-    TEST_ASSERT_EQUAL(25, message.payload.coords[0]);
-    TEST_ASSERT_EQUAL(113, message.payload.coords[1]);
-    TEST_ASSERT_EQUAL(113, message.payload.coords[2]);
-    TEST_ASSERT_EQUAL(23, message.payload.coords[3]);
-    TEST_ASSERT_EQUAL(17, message.payload.coords[4]);
-    TEST_ASSERT_EQUAL(18, message.payload.coords[5]);
+    TEST_ASSERT_EQUAL(25, expected_coords[0]);
+    TEST_ASSERT_EQUAL(113, expected_coords[1]);
+    TEST_ASSERT_EQUAL(113, expected_coords[2]);
+    TEST_ASSERT_EQUAL(23, expected_coords[3]);
+    TEST_ASSERT_EQUAL(17, expected_coords[4]);
+    TEST_ASSERT_EQUAL(18, expected_coords[5]);
 }
 
 int

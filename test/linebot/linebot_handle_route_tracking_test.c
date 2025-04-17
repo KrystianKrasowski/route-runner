@@ -78,7 +78,7 @@ void
 should_finish_tracking(void)
 {
     // given
-    linebot = fixtures_linebot_acquire(LINEBOT_MODE_MANUAL);
+    linebot = fixtures_linebot_acquire(LINEBOT_MODE_FOLLOWING);
 
     // when
     new_coords = fixtures_coords_acquire(COORDS_ON_FINISH);
@@ -89,6 +89,20 @@ should_finish_tracking(void)
                       linebot_port_mock_motion_get_direction());
     TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_get_correction());
     TEST_ASSERT_EQUAL(1, linebot_port_mock_motion_verify_apply_calls());
+}
+
+void
+should_not_finish_in_manual_mode(void)
+{
+    // given
+    linebot = fixtures_linebot_acquire(LINEBOT_MODE_MANUAL);
+
+    // when
+    new_coords = fixtures_coords_acquire(COORDS_ON_FINISH);
+    linebot_handle_route_tracking(linebot, new_coords);
+
+    // then
+    TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_verify_apply_calls());
 }
 
 int
@@ -140,6 +154,7 @@ main(void)
     RUN_PARAM_TEST(should_apply_following_motion, LINEBOT_MODE_MANUAL, 0);
 
     RUN_TEST(should_finish_tracking);
+    RUN_TEST(should_not_finish_in_manual_mode);
 
     return UNITY_END();
 }
