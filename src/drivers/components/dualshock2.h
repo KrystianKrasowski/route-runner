@@ -28,6 +28,6 @@ void
 dualshock2_init(void);
 
 uint16_t
-dualshock2_parse_commands(uint8_t const *p_byte_buffer);
+dualshock2_parse_commands(uint8_t const *byte_buffer);
 
 #endif

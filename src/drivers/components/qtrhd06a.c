@@ -64,7 +64,7 @@ adc_sequence_complete_isr(uint16_t const value[])
 }
 
 void
-qtrhd06a_parse_values(uint8_t const *p_byte_buffer, uint8_t *p_values)
+qtrhd06a_parse_values(uint8_t const *byte_buffer, uint8_t *p_values)
 {
-    memcpy(p_values, p_byte_buffer, COORDS_SIZE);
+    memcpy(p_values, byte_buffer, COORDS_SIZE);
 }

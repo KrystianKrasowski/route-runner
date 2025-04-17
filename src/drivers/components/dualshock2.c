@@ -54,10 +54,10 @@ spi_on_response_received_isr(uint8_t const response[])
 }
 
 uint16_t
-dualshock2_parse_commands(uint8_t const *p_byte_buffer)
+dualshock2_parse_commands(uint8_t const *byte_buffer)
 {
     int payload;
-    memcpy(&payload, p_byte_buffer, sizeof(payload));
+    memcpy(&payload, byte_buffer, sizeof(payload));
 
     return payload;
 }
