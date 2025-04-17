@@ -3,6 +3,8 @@
 #include <mq.h>
 #include <string.h>
 
+#define COORDS_SIZE 6
+
 void
 qtrhd06a_init(void)
 {
@@ -43,7 +45,7 @@ adc_sequence_complete_isr(uint16_t const value[])
         }
     }
 
-    uint8_t coords[6];
+    uint8_t coords[COORDS_SIZE];
     coords[0] = l3 / 10;
     coords[1] = l2 / 10;
     coords[2] = l1 / 10;
@@ -51,6 +53,12 @@ adc_sequence_complete_isr(uint16_t const value[])
     coords[4] = r2 / 10;
     coords[5] = r3 / 10;
 
-    mq_message_t message = mq_create_coords_message(coords);
+    mq_message_t message = mq_create_message(coords, sizeof(coords));
     mq_push(MQ_TOPIC_COORDS, &message);
+}
+
+void
+qtrhd06a_parse_values(uint8_t const *p_byte_buffer, uint8_t *p_values)
+{
+    memcpy(p_values, p_byte_buffer, COORDS_SIZE);
 }

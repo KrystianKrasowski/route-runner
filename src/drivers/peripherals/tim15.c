@@ -50,7 +50,8 @@ TIM15_IRQHandler(void)
     {
         TIM15->SR &= ~TIM_SR_UIF;
 
-        mq_message_t message = mq_create_route_guard_timeout_message();
+        uint8_t      dummy_payload = 1;
+        mq_message_t message       = mq_create_message(&dummy_payload, 1);
         mq_push(MQ_TOPIC_ROUTE_GUARD, &message);
     }
 }

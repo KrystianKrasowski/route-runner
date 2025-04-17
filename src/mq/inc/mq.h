@@ -7,29 +7,14 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
-typedef enum
-{
-    MQ_MESSAGE_TYPE_COMMAND,
-    MQ_MESSAGE_TYPE_COORDS,
-    MQ_MESSAGE_TYPE_ROUTE_GUARD_TIMEOUT,
-} mq_message_type_t;
+#define MQ_MAX_PAYLOAD_SIZE 6
 
 typedef struct
 {
-    uint8_t coordinates[6];
-} mq_coordinates_t;
-
-typedef union
-{
-    uint16_t command;
-    uint8_t  coords[6];
-} mq_message_payload_t;
-
-typedef struct
-{
-    mq_message_type_t    type;
-    mq_message_payload_t payload;
+    uint8_t payload[MQ_MAX_PAYLOAD_SIZE];
+    size_t  size;
 } mq_message_t;
 
 typedef enum
@@ -52,12 +37,6 @@ void
 mq_clear(mq_topic_t const topic);
 
 mq_message_t
-mq_create_command_message(uint16_t const command);
-
-mq_message_t
-mq_create_coords_message(uint8_t const p_coords[]);
-
-mq_message_t
-mq_create_route_guard_timeout_message(void);
+mq_create_message(void const *p_payload, size_t size);
 
 #endif

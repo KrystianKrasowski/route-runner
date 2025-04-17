@@ -1,6 +1,8 @@
 #ifndef _DUALSHOCK2_H
 #define _DUALSHOCK2_H
 
+#include <stdint.h>
+
 typedef enum
 {
     DS2_NONE     = 0,
@@ -24,5 +26,8 @@ typedef enum
 
 void
 dualshock2_init(void);
+
+uint16_t
+dualshock2_parse_commands(uint8_t const *p_byte_buffer);
 
 #endif

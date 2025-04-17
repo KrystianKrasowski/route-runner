@@ -1,7 +1,7 @@
 #include <adapters.h>
+#include <dualshock2.h>
 #include <linebot/command.h>
 #include <linebot/port.h>
-#include <dualshock2.h>
 
 void
 adapters_control_init(void)
@@ -10,8 +10,9 @@ adapters_control_init(void)
 }
 
 uint16_t
-adapters_control_map(uint16_t const raw)
+adapters_control_parse(uint8_t const *p_byte_buffer)
 {
+    uint16_t raw     = dualshock2_parse_commands(p_byte_buffer);
     uint16_t command = LINEBOT_COMMAND_NONE;
 
     if (raw & DS2_R2)

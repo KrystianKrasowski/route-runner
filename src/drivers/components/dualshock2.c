@@ -4,6 +4,7 @@
 #include <spi.h>
 #include <stdint.h>
 #include <tim2.h>
+#include <string.h>
 
 static spi_request_t request = {
     .payload       = {0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
@@ -47,7 +48,16 @@ spi_on_response_received_isr(uint8_t const response[])
     if (last_command != command)
     {
         last_command         = command;
-        mq_message_t message = mq_create_command_message(command);
+        mq_message_t message = mq_create_message(&command, sizeof(command));
         mq_push(MQ_TOPIC_REMOTE_CONTROL, &message);
     }
+}
+
+uint16_t
+dualshock2_parse_commands(uint8_t const *p_byte_buffer)
+{
+    int payload;
+    memcpy(&payload, p_byte_buffer, sizeof(payload));
+
+    return payload;
 }
