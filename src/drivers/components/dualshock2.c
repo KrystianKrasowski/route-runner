@@ -28,7 +28,7 @@ dualshock2_init(void)
 {
     memset(&payload, 0, sizeof(payload));
     payload.last_command = DS2_NONE;
-    payload.handled      = false;
+    payload.handled      = true;
 
     gpio_init(&request.device_select);
     gpio_set_state(&request.device_select, GPIO_STATE_HIGH);

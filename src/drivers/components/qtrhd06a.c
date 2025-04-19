@@ -20,7 +20,7 @@ void
 qtrhd06a_init(void)
 {
     memset(&payload, 0, sizeof(payload));
-    payload.handled = false;
+    payload.handled = true;
 
     adc_init();
     adc_on();

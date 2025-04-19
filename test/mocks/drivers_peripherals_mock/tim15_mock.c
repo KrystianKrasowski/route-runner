@@ -35,6 +35,12 @@ tim15_stop(void)
     mock.stop_calls++;
 }
 
+bool
+tim15_is_timeout(void)
+{
+    return false;
+}
+
 void
 tim15_mock_reset(void)
 {
