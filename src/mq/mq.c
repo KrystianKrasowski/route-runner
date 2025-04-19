@@ -3,7 +3,7 @@
 #include <string.h>
 #include <utils/queue.h>
 
-#define QUEUE_TOPICS_SIZE 3
+#define QUEUE_TOPICS_SIZE 1
 
 QUEUE_DECLARE(message, mq_message_t, MQ_SIZE)
 

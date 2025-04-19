@@ -1,10 +1,19 @@
 #include "dualshock2.h"
 #include <gpio.h>
-#include <mq.h>
 #include <spi.h>
+#include <stdbool.h>
 #include <stdint.h>
-#include <tim2.h>
 #include <string.h>
+#include <tim2.h>
+#include <utils/result.h>
+
+#define DUALSHOCK2_RESPONSE_SIZE 9
+
+typedef struct
+{
+    uint16_t last_command;
+    bool volatile handled;
+} dualshock2_payload_t;
 
 static spi_request_t request = {
     .payload       = {0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
@@ -12,12 +21,15 @@ static spi_request_t request = {
     .device_select = {GPIO_DUALSHOCK2_ATTENTION},
 };
 
-static volatile uint16_t last_command = DS2_NONE;
+static dualshock2_payload_t payload;
 
 void
 dualshock2_init(void)
 {
-    last_command = DS2_NONE;
+    memset(&payload, 0, sizeof(payload));
+    payload.last_command = DS2_NONE;
+    payload.handled      = false;
+
     gpio_init(&request.device_select);
     gpio_set_state(&request.device_select, GPIO_STATE_HIGH);
     spi_init_master();
@@ -45,19 +57,27 @@ spi_on_response_received_isr(uint8_t const response[])
         command = ~(((uint16_t)response[4] << 8) | response[3]);
     }
 
-    if (last_command != command)
+    if (payload.handled && payload.last_command != command)
     {
-        last_command         = command;
-        mq_message_t message = mq_create_message(&command, sizeof(command));
-        mq_push(MQ_TOPIC_REMOTE_CONTROL, &message);
+        payload.last_command = command;
+        payload.handled      = false;
     }
 }
 
-uint16_t
-dualshock2_parse_commands(uint8_t const *byte_buffer)
+int
+dualshock2_read(uint16_t *p_commands)
 {
-    int payload;
-    memcpy(&payload, byte_buffer, sizeof(payload));
+    int result = RESULT_OK;
 
-    return payload;
+    if (!payload.handled)
+    {
+        *p_commands     = payload.last_command;
+        payload.handled = true;
+    }
+    else
+    {
+        result = RESULT_NOT_READY;
+    }
+
+    return result;
 }

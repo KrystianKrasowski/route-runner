@@ -1,7 +1,8 @@
 #include "tim15.h"
 #include "sysclock.h"
-#include <mq.h>
 #include <stm32f3xx.h>
+
+static bool volatile timeout = false;
 
 void
 tim15_init()
@@ -33,6 +34,8 @@ void
 tim15_start()
 {
     TIM15->CR1 |= TIM_CR1_CEN;
+
+    timeout = false;
 }
 
 void
@@ -40,6 +43,14 @@ tim15_stop()
 {
     TIM15->CR1 &= ~TIM_CR1_CEN;
     TIM15->CNT = 0;
+
+    timeout = false;
+}
+
+bool
+tim15_is_timeout(void)
+{
+    return timeout;
 }
 
 void
@@ -50,8 +61,6 @@ TIM15_IRQHandler(void)
     {
         TIM15->SR &= ~TIM_SR_UIF;
 
-        uint8_t      dummy_payload = 1;
-        mq_message_t message       = mq_create_message(&dummy_payload, 1);
-        mq_push(MQ_TOPIC_ROUTE_GUARD, &message);
+        timeout = true;
     }
 }

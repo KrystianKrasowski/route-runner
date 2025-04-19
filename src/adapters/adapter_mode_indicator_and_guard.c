@@ -26,6 +26,12 @@ adapters_mode_init(void)
     tim15_init();
 }
 
+bool
+adapters_is_route_guard_timeout(void)
+{
+    return tim15_is_timeout();
+}
+
 void
 linebot_port_mode_changed(linebot_mode_t const value)
 {

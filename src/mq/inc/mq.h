@@ -19,8 +19,6 @@ typedef struct
 
 typedef enum
 {
-    MQ_TOPIC_REMOTE_CONTROL,
-    MQ_TOPIC_COORDS,
     MQ_TOPIC_ROUTE_GUARD,
 } mq_topic_t;
 

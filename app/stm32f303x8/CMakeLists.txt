@@ -11,7 +11,6 @@ add_executable(${MAIN_EXECUTABLE}
 
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
-        mq
         linebot
         adapters
         drivers_components
