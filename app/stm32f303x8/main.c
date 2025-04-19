@@ -1,15 +1,12 @@
 #include "task.h"
 #include <adapters.h>
 #include <linebot/api.h>
-#include <mq.h>
 #include <sysclock.h>
 
 int
 main(void)
 {
     sysclock_init();
-
-    mq_init();
 
     adapters_mode_init();
     adapters_coords_init();

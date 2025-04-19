@@ -27,7 +27,7 @@ typedef enum
 void
 dualshock2_init(void);
 
-uint16_t
-dualshock2_parse_commands(uint8_t const *byte_buffer);
+int
+dualshock2_read(uint16_t *p_commands);
 
 #endif

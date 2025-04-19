@@ -1,6 +1,5 @@
 #include <dualshock2.h>
 #include <gpio_mock.h>
-#include <mq.h>
 #include <spi_mock.h>
 #include <tim2_mock.h>
 #include <unity.h>
@@ -13,7 +12,6 @@
 void
 setUp(void)
 {
-    mq_init();
     dualshock2_init();
 }
 
@@ -23,7 +21,6 @@ tearDown(void)
     gpio_mock_reset();
     spi_mock_reset();
     tim2_ch1_mock_reset();
-    mq_clear(MQ_TOPIC_REMOTE_CONTROL);
 }
 
 void
@@ -63,15 +60,12 @@ void
 should_receive_spi_transmission(uint8_t response[], uint16_t expected_command)
 {
     // when
+    uint16_t actual_command;
     spi_on_response_received_isr(response);
+    dualshock2_read(&actual_command);
 
     // then
-    mq_message_t message;
-    int          status = mq_pull(MQ_TOPIC_REMOTE_CONTROL, &message);
-
-    TEST_ASSERT_EQUAL(0, status);
-    TEST_ASSERT_DS2_COMMANDS(expected_command,
-                             dualshock2_parse_commands(message.payload));
+    TEST_ASSERT_DS2_COMMANDS(expected_command, actual_command);
 }
 
 int

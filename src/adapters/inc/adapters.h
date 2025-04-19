@@ -7,20 +7,20 @@
 void
 adapters_control_init(void);
 
-uint16_t
-adapters_control_parse(uint8_t const *p_byte_buffer);
+int
+adapters_control_read(uint16_t *p_commands);
 
 void
 adapters_coords_init(void);
 
 int
-adapters_coords_parse(uint8_t const *p_byte_buffer, linebot_coords_t *coords);
-
-int
-adapters_coords_map(uint8_t const *raw, linebot_coords_t *coords);
+adapters_coords_read(linebot_coords_t *ph_coords);
 
 void
 adapters_mode_init(void);
+
+bool
+adapters_is_route_guard_timeout(void);
 
 void
 adapters_motion_init(void);

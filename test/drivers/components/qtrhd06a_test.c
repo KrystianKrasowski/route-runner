@@ -1,12 +1,10 @@
 #include <adc_mock.h>
-#include <mq.h>
 #include <qtrhd06a.h>
 #include <unity.h>
 
 void
 setUp(void)
 {
-    mq_init();
     adc_mock_reset();
 }
 
@@ -38,17 +36,13 @@ should_average_adc_conversions(void)
         28945, 6417,  5906,  28945, 28945, 6417,  5906,  28945, 28946, 6418,
     };
 
-    mq_message_t message;
-
     // when
     adc_sequence_complete_isr(conversions);
-    int status = mq_pull(MQ_TOPIC_COORDS, &message);
 
     // then
     uint8_t expected_coords[6];
-    qtrhd06a_parse_values(message.payload, expected_coords);
+    qtrhd06a_read(expected_coords);
 
-    TEST_ASSERT_EQUAL(0, status);
     TEST_ASSERT_EQUAL(25, expected_coords[0]);
     TEST_ASSERT_EQUAL(113, expected_coords[1]);
     TEST_ASSERT_EQUAL(113, expected_coords[2]);

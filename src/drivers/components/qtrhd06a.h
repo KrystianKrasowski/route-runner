@@ -6,7 +6,7 @@
 void
 qtrhd06a_init(void);
 
-void
-qtrhd06a_parse_values(uint8_t const *byte_buffer, uint8_t *p_values);
+int
+qtrhd06a_read(uint8_t values[]);
 
 #endif

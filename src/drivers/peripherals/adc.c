@@ -12,9 +12,6 @@ static inline void
 init_gpio(void);
 
 static inline void
-init_rcc(void);
-
-static inline void
 init_adc_dma(void);
 
 static inline void
@@ -38,7 +35,6 @@ init_tim6_trgo_trigger(void);
 void
 adc_init()
 {
-    init_rcc();
     init_gpio();
     init_adc_dma();
     enable_advreg();
@@ -128,16 +124,6 @@ init_gpio(void)
 }
 
 static inline void
-init_rcc(void)
-{
-    // enable clock access to ADC
-    RCC->AHBENR |= RCC_AHBENR_ADC12EN;
-
-    // Set ADC Clock Source (Use PLL/2 clock, resulting 8MHz)
-    RCC->CFGR2 |= RCC_CFGR2_ADCPRE12_DIV2;
-}
-
-static inline void
 init_adc_dma(void)
 {
     // enable clock access to DMA controller
@@ -202,6 +188,12 @@ advreg_disable()
 static inline void
 init_adc_dual_mode(void)
 {
+    // enable clock access to ADC
+    RCC->AHBENR |= RCC_AHBENR_ADC12EN;
+
+    // Set ADC Clock Source (Use PLL/2 clock, resulting 8MHz)
+    RCC->CFGR2 |= RCC_CFGR2_ADCPRE12_DIV2;
+
     // enable ADC 12 dual mode
     ADC12_COMMON->CCR |= (6 << ADC12_CCR_MULTI_Pos);
 
