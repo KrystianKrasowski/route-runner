@@ -80,7 +80,7 @@ coords_is_on_route(linebot_coords_t const h_self)
 {
     coords_instance_t const *p_self = coords_pool_get(&pool, h_self);
 
-    for (uint8_t i = 0; i < COORDS_MAX_SIZE; i++)
+    for (uint8_t i = 0; i < p_self->size; i++)
     {
         if (p_self->coordinates[i] >= COORDS_DETECTION_TRESHOLD)
         {
@@ -110,7 +110,7 @@ coords_compute_mass_center(linebot_coords_t const h_self, int8_t *p_value)
     int16_t sum        = 0;
     int16_t weight_sum = 0;
 
-    for (uint8_t i = 0; i < COORDS_MAX_SIZE; i++)
+    for (uint8_t i = 0; i < p_self->size; i++)
     {
         sum += p_self->coordinates[i];
         weight_sum += p_self->weights[i] * p_self->coordinates[i];
