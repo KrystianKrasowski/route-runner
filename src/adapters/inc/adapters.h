@@ -14,6 +14,9 @@ void
 adapters_coords_init(void);
 
 int
+adapters_coords_create_default(linebot_coords_t *ph_coords);
+
+int
 adapters_coords_read(linebot_coords_t *ph_coords);
 
 void
