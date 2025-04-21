@@ -39,16 +39,12 @@ linebot_acquire(linebot_mode_t    mode,
                 uint8_t           errsize,
                 linebot_t * const ph_self)
 {
-    bool b_coords_valid = coords_validate(coords) >= 0;
-
-    if (!b_coords_valid)
+    if (coords_validate(coords) < 0)
     {
         return -EINVAL;
     }
 
-    bool b_acquired = context_acquire(mode, coords, errsize, ph_self) >= 0;
-
-    if (!b_acquired)
+    if (context_acquire(mode, coords, errsize, ph_self) < 0)
     {
         return -ENOMEM;
     }
