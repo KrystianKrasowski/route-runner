@@ -15,6 +15,7 @@ typedef struct
     stack_t          errors;
 } position_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(position, position_instance_t, 1)
 
 static position_pool_t pool;

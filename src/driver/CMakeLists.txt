@@ -1,0 +1,2 @@
+add_subdirectory(devices)
+add_subdirectory(devices_stm32f3xx)

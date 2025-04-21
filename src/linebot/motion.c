@@ -8,6 +8,7 @@ typedef struct
     int8_t                     correction;
 } motion_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(motion, motion_instance_t, 1)
 
 static motion_pool_t pool;

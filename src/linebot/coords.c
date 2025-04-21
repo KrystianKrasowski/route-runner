@@ -14,6 +14,7 @@ typedef struct
     uint8_t size;
 } coords_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(coords, coords_instance_t, 2)
 
 static coords_pool_t pool;

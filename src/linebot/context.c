@@ -10,6 +10,7 @@ typedef struct
     position_t     position;
 } linebot_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(linebot, linebot_instance_t, 1)
 
 static linebot_pool_t pool;
