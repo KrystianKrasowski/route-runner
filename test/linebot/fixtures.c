@@ -1,5 +1,6 @@
 #include "fixtures.h"
 #include <assert.h>
+#include <string.h>
 
 linebot_t
 fixtures_linebot_acquire(linebot_mode_t const mode)
@@ -15,24 +16,23 @@ fixtures_linebot_acquire(linebot_mode_t const mode)
 linebot_coords_t
 fixtures_coords_acquire(fixtures_coords_type_t const type)
 {
-    int              result;
+    uint8_t          values[6];
     linebot_coords_t coords;
 
-    switch (type)
+    memset(values, 0, sizeof(values));
+
+    if (COORDS_ON_ROUTE == type)
     {
-        case COORDS_ON_ROUTE:
-            result = linebot_coords_acquire(0, 0, 100, 100, 0, 0, &coords);
-            break;
-        case COORDS_ON_FINISH:
-            result = linebot_coords_acquire(5, 0, 0, 0, 0, 5, &coords);
-            break;
-        case COORDS_OFF_ROUTE:
-        default:
-            result = linebot_coords_acquire(0, 0, 0, 0, 0, 0, &coords);
-            break;
+        values[2] = 100;
+        values[3] = 100;
+    }
+    else if (COORDS_ON_FINISH == type)
+    {
+        values[0] = 5;
+        values[5] = 5;
     }
 
-    assert(result >= 0);
+    assert(linebot_coords_acquire(values, 6, &coords) >= 0);
 
     return coords;
 }

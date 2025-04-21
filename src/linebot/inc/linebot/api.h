@@ -45,17 +45,6 @@ linebot_acquire(linebot_mode_t    mode,
                 linebot_t * const ph_self);
 
 /**
- * @brief Produces a handle to a Linebot context object with default values.
- *
- * @param[out] ph_self handle of linebot instance
- *
- * @retval 0 OK linebot object successfully instantiated
- * @retval -12 ENOMEM linebot object instantiation failed due to pool exhaustion
- */
-int
-linebot_acquire_default(linebot_t * const ph_self);
-
-/**
  * @brief Release linebot instance
  *
  * @param[in] ph_self handle to a linebot instance

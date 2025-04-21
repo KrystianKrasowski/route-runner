@@ -18,27 +18,23 @@ typedef uint8_t linebot_coords_t;
 /**
  * @brief Produces a handle to the linebot route coordinates object.
  *
- * Coordinates are based on 6 values that represents the route detection
+ * Coordinates are based on values that represents the route detection
  * intensivity.
  *
- * @param[in] l3 furthest from center detection on the left side of the route
- * @param[in] l2 middle detection on the left side of the route
- * @param[in] l1 nearset to center detection on the left side of the route
- * @param[in] r1 nearset to center detection on the right side of the route
- * @param[in] r2 middle detection on the right side of the route
- * @param[in] r3 furthest from center detection on the right side of the route
+ * @param[in] coordinates coordinates "visibility" values array; higher - more
+ * visible
+ * @param[in] weights coordinates "importance" values array; the higher the
+ * absolute value, the greater the deviation from the center; negative values
+ * are deviation to left side, positive - to the right
+ * @param[in] size coordinates array size
  * @param[out] ph_self pointer to a handle of a coords object
  *
  * @retval 0 OK
  * @retval -12 ENOMEM
  */
 int
-linebot_coords_acquire(uint8_t const            l3,
-                       uint8_t const            l2,
-                       uint8_t const            l1,
-                       uint8_t const            r1,
-                       uint8_t const            r2,
-                       uint8_t const            r3,
+linebot_coords_acquire(uint8_t const            coordinates[],
+                       uint8_t const            size,
                        linebot_coords_t * const ph_self);
 
 /**

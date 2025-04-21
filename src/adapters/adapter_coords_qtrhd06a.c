@@ -2,7 +2,10 @@
 #include <errno.h>
 #include <linebot/port.h>
 #include <qtrhd06a.h>
+#include <string.h>
 #include <utils/result.h>
+
+#define COORDS_SIZE 6
 
 static uint8_t
 normalize(uint8_t raw);
@@ -14,32 +17,43 @@ adapters_coords_init(void)
 }
 
 int
+adapters_coords_create_default(linebot_coords_t *ph_coords)
+{
+    uint8_t coords[COORDS_SIZE];
+
+    memset(coords, 0, sizeof(coords));
+
+    if (linebot_coords_acquire(coords, COORDS_SIZE, ph_coords) < 0)
+    {
+        return -ENOMEM;
+    }
+    
+    return RESULT_OK;
+}
+
+int
 adapters_coords_read(linebot_coords_t *ph_coords)
 {
-    int result = RESULT_OK;
+    uint8_t raw[COORDS_SIZE];
 
-    uint8_t raw[6];
-
-    if (qtrhd06a_read(raw) == RESULT_OK)
+    if (qtrhd06a_read(raw) != RESULT_OK)
     {
-        uint8_t l3 = normalize(raw[0]);
-        uint8_t l2 = normalize(raw[1]);
-        uint8_t l1 = normalize(raw[2]);
-        uint8_t r1 = normalize(raw[3]);
-        uint8_t r2 = normalize(raw[4]);
-        uint8_t r3 = normalize(raw[5]);
-
-        if (linebot_coords_acquire(l3, l2, l1, r1, r2, r3, ph_coords) < 0)
-        {
-            result = -ENOMEM;
-        }
-    }
-    else
-    {
-        result = RESULT_NOT_READY;
+        return RESULT_NOT_READY;
     }
 
-    return result;
+    uint8_t coords[COORDS_SIZE];
+
+    for (uint8_t i = 0; i < COORDS_SIZE; i++)
+    {
+        coords[i] = normalize(raw[i]);
+    }
+
+    if (linebot_coords_acquire(coords, COORDS_SIZE, ph_coords) < 0)
+    {
+        return -ENOMEM;
+    }
+
+    return RESULT_OK;
 }
 
 static uint8_t

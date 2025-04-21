@@ -34,7 +34,6 @@ linebot_init(void)
 }
 
 int
-// cppcheck-suppress staticFunction
 linebot_acquire(linebot_mode_t    mode,
                 linebot_coords_t  coords,
                 uint8_t           errsize,
@@ -57,27 +56,6 @@ linebot_acquire(linebot_mode_t    mode,
     return 0;
 }
 
-int
-linebot_acquire_default(linebot_t * const ph_self)
-{
-    linebot_coords_t coords;
-    bool b_acquired = linebot_coords_acquire(0, 0, 0, 0, 0, 0, &coords) >= 0;
-
-    if (!b_acquired)
-    {
-        return -ENOMEM;
-    }
-
-    b_acquired = linebot_acquire(LINEBOT_MODE_MANUAL, coords, 20, ph_self) >= 0;
-
-    if (!b_acquired)
-    {
-        return -ENOMEM;
-    }
-
-    return 0;
-}
-
 void
 // cppcheck-suppress unusedFunction
 linebot_release(linebot_t const h_self)
@@ -89,10 +67,9 @@ int
 // cppcheck-suppress unusedFunction
 linebot_get_mode(linebot_t const h_self, linebot_mode_t * const p_mode)
 {
-    int  result          = 0;
-    bool b_context_valid = context_validate(h_self) >= 0;
+    int result = 0;
 
-    if (b_context_valid)
+    if (context_validate(h_self) >= 0)
     {
         *p_mode = context_get_mode(h_self);
     }
@@ -107,10 +84,9 @@ linebot_get_mode(linebot_t const h_self, linebot_mode_t * const p_mode)
 int
 linebot_handle_manual_control(linebot_t const h_self, uint16_t const commands)
 {
-    int  result          = 0;
-    bool b_context_valid = context_validate(h_self) >= 0;
+    int result = 0;
 
-    if (b_context_valid)
+    if (context_validate(h_self) >= 0)
     {
         apply_manual_motion(h_self, commands);
         change_mode_by_control(h_self, commands);
@@ -127,11 +103,9 @@ int
 linebot_handle_route_tracking(linebot_t const        h_self,
                               linebot_coords_t const h_coords)
 {
-    int  result          = 0;
-    bool b_coords_valid  = coords_validate(h_coords) >= 0;
-    bool b_context_valid = context_validate(h_self) >= 0;
+    int result = 0;
 
-    if (b_coords_valid && b_context_valid)
+    if (coords_validate(h_coords) >= 0 && context_validate(h_self) >= 0)
     {
         apply_tracking_motion(h_self, h_coords);
         change_mode_by_coords(h_self, h_coords);
@@ -147,10 +121,9 @@ linebot_handle_route_tracking(linebot_t const        h_self,
 int
 linebot_handle_immediate_stop(linebot_t const h_self)
 {
-    int  result          = 0;
-    bool b_context_valid = context_validate(h_self) >= 0;
+    int result = 0;
 
-    if (b_context_valid)
+    if (context_validate(h_self) >= 0)
     {
         stop_immediately(h_self);
     }

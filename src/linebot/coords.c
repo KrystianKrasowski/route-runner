@@ -2,48 +2,42 @@
 #include <errno.h>
 #include <string.h>
 #include <utils/pool.h>
+#include <utils/result.h>
 
-#define COORDS_SIZE               6
+#define COORDS_MAX_SIZE           6
 #define COORDS_DETECTION_TRESHOLD 3
 
 typedef struct
 {
-    uint8_t coordinates[COORDS_SIZE];
+    uint8_t coordinates[COORDS_MAX_SIZE];
+    int8_t  weights[COORDS_MAX_SIZE];
+    uint8_t size;
 } coords_instance_t;
 
 POOL_DECLARE(coords, coords_instance_t, 2)
 
-static int8_t const COORDS_WEIGHTS[COORDS_SIZE] = {-100, -40, -20, 20, 40, 100};
-
 static coords_pool_t pool;
 
+static inline int
+set_weights(int8_t weights[], uint8_t size);
+
 int
-linebot_coords_acquire(uint8_t const            l3,
-                       uint8_t const            l2,
-                       uint8_t const            l1,
-                       uint8_t const            r1,
-                       uint8_t const            r2,
-                       uint8_t const            r3,
+linebot_coords_acquire(uint8_t const            coordinates[],
+                       uint8_t const            size,
                        linebot_coords_t * const ph_self)
 {
-    int  result         = -ENOMEM;
-    bool b_is_allocated = coords_pool_alloc(&pool, ph_self);
-
-    if (b_is_allocated)
+    if (!coords_pool_alloc(&pool, ph_self))
     {
-        coords_instance_t *p_self = coords_pool_get(&pool, *ph_self);
-
-        p_self->coordinates[0] = l3;
-        p_self->coordinates[1] = l2;
-        p_self->coordinates[2] = l1;
-        p_self->coordinates[3] = r1;
-        p_self->coordinates[4] = r2;
-        p_self->coordinates[5] = r3;
-
-        result = 0;
+        return -ENOMEM;
     }
 
-    return result;
+    coords_instance_t *p_self = coords_pool_get(&pool, *ph_self);
+
+    memcpy(p_self->coordinates, coordinates, size);
+    set_weights(p_self->weights, size);
+    p_self->size = size;
+
+    return RESULT_OK;
 }
 
 void
@@ -84,33 +78,28 @@ coords_copy(linebot_coords_t const h_self, linebot_coords_t const h_other)
 bool
 coords_is_on_route(linebot_coords_t const h_self)
 {
-    bool                     b_on_route = false;
-    coords_instance_t const *p_self     = coords_pool_get(&pool, h_self);
+    coords_instance_t const *p_self = coords_pool_get(&pool, h_self);
 
-    for (uint8_t i = 0; i < COORDS_SIZE; i++)
+    for (uint8_t i = 0; i < p_self->size; i++)
     {
         if (p_self->coordinates[i] >= COORDS_DETECTION_TRESHOLD)
         {
-            b_on_route = true;
-            break;
+            return true;
         }
     }
 
-    return b_on_route;
+    return false;
 }
 
 bool
 coords_is_on_finish(linebot_coords_t const h_self)
 {
-    bool                     b_on_finish = false;
-    coords_instance_t const *p_self      = coords_pool_get(&pool, h_self);
+    coords_instance_t const *p_self = coords_pool_get(&pool, h_self);
 
-    b_on_finish = p_self->coordinates[0] >= COORDS_DETECTION_TRESHOLD &&
-                  p_self->coordinates[2] < COORDS_DETECTION_TRESHOLD &&
-                  p_self->coordinates[3] < COORDS_DETECTION_TRESHOLD &&
-                  p_self->coordinates[5] >= COORDS_DETECTION_TRESHOLD;
-
-    return b_on_finish;
+    return p_self->coordinates[0] >= COORDS_DETECTION_TRESHOLD &&
+           p_self->coordinates[2] < COORDS_DETECTION_TRESHOLD &&
+           p_self->coordinates[3] < COORDS_DETECTION_TRESHOLD &&
+           p_self->coordinates[5] >= COORDS_DETECTION_TRESHOLD;
 }
 
 void
@@ -121,14 +110,31 @@ coords_compute_mass_center(linebot_coords_t const h_self, int8_t *p_value)
     int16_t sum        = 0;
     int16_t weight_sum = 0;
 
-    for (uint8_t i = 0; i < COORDS_SIZE; i++)
+    for (uint8_t i = 0; i < p_self->size; i++)
     {
         sum += p_self->coordinates[i];
-        weight_sum += COORDS_WEIGHTS[i] * p_self->coordinates[i];
+        weight_sum += p_self->weights[i] * p_self->coordinates[i];
     }
 
     if (sum != 0)
     {
         *p_value = weight_sum / sum;
     }
+}
+
+static inline int
+set_weights(int8_t weights[], uint8_t size)
+{
+    int result = RESULT_OK;
+
+    switch (size)
+    {
+        case 6:
+            memcpy(weights, ((int8_t[]){-100, -40, -20, 20, 40, 100}), size);
+            break;
+        default:
+            result = -EINVAL;
+    }
+
+    return result;
 }
