@@ -117,6 +117,23 @@ gpio_set_alternate_func(gpio_t h_self, gpio_function_t function)
     return RESULT_OK;
 }
 
+int
+gpio_set_pull_down(gpio_t h_self)
+{
+    gpio_instance_t *p_self = gpio_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    uint32_t pupdr_pos = p_self->bit * 2;
+
+    p_self->GPIOx->PUPDR |= (2 << pupdr_pos);
+
+    return RESULT_OK;
+}
+
 static inline void
 init_rcc(void)
 {

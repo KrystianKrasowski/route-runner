@@ -5,8 +5,8 @@
 
 typedef enum
 {
-    L293_CHANNEL_12,
-    L293_CHANNEL_34,
+    DEVICES_L293_CHANNEL_12,
+    DEVICES_L293_CHANNEL_34,
 } l293_t;
 
 int

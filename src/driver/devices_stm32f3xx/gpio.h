@@ -53,4 +53,7 @@ gpio_set_state(gpio_t h_self, gpio_state_t state);
 int
 gpio_set_alternate_func(gpio_t h_self, gpio_function_t function);
 
+int
+gpio_set_pull_down(gpio_t h_self);
+
 #endif

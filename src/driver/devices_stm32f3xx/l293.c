@@ -8,12 +8,6 @@
 #include <utils/pool.h>
 #include <utils/result.h>
 
-typedef enum
-{
-    L293_PWM_CHANNEL_3,
-    L293_PWM_CHANNEL_4,
-} l293_pwm_channel_t;
-
 typedef struct
 {
     gpio_t        driver_channel_1;
@@ -36,7 +30,6 @@ create_instance_34(void);
 void
 l293_init(void)
 {
-    init_pwm();
     l293_pool_init(&pool);
     create_instance_12();
     create_instance_34();
@@ -149,9 +142,9 @@ devices_l293_disable(l293_t h_self)
 static inline void
 create_instance_12(void)
 {
-    l293_pool_alloc_at(&pool, L293_CHANNEL_12);
+    l293_pool_alloc_at(&pool, DEVICES_L293_CHANNEL_12);
 
-    l293_instance_t *p_self = l293_pool_get(&pool, L293_CHANNEL_12);
+    l293_instance_t *p_self = l293_pool_get(&pool, DEVICES_L293_CHANNEL_12);
 
     p_self->driver_channel_1 = PERIPH_GPIO_PA12;
     p_self->driver_channel_2 = PERIPH_GPIO_PA10;
@@ -162,9 +155,9 @@ create_instance_12(void)
 static inline void
 create_instance_34(void)
 {
-    l293_pool_alloc_at(&pool, L293_CHANNEL_34);
+    l293_pool_alloc_at(&pool, DEVICES_L293_CHANNEL_34);
 
-    l293_instance_t *p_self = l293_pool_get(&pool, L293_CHANNEL_34);
+    l293_instance_t *p_self = l293_pool_get(&pool, DEVICES_L293_CHANNEL_34);
 
     p_self->driver_channel_1 = PERIPH_GPIO_PB6;
     p_self->driver_channel_2 = PERIPH_GPIO_PB7;

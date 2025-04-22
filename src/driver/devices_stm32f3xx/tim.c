@@ -50,6 +50,7 @@ match_tim_port(tim_t h_tim);
 void
 tim_init(void)
 {
+    init_rcc();
     tim_pool_init(&pool);
     create_all_instances();
 }

@@ -5,16 +5,19 @@ add_executable(${MAIN_EXECUTABLE}
     syscalls.c
     sysmem.c
     system_stm32f3xx.c
-    task.c
-    main.c
+    # task.c
+    # main.c
+    sandbox_devices.c
 )
 
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
-        linebot
-        adapters
-        drivers_components
-        drivers_stm32f303x8
+        # linebot
+        # adapters
+        # drivers_components
+        # drivers_stm32f303x8
+        devices
+        devices_stm32f3xx
         stm32f303x8
 )
 
