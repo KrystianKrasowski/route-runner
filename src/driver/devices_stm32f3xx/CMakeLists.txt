@@ -2,7 +2,10 @@ if(TARGET_ARCH STREQUAL "stm32f303x8")
     add_library(devices_stm32f3xx STATIC
         devices.c
         sysclock.c
+        gpio.c
+        tim.c
         l293.c
+        dualshock2.c
     )
 
     set_property(TARGET devices_stm32f3xx PROPERTY C_STANDARD 11)
