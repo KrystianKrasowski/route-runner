@@ -18,10 +18,10 @@ POOL_DECLARE(gpio, gpio_instance_t, GPIO_USAGE_SIZE)
 static gpio_pool_t pool;
 
 static inline void
-init_rcc(void);
+rcc_init(void);
 
 static inline void
-create_all_instances(void);
+all_instances_create(void);
 
 static inline GPIO_TypeDef *
 match_gpio_port(gpio_t h_gpio);
@@ -32,9 +32,9 @@ match_gpio_bit(gpio_t h_gpio);
 void
 gpio_init(void)
 {
-    init_rcc();
+    rcc_init();
     gpio_pool_init(&pool);
-    create_all_instances();
+    all_instances_create();
 }
 
 int
@@ -135,7 +135,7 @@ gpio_set_pull_down(gpio_t h_self)
 }
 
 static inline void
-init_rcc(void)
+rcc_init(void)
 {
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
     RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
@@ -143,7 +143,7 @@ init_rcc(void)
 }
 
 static inline void
-create_all_instances(void)
+all_instances_create(void)
 {
     for (gpio_t h_gpio = 0; h_gpio < GPIO_USAGE_SIZE; h_gpio++)
     {

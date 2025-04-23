@@ -111,7 +111,7 @@ devices_l293_enable(l293_t h_self, uint8_t duty_cycle)
         duty_cycle = 100;
     }
 
-    tim_run_out_compare(p_self->pwm_timer, p_self->pwm_channel, duty_cycle);
+    tim_oc_run(p_self->pwm_timer, p_self->pwm_channel, duty_cycle);
 
     return RESULT_OK;
 }
@@ -126,7 +126,7 @@ devices_l293_disable(l293_t h_self)
         return -ENODEV;
     }
 
-    tim_stop_out_compare(p_self->pwm_timer, p_self->pwm_channel);
+    tim_oc_stop(p_self->pwm_timer, p_self->pwm_channel);
 
     return RESULT_OK;
 }

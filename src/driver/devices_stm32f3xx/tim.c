@@ -1,4 +1,5 @@
 #include "tim.h"
+#include "interrupts.h"
 #include "sysclock.h"
 #include <errno.h>
 #include <stm32f3xx.h>
@@ -10,6 +11,7 @@
 typedef struct
 {
     TIM_TypeDef *TIMx;
+    IRQn_Type    IRQn;
 } tim_instance_t;
 
 POOL_DECLARE(tim, tim_instance_t, TIM_USAGE_SIZE)
@@ -17,46 +19,43 @@ POOL_DECLARE(tim, tim_instance_t, TIM_USAGE_SIZE)
 static tim_pool_t pool;
 
 static inline void
-init_rcc(void);
+rcc_init(void);
 
 static inline void
-create_all_instances(void);
+all_instances_create(void);
 
 static inline void
-configure_control(tim_instance_t *p_self, tim_base_conf_t *p_conf);
+oc_set_treshold(tim_instance_t *p_self,
+                tim_channel_t   channel,
+                uint32_t        treshold);
 
 static inline void
-configure_event_generation(tim_instance_t *p_self, tim_base_conf_t *p_conf);
+oc_configure_mode(tim_instance_t *p_self,
+                  tim_channel_t   channel,
+                  tim_oc_conf_t  *p_conf);
 
 static inline void
-set_out_compare_treshold(tim_instance_t *p_self,
-                         tim_channel_t   channel,
-                         uint32_t        treshold);
+oc_enable(tim_instance_t *p_self, tim_channel_t channel);
 
 static inline void
-configure_out_compare_mode(tim_instance_t         *p_self,
-                           tim_channel_t           channel,
-                           tim_out_compare_conf_t *p_conf);
-
-static inline void
-enable_out_compare(tim_instance_t *p_self, tim_channel_t channel);
-
-static inline void
-disable_out_compare(tim_instance_t *p_self, tim_channel_t channel);
+oc_disable(tim_instance_t *p_self, tim_channel_t channel);
 
 static inline TIM_TypeDef *
-match_tim_port(tim_t h_tim);
+tim_port_match(tim_t h_tim);
+
+static inline IRQn_Type
+tim_irqn_match(tim_t h_tim);
 
 void
 tim_init(void)
 {
-    init_rcc();
+    rcc_init();
     tim_pool_init(&pool);
-    create_all_instances();
+    all_instances_create();
 }
 
 int
-tim_configure_base(tim_t h_self, tim_base_conf_t *p_conf)
+tim_base_configure(tim_t h_self, tim_base_conf_t *p_conf)
 {
     tim_instance_t *p_self = tim_pool_get(&pool, h_self);
 
@@ -68,16 +67,11 @@ tim_configure_base(tim_t h_self, tim_base_conf_t *p_conf)
     p_self->TIMx->PSC = sysclock_get_prescaller_base(p_conf->resolution) - 1;
     p_self->TIMx->ARR = p_conf->auto_reload_at - 1;
 
-    configure_control(p_self, p_conf);
-    configure_event_generation(p_self, p_conf);
-
     return RESULT_OK;
 }
 
 int
-tim_configure_out_compare(tim_t                   h_self,
-                          tim_channel_t           channel,
-                          tim_out_compare_conf_t *p_conf)
+tim_control_configure(tim_t h_self, tim_control_conf_t *p_conf)
 {
     tim_instance_t *p_self = tim_pool_get(&pool, h_self);
 
@@ -86,8 +80,129 @@ tim_configure_out_compare(tim_t                   h_self,
         return -ENODEV;
     }
 
-    set_out_compare_treshold(p_self, channel, p_conf->default_compare_value);
-    configure_out_compare_mode(p_self, channel, p_conf);
+    // disable timer before configuration
+    p_self->TIMx->CR1 &= ~TIM_CR1_CEN;
+
+    // configure alignment mode
+    if (PERIPH_TIM_EDGE_ALIGNED == p_conf->center_aligned_mode)
+    {
+        p_self->TIMx->CR1 &= ~(TIM_CR1_CMS);
+    }
+    else
+    {
+        p_self->TIMx->CR1 |= (p_conf->center_aligned_mode << TIM_CR1_CMS_Pos);
+    }
+
+    return RESULT_OK;
+}
+
+int
+tim_event_gen_configure(tim_t h_self, tim_event_gen_conf_t *p_conf)
+{
+    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    // configure counter reinitialization on update event
+    if (p_conf->reinit_on_update)
+    {
+        p_self->TIMx->EGR |= TIM_EGR_UG;
+    }
+
+    return RESULT_OK;
+}
+
+int
+tim_oc_configure(tim_t h_self, tim_channel_t channel, tim_oc_conf_t *p_conf)
+{
+    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    oc_set_treshold(p_self, channel, p_conf->default_oc_treshold);
+    oc_configure_mode(p_self, channel, p_conf);
+
+    return RESULT_OK;
+}
+
+int
+tim_oc_run(tim_t h_self, tim_channel_t channel, uint32_t treshold)
+{
+    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    oc_set_treshold(p_self, channel, treshold);
+    oc_enable(p_self, channel);
+
+    return RESULT_OK;
+}
+
+int
+tim_oc_stop(tim_t h_self, tim_channel_t channel)
+{
+    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    oc_disable(p_self, channel);
+
+    return RESULT_OK;
+}
+
+int
+tim_interrupt_update_enable(tim_t h_self)
+{
+    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    p_self->TIMx->DIER |= TIM_DIER_UIE;
+
+    return RESULT_OK;
+}
+
+int
+tim_interrupt_oc_enable(tim_t h_self, tim_channel_t channel)
+{
+    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    switch (channel)
+    {
+        case PERIPH_TIM_CHANNEL_1:
+            p_self->TIMx->DIER |= TIM_DIER_CC1IE;
+            break;
+
+        case PERIPH_TIM_CHANNEL_3:
+            p_self->TIMx->DIER |= TIM_DIER_CC3IE;
+            break;
+
+        case PERIPH_TIM_CHANNEL_4:
+            p_self->TIMx->DIER |= TIM_DIER_CC4IE;
+            break;
+    }
+
+    NVIC_EnableIRQ(p_self->IRQn);
 
     return RESULT_OK;
 }
@@ -107,46 +222,34 @@ tim_enable(tim_t h_self)
     return RESULT_OK;
 }
 
-int
-tim_run_out_compare(tim_t h_self, tim_channel_t channel, uint32_t treshold)
+__attribute__((weak)) void
+tim2_on_update_isr(void)
 {
-    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
-
-    if (NULL == p_self)
-    {
-        return -ENODEV;
-    }
-
-    set_out_compare_treshold(p_self, channel, treshold);
-    enable_out_compare(p_self, channel);
-
-    return RESULT_OK;
 }
 
-int
-tim_stop_out_compare(tim_t h_self, tim_channel_t channel)
+void
+// cppcheck-suppress unusedFunction
+TIM2_IRQHandler(void)
 {
-    tim_instance_t *p_self = tim_pool_get(&pool, h_self);
-
-    if (NULL == p_self)
+    if (TIM2->SR & TIM_SR_UIF)
     {
-        return -ENODEV;
+        TIM2->SR &= ~TIM_SR_UIF;
+        tim2_on_update_isr();
     }
-
-    disable_out_compare(p_self, channel);
-
-    return RESULT_OK;
 }
 
 static inline void
-init_rcc(void)
+rcc_init(void)
 {
+    // enable clock access to TIM2
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+
     // enable clock access to TIM3
     RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 }
 
 static inline void
-create_all_instances(void)
+all_instances_create(void)
 {
     for (uint8_t h_tim = 0; h_tim < TIM_USAGE_SIZE; h_tim++)
     {
@@ -154,48 +257,27 @@ create_all_instances(void)
         {
             tim_instance_t *p_tim = tim_pool_get(&pool, h_tim);
 
-            p_tim->TIMx = match_tim_port(h_tim);
+            p_tim->TIMx = tim_port_match(h_tim);
+            p_tim->IRQn = tim_irqn_match(h_tim);
         }
     }
 }
 
 static inline void
-configure_control(tim_instance_t *p_self, tim_base_conf_t *p_conf)
-{
-    // disable timer before configuration
-    p_self->TIMx->CR1 &= ~TIM_CR1_CEN;
-
-    // configure alignment mode
-    if (PERIPH_TIM_EDGE_ALIGNED == p_conf->center_aligned_mode)
-    {
-        p_self->TIMx->CR1 &= ~(TIM_CR1_CMS);
-    }
-    else
-    {
-        p_self->TIMx->CR1 |= (p_conf->center_aligned_mode << TIM_CR1_CMS_Pos);
-    }
-}
-
-static inline void
-configure_event_generation(tim_instance_t *p_self, tim_base_conf_t *p_conf)
-{
-    // configure counter reinitialization on update event
-    if (p_conf->reinitialize_on_update)
-    {
-        p_self->TIMx->EGR |= TIM_EGR_UG;
-    }
-}
-
-static inline void
-set_out_compare_treshold(tim_instance_t *p_self,
-                         tim_channel_t   channel,
-                         uint32_t        treshold)
+oc_set_treshold(tim_instance_t *p_self,
+                tim_channel_t   channel,
+                uint32_t        treshold)
 {
     switch (channel)
     {
+        case PERIPH_TIM_CHANNEL_1:
+            p_self->TIMx->CCR1 = treshold;
+            break;
+
         case PERIPH_TIM_CHANNEL_3:
             p_self->TIMx->CCR3 = treshold;
             break;
+
         case PERIPH_TIM_CHANNEL_4:
             p_self->TIMx->CCR4 = treshold;
             break;
@@ -203,9 +285,9 @@ set_out_compare_treshold(tim_instance_t *p_self,
 }
 
 static inline void
-configure_out_compare_mode(tim_instance_t         *p_self,
-                           tim_channel_t           channel,
-                           tim_out_compare_conf_t *p_conf)
+oc_configure_mode(tim_instance_t *p_self,
+                  tim_channel_t   channel,
+                  tim_oc_conf_t  *p_conf)
 {
     // Determine mode register and masks
     uint32_t volatile *CCMRx;
@@ -218,6 +300,15 @@ configure_out_compare_mode(tim_instance_t         *p_self,
 
     switch (channel)
     {
+        case PERIPH_TIM_CHANNEL_1:
+            CCMRx        = &p_self->TIMx->CCMR1;
+            CCMRx_OCxM_0 = TIM_CCMR1_OC1M_0;
+            CCMRx_OCxM_1 = TIM_CCMR1_OC1M_1;
+            CCMRx_OCxM_2 = TIM_CCMR1_OC1M_2;
+            CCMRx_OCxM_3 = TIM_CCMR1_OC1M_3;
+            CCMRx_OCxPE  = TIM_CCMR1_OC1PE;
+            break;
+
         case PERIPH_TIM_CHANNEL_3:
             CCMRx        = &p_self->TIMx->CCMR2;
             CCMRx_OCxM_0 = TIM_CCMR2_OC3M_0;
@@ -241,13 +332,13 @@ configure_out_compare_mode(tim_instance_t         *p_self,
     }
 
     // set output compare mode
-    switch (p_conf->output_compare_mode)
+    switch (p_conf->oc_mode)
     {
-        case PERIPH_TIM_OUTPUT_COMPARE_PWM_1:
+        case PERIPH_TIM_OC_PWM_1:
             *CCMRx |= (CCMRx_OCxM_2 | CCMRx_OCxM_1);
             break;
 
-        case PERIPH_TIM_OUTPUT_COMPARE_FROZEN:
+        case PERIPH_TIM_OC_FROZEN:
         default:
             *CCMRx &=
                 ~(CCMRx_OCxM_3 | CCMRx_OCxM_2 | CCMRx_OCxM_1 | CCMRx_OCxM_0);
@@ -261,10 +352,14 @@ configure_out_compare_mode(tim_instance_t         *p_self,
 }
 
 static inline void
-enable_out_compare(tim_instance_t *p_self, tim_channel_t channel)
+oc_enable(tim_instance_t *p_self, tim_channel_t channel)
 {
     switch (channel)
     {
+        case PERIPH_TIM_CHANNEL_1:
+            p_self->TIMx->CCER |= TIM_CCER_CC1E;
+            break;
+
         case PERIPH_TIM_CHANNEL_3:
             p_self->TIMx->CCER |= TIM_CCER_CC3E;
             break;
@@ -275,26 +370,48 @@ enable_out_compare(tim_instance_t *p_self, tim_channel_t channel)
 }
 
 static inline void
-disable_out_compare(tim_instance_t *p_self, tim_channel_t channel)
+oc_disable(tim_instance_t *p_self, tim_channel_t channel)
 {
     switch (channel)
     {
+        case PERIPH_TIM_CHANNEL_1:
+            p_self->TIMx->CCER &= ~TIM_CCER_CC1E;
+            break;
+
         case PERIPH_TIM_CHANNEL_3:
             p_self->TIMx->CCER &= ~TIM_CCER_CC3E;
             break;
 
         case PERIPH_TIM_CHANNEL_4:
             p_self->TIMx->CCER &= ~TIM_CCER_CC4E;
+            break;
     }
 }
 
 static inline TIM_TypeDef *
-match_tim_port(tim_t h_tim)
+tim_port_match(tim_t h_tim)
 {
     switch (h_tim)
     {
+        case PERIPH_TIM2:
+            return TIM2;
+
         case PERIPH_TIM3:
         default:
             return TIM3;
+    }
+}
+
+static inline IRQn_Type
+tim_irqn_match(tim_t h_tim)
+{
+    switch (h_tim)
+    {
+        case PERIPH_TIM2:
+            return TIM2_IRQn;
+
+        case PERIPH_TIM3:
+        default:
+            return TIM3_IRQn;
     }
 }

@@ -26,7 +26,7 @@ typedef enum
 
 typedef enum
 {
-    DUALSHOCK2_1,
+    DEVICES_DUALSHOCK2_1,
 } dualshock2_t;
 
 int
