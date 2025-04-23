@@ -10,6 +10,12 @@ configure_gpios(void);
 static inline void
 configure_tim3(void);
 
+static inline void
+create_l293_12(void);
+
+static inline void
+create_l293_34(void);
+
 void
 devices_init(void)
 {
@@ -22,6 +28,9 @@ devices_init(void)
     configure_tim3();
 
     l293_init();
+
+    create_l293_12();
+    create_l293_34();
 }
 
 static inline void
@@ -64,4 +73,30 @@ configure_tim3(void)
     tim_configure_out_compare(PERIPH_TIM3, PERIPH_TIM_CHANNEL_3, &pwm_conf);
     tim_configure_out_compare(PERIPH_TIM3, PERIPH_TIM_CHANNEL_4, &pwm_conf);
     tim_enable(PERIPH_TIM3);
+}
+
+static inline void
+create_l293_12(void)
+{
+    l293_instance_t l293_12 = {
+        .driver_channel_1 = PERIPH_GPIO_PA12,
+        .driver_channel_2 = PERIPH_GPIO_PA10,
+        .pwm_timer        = PERIPH_TIM3,
+        .pwm_channel      = PERIPH_TIM_CHANNEL_3,
+    };
+
+    l293_create(DEVICES_L293_CHANNEL_12, &l293_12);
+}
+
+static inline void
+create_l293_34(void)
+{
+    l293_instance_t l293_34 = {
+        .driver_channel_1 = PERIPH_GPIO_PB6,
+        .driver_channel_2 = PERIPH_GPIO_PB7,
+        .pwm_timer        = PERIPH_TIM3,
+        .pwm_channel      = PERIPH_TIM_CHANNEL_4,
+    };
+
+    l293_create(DEVICES_L293_CHANNEL_34, &l293_34);
 }
