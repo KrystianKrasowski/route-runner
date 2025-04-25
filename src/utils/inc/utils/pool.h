@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <stddef.h>
 #include <string.h>
 
 #define POOL_DECLARE(name, type, size)                                         \

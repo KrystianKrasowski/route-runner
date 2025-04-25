@@ -1,12 +1,12 @@
-#include "tim.h"
 #include "interrupts.h"
 #include "sysclock.h"
+#include "tim.h"
 #include <errno.h>
 #include <stm32f3xx.h>
 #include <utils/pool.h>
 #include <utils/result.h>
 
-#define TIM_USAGE_SIZE 1
+#define TIM_USAGE_SIZE 2
 
 typedef struct
 {
@@ -172,7 +172,10 @@ tim_interrupt_update_enable(tim_t h_self)
         return -ENODEV;
     }
 
+    p_self->TIMx->SR &= ~TIM_SR_UIF;
     p_self->TIMx->DIER |= TIM_DIER_UIE;
+
+    NVIC_EnableIRQ(p_self->IRQn);
 
     return RESULT_OK;
 }
@@ -222,11 +225,6 @@ tim_enable(tim_t h_self)
     return RESULT_OK;
 }
 
-__attribute__((weak)) void
-tim2_on_update_isr(void)
-{
-}
-
 void
 // cppcheck-suppress unusedFunction
 TIM2_IRQHandler(void)
@@ -248,6 +246,7 @@ rcc_init(void)
     RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 }
 
+// TODO: Should explicitly create every instance
 static inline void
 all_instances_create(void)
 {

@@ -3,10 +3,10 @@
 
 #include <stdint.h>
 
-__attribute__((weak)) void
+void
 tim2_on_update_isr(void);
 
-__attribute__((weak)) void
+void
 spi1_on_response_isr(uint8_t const response[]);
 
 #endif

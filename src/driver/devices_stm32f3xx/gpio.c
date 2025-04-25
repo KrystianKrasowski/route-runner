@@ -95,7 +95,7 @@ gpio_set_state(gpio_t h_self, gpio_state_t state)
 }
 
 int
-gpio_set_alternate_func(gpio_t h_self, gpio_function_t function)
+gpio_set_alternate_func(gpio_t h_self, uint8_t function)
 {
     gpio_instance_t *p_self = gpio_pool_get(&pool, h_self);
 

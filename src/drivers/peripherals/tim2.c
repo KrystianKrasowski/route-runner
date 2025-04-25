@@ -13,11 +13,12 @@ tim2_ch1_init(void)
     TIM2->ARR  = 16 - 1;
     TIM2->CCR1 = 16;
 
+    TIM2->EGR |= TIM_EGR_UG;
+    TIM2->SR &= ~TIM_SR_UIF;
+    TIM2->DIER |= TIM_DIER_UIE;
+
     // enable the timer
     TIM2->CR1 |= TIM_CR1_CEN;
-
-    // enable capture/compare interrupt for channel 1
-    TIM2->DIER |= TIM_DIER_CC1IE;
 
     // enable TIM2 IRQ in NVIC
     NVIC_EnableIRQ(TIM2_IRQn);
@@ -27,9 +28,9 @@ void
 // cppcheck-suppress unusedFunction
 TIM2_IRQHandler(void)
 {
-    if (TIM2->SR & TIM_SR_CC1IF)
+    if (TIM2->SR & TIM_SR_UIF)
     {
-        TIM2->SR &= ~TIM_SR_CC1IF;
+        TIM2->SR &= ~TIM_SR_UIF;
         tim2_ch1_compare_isr();
     }
 }

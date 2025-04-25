@@ -1,6 +1,7 @@
 #include "dualshock2.h"
 #include "gpio.h"
 #include "interrupts.h"
+#include "spi.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -8,19 +9,20 @@
 #include <utils/pool.h>
 #include <utils/result.h>
 
-#define DUALSHOCK2_INSTANCES_NUM 1
-#define DUALSHOCK2_PAYLOAD_SIZE  9
+#define INSTANCES_NUM 1
+#define PAYLOAD_SIZE  9
 
 typedef struct
 {
     gpio_t  device_select;
-    uint8_t state[DUALSHOCK2_PAYLOAD_SIZE];
+    spi_t   spi_bus;
+    uint8_t state[PAYLOAD_SIZE];
     bool volatile handled;
 } dualshock2_instance_t;
 
-POOL_DECLARE(dualshock2, dualshock2_instance_t, DUALSHOCK2_INSTANCES_NUM)
+POOL_DECLARE(dualshock2, dualshock2_instance_t, INSTANCES_NUM)
 
-static uint8_t const PAYLOAD[DUALSHOCK2_PAYLOAD_SIZE] = {
+static uint8_t PAYLOAD[PAYLOAD_SIZE] = {
     0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 static dualshock2_pool_t pool;
@@ -42,10 +44,11 @@ dualshock2_create(dualshock2_t handle, dualshock2_conf_t *p_conf)
     dualshock2_instance_t *p_dualshock = dualshock2_pool_get(&pool, handle);
 
     p_dualshock->device_select = p_conf->device_select;
+    p_dualshock->spi_bus       = p_conf->spi_bus;
     p_dualshock->handled       = false;
 
     memset(&p_dualshock->state, 0, sizeof(p_dualshock->state));
-    
+
     gpio_set_state(p_dualshock->device_select, PERIPH_GPIO_STATE_HIGH);
 }
 
@@ -81,7 +84,16 @@ devices_dualshock2_read(dualshock2_t h_self, uint16_t *p_commands)
 void
 tim2_on_update_isr(void)
 {
-    // trigger SPI communication
+    // explicit handle is assumed by the TIM2 indication
+    dualshock2_t           handle = DEVICES_DUALSHOCK2_1;
+    dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, handle);
+
+    if (NULL == p_self)
+    {
+        return;
+    }
+
+    spi_transmit(p_self->spi_bus, PAYLOAD, PAYLOAD_SIZE, p_self->device_select);
 }
 
 void
@@ -90,6 +102,11 @@ spi1_on_response_isr(uint8_t const response[])
     // explicit handle is assumed by the SPI1 indication
     dualshock2_t           handle = DEVICES_DUALSHOCK2_1;
     dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, handle);
+
+    if (NULL == p_self)
+    {
+        return;
+    }
 
     if (memcmp(p_self->state, response, sizeof(p_self->state)) == 0)
     {

@@ -7,6 +7,7 @@ add_executable(${MAIN_EXECUTABLE}
     system_stm32f3xx.c
     # task.c
     # main.c
+    # sandbox_legacy_devices.c
     sandbox_devices.c
 )
 

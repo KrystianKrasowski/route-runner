@@ -1,7 +1,9 @@
 #ifndef _RESULT_H
 #define _RESULT_H
 
-#define RESULT_OK        0
-#define RESULT_NOT_READY 1
+#define RESULT_OK               0
+#define RESULT_NOT_READY        1
+#define RESULT_BUFFER_EMPTY 2
+#define RESULT_BUFFER_FULL 3
 
 #endif

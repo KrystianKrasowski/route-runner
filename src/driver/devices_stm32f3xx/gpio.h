@@ -1,6 +1,15 @@
 #ifndef _DEVICES_STM32F303XX_GPIO_H
 #define _DEVICES_STM32F303XX_GPIO_H
 
+#include <stdint.h>
+
+#define PERIPH_GPIO_AF_TIM3_CH3  2
+#define PERIPH_GPIO_AF_TIM3_CH4  2
+#define PERIPH_GPIO_AF_TIM1_CH1  6
+#define PERIPH_GPIO_AF_SPI1_SCK  5
+#define PERIPH_GPIO_AF_SPI1_MISO 5
+#define PERIPH_GPIO_AF_SPI1_MOSI 5
+
 typedef enum
 {
     PERIPH_GPIO_PA1,
@@ -35,12 +44,6 @@ typedef enum
     PERIPH_GPIO_STATE_HIGH,
 } gpio_state_t;
 
-typedef enum
-{
-    PERIPH_GPIO_AF2 = 2,
-    PERIPH_GPIO_AF5 = 5,
-} gpio_function_t;
-
 void
 gpio_init(void);
 
@@ -51,7 +54,7 @@ int
 gpio_set_state(gpio_t h_self, gpio_state_t state);
 
 int
-gpio_set_alternate_func(gpio_t h_self, gpio_function_t function);
+gpio_set_alternate_func(gpio_t h_self, uint8_t function);
 
 int
 gpio_set_pull_down(gpio_t h_self);

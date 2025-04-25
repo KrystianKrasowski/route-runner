@@ -4,6 +4,7 @@ if(TARGET_ARCH STREQUAL "stm32f303x8")
         sysclock.c
         gpio.c
         tim.c
+        spi.c
         l293.c
         dualshock2.c
     )
