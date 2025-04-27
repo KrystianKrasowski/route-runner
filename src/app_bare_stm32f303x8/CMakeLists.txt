@@ -14,9 +14,6 @@ add_executable(${MAIN_EXECUTABLE}
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
         linebot
-        adapters
-        # drivers_components
-        # drivers_stm32f303x8
         devices
         devices_stm32f3xx
         stm32f303x8
@@ -35,6 +32,6 @@ add_custom_command(TARGET ${MAIN_EXECUTABLE}
 
 add_custom_target(flash
     COMMAND st-flash write ${MAIN_EXECUTABLE}.bin 0x08000000
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/app/stm32f303x8
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/app_bare_stm32f303x8
     COMMENT "Flashing ${MAIN_EXECUTABLE}.bin"
 )

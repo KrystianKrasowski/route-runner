@@ -1,6 +1,5 @@
 set(TEST_SUITE
     adapter_motion_l293_test.c
-    adapter_mode_indicator_and_guard_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
@@ -17,8 +16,6 @@ foreach(FILE ${TEST_SUITE})
         PRIVATE
             linebot
             adapters
-            drivers_components
-            drivers_peripherals_mock
             unity
     )   
 

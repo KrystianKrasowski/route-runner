@@ -14,15 +14,14 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "hidden": true,
             "cacheVariables": {
-                "TARGET_ARCH": "stm32f303x8",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "TARGET_ARCH": "stm32f303x8"
             }
         },
         {
             "name": "debug",
             "inherits": "default",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
