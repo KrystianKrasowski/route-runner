@@ -1,6 +1,8 @@
 #include "motion.h"
+#include <errno.h>
 #include <string.h>
 #include <utils/pool.h>
+#include <utils/result.h>
 
 typedef struct
 {
@@ -14,7 +16,7 @@ POOL_DECLARE(motion, motion_instance_t, 1)
 static motion_pool_t pool;
 
 void
-motion_init(void)
+linebot_motion_init(void)
 {
     motion_pool_init(&pool);
 }
@@ -24,20 +26,17 @@ linebot_motion_acquire(linebot_motion_direction_t const direction,
                        int8_t const                     correction,
                        linebot_motion_t * const         ph_self)
 {
-    int  result      = 0;
-    bool b_allocated = motion_pool_alloc(&pool, ph_self);
-
-    if (b_allocated)
+    if (!motion_pool_alloc(&pool, ph_self))
     {
-        motion_instance_t *p_self = motion_pool_get(&pool, *ph_self);
-
-        p_self->direction  = direction;
-        p_self->correction = correction;
-
-        result = true;
+        return -ENOMEM;
     }
 
-    return result;
+    motion_instance_t *p_self = motion_pool_get(&pool, *ph_self);
+
+    p_self->direction  = direction;
+    p_self->correction = correction;
+
+    return RESULT_OK;
 }
 
 void

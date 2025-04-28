@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define DEVICES_L293_INSTANCES_NUM 2
+
 typedef enum
 {
     DEVICES_L293_CHANNEL_12,

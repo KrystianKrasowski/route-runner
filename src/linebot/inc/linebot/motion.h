@@ -26,6 +26,9 @@ typedef enum
  */
 typedef uint8_t linebot_motion_t;
 
+void
+linebot_motion_init(void);
+
 /**
  * @brief Produces a handle to the motion object.
  *
@@ -35,7 +38,7 @@ typedef uint8_t linebot_motion_t;
  * @param[in] direction direction in which linebot moves
  * @param[in] correction steering value
  * @param[out] ph_self handle of motion object
- * 
+ *
  * @retval 0 OK
  * @retval -12 ENOMEM
  */
@@ -56,7 +59,7 @@ linebot_motion_release(linebot_motion_t h_self);
  * @brief Returns motion direction
  *
  * @param[in] h_self handle to a motion instance
- * 
+ *
  * @return linebot_motion_direction_t
  */
 linebot_motion_direction_t
@@ -66,7 +69,7 @@ linebot_motion_get_direction(linebot_motion_t const h_self);
  * @brief Returns motion correction
  *
  * @param[in] h_self handle to a motion instance
- * 
+ *
  * @return int8_t steering value
  */
 int8_t

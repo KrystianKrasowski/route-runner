@@ -3,13 +3,17 @@
 
 #include <devices/l293.h>
 #include <linebot/port.h>
+#include <stdint.h>
 
 void
-adapters_motion_l293_init(void);
+adapter_motion_l293_init(void);
 
 int
-adapters_motion_l293_acquire(l293_t const           h_motor_left,
-                             l293_t const           h_motor_right,
-                             linebot_port_motion_t *ph_self);
+adapter_motion_l293_acquire(l293_t const           h_motor_left,
+                            l293_t const           h_motor_right,
+                            linebot_port_motion_t *ph_self);
+
+void
+adapter_motion_l293_release(linebot_port_motion_t const h_self);
 
 #endif

@@ -2,7 +2,6 @@
 #include "context.h"
 #include "coords.h"
 #include "mode.h"
-#include "motion.h"
 #include "motion_factory.h"
 #include "position.h"
 #include <errno.h>
@@ -29,7 +28,7 @@ linebot_init(void)
 {
     coords_init();
     position_init();
-    motion_init();
+    linebot_motion_init();
     context_init();
 }
 

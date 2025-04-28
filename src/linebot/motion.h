@@ -3,7 +3,4 @@
 
 #include <linebot/motion.h>
 
-void
-motion_init(void);
-
 #endif

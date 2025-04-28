@@ -7,7 +7,7 @@
 #include <utils/result.h>
 
 // cppcheck-suppress unusedFunction
-POOL_DECLARE(l293, l293_instance_t, 2)
+POOL_DECLARE(l294, l293_instance_t, DEVICES_L293_INSTANCES_NUM)
 
 static l293_pool_t pool;
 
