@@ -147,9 +147,9 @@ apply_manual_motion(linebot_t const h_self, uint16_t const commands)
 {
     if (!context_is_tracking_route(h_self) || command_has_break(commands))
     {
-        linebot_motion_t h_motion = motion_create_by_commands(commands);
+        linebot_lgc_motion_t h_motion = motion_create_by_commands(commands);
 
-        linebot_port_motion_apply(h_motion);
+        linebot_lgc_port_motion_apply(h_motion);
         linebot_motion_release(h_motion);
     }
 }
@@ -174,8 +174,8 @@ apply_tracking_motion(linebot_t const h_self, linebot_coords_t const h_coords)
         position_t h_position = context_get_position(h_self);
         position_update_coords(h_position, h_coords);
 
-        linebot_motion_t h_motion = motion_create_by_position(h_position);
-        linebot_port_motion_apply(h_motion);
+        linebot_lgc_motion_t h_motion = motion_create_by_position(h_position);
+        linebot_lgc_port_motion_apply(h_motion);
         linebot_motion_release(h_motion);
     }
 }
@@ -183,11 +183,11 @@ apply_tracking_motion(linebot_t const h_self, linebot_coords_t const h_coords)
 static inline void
 stop_immediately(linebot_t const h_self)
 {
-    linebot_mode_t   new_mode = LINEBOT_MODE_MANUAL;
-    linebot_motion_t h_motion = motion_create_standby();
+    linebot_mode_t       new_mode = LINEBOT_MODE_MANUAL;
+    linebot_lgc_motion_t h_motion = motion_create_standby();
 
     context_update_mode(h_self, new_mode);
     linebot_port_mode_changed(new_mode);
-    linebot_port_motion_apply(h_motion);
+    linebot_lgc_port_motion_apply(h_motion);
     linebot_motion_release(h_motion);
 }

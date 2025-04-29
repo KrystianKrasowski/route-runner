@@ -7,9 +7,9 @@
 
 typedef struct
 {
-    l293_mock_state_t state;
-    bool              enabled;
-    uint8_t           duty_cycle;
+    device_l293_mock_rotation_t rotation;
+    bool                        enabled;
+    uint8_t                     duty_cycle;
 } l293_mock_instance_t;
 
 POOL_DECLARE(l293_mock, l293_mock_instance_t, DEVICES_L293_INSTANCES_NUM)
@@ -27,7 +27,7 @@ devices_l293_mock_init(void)
 
         l293_mock_instance_t *p_mock = l293_mock_pool_get(&pool, i);
 
-        p_mock->state      = L293_MOCK_STATE_STOP;
+        p_mock->rotation   = L293_MOCK_ROTATION_STOP;
         p_mock->enabled    = false;
         p_mock->duty_cycle = 0;
     }
@@ -43,43 +43,43 @@ devices_l293_mock_deinit(void)
 }
 
 int
-devices_l293_set_left(l293_t h_self)
+devices_l293_set_left(device_l293_t h_self)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 
     assert(p_self != NULL);
 
-    p_self->state = L293_MOCK_STATE_LEFT;
+    p_self->rotation = L293_MOCK_ROTATION_LEFT;
 
     return RESULT_OK;
 }
 
 int
-devices_l293_set_right(l293_t h_self)
+devices_l293_set_right(device_l293_t h_self)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 
     assert(p_self != NULL);
 
-    p_self->state = L293_MOCK_STATE_RIGHT;
+    p_self->rotation = L293_MOCK_ROTATION_RIGHT;
 
     return RESULT_OK;
 }
 
 int
-devices_l293_set_stop(l293_t h_self)
+devices_l293_set_stop(device_l293_t h_self)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 
     assert(p_self != NULL);
 
-    p_self->state = L293_MOCK_STATE_STOP;
+    p_self->rotation = L293_MOCK_ROTATION_STOP;
 
     return RESULT_OK;
 }
 
 int
-devices_l293_enable(l293_t h_self, uint8_t duty_cycle)
+devices_l293_enable(device_l293_t h_self, uint8_t duty_cycle)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 
@@ -92,7 +92,7 @@ devices_l293_enable(l293_t h_self, uint8_t duty_cycle)
 }
 
 int
-devices_l293_disable(l293_t h_self)
+devices_l293_disable(device_l293_t h_self)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 
@@ -104,18 +104,18 @@ devices_l293_disable(l293_t h_self)
     return RESULT_OK;
 }
 
-l293_mock_state_t
-devices_l293_mock_get_state(l293_t const h_self)
+device_l293_mock_rotation_t
+devices_l293_mock_verify_rotation(device_l293_t const h_self)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 
     assert(p_self != NULL);
 
-    return p_self->state;
+    return p_self->rotation;
 }
 
 bool
-devices_l293_mock_is_enabled(l293_t const h_self)
+devices_l293_mock_is_enabled(device_l293_t const h_self)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 
@@ -125,7 +125,7 @@ devices_l293_mock_is_enabled(l293_t const h_self)
 }
 
 uint8_t
-devices_l293_mock_get_ducy_cycle(l293_t const h_self)
+devices_l293_mock_verify_duty_cycle(device_l293_t const h_self)
 {
     l293_mock_instance_t *p_self = l293_mock_pool_get(&pool, h_self);
 

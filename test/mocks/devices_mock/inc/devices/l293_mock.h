@@ -6,10 +6,10 @@
 
 typedef enum
 {
-    L293_MOCK_STATE_LEFT,
-    L293_MOCK_STATE_RIGHT,
-    L293_MOCK_STATE_STOP,
-} l293_mock_state_t;
+    L293_MOCK_ROTATION_LEFT,
+    L293_MOCK_ROTATION_RIGHT,
+    L293_MOCK_ROTATION_STOP,
+} device_l293_mock_rotation_t;
 
 void
 devices_l293_mock_init(void);
@@ -17,13 +17,13 @@ devices_l293_mock_init(void);
 void
 devices_l293_mock_deinit(void);
 
-l293_mock_state_t
-devices_l293_mock_get_state(l293_t const h_self);
+device_l293_mock_rotation_t
+devices_l293_mock_verify_rotation(device_l293_t const h_self);
 
 bool
-devices_l293_mock_is_enabled(l293_t const h_self);
+devices_l293_mock_is_enabled(device_l293_t const h_self);
 
 uint8_t
-devices_l293_mock_get_ducy_cycle(l293_t const h_self);
+devices_l293_mock_verify_duty_cycle(device_l293_t const h_self);
 
 #endif

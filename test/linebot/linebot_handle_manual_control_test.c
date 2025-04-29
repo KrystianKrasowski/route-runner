@@ -55,9 +55,9 @@ should_keep_mode(linebot_mode_t current_mode, uint16_t commands)
 }
 
 void
-should_apply_manual_motion(uint16_t                   commands,
-                           linebot_motion_direction_t direction,
-                           int8_t                     correction)
+should_apply_manual_motion(uint16_t            commands,
+                           linebot_direction_t direction,
+                           int8_t              correction)
 {
     // given
     linebot = fixtures_linebot_acquire(LINEBOT_MODE_MANUAL);
@@ -96,7 +96,7 @@ should_apply_manual_motion_on_tracking_break(linebot_mode_t mode)
 
     // then
     TEST_ASSERT_EQUAL(1, linebot_port_mock_motion_verify_apply_calls());
-    TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,
+    TEST_ASSERT_EQUAL(LINEBOT_DIRECTION_NONE,
                       linebot_port_mock_motion_get_direction());
     TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_get_correction());
 }
@@ -170,51 +170,51 @@ main(void)
 
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_FORWARD,
-                   LINEBOT_MOTION_FORWARD,
+                   LINEBOT_DIRECTION_FORWARD,
                    0);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_FORWARD | LINEBOT_COMMAND_LEFT,
-                   LINEBOT_MOTION_FORWARD,
+                   LINEBOT_DIRECTION_FORWARD,
                    -50);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_FORWARD | LINEBOT_COMMAND_RIGHT,
-                   LINEBOT_MOTION_FORWARD,
+                   LINEBOT_DIRECTION_FORWARD,
                    50);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_BACKWARD,
-                   LINEBOT_MOTION_BACKWARD,
+                   LINEBOT_DIRECTION_BACKWARD,
                    0);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_BACKWARD | LINEBOT_COMMAND_LEFT,
-                   LINEBOT_MOTION_BACKWARD,
+                   LINEBOT_DIRECTION_BACKWARD,
                    -50);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_BACKWARD | LINEBOT_COMMAND_RIGHT,
-                   LINEBOT_MOTION_BACKWARD,
+                   LINEBOT_DIRECTION_BACKWARD,
                    50);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_BACKWARD | LINEBOT_COMMAND_FORWARD,
-                   LINEBOT_MOTION_NONE,
+                   LINEBOT_DIRECTION_NONE,
                    0);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_LEFT | LINEBOT_COMMAND_RIGHT,
-                   LINEBOT_MOTION_NONE,
+                   LINEBOT_DIRECTION_NONE,
                    0);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_LEFT,
-                   LINEBOT_MOTION_NONE,
+                   LINEBOT_DIRECTION_NONE,
                    0);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_RIGHT,
-                   LINEBOT_MOTION_NONE,
+                   LINEBOT_DIRECTION_NONE,
                    0);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_FOLLOW,
-                   LINEBOT_MOTION_NONE,
+                   LINEBOT_DIRECTION_NONE,
                    0);
     RUN_PARAM_TEST(should_apply_manual_motion,
                    LINEBOT_COMMAND_BREAK,
-                   LINEBOT_MOTION_NONE,
+                   LINEBOT_DIRECTION_NONE,
                    0);
 
     RUN_PARAM_TEST(should_not_apply_manual_motion_while_tracking,

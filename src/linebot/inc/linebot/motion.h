@@ -15,16 +15,25 @@
  */
 typedef enum
 {
-    LINEBOT_MOTION_NONE,
-    LINEBOT_MOTION_FORWARD,
-    LINEBOT_MOTION_BACKWARD,
-} linebot_motion_direction_t;
+    LINEBOT_DIRECTION_NONE,
+    LINEBOT_DIRECTION_FORWARD,
+    LINEBOT_DIRECTION_BACKWARD,
+} linebot_direction_t;
 
 /**
  * @brief Motion object handle
  *
  */
-typedef uint8_t linebot_motion_t;
+typedef uint8_t linebot_lgc_motion_t;
+
+typedef struct
+{
+    linebot_direction_t const direction;
+    int8_t const              correction;
+} linebot_motion_t;
+
+linebot_direction_t
+linebot_motion_invert_direction(linebot_motion_t const *p_self);
 
 void
 linebot_motion_init(void);
@@ -43,9 +52,9 @@ linebot_motion_init(void);
  * @retval -12 ENOMEM
  */
 int
-linebot_motion_acquire(linebot_motion_direction_t const direction,
-                       int8_t const                     correction,
-                       linebot_motion_t * const         ph_self);
+linebot_motion_acquire(linebot_direction_t const    direction,
+                       int8_t const                 correction,
+                       linebot_lgc_motion_t * const ph_self);
 
 /**
  * @brief Release motion instance
@@ -53,7 +62,7 @@ linebot_motion_acquire(linebot_motion_direction_t const direction,
  * @param[in] h_self handle to a motion instance
  */
 void
-linebot_motion_release(linebot_motion_t h_self);
+linebot_motion_release(linebot_lgc_motion_t h_self);
 
 /**
  * @brief Returns motion direction
@@ -62,8 +71,8 @@ linebot_motion_release(linebot_motion_t h_self);
  *
  * @return linebot_motion_direction_t
  */
-linebot_motion_direction_t
-linebot_motion_get_direction(linebot_motion_t const h_self);
+linebot_direction_t
+linebot_motion_get_direction(linebot_lgc_motion_t const h_self);
 
 /**
  * @brief Returns motion correction
@@ -73,6 +82,6 @@ linebot_motion_get_direction(linebot_motion_t const h_self);
  * @return int8_t steering value
  */
 int8_t
-linebot_motion_get_correction(linebot_motion_t const h_self);
+linebot_motion_get_correction(linebot_lgc_motion_t const h_self);
 
 #endif

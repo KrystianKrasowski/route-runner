@@ -85,7 +85,7 @@ should_finish_tracking(void)
     linebot_handle_route_tracking(linebot, new_coords);
 
     // then
-    TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,
+    TEST_ASSERT_EQUAL(LINEBOT_DIRECTION_NONE,
                       linebot_port_mock_motion_get_direction());
     TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_get_correction());
     TEST_ASSERT_EQUAL(1, linebot_port_mock_motion_verify_apply_calls());

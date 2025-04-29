@@ -1,5 +1,5 @@
 add_library(adapters STATIC
-    motion_l293.c
+    adapter_motion_l293.c
 )
 
 set_property(TARGET adapters PROPERTY C_STANDARD 11)

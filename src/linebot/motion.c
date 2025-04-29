@@ -1,3 +1,4 @@
+#include "linebot/motion.h"
 #include "motion.h"
 #include <errno.h>
 #include <string.h>
@@ -6,8 +7,8 @@
 
 typedef struct
 {
-    linebot_motion_direction_t direction;
-    int8_t                     correction;
+    linebot_direction_t direction;
+    int8_t              correction;
 } motion_instance_t;
 
 // cppcheck-suppress unusedFunction
@@ -22,9 +23,9 @@ linebot_motion_init(void)
 }
 
 int
-linebot_motion_acquire(linebot_motion_direction_t const direction,
-                       int8_t const                     correction,
-                       linebot_motion_t * const         ph_self)
+linebot_motion_acquire(linebot_direction_t const    direction,
+                       int8_t const                 correction,
+                       linebot_lgc_motion_t * const ph_self)
 {
     if (!motion_pool_alloc(&pool, ph_self))
     {
@@ -40,21 +41,37 @@ linebot_motion_acquire(linebot_motion_direction_t const direction,
 }
 
 void
-linebot_motion_release(linebot_motion_t const h_self)
+linebot_motion_release(linebot_lgc_motion_t const h_self)
 {
     motion_pool_free(&pool, h_self);
 }
 
-linebot_motion_direction_t
-linebot_motion_get_direction(linebot_motion_t const h_self)
+linebot_direction_t
+linebot_motion_get_direction(linebot_lgc_motion_t const h_self)
 {
     motion_instance_t const *p_self = motion_pool_get(&pool, h_self);
     return p_self->direction;
 }
 
 int8_t
-linebot_motion_get_correction(linebot_motion_t const h_self)
+linebot_motion_get_correction(linebot_lgc_motion_t const h_self)
 {
     motion_instance_t const *p_self = motion_pool_get(&pool, h_self);
     return p_self->correction;
+}
+
+linebot_direction_t
+linebot_motion_invert_direction(linebot_motion_t const *p_self)
+{
+    switch (p_self->direction)
+    {
+        case LINEBOT_DIRECTION_FORWARD:
+            return LINEBOT_DIRECTION_BACKWARD;
+
+        case LINEBOT_DIRECTION_BACKWARD:
+            return LINEBOT_DIRECTION_FORWARD;
+
+        default:
+            return LINEBOT_DIRECTION_NONE;
+    }
 }

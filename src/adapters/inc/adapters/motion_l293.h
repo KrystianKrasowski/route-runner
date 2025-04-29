@@ -9,8 +9,8 @@ void
 adapter_motion_l293_init(void);
 
 int
-adapter_motion_l293_acquire(l293_t const           h_motor_left,
-                            l293_t const           h_motor_right,
+adapter_motion_l293_acquire(device_l293_t const    h_motor_left,
+                            device_l293_t const    h_motor_right,
                             linebot_port_motion_t *ph_self);
 
 void
