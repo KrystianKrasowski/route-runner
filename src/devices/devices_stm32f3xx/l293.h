@@ -9,8 +9,8 @@
  * @brief A L293 driver instance for bidirectional mode. Single channel
  *
  * The instance internals are exposed as module-private because of:
- *  * separation creation from initialization
- *  * prevent from "construct" functions with all the instance fields anyway
+ *  - separation creation from initialization
+ *  - prevent from "construct" functions with all the instance fields anyway
  */
 typedef struct
 {

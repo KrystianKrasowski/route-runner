@@ -170,15 +170,15 @@ rotation_apply(device_l293_t h_motor, linebot_direction_t direction)
     switch (direction)
     {
         case LINEBOT_DIRECTION_FORWARD:
-            (void)devices_l293_set_right(h_motor);
+            (void)devices_l293_rotate(h_motor, DEVICES_L293_ROTATION_RIGHT);
             break;
 
         case LINEBOT_DIRECTION_BACKWARD:
-            (void)devices_l293_set_left(h_motor);
+            (void)devices_l293_rotate(h_motor, DEVICES_L293_ROTATION_LEFT);
             break;
 
         case LINEBOT_DIRECTION_NONE:
         default:
-            (void)devices_l293_set_stop(h_motor);
+            (void)devices_l293_rotate(h_motor, DEVICES_L293_ROTATION_STOP);
     }
 }

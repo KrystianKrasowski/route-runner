@@ -12,9 +12,9 @@
 
 #define MOTOR_LEFT     DEVICES_L293_CHANNEL_12
 #define MOTOR_RIGHT    DEVICES_L293_CHANNEL_34
-#define ROTATION_LEFT  L293_MOCK_ROTATION_LEFT
-#define ROTATION_RIGHT L293_MOCK_ROTATION_RIGHT
-#define ROTATION_STOP  L293_MOCK_ROTATION_STOP
+#define ROTATION_LEFT  DEVICES_L293_ROTATION_LEFT
+#define ROTATION_RIGHT DEVICES_L293_ROTATION_RIGHT
+#define ROTATION_STOP  DEVICES_L293_ROTATION_STOP
 
 static linebot_port_motion_t h_adapter;
 
@@ -36,11 +36,11 @@ tearDown(void)
 }
 
 void
-should_apply_motion(int8_t                      correction,
-                    linebot_direction_t         direction,
-                    device_l293_t               h_motor,
-                    uint8_t                     expected_duty_cycle,
-                    device_l293_mock_rotation_t expected_rotation)
+should_apply_motion(int8_t                 correction,
+                    linebot_direction_t    direction,
+                    device_l293_t          h_motor,
+                    uint8_t                expected_duty_cycle,
+                    device_l293_rotation_t expected_rotation)
 {
     // given
     linebot_motion_t motion = {

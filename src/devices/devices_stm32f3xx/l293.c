@@ -1,3 +1,4 @@
+#include "devices/l293.h"
 #include "l293.h"
 #include "sysclock.h"
 #include <errno.h>
@@ -10,6 +11,15 @@
 POOL_DECLARE(l294, l293_instance_t, DEVICES_L293_INSTANCES_NUM)
 
 static l293_pool_t pool;
+
+static inline int
+l293_set_left(l293_instance_t const *p_self);
+
+static inline int
+l293_set_right(l293_instance_t const *p_self);
+
+static inline int
+l293_set_stop(l293_instance_t const *p_self);
 
 void
 l293_init(void)
@@ -28,72 +38,27 @@ l293_create(l293_t handle, l293_instance_t *p_instance)
 }
 
 int
-devices_l293_set_left(l293_t h_self)
+devices_l293_rotate(device_l293_t h_self, device_l293_rotation_t rotation)
 {
-    l293_instance_t const *p_self = l293_pool_get(&pool, h_self);
+    l293_instance_t const *p_self = l294_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
         return -ENODEV;
     }
 
-    if (gpio_set_state(p_self->driver_channel_1, PERIPH_GPIO_STATE_HIGH) < 0)
+    switch (rotation)
     {
-        return -ENODEV;
+        case DEVICES_L293_ROTATION_LEFT:
+            return l293_set_left(p_self);
+
+        case DEVICES_L293_ROTATION_RIGHT:
+            return l293_set_right(p_self);
+
+        case DEVICES_L293_ROTATION_STOP:
+        default:
+            return l293_set_stop(p_self);
     }
-
-    if (gpio_set_state(p_self->driver_channel_2, PERIPH_GPIO_STATE_LOW) < 0)
-    {
-        return -ENODEV;
-    }
-
-    return RESULT_OK;
-}
-
-int
-devices_l293_set_right(l293_t h_self)
-{
-    l293_instance_t const *p_self = l293_pool_get(&pool, h_self);
-
-    if (NULL == p_self)
-    {
-        return -ENODEV;
-    }
-
-    if (gpio_set_state(p_self->driver_channel_1, PERIPH_GPIO_STATE_LOW) < 0)
-    {
-        return -ENODEV;
-    }
-
-    if (gpio_set_state(p_self->driver_channel_2, PERIPH_GPIO_STATE_HIGH) < 0)
-    {
-        return -ENODEV;
-    }
-
-    return RESULT_OK;
-}
-
-int
-devices_l293_set_stop(l293_t h_self)
-{
-    l293_instance_t const *p_self = l293_pool_get(&pool, h_self);
-
-    if (NULL == p_self)
-    {
-        return -ENODEV;
-    }
-
-    if (gpio_set_state(p_self->driver_channel_1, PERIPH_GPIO_STATE_LOW) < 0)
-    {
-        return -ENODEV;
-    }
-
-    if (gpio_set_state(p_self->driver_channel_2, PERIPH_GPIO_STATE_LOW) < 0)
-    {
-        return -ENODEV;
-    }
-
-    return RESULT_OK;
 }
 
 int
@@ -119,7 +84,6 @@ devices_l293_enable(l293_t h_self, uint8_t duty_cycle)
 int
 devices_l293_disable(l293_t h_self)
 {
-    l293_instance_t const *p_self = l293_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
@@ -127,6 +91,54 @@ devices_l293_disable(l293_t h_self)
     }
 
     tim_oc_stop(p_self->pwm_timer, p_self->pwm_channel);
+
+    return RESULT_OK;
+}
+
+int
+l293_set_left(l293_instance_t const *p_self)
+{
+    if (gpio_set_state(p_self->driver_channel_1, PERIPH_GPIO_STATE_HIGH) < 0)
+    {
+        return -ENODEV;
+    }
+
+    if (gpio_set_state(p_self->driver_channel_2, PERIPH_GPIO_STATE_LOW) < 0)
+    {
+        return -ENODEV;
+    }
+
+    return RESULT_OK;
+}
+
+int
+l293_set_right(l293_instance_t const *p_self)
+{
+    if (gpio_set_state(p_self->driver_channel_1, PERIPH_GPIO_STATE_LOW) < 0)
+    {
+        return -ENODEV;
+    }
+
+    if (gpio_set_state(p_self->driver_channel_2, PERIPH_GPIO_STATE_HIGH) < 0)
+    {
+        return -ENODEV;
+    }
+
+    return RESULT_OK;
+}
+
+int
+l293_set_stop(l293_instance_t const *p_self)
+{
+    if (gpio_set_state(p_self->driver_channel_1, PERIPH_GPIO_STATE_LOW) < 0)
+    {
+        return -ENODEV;
+    }
+
+    if (gpio_set_state(p_self->driver_channel_2, PERIPH_GPIO_STATE_LOW) < 0)
+    {
+        return -ENODEV;
+    }
 
     return RESULT_OK;
 }
