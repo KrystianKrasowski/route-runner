@@ -142,7 +142,7 @@ create_l293_12(void)
         .pwm_channel      = PERIPH_TIM_CHANNEL_3,
     };
 
-    l293_create(DEVICES_L293_CHANNEL_12, &l293_12);
+    l293_create(DEVICE_L293_CHANNEL_12, &l293_12);
 }
 
 static inline void
@@ -158,7 +158,7 @@ create_l293_34(void)
         .pwm_channel      = PERIPH_TIM_CHANNEL_4,
     };
 
-    l293_create(DEVICES_L293_CHANNEL_34, &l293_34);
+    l293_create(DEVICE_L293_CHANNEL_34, &l293_34);
 }
 
 static inline void
@@ -171,5 +171,5 @@ create_dualshock2_1(void)
         .spi_bus       = PERIPH_SPI1,
     };
 
-    dualshock2_create(DEVICES_DUALSHOCK2_1, &conf);
+    dualshock2_create(DEVICE_DUALSHOCK2_1, &conf);
 }

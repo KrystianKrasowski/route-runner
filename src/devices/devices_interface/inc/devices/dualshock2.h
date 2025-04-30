@@ -1,5 +1,5 @@
-#ifndef _DEVICES_DUALSHOCK2_H
-#define _DEVICES_DUALSHOCK2_H
+#ifndef _DEVICE_DUALSHOCK2_H
+#define _DEVICE_DUALSHOCK2_H
 
 #include <stdint.h>
 
@@ -26,10 +26,12 @@ typedef enum
 
 typedef enum
 {
-    DEVICES_DUALSHOCK2_1,
-} dualshock2_t;
+    DEVICE_DUALSHOCK2_1,
+} device_dualshock2_t;
+
+#define DEVICE_DUALSHOCK2_INSTANCES_NUM 1
 
 int
-devices_dualshock2_read(dualshock2_t h_self, uint16_t *p_commands);
+device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands);
 
 #endif

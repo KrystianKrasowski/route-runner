@@ -5,15 +5,16 @@ add_executable(${MAIN_EXECUTABLE}
     syscalls.c
     sysmem.c
     system_stm32f3xx.c
-    # task.c
-    # main.c
+    task.c
+    main.c
     # sandbox_legacy_devices.c
-    sandbox_devices.c
+    # sandbox_devices.c
 )
 
 target_link_libraries(${MAIN_EXECUTABLE} 
     PRIVATE
         linebot
+        adapters
         devices
         devices_stm32f3xx
         stm32f303x8

@@ -1,5 +1,5 @@
-#ifndef _DEVICES_MOCK_L293_H
-#define _DEVICES_MOCK_L293_H
+#ifndef _DEVICE_MOCK_L293_H
+#define _DEVICE_MOCK_L293_H
 
 #include <devices/l293.h>
 #include <stdbool.h>

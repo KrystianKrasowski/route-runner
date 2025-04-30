@@ -8,7 +8,7 @@
 #include <utils/result.h>
 
 // cppcheck-suppress unusedFunction
-POOL_DECLARE(l294, l293_instance_t, DEVICES_L293_INSTANCES_NUM)
+POOL_DECLARE(l293, l293_instance_t, DEVICE_L293_INSTANCES_NUM)
 
 static l293_pool_t pool;
 
@@ -28,7 +28,7 @@ l293_init(void)
 }
 
 void
-l293_create(l293_t handle, l293_instance_t *p_instance)
+l293_create(device_l293_t handle, l293_instance_t *p_instance)
 {
     l293_pool_alloc_at(&pool, handle);
 
@@ -38,9 +38,9 @@ l293_create(l293_t handle, l293_instance_t *p_instance)
 }
 
 int
-devices_l293_rotate(device_l293_t h_self, device_l293_rotation_t rotation)
+device_l293_rotate(device_l293_t h_self, device_l293_rotation_t rotation)
 {
-    l293_instance_t const *p_self = l294_pool_get(&pool, h_self);
+    l293_instance_t const *p_self = l293_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
@@ -49,20 +49,20 @@ devices_l293_rotate(device_l293_t h_self, device_l293_rotation_t rotation)
 
     switch (rotation)
     {
-        case DEVICES_L293_ROTATION_LEFT:
+        case DEVICE_L293_ROTATION_LEFT:
             return l293_set_left(p_self);
 
-        case DEVICES_L293_ROTATION_RIGHT:
+        case DEVICE_L293_ROTATION_RIGHT:
             return l293_set_right(p_self);
 
-        case DEVICES_L293_ROTATION_STOP:
+        case DEVICE_L293_ROTATION_STOP:
         default:
             return l293_set_stop(p_self);
     }
 }
 
 int
-devices_l293_enable(l293_t h_self, uint8_t duty_cycle)
+device_l293_enable(device_l293_t h_self, uint8_t duty_cycle)
 {
     l293_instance_t const *p_self = l293_pool_get(&pool, h_self);
 
@@ -82,8 +82,9 @@ devices_l293_enable(l293_t h_self, uint8_t duty_cycle)
 }
 
 int
-devices_l293_disable(l293_t h_self)
+device_l293_disable(device_l293_t h_self)
 {
+    l293_instance_t const *p_self = l293_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {

@@ -15,6 +15,6 @@ void
 dualshock2_init(void);
 
 void
-dualshock2_create(dualshock2_t handle, dualshock2_conf_t *p_conf);
+dualshock2_create(device_dualshock2_t handle, dualshock2_conf_t *p_conf);
 
 #endif

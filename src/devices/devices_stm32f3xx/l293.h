@@ -24,6 +24,6 @@ void
 l293_init(void);
 
 void
-l293_create(l293_t handle, l293_instance_t *p_instance);
+l293_create(device_l293_t handle, l293_instance_t *p_instance);
 
 #endif

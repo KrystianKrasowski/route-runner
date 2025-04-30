@@ -9,8 +9,7 @@
 #include <utils/pool.h>
 #include <utils/result.h>
 
-#define INSTANCES_NUM 1
-#define PAYLOAD_SIZE  9
+#define PAYLOAD_SIZE 9
 
 typedef struct
 {
@@ -20,7 +19,7 @@ typedef struct
     bool volatile handled;
 } dualshock2_instance_t;
 
-POOL_DECLARE(dualshock2, dualshock2_instance_t, INSTANCES_NUM)
+POOL_DECLARE(dualshock2, dualshock2_instance_t, DEVICE_DUALSHOCK2_INSTANCES_NUM)
 
 static uint8_t PAYLOAD[PAYLOAD_SIZE] = {
     0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -37,7 +36,7 @@ dualshock2_init(void)
 }
 
 void
-dualshock2_create(dualshock2_t handle, dualshock2_conf_t *p_conf)
+dualshock2_create(device_dualshock2_t handle, dualshock2_conf_t *p_conf)
 {
     dualshock2_pool_alloc_at(&pool, handle);
 
@@ -53,7 +52,7 @@ dualshock2_create(dualshock2_t handle, dualshock2_conf_t *p_conf)
 }
 
 int
-devices_dualshock2_read(dualshock2_t h_self, uint16_t *p_commands)
+device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands)
 {
     dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, h_self);
 
@@ -85,8 +84,8 @@ void
 tim2_on_update_isr(void)
 {
     // explicit handle is assumed by the TIM2 indication
-    dualshock2_t           handle = DEVICES_DUALSHOCK2_1;
-    dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, handle);
+    dualshock2_instance_t *p_self =
+        dualshock2_pool_get(&pool, DEVICE_DUALSHOCK2_1);
 
     if (NULL == p_self)
     {
@@ -100,15 +99,15 @@ void
 spi1_on_response_isr(uint8_t const response[])
 {
     // explicit handle is assumed by the SPI1 indication
-    dualshock2_t           handle = DEVICES_DUALSHOCK2_1;
-    dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, handle);
+    dualshock2_instance_t *p_self =
+        dualshock2_pool_get(&pool, DEVICE_DUALSHOCK2_1);
 
     if (NULL == p_self)
     {
         return;
     }
 
-    if (memcmp(p_self->state, response, sizeof(p_self->state)) == 0)
+    if (memcmp(p_self->state, response, sizeof(p_self->state)) != 0)
     {
         memcpy(p_self->state, response, sizeof(p_self->state));
         p_self->handled = false;
