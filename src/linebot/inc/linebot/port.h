@@ -33,12 +33,10 @@ linebot_lgc_port_motion_apply(linebot_lgc_motion_t const h_motion);
  *
  * Can serve as DC motor driver
  *
- * @param[in] h_self handle to port instance
  * @param[in] h_motion handle to linebot motion
  */
-int
-linebot_port_motion_apply(linebot_port_motion_t const h_self,
-                          linebot_motion_t const     *p_motion);
+void
+linebot_port_motion_apply(linebot_motion_t const *p_motion);
 
 /**
  * @brief Triggers an event on linebot motion change to be handled by

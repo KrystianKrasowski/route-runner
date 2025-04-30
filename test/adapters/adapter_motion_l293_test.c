@@ -1,7 +1,3 @@
-#include "devices/l293.h"
-#include "linebot/motion.h"
-#include <adapters/motion_l293.h>
-#include <assert.h>
 #include <devices/l293_mock.h>
 #include <linebot/motion.h>
 #include <linebot/port.h>
@@ -16,23 +12,16 @@
 #define ROTATION_RIGHT DEVICE_L293_ROTATION_RIGHT
 #define ROTATION_STOP  DEVICE_L293_ROTATION_STOP
 
-static linebot_port_motion_t h_adapter;
-
 void
 setUp(void)
 {
     device_l293_mock_init();
-    adapter_motion_l293_init();
-
-    assert(RESULT_OK ==
-           adapter_motion_l293_acquire(MOTOR_LEFT, MOTOR_RIGHT, &h_adapter));
 }
 
 void
 tearDown(void)
 {
     device_l293_mock_deinit();
-    adapter_motion_l293_release(h_adapter);
 }
 
 void
@@ -49,7 +38,7 @@ should_apply_motion(int8_t                 correction,
     };
 
     // when
-    linebot_port_motion_apply(h_adapter, &motion);
+    linebot_port_motion_apply(&motion);
 
     // then
     TEST_ASSERT_EQUAL(expected_duty_cycle,
