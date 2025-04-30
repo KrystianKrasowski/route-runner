@@ -1,3 +1,5 @@
+#include <linebot/motion.h>
+#include <linebot/port.h>
 #include <linebot_port_mock_motion.h>
 #include <string.h>
 
@@ -11,15 +13,10 @@ typedef struct
 static mock_motion_t mock;
 
 void
-linebot_port_motion_init(void)
+linebot_port_motion_apply(linebot_motion_t const *p_motion)
 {
-}
-
-void
-linebot_lgc_port_motion_apply(linebot_lgc_motion_t motion)
-{
-    mock.applied_direction  = linebot_motion_get_direction(motion);
-    mock.applied_correction = linebot_motion_get_correction(motion);
+    mock.applied_direction  = p_motion->direction;
+    mock.applied_correction = p_motion->correction;
     mock.calls++;
 }
 

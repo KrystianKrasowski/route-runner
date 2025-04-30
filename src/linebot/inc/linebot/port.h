@@ -21,18 +21,6 @@ typedef uint8_t linebot_port_mode_t;
  *
  * Can serve as DC motor driver
  *
- * @deprecated
- * @param[in] h_self handle to port instance
- * @param[in] h_motion handle to linebot motion
- */
-void
-linebot_lgc_port_motion_apply(linebot_lgc_motion_t const h_motion);
-
-/**
- * @brief Applies motion to the external motion handler
- *
- * Can serve as DC motor driver
- *
  * @param[in] h_motion handle to linebot motion
  */
 void
