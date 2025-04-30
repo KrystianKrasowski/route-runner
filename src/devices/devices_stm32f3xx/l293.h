@@ -1,5 +1,5 @@
-#ifndef _DEVICES_STM32F3XX_L293_H
-#define _DEVICES_STM32F3XX_L293_H
+#ifndef _DEVICE_STM32F3XX_L293_H
+#define _DEVICE_STM32F3XX_L293_H
 
 #include "gpio.h"
 #include "tim.h"

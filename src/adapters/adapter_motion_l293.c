@@ -77,8 +77,8 @@ linebot_port_motion_apply(linebot_port_motion_t const h_self,
     }
 
     // maybe I should validate devices here ?
-    devices_l293_disable(p_self->motor_left);
-    devices_l293_disable(p_self->motor_right);
+    device_l293_disable(p_self->motor_left);
+    device_l293_disable(p_self->motor_right);
 
     uint8_t             duty_cycle_left  = duty_cycle_left_compute(p_motion);
     uint8_t             duty_cycle_right = duty_cycle_right_compute(p_motion);
@@ -88,8 +88,8 @@ linebot_port_motion_apply(linebot_port_motion_t const h_self,
     rotation_apply(p_self->motor_left, dir_left);
     rotation_apply(p_self->motor_right, dir_right);
 
-    devices_l293_enable(p_self->motor_left, duty_cycle_left);
-    devices_l293_enable(p_self->motor_right, duty_cycle_right);
+    device_l293_enable(p_self->motor_left, duty_cycle_left);
+    device_l293_enable(p_self->motor_right, duty_cycle_right);
 
     return RESULT_OK;
 }
@@ -170,15 +170,15 @@ rotation_apply(device_l293_t h_motor, linebot_direction_t direction)
     switch (direction)
     {
         case LINEBOT_DIRECTION_FORWARD:
-            (void)devices_l293_rotate(h_motor, DEVICES_L293_ROTATION_RIGHT);
+            (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_RIGHT);
             break;
 
         case LINEBOT_DIRECTION_BACKWARD:
-            (void)devices_l293_rotate(h_motor, DEVICES_L293_ROTATION_LEFT);
+            (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_LEFT);
             break;
 
         case LINEBOT_DIRECTION_NONE:
         default:
-            (void)devices_l293_rotate(h_motor, DEVICES_L293_ROTATION_STOP);
+            (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_STOP);
     }
 }

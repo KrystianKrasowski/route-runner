@@ -10,18 +10,18 @@
 #include <unity_config.h>
 #include <utils/result.h>
 
-#define MOTOR_LEFT     DEVICES_L293_CHANNEL_12
-#define MOTOR_RIGHT    DEVICES_L293_CHANNEL_34
-#define ROTATION_LEFT  DEVICES_L293_ROTATION_LEFT
-#define ROTATION_RIGHT DEVICES_L293_ROTATION_RIGHT
-#define ROTATION_STOP  DEVICES_L293_ROTATION_STOP
+#define MOTOR_LEFT     DEVICE_L293_CHANNEL_12
+#define MOTOR_RIGHT    DEVICE_L293_CHANNEL_34
+#define ROTATION_LEFT  DEVICE_L293_ROTATION_LEFT
+#define ROTATION_RIGHT DEVICE_L293_ROTATION_RIGHT
+#define ROTATION_STOP  DEVICE_L293_ROTATION_STOP
 
 static linebot_port_motion_t h_adapter;
 
 void
 setUp(void)
 {
-    devices_l293_mock_init();
+    device_l293_mock_init();
     adapter_motion_l293_init();
 
     assert(RESULT_OK ==
@@ -31,7 +31,7 @@ setUp(void)
 void
 tearDown(void)
 {
-    devices_l293_mock_deinit();
+    device_l293_mock_deinit();
     adapter_motion_l293_release(h_adapter);
 }
 
@@ -53,9 +53,9 @@ should_apply_motion(int8_t                 correction,
 
     // then
     TEST_ASSERT_EQUAL(expected_duty_cycle,
-                      devices_l293_mock_verify_duty_cycle(h_motor));
+                      device_l293_mock_verify_duty_cycle(h_motor));
     TEST_ASSERT_EQUAL(expected_rotation,
-                      devices_l293_mock_verify_rotation(h_motor));
+                      device_l293_mock_verify_rotation(h_motor));
 }
 
 int
