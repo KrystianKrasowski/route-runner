@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-project(route-runner VERSION 1.2.x)
+project(route-runner VERSION 1.2.0)
 
 enable_language(C ASM)
 

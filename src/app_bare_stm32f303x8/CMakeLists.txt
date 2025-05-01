@@ -20,6 +20,11 @@ target_link_libraries(${MAIN_EXECUTABLE}
         stm32f303x8
 )
 
+target_link_options(${MAIN_EXECUTABLE}
+    PRIVATE
+    -T "${CMAKE_SOURCE_DIR}/config/stm32f303k8tx_flash.ld"
+)
+
 add_custom_command(TARGET ${MAIN_EXECUTABLE}
     POST_BUILD
     COMMAND arm-none-eabi-size ${MAIN_EXECUTABLE}.elf
