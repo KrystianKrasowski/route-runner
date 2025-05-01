@@ -39,6 +39,14 @@
                 "TARGET_ARCH": "test",
                 "CMAKE_BUILD_TYPE": "Debug"
             }
+        },
+        {
+            "name": "release-cm3",
+            "inherits": "default",
+            "cacheVariables": {
+                "TARGET_ARCH": "stm32f3",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ],
     "buildPresets": [
@@ -49,6 +57,10 @@
         {
             "name": "release",
             "configurePreset": "release"
+        },
+        {
+            "name": "release-cm3",
+            "configurePreset": "release-cm3"
         },
         {
             "name": "test",
