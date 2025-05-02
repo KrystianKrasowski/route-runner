@@ -1,8 +1,9 @@
 #include "l293.h"
 #include <devices/devices.h>
-#include <libopencm3/stm32/common/timer_common_all.h>
+#include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
 
 static inline void
@@ -10,6 +11,9 @@ sysclock_config(void);
 
 static inline void
 tim3_pwm_config(void);
+
+static inline void
+spi_config(void);
 
 static inline int
 l293_channel_12_create(void);
@@ -25,6 +29,7 @@ devices_init(void)
 {
     sysclock_config();
     tim3_pwm_config();
+    spi_config();
 
     l293_init();
 
@@ -78,6 +83,35 @@ tim3_pwm_config(void)
 
     // enable the counter
     timer_enable_counter(TIM3);
+}
+
+static inline void
+spi_config(void)
+{
+    rcc_periph_clock_enable(RCC_GPIOB);
+    rcc_periph_clock_enable(RCC_SPI1);
+
+    // configure SCK
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO3);
+
+    // configure MISO
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO4);
+
+    // configure MOSI
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO5);
+
+    nvic_enable_irq(NVIC_SPI1_IRQ);
+
+    spi_set_baudrate_prescaler(SPI1, SPI_CR1_BR_FPCLK_DIV_256);
+    spi_set_clock_phase_1(SPI1);
+    spi_set_clock_polarity_1(SPI1);
+    spi_set_full_duplex_mode(SPI1);
+    spi_send_lsb_first(SPI1);
+    spi_enable_software_slave_management(SPI1);
+    spi_set_master_mode(SPI1);
+    spi_set_data_size(SPI1, SPI_CR2_DS_8BIT);
+    spi_enable_rx_buffer_not_empty_interrupt(SPI1);
+    spi_enable(SPI1);
 }
 
 static inline int
