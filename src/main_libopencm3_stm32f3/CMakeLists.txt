@@ -1,10 +1,11 @@
-include(${CMAKE_SOURCE_DIR}/cmake/libopencm3-stm32f3.cmake)
-
 add_executable(${PROJECT_NAME}
     main.c
 )
 
-target_link_libraries(${PROJECT_NAME} stm32f303)
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        devices_opencm3_stm32f3
+)
 
 target_link_options(${PROJECT_NAME}
     PRIVATE

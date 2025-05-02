@@ -44,7 +44,7 @@
             "name": "release-cm3",
             "inherits": "default",
             "cacheVariables": {
-                "TARGET_ARCH": "stm32f3",
+                "TARGET_ARCH": "opencm3_stm32f3",
                 "CMAKE_BUILD_TYPE": "Release"
             }
         }
