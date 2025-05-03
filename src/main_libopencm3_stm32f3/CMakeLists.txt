@@ -1,9 +1,12 @@
 add_executable(${PROJECT_NAME}
     main.c
+    task.c
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
+        linebot
+        adapters
         devices_opencm3_stm32f3
 )
 

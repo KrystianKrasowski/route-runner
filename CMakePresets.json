@@ -47,6 +47,14 @@
                 "TARGET_ARCH": "opencm3_stm32f3",
                 "CMAKE_BUILD_TYPE": "Release"
             }
+        },
+        {
+            "name": "debug-cm3",
+            "inherits": "default",
+            "cacheVariables": {
+                "TARGET_ARCH": "opencm3_stm32f3",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
         }
     ],
     "buildPresets": [
