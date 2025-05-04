@@ -91,7 +91,8 @@ spi_transmittion_next_tx_byte(spi_transmittion_t const h_self, uint8_t *p_byte)
 }
 
 int
-spi_transmittion_next_rx_byte(spi_transmittion_t const h_self, uint8_t byte)
+spi_transmittion_next_rx_byte(spi_transmittion_t const h_self,
+                              uint8_t const            byte)
 {
     spi_tx_instance_t *p_self = spi_tx_pool_get(&pool, h_self);
 
