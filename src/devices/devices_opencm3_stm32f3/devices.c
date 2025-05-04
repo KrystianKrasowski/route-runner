@@ -1,3 +1,4 @@
+#include "data_store.h"
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "l293.h"
@@ -5,11 +6,13 @@
 #include <devices/devices.h>
 #include <devices/dualshock2.h>
 #include <libopencm3/cm3/nvic.h>
-#include <libopencm3/stm32/f3/rcc.h>
+#include <libopencm3/stm32/adc.h>
+#include <libopencm3/stm32/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <stdint.h>
 
 static inline void
 sysclock_config(void);
@@ -18,19 +21,25 @@ static inline void
 rcc_periph_clocks_config(void);
 
 static inline void
-nvic_config(void);
-
-static inline void
 gpio_config(void);
 
 static inline void
 tim2_config(void);
 
 static inline void
+tim6_config(void);
+
+static inline void
 tim3_pwm_config(void);
 
 static inline void
 spi_config(void);
+
+static inline void
+dma1_channel1_config(void);
+
+static inline void
+adc12_config(void);
 
 static inline int
 l293_create_channel_12(void);
@@ -47,11 +56,13 @@ devices_init(void)
     isr_dispatch_init();
     sysclock_config();
     rcc_periph_clocks_config();
-    nvic_config();
     gpio_config();
     tim2_config();
     tim3_pwm_config();
     spi_config();
+    dma1_channel1_config();
+    adc12_config();
+    tim6_config();
 
     l293_init();
     dualshock2_init();
@@ -89,14 +100,12 @@ rcc_periph_clocks_config(void)
     rcc_periph_clock_enable(RCC_GPIOF);
     rcc_periph_clock_enable(RCC_TIM2);
     rcc_periph_clock_enable(RCC_TIM3);
+    rcc_periph_clock_enable(RCC_TIM6);
     rcc_periph_clock_enable(RCC_SPI1);
-}
-
-static inline void
-nvic_config(void)
-{
-    nvic_enable_irq(NVIC_TIM2_IRQ);
-    nvic_enable_irq(NVIC_SPI1_IRQ);
+    rcc_periph_clock_enable(RCC_DMA1);
+    rcc_periph_clock_enable(RCC_ADC12);
+    rcc_adc_prescale(RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_2,
+                     RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_1);
 }
 
 static inline void
@@ -130,6 +139,12 @@ gpio_config(void)
 
     // dualshock2 spi device select
     gpio_mode_setup(GPIOF, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0);
+
+    // QTR-HD-6A analog inputs
+    gpio_mode_setup(GPIOA,
+                    GPIO_MODE_ANALOG,
+                    GPIO_PUPD_NONE,
+                    GPIO1 | GPIO3 | GPIO4 | GPIO5 | GPIO6 | GPIO7);
 }
 
 static inline void
@@ -177,6 +192,20 @@ tim3_pwm_config(void)
 
     // enable the counter
     timer_enable_counter(TIM3);
+}
+
+static inline void
+tim6_config(void)
+{
+    // set timer frequency to 1kHz
+    timer_set_prescaler(TIM6, 16 - 1);
+    timer_set_period(TIM6, 1000 - 1);
+
+    // enable TRGO on update event
+    timer_set_master_mode(TIM6, TIM_CR2_MMS_UPDATE);
+
+    // enable timer
+    timer_enable_counter(TIM6);
 }
 
 static inline void
@@ -237,4 +266,49 @@ dualshock2_create_device(void)
     };
 
     return dualshock2_create(DEVICE_DUALSHOCK2_1, &conf);
+}
+
+static inline void
+dma1_channel1_config(void)
+{
+    uint32_t memory_addr = data_store_get_adc_route_write_buffer_addr();
+
+    dma_disable_channel(DMA1, DMA_CHANNEL1);
+    dma_set_peripheral_address(DMA1, DMA_CHANNEL1, ADC12_CDR);
+    dma_set_memory_address(DMA1, DMA_CHANNEL1, memory_addr);
+    dma_set_number_of_data(DMA1, DMA_CHANNEL1, ADC_ROUTE_BUFFER_LENGTH);
+    dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL1);
+    dma_enable_circular_mode(DMA1, DMA_CHANNEL1);
+    dma_set_peripheral_size(DMA1, DMA_CHANNEL1, DMA_CCR_PSIZE_32BIT);
+    dma_set_memory_size(DMA1, DMA_CHANNEL1, DMA_CCR_MSIZE_16BIT);
+    dma_enable_transfer_complete_interrupt(DMA1, DMA_CHANNEL1);
+    dma_enable_channel(DMA1, DMA_CHANNEL1);
+}
+
+static inline void
+adc12_config(void)
+{
+    adc_enable_regulator(ADC1);
+    adc_enable_regulator(ADC2);
+    adc_set_multi_mode(ADC1, ADC_CCR_DUAL_REGULAR_SIMUL);
+
+    // enable DMA for dual mode 8-bit
+    ADC12_CCR |= ADC_CCR_MDMA_8_6_BIT;
+
+    // enable DMA circular
+    ADC12_CCR |= ADC_CCR_DMACFG;
+
+    adc_set_resolution(ADC1, ADC_CFGR1_RES_8_BIT);
+    adc_set_resolution(ADC2, ADC_CFGR1_RES_8_BIT);
+
+    adc_set_regular_sequence(ADC1, 4, (uint8_t[]){2, 4, 4, 4});
+    adc_set_regular_sequence(ADC2, 4, (uint8_t[]){1, 2, 3, 4});
+
+    adc_enable_external_trigger_regular(
+        ADC1, ADC_CFGR1_EXTSEL_VAL(13), ADC_CFGR1_EXTEN_RISING_EDGE);
+
+    adc_power_on(ADC1);
+    adc_power_on(ADC2);
+
+    adc_start_conversion_regular(ADC1);
 }

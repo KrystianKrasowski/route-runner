@@ -1,8 +1,11 @@
+#include "data_store.h"
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "spi_transmittion.h"
 #include <devices/dualshock2.h>
 #include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/f3/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
@@ -12,7 +15,9 @@
 void
 isr_dispatch_init(void)
 {
-    // dummy function to prevent optimizing out by linker
+    nvic_enable_irq(NVIC_TIM2_IRQ);
+    nvic_enable_irq(NVIC_SPI1_IRQ);
+    nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
 }
 
 void
@@ -61,5 +66,15 @@ spi1_isr(void)
         {
             dualshock2_set_state(DEVICE_DUALSHOCK2_1, response);
         }
+    }
+}
+
+void
+dma1_channel1_isr(void)
+{
+    if (dma_get_interrupt_flag(DMA1, DMA_CHANNEL1, DMA_TCIF))
+    {
+        dma_clear_interrupt_flags(DMA1, DMA_CHANNEL1, DMA_TCIF);
+        data_store_receive_adc_route();
     }
 }
