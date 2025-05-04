@@ -14,5 +14,6 @@ target_link_libraries(devices_opencm3_stm32f3
     PUBLIC
         opencm3_stm32f3
         devices
+    PRIVATE
         utils
 )
