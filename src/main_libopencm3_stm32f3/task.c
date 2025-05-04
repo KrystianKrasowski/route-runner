@@ -1,6 +1,6 @@
-#include "devices/dualshock2.h"
 #include "task.h"
 #include <adapters/control_dualshock2.h>
+#include <devices/dualshock2.h>
 #include <utils/result.h>
 
 void
