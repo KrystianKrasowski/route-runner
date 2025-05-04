@@ -14,7 +14,7 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "hidden": true,
             "cacheVariables": {
-                "TARGET_ARCH": "stm32f303x8"
+                "TARGET_ARCH": "opencm3_stm32f3"
             }
         },
         {
@@ -39,22 +39,6 @@
                 "TARGET_ARCH": "test",
                 "CMAKE_BUILD_TYPE": "Debug"
             }
-        },
-        {
-            "name": "release-cm3",
-            "inherits": "default",
-            "cacheVariables": {
-                "TARGET_ARCH": "opencm3_stm32f3",
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "debug-cm3",
-            "inherits": "default",
-            "cacheVariables": {
-                "TARGET_ARCH": "opencm3_stm32f3",
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
         }
     ],
     "buildPresets": [
@@ -65,10 +49,6 @@
         {
             "name": "release",
             "configurePreset": "release"
-        },
-        {
-            "name": "release-cm3",
-            "configurePreset": "release-cm3"
         },
         {
             "name": "test",
