@@ -15,12 +15,14 @@ void
 dualshock2_init(void);
 
 int
-dualshock2_create(device_dualshock2_t const handle, dualshock2_conf_t *p_conf);
+dualshock2_create(device_dualshock2_t const handle,
+                  dualshock2_conf_t const  *p_conf);
 
 int
 dualshock2_poll(device_dualshock2_t const h_self);
 
 int
-dualshock2_set_state(device_dualshock2_t const h_self, uint8_t response[]);
+dualshock2_set_state(device_dualshock2_t const h_self,
+                     uint8_t const             response[]);
 
 #endif
