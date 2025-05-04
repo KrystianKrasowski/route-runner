@@ -9,16 +9,17 @@
 #include <string.h>
 #include <utils/pool.h>
 #include <utils/result.h>
+#include <utils/volatile_string.h>
 
 #define PAYLOAD_SIZE 9
 
 typedef struct
 {
-    uint32_t device_select_port;
-    uint16_t device_select_pin;
-    uint32_t spi_port;
-    uint8_t  state[PAYLOAD_SIZE];
-    bool volatile handled;
+    uint32_t         device_select_port;
+    uint16_t         device_select_pin;
+    uint32_t         spi_port;
+    volatile uint8_t state[PAYLOAD_SIZE];
+    volatile bool    handled;
 } dualshock2_instance_t;
 
 POOL_DECLARE(dualshock2, dualshock2_instance_t, 1)
@@ -29,7 +30,7 @@ static uint8_t PAYLOAD[PAYLOAD_SIZE] = {
 static dualshock2_pool_t pool;
 
 static inline bool
-state_is_valid(uint8_t const response[]);
+state_is_valid(volatile uint8_t const response[]);
 
 int
 device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands)
@@ -81,7 +82,7 @@ dualshock2_create(device_dualshock2_t const handle, dualshock2_conf_t *p_conf)
     p_self->spi_port           = p_conf->spi_port;
     p_self->handled            = false;
 
-    memset(p_self->state, 0, sizeof(p_self->state));
+    memset_volatile(p_self->state, 0, sizeof(p_self->state));
 
     gpio_set(p_self->device_select_port, p_self->device_select_pin);
 
@@ -119,7 +120,7 @@ dualshock2_set_state(device_dualshock2_t const h_self, uint8_t response[])
         return -ENODEV;
     }
 
-    memcpy(p_self->state, response, PAYLOAD_SIZE);
+    memcpy_volatile(p_self->state, response, PAYLOAD_SIZE);
 
     p_self->handled = false;
 
@@ -127,7 +128,7 @@ dualshock2_set_state(device_dualshock2_t const h_self, uint8_t response[])
 }
 
 static inline bool
-state_is_valid(uint8_t const state[])
+state_is_valid(volatile uint8_t const state[])
 {
     bool b_1st_byte_valid = 0xff == state[0];
     bool b_2nd_byte_valid = 0x41 == state[1] || 0x73 == state[1];
