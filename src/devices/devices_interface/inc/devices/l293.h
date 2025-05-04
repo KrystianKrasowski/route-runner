@@ -19,12 +19,13 @@ typedef enum
 } device_l293_rotation_t;
 
 int
-device_l293_rotate(device_l293_t h_self, device_l293_rotation_t rotation);
+device_l293_rotate(device_l293_t const          h_self,
+                   device_l293_rotation_t const rotation);
 
 int
-device_l293_enable(device_l293_t h_self, uint8_t duty_cycle);
+device_l293_enable(device_l293_t const h_self, uint8_t duty_cycle);
 
 int
-device_l293_disable(device_l293_t h_self);
+device_l293_disable(device_l293_t const h_self);
 
 #endif

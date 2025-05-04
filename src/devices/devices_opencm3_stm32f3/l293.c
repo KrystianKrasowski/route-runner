@@ -25,7 +25,7 @@ l293_init(void)
 }
 
 int
-l293_create(device_l293_t h_self, l293_conf_t *p_conf)
+l293_create(device_l293_t const h_self, l293_conf_t const *p_conf)
 {
     if (!l293_pool_alloc_at(&pool, h_self))
     {
@@ -103,21 +103,21 @@ device_l293_disable(device_l293_t h_self)
     return RESULT_OK;
 }
 
-void
+static inline void
 l293_set_left(l293_conf_t const *p_self)
 {
     gpio_set(p_self->gpio_port_1, p_self->gpio_pin_1);
     gpio_clear(p_self->gpio_port_2, p_self->gpio_pin_2);
 }
 
-void
+static inline void
 l293_set_right(l293_conf_t const *p_self)
 {
     gpio_clear(p_self->gpio_port_1, p_self->gpio_pin_1);
     gpio_set(p_self->gpio_port_2, p_self->gpio_pin_2);
 }
 
-void
+static inline void
 l293_set_stop(l293_conf_t const *p_self)
 {
     gpio_clear(p_self->gpio_port_1, p_self->gpio_pin_1);

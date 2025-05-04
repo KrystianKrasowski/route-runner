@@ -19,6 +19,6 @@ void
 l293_init(void);
 
 int
-l293_create(device_l293_t h_self, l293_conf_t *p_conf);
+l293_create(device_l293_t const h_self, l293_conf_t const *p_conf);
 
 #endif
