@@ -2,9 +2,11 @@
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "l293.h"
+#include "qtrhd06a.h"
 #include "spi_transmittion.h"
 #include <devices/devices.h>
 #include <devices/dualshock2.h>
+#include <devices/qtrhd06a.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/adc.h>
 #include <libopencm3/stm32/dma.h>
@@ -50,6 +52,9 @@ l293_create_channel_34(void);
 static inline int
 dualshock2_create_device(void);
 
+static inline int
+qtrhd06a_create_device(void);
+
 void
 devices_init(void)
 {
@@ -67,11 +72,13 @@ devices_init(void)
     l293_init();
     dualshock2_init();
     spi_transmittion_init();
+    qtrhd06a_init();
 
     // TODO: error handling
     (void)l293_create_channel_12();
     (void)l293_create_channel_34();
     (void)dualshock2_create_device();
+    (void)qtrhd06a_create_device();
 }
 
 static inline void
@@ -271,12 +278,12 @@ dualshock2_create_device(void)
 static inline void
 dma1_channel1_config(void)
 {
-    uint32_t memory_addr = data_store_get_adc_route_write_buffer_addr();
+    uint32_t memory_addr = data_store_get_route_write_buffer_addr();
 
     dma_disable_channel(DMA1, DMA_CHANNEL1);
     dma_set_peripheral_address(DMA1, DMA_CHANNEL1, ADC12_CDR);
     dma_set_memory_address(DMA1, DMA_CHANNEL1, memory_addr);
-    dma_set_number_of_data(DMA1, DMA_CHANNEL1, ADC_ROUTE_BUFFER_LENGTH);
+    dma_set_number_of_data(DMA1, DMA_CHANNEL1, DATA_STORE_ROUTE_BUFFER_LENGTH);
     dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL1);
     dma_enable_circular_mode(DMA1, DMA_CHANNEL1);
     dma_set_peripheral_size(DMA1, DMA_CHANNEL1, DMA_CCR_PSIZE_32BIT);
@@ -311,4 +318,16 @@ adc12_config(void)
     adc_power_on(ADC2);
 
     adc_start_conversion_regular(ADC1);
+}
+
+static inline int
+qtrhd06a_create_device(void)
+{
+    qtrhd06a_conf_t conf = {
+        .p_raw_values      = data_store_get_route_read_buffer(),
+        .pb_values_handled = data_store_get_route_handled_flag(),
+        .raw_values_length = DATA_STORE_ROUTE_BUFFER_LENGTH,
+    };
+
+    return qtrhd06a_create(DEVICE_QTRHD06A_1, &conf);
 }
