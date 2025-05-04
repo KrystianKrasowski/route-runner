@@ -1,5 +1,6 @@
 add_library(utils STATIC
     stack.c
+    volatile_string.c
 )
 
 set_property(TARGET utils PROPERTY C_STANDARD 11)
