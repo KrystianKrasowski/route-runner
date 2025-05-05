@@ -1,6 +1,8 @@
 #include "task.h"
 #include <adapters/control_dualshock2.h>
+#include <adapters/coords_qtrhd06a.h>
 #include <devices/dualshock2.h>
+#include <devices/qtrhd06a.h>
 #include <utils/result.h>
 
 void
@@ -16,18 +18,18 @@ task_handle_manual_control(linebot_t const linebot)
     }
 }
 
-// void
-// task_handle_route_tracking(linebot_t const linebot)
-// {
-// linebot_coords_t h_coords;
-//
-// if (adapters_coords_read(&h_coords) == RESULT_OK)
-// {
-// // TODO: Handle failures
-// (void)linebot_handle_route_tracking(linebot, h_coords);
-// (void)linebot_coords_release(h_coords);
-// }
-// }
+void
+task_handle_route_tracking(linebot_t const linebot)
+{
+    linebot_coords_t h_coords;
+
+    if (adapter_coords_qtrhd06a_read(DEVICE_QTRHD06A_1, &h_coords) == RESULT_OK)
+    {
+        // TODO: Handle failures
+        (void)linebot_handle_route_tracking(linebot, h_coords);
+        (void)linebot_coords_release(h_coords);
+    }
+}
 
 // void
 // task_handle_immediate_stop(linebot_t const linebot)

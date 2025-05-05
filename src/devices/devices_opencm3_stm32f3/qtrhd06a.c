@@ -5,7 +5,7 @@
 #include <utils/pool.h>
 #include <utils/result.h>
 
-POOL_DECLARE(qtrhd06a, qtrhd06a_conf_t, 1)
+POOL_DECLARE(qtrhd06a, qtrhd06a_conf_t, DEVICE_QTRHD06A_INSTANCES_NUM)
 
 static qtrhd06a_pool_t pool;
 
@@ -45,6 +45,7 @@ device_qtrhd06a_read(device_qtrhd06a_t const h_self, uint8_t values[])
         return RESULT_NOT_READY;
     }
 
+    // TODO: handle values size
     uint16_t l3 = 0;
     uint16_t l2 = 0;
     uint16_t l1 = 0;

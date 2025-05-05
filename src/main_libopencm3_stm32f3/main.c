@@ -21,7 +21,7 @@ main(void)
     while (1)
     {
         task_handle_manual_control(h_linebot);
-        // task_handle_route_tracking(h_linebot);
+        task_handle_route_tracking(h_linebot);
         // task_handle_immediate_stop(h_linebot);
     }
 }

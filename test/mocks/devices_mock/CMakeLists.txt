@@ -1,6 +1,7 @@
 add_library(devices_mock STATIC
     device_l293_mock.c
     device_dualshock2_mock.c
+    device_qtrhd06a_mock.c
 )
 
 target_include_directories(devices_mock
