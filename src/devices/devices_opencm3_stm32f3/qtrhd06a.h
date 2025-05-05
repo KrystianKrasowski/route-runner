@@ -7,9 +7,9 @@
 
 typedef struct
 {
-    uint16_t * const p_raw_values;
-    bool * const     pb_values_handled;
-    uint8_t const    raw_values_length;
+    volatile uint16_t * const p_raw_values;
+    volatile bool * const     pb_values_handled;
+    uint8_t const             raw_values_length;
 } qtrhd06a_conf_t;
 
 void

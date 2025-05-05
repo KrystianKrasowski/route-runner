@@ -6,7 +6,7 @@ static data_store_t store;
 uint32_t
 data_store_get_route_write_buffer_addr(void)
 {
-    return (uint32_t)(uintptr_t)&store.route_write_buffer;
+    return (uint32_t)store.route_write_buffer;
 }
 
 void
@@ -19,13 +19,13 @@ data_store_receive_adc_route(void)
     store.route_handled = false;
 }
 
-uint16_t *
+volatile uint16_t *
 data_store_get_route_read_buffer(void)
 {
     return store.route_read_buffer;
 }
 
-bool *
+volatile bool *
 data_store_get_route_handled_flag(void)
 {
     return &store.route_handled;

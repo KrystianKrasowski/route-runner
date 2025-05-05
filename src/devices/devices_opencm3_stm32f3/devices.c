@@ -4,6 +4,7 @@
 #include "l293.h"
 #include "qtrhd06a.h"
 #include "spi_transmittion.h"
+#include "systick.h"
 #include <devices/devices.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
@@ -278,10 +279,11 @@ dualshock2_create_device(void)
 static inline void
 dma1_channel1_config(void)
 {
+    uint32_t periph_addr = (uint32_t)&ADC12_CDR;
     uint32_t memory_addr = data_store_get_route_write_buffer_addr();
 
     dma_disable_channel(DMA1, DMA_CHANNEL1);
-    dma_set_peripheral_address(DMA1, DMA_CHANNEL1, ADC12_CDR);
+    dma_set_peripheral_address(DMA1, DMA_CHANNEL1, periph_addr);
     dma_set_memory_address(DMA1, DMA_CHANNEL1, memory_addr);
     dma_set_number_of_data(DMA1, DMA_CHANNEL1, DATA_STORE_ROUTE_BUFFER_LENGTH);
     dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL1);
@@ -295,8 +297,11 @@ dma1_channel1_config(void)
 static inline void
 adc12_config(void)
 {
+    // enable voltage regulators
     adc_enable_regulator(ADC1);
     adc_enable_regulator(ADC2);
+    systick_delay_us(10);
+
     adc_set_multi_mode(ADC1, ADC_CCR_DUAL_REGULAR_SIMUL);
 
     // enable DMA for dual mode 8-bit

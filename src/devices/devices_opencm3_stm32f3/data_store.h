@@ -24,10 +24,10 @@ data_store_get_route_write_buffer_addr(void);
 void
 data_store_receive_adc_route(void);
 
-uint16_t *
+volatile uint16_t *
 data_store_get_route_read_buffer(void);
 
-bool *
+volatile bool *
 data_store_get_route_handled_flag(void);
 
 #endif

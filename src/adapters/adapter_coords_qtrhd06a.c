@@ -43,4 +43,6 @@ normalize(uint8_t *p_value)
     {
         *p_value = 20;
     }
+
+    *p_value -= 20;
 }
