@@ -8,7 +8,6 @@
 #include <devices/dualshock2.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/dma.h>
-#include <libopencm3/stm32/f3/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
@@ -19,6 +18,7 @@ void
 isr_dispatch_init(void)
 {
     nvic_enable_irq(NVIC_TIM1_CC_IRQ);
+    nvic_enable_irq(NVIC_TIM1_BRK_TIM15_IRQ);
     nvic_enable_irq(NVIC_TIM2_IRQ);
     nvic_enable_irq(NVIC_SPI1_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
@@ -31,6 +31,15 @@ tim1_cc_isr(void)
     {
         timer_clear_flag(TIM1, TIM_SR_CC1IF);
         blink_update(DEVICE_BLINK_1);
+    }
+}
+
+void
+tim1_brk_tim15_isr(void)
+{
+    if (timer_get_flag(TIM15, TIM_SR_UIF))
+    {
+        timer_clear_flag(TIM15, TIM_SR_UIF);
     }
 }
 

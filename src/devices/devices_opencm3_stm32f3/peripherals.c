@@ -3,7 +3,6 @@
 #include "systick.h"
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/adc.h>
-#include <libopencm3/stm32/common/timer_common_all.h>
 #include <libopencm3/stm32/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
@@ -27,10 +26,13 @@ static inline void
 tim2_config(void);
 
 static inline void
+tim3_pwm_config(void);
+
+static inline void
 tim6_config(void);
 
 static inline void
-tim3_pwm_config(void);
+tim15_config(void);
 
 static inline void
 spi_config(void);
@@ -54,6 +56,7 @@ peripherals_init(void)
     dma1_channel1_config();
     adc12_config();
     tim6_config();
+    tim15_config();
 }
 
 static inline void
@@ -84,6 +87,7 @@ rcc_periph_clocks_config(void)
     rcc_periph_clock_enable(RCC_TIM2);
     rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TIM6);
+    rcc_periph_clock_enable(RCC_TIM15);
     rcc_periph_clock_enable(RCC_SPI1);
     rcc_periph_clock_enable(RCC_DMA1);
     rcc_periph_clock_enable(RCC_ADC12);
@@ -204,6 +208,16 @@ tim6_config(void)
 
     // enable timer
     timer_enable_counter(TIM6);
+}
+
+static inline void
+tim15_config(void)
+{
+    timer_set_prescaler(TIM15, 16 - 1);
+    timer_set_period(TIM15, 500 - 1);
+    timer_generate_event(TIM15, TIM_EGR_UG);
+    timer_clear_flag(TIM15, TIM_SR_UIF);
+    timer_enable_irq(TIM15, TIM_DIER_UIE);
 }
 
 static inline void
