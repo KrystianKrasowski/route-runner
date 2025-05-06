@@ -8,6 +8,8 @@ typedef enum
     DEVICE_BLINK_1,
 } device_blink_t;
 
+#define DEVICE_BLINK_INSTANCES_NUM 1
+
 int
 device_blink_set_toggles(device_blink_t const h_self, uint8_t num);
 

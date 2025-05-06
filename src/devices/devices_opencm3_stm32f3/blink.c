@@ -11,7 +11,7 @@ typedef struct
     uint8_t          toggles_num;
 } blink_instance_t;
 
-POOL_DECLARE(blink, blink_instance_t, 1)
+POOL_DECLARE(blink, blink_instance_t, DEVICE_BLINK_INSTANCES_NUM)
 
 #define HALF_INTERVAL 125
 
