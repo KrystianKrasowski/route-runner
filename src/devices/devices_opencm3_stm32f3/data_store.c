@@ -1,6 +1,13 @@
 #include "data_store.h"
 #include <utils/volatile_string.h>
 
+typedef struct
+{
+    volatile uint16_t route_write_buffer[DATA_STORE_ROUTE_BUFFER_LENGTH];
+    volatile uint16_t route_read_buffer[DATA_STORE_ROUTE_BUFFER_LENGTH];
+    volatile bool     route_handled;
+} data_store_t;
+
 static data_store_t store;
 
 uint32_t

@@ -10,14 +10,6 @@
 
 #define DATA_STORE_ROUTE_BUFFER_LENGTH 40
 
-// TODO: Consider opaque handle here
-typedef struct
-{
-    volatile uint16_t route_write_buffer[DATA_STORE_ROUTE_BUFFER_LENGTH];
-    volatile uint16_t route_read_buffer[DATA_STORE_ROUTE_BUFFER_LENGTH];
-    volatile bool     route_handled;
-} data_store_t;
-
 uint32_t
 data_store_get_route_write_buffer_addr(void);
 
