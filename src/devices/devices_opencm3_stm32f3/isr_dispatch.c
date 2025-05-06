@@ -40,6 +40,7 @@ tim1_brk_tim15_isr(void)
     if (timer_get_flag(TIM15, TIM_SR_UIF))
     {
         timer_clear_flag(TIM15, TIM_SR_UIF);
+        notification_give(NOTIFICATION_TIMEOUT_GUARD_ROUTE);
     }
 }
 

@@ -4,12 +4,15 @@
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "l293.h"
+#include "notification.h"
 #include "peripherals.h"
 #include "qtrhd06a.h"
 #include "spi_transmittion.h"
+#include "timeout_guard.h"
 #include <devices/devices.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
+#include <devices/timeout_guard.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
@@ -30,6 +33,9 @@ qtrhd06a_create_device(void);
 static inline int
 blink_create_device(void);
 
+static inline int
+timeout_guard_route_create_device(void);
+
 void
 devices_init(void)
 {
@@ -41,6 +47,7 @@ devices_init(void)
     spi_transmittion_init();
     qtrhd06a_init();
     blink_init();
+    timeout_guard_route_create_device();
 
     // TODO: error handling
     (void)l293_create_channel_12();
@@ -48,6 +55,7 @@ devices_init(void)
     (void)dualshock2_create_device();
     (void)qtrhd06a_create_device();
     (void)blink_create_device();
+    (void)timeout_guard_route_create_device();
 }
 
 static inline int
@@ -112,4 +120,15 @@ blink_create_device(void)
     };
 
     return blink_create(DEVICE_BLINK_1, &conf);
+}
+
+static inline int
+timeout_guard_route_create_device(void)
+{
+    timeout_guard_conf_t conf = {
+        .timer                = TIM15,
+        .timeout_notification = NOTIFICATION_TIMEOUT_GUARD_ROUTE,
+    };
+
+    return timeout_guard_create(DEVICE_TIEMOUT_GUARD_ROUTE, &conf);
 }

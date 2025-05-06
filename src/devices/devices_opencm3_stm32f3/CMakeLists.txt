@@ -12,6 +12,7 @@ add_library(devices_opencm3_stm32f3 STATIC
     peripherals.c
     blink.c
     notification.c
+    timeout_guard.c
 )
 
 set_property(TARGET devices_opencm3_stm32f3 PROPERTY C_STANDARD 11)

@@ -40,6 +40,7 @@ device_qtrhd06a_read(device_qtrhd06a_t const h_self, uint8_t values[])
         return -ENODEV;
     }
 
+    // TODO: this notification ID should be passed by conf
     if (!notification_take(NOTIFICATION_ROUTE_CONVERSIONS))
     {
         return RESULT_NOT_READY;
