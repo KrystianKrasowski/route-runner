@@ -1,5 +1,5 @@
+#include "notification.h"
 #include "qtrhd06a.h"
-#include <devices/qtrhd06a.h>
 #include <errno.h>
 #include <stdint.h>
 #include <utils/pool.h>
@@ -40,7 +40,7 @@ device_qtrhd06a_read(device_qtrhd06a_t const h_self, uint8_t values[])
         return -ENODEV;
     }
 
-    if (*p_self->pb_values_handled)
+    if (!notification_take(NOTIFICATION_ROUTE_CONVERSIONS))
     {
         return RESULT_NOT_READY;
     }
@@ -69,8 +69,6 @@ device_qtrhd06a_read(device_qtrhd06a_t const h_self, uint8_t values[])
     values[3] = r1 / 10;
     values[4] = r2 / 10;
     values[5] = r3 / 10;
-
-    *p_self->pb_values_handled = true;
 
     return RESULT_OK;
 }

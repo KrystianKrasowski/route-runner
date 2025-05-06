@@ -2,6 +2,7 @@
 #include "data_store.h"
 #include "dualshock2.h"
 #include "isr_dispatch.h"
+#include "notification.h"
 #include "spi_transmittion.h"
 #include <devices/blink.h>
 #include <devices/dualshock2.h>
@@ -89,5 +90,6 @@ dma1_channel1_isr(void)
     {
         dma_clear_interrupt_flags(DMA1, DMA_CHANNEL1, DMA_TCIF);
         data_store_receive_adc_route();
+        notification_give(NOTIFICATION_ROUTE_CONVERSIONS);
     }
 }
