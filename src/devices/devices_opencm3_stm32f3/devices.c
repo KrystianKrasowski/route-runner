@@ -1,4 +1,6 @@
+#include "blink.h"
 #include "data_store.h"
+#include "devices/blink.h"
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "l293.h"
@@ -25,6 +27,9 @@ dualshock2_create_device(void);
 static inline int
 qtrhd06a_create_device(void);
 
+static inline int
+blink_create_device(void);
+
 void
 devices_init(void)
 {
@@ -35,12 +40,14 @@ devices_init(void)
     dualshock2_init();
     spi_transmittion_init();
     qtrhd06a_init();
+    blink_init();
 
     // TODO: error handling
     (void)l293_create_channel_12();
     (void)l293_create_channel_34();
     (void)dualshock2_create_device();
     (void)qtrhd06a_create_device();
+    (void)blink_create_device();
 }
 
 static inline int
@@ -95,4 +102,15 @@ qtrhd06a_create_device(void)
     };
 
     return qtrhd06a_create(DEVICE_QTRHD06A_1, &conf);
+}
+
+static inline int
+blink_create_device(void)
+{
+    blink_conf_t conf = {
+        .timer       = TIM1,
+        .toggles_num = 2,
+    };
+
+    return blink_create(DEVICE_BLINK_1, &conf);
 }

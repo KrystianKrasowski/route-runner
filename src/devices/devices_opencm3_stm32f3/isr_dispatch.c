@@ -1,7 +1,9 @@
+#include "blink.h"
 #include "data_store.h"
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "spi_transmittion.h"
+#include <devices/blink.h>
 #include <devices/dualshock2.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/dma.h>
@@ -15,9 +17,20 @@
 void
 isr_dispatch_init(void)
 {
+    nvic_enable_irq(NVIC_TIM1_CC_IRQ);
     nvic_enable_irq(NVIC_TIM2_IRQ);
     nvic_enable_irq(NVIC_SPI1_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
+}
+
+void
+tim1_cc_isr(void)
+{
+    if (timer_get_flag(TIM1, TIM_SR_CC1IF))
+    {
+        timer_clear_flag(TIM1, TIM_SR_CC1IF);
+        blink_update(DEVICE_BLINK_1);
+    }
 }
 
 void
@@ -27,7 +40,7 @@ tim2_isr(void)
     {
         timer_clear_flag(TIM2, TIM_SR_UIF);
 
-        // TODO: error handling
+        // TODO: DOD
         (void)dualshock2_poll(DEVICE_DUALSHOCK2_1);
     }
 }

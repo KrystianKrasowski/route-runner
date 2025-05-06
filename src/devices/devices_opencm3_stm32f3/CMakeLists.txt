@@ -10,6 +10,7 @@ add_library(devices_opencm3_stm32f3 STATIC
     qtrhd06a.c
     systick.c
     peripherals.c
+    blink.c
 )
 
 set_property(TARGET devices_opencm3_stm32f3 PROPERTY C_STANDARD 11)

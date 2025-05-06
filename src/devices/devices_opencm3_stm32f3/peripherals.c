@@ -3,6 +3,7 @@
 #include "systick.h"
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/adc.h>
+#include <libopencm3/stm32/common/timer_common_all.h>
 #include <libopencm3/stm32/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
@@ -18,6 +19,9 @@ rcc_periph_clocks_config(void);
 
 static inline void
 gpio_config(void);
+
+static inline void
+tim1_config(void);
 
 static inline void
 tim2_config(void);
@@ -43,6 +47,7 @@ peripherals_init(void)
     sysclock_config();
     rcc_periph_clocks_config();
     gpio_config();
+    tim1_config();
     tim2_config();
     tim3_pwm_config();
     spi_config();
@@ -75,6 +80,7 @@ rcc_periph_clocks_config(void)
     rcc_periph_clock_enable(RCC_GPIOA);
     rcc_periph_clock_enable(RCC_GPIOB);
     rcc_periph_clock_enable(RCC_GPIOF);
+    rcc_periph_clock_enable(RCC_TIM1);
     rcc_periph_clock_enable(RCC_TIM2);
     rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TIM6);
@@ -93,6 +99,10 @@ gpio_config(void)
     gpio_set_af(GPIOB, GPIO_AF2, GPIO0);
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_PULLDOWN, GPIO1);
     gpio_set_af(GPIOB, GPIO_AF2, GPIO1);
+
+    // output compare pin for state indicator LED
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLDOWN, GPIO8);
+    gpio_set_af(GPIOA, GPIO_AF6, GPIO8);
 
     // SPI SCK
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO3);
@@ -122,6 +132,17 @@ gpio_config(void)
                     GPIO_MODE_ANALOG,
                     GPIO_PUPD_NONE,
                     GPIO1 | GPIO3 | GPIO4 | GPIO5 | GPIO6 | GPIO7);
+}
+
+static inline void
+tim1_config(void)
+{
+    timer_set_prescaler(TIM1, 16000 - 1);
+    timer_set_period(TIM1, 125 - 1);
+    timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_TOGGLE);
+    timer_enable_oc_output(TIM1, TIM_OC1);
+    timer_enable_break_main_output(TIM1);
+    timer_enable_irq(TIM1, TIM_DIER_CC1IE);
 }
 
 static inline void
