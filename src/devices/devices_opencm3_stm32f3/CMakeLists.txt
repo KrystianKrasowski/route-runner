@@ -9,6 +9,7 @@ add_library(devices_opencm3_stm32f3 STATIC
     data_store.c
     qtrhd06a.c
     systick.c
+    peripherals.c
 )
 
 set_property(TARGET devices_opencm3_stm32f3 PROPERTY C_STANDARD 11)
