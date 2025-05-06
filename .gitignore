@@ -4,3 +4,4 @@ tags
 *.swp
 .cache/
 compile_commands.json
+.vim-lsp-settings
