@@ -1,4 +1,3 @@
-#include "devices/blink.h"
 #include <assert.h>
 #include <devices/blink_mock.h>
 #include <utils/pool.h>
