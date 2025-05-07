@@ -9,7 +9,7 @@ linebot_port_mock_motion_init(void);
 bool
 linebot_port_mock_motion_verify_applied(void);
 
-linebot_motion_direction_t
+linebot_direction_t
 linebot_port_mock_motion_get_direction(void);
 
 int8_t

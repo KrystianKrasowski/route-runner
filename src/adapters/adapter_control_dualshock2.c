@@ -1,56 +1,51 @@
-#include <adapters.h>
-#include <dualshock2.h>
+#include <adapters/control_dualshock2.h>
+#include <devices/dualshock2.h>
 #include <linebot/command.h>
-#include <linebot/port.h>
+#include <stdint.h>
 #include <utils/result.h>
 
-void
-adapters_control_init(void)
-{
-    dualshock2_init();
-}
-
 int
-adapters_control_read(uint16_t *p_commands)
+adapter_control_dualshock2_read(device_dualshock2_t const h_dualshock,
+                                uint16_t                 *p_commands)
 {
     int result = RESULT_OK;
 
-    uint16_t raw     = DS2_NONE;
-    uint16_t command = LINEBOT_COMMAND_NONE;
+    uint16_t raw      = DS2_NONE;
+    uint16_t commands = LINEBOT_COMMAND_NONE;
 
-    if (dualshock2_read(&raw) == RESULT_OK)
+    if (RESULT_OK == device_dualshock2_read(h_dualshock, &raw))
     {
         if (raw & DS2_R2)
         {
-            command |= LINEBOT_COMMAND_FORWARD;
+            commands |= LINEBOT_COMMAND_FORWARD;
         }
 
         if (raw & DS2_L2)
         {
-            command |= LINEBOT_COMMAND_BACKWARD;
+            commands |= LINEBOT_COMMAND_BACKWARD;
         }
 
         if (raw & DS2_RIGHT)
         {
-            command |= LINEBOT_COMMAND_RIGHT;
+            commands |= LINEBOT_COMMAND_RIGHT;
         }
 
         if (raw & DS2_LEFT)
         {
-            command |= LINEBOT_COMMAND_LEFT;
+            commands |= LINEBOT_COMMAND_LEFT;
         }
 
         if (raw & DS2_CIRCLE)
         {
-            command |= LINEBOT_COMMAND_BREAK;
+            commands |= LINEBOT_COMMAND_BREAK;
         }
 
         if (raw & DS2_CROSS)
         {
-            command |= LINEBOT_COMMAND_FOLLOW;
+            commands |= LINEBOT_COMMAND_FOLLOW;
         }
 
-        *p_commands = command;
+        *p_commands = commands;
     }
     else
     {

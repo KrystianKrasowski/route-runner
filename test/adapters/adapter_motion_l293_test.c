@@ -1,68 +1,644 @@
-#include <adapters.h>
-#include <gpio_mock.h>
+#include <devices/l293_mock.h>
+#include <linebot/motion.h>
 #include <linebot/port.h>
-#include <tim3_mock.h>
+#include <stdint.h>
 #include <unity.h>
 #include <unity_config.h>
+#include <utils/result.h>
 
-static linebot_motion_t motion;
+#define MOTOR_LEFT     DEVICE_L293_CHANNEL_12
+#define MOTOR_RIGHT    DEVICE_L293_CHANNEL_34
+#define ROTATION_LEFT  DEVICE_L293_ROTATION_LEFT
+#define ROTATION_RIGHT DEVICE_L293_ROTATION_RIGHT
+#define ROTATION_STOP  DEVICE_L293_ROTATION_STOP
 
 void
 setUp(void)
 {
-    adapters_motion_init();
-    tim3_mock_reset();
+    device_l293_mock_init();
 }
 
 void
 tearDown(void)
 {
-    linebot_motion_release(motion);
+    device_l293_mock_deinit();
 }
 
 void
-should_apply_duty_cycle(int8_t  correction,
-                        uint8_t expected_left_duty_cycle,
-                        uint8_t expected_right_duty_cycle)
+should_apply_motion(int8_t                 correction,
+                    linebot_direction_t    direction,
+                    device_l293_t          h_motor,
+                    uint8_t                expected_duty_cycle,
+                    device_l293_rotation_t expected_rotation)
 {
     // given
-    linebot_motion_acquire(LINEBOT_MOTION_FORWARD, correction, &motion);
+    linebot_motion_t motion = {
+        .correction = correction,
+        .direction  = direction,
+    };
 
     // when
-    linebot_port_motion_apply(motion);
+    linebot_port_motion_apply(&motion);
 
     // then
-    TEST_ASSERT_EQUAL(expected_left_duty_cycle,
-                      tim3_mock_verify_channel3_duty_cycle());
-
-    TEST_ASSERT_EQUAL(expected_right_duty_cycle,
-                      tim3_mock_verify_channel4_duty_cycle());
+    TEST_ASSERT_EQUAL(expected_duty_cycle,
+                      device_l293_mock_verify_duty_cycle(h_motor));
+    TEST_ASSERT_EQUAL(expected_rotation,
+                      device_l293_mock_verify_rotation(h_motor));
 }
 
 int
 main(void)
 {
     UNITY_BEGIN();
-    RUN_PARAM_TEST(should_apply_duty_cycle, -100, 100, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -90, 80, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -80, 60, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -70, 40, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -60, 20, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -50, 0, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -40, 20, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -30, 40, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -20, 60, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, -10, 80, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 0, 100, 100);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 10, 100, 80);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 20, 100, 60);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 30, 100, 40);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 40, 100, 20);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 50, 100, 0);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 60, 100, 20);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 70, 100, 40);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 80, 100, 60);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 90, 100, 80);
-    RUN_PARAM_TEST(should_apply_duty_cycle, 100, 100, 100);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -100,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -90,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   80,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -80,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   60,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -70,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   40,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -60,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   20,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -50,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   0,
+                   ROTATION_STOP);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -40,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   20,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -30,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   40,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -20,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   60,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -10,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   80,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   0,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   10,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   20,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   30,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   40,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   50,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   60,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   70,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   80,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   90,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   100,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -100,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -90,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -80,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -70,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -60,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -50,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -40,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -30,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -20,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -10,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   0,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   10,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   80,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   20,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   60,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   30,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   40,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   40,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   20,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   50,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   0,
+                   ROTATION_STOP);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   60,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   20,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   70,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   40,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   80,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   60,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   90,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   80,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   100,
+                   LINEBOT_DIRECTION_FORWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -100,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -90,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   80,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -80,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   60,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -70,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   40,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -60,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   20,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -50,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   0,
+                   ROTATION_STOP);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -40,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   20,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -30,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   40,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -20,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   60,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -10,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   80,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   0,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   10,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   20,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   30,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   40,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   50,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   60,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   70,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   80,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   90,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   100,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_LEFT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -100,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -90,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -80,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -70,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -60,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -50,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -40,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -30,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -20,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   -10,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   0,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   10,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   80,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   20,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   60,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   30,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   40,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   40,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   20,
+                   ROTATION_LEFT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   50,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   0,
+                   ROTATION_STOP);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   60,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   20,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   70,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   40,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   80,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   60,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   90,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   80,
+                   ROTATION_RIGHT);
+
+    RUN_PARAM_TEST(should_apply_motion,
+                   100,
+                   LINEBOT_DIRECTION_BACKWARD,
+                   MOTOR_RIGHT,
+                   100,
+                   ROTATION_RIGHT);
+
     return UNITY_END();
 }

@@ -2,7 +2,6 @@
 #include "context.h"
 #include "coords.h"
 #include "mode.h"
-#include "motion.h"
 #include "motion_factory.h"
 #include "position.h"
 #include <errno.h>
@@ -29,7 +28,6 @@ linebot_init(void)
 {
     coords_init();
     position_init();
-    motion_init();
     context_init();
 }
 
@@ -39,16 +37,12 @@ linebot_acquire(linebot_mode_t    mode,
                 uint8_t           errsize,
                 linebot_t * const ph_self)
 {
-    bool b_coords_valid = coords_validate(coords) >= 0;
-
-    if (!b_coords_valid)
+    if (coords_validate(coords) < 0)
     {
         return -EINVAL;
     }
 
-    bool b_acquired = context_acquire(mode, coords, errsize, ph_self) >= 0;
-
-    if (!b_acquired)
+    if (context_acquire(mode, coords, errsize, ph_self) < 0)
     {
         return -ENOMEM;
     }
@@ -152,10 +146,9 @@ apply_manual_motion(linebot_t const h_self, uint16_t const commands)
 {
     if (!context_is_tracking_route(h_self) || command_has_break(commands))
     {
-        linebot_motion_t h_motion = motion_create_by_commands(commands);
+        linebot_motion_t motion = motion_create_by_commands(commands);
 
-        linebot_port_motion_apply(h_motion);
-        linebot_motion_release(h_motion);
+        linebot_port_motion_apply(&motion);
     }
 }
 
@@ -179,9 +172,8 @@ apply_tracking_motion(linebot_t const h_self, linebot_coords_t const h_coords)
         position_t h_position = context_get_position(h_self);
         position_update_coords(h_position, h_coords);
 
-        linebot_motion_t h_motion = motion_create_by_position(h_position);
-        linebot_port_motion_apply(h_motion);
-        linebot_motion_release(h_motion);
+        linebot_motion_t motion = motion_create_by_position(h_position);
+        linebot_port_motion_apply(&motion);
     }
 }
 
@@ -189,10 +181,9 @@ static inline void
 stop_immediately(linebot_t const h_self)
 {
     linebot_mode_t   new_mode = LINEBOT_MODE_MANUAL;
-    linebot_motion_t h_motion = motion_create_standby();
+    linebot_motion_t motion   = motion_create_standby();
 
     context_update_mode(h_self, new_mode);
     linebot_port_mode_changed(new_mode);
-    linebot_port_motion_apply(h_motion);
-    linebot_motion_release(h_motion);
+    linebot_port_motion_apply(&motion);
 }

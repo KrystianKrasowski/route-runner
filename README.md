@@ -33,7 +33,7 @@ For the power details visit the [Power supply](#power-supply) section
 ## Usage
 * Turn on the device using ON/OFF switch. Mode indicator displays MANUAL CONTROL mode.
 * Place the vehicle or simply run it on the black line. Mode indicator displays DETECTED state. 
-* Start line following by issuing START TRACKING command. Mode indicator displays TRACKING state.
+* Start line following by issuing FOLLOW command. Mode indicator displays TRACKING state.
 
 ### Command reference
 * FORWARD - move forward
@@ -61,8 +61,8 @@ For the power details visit the [Power supply](#power-supply) section
 > Note that the RECOVERING mode lasts only for 500ms unless route runner gets back on the route. After that time the vehicle will stop tracking.
 
 ### Modes - LED indicator mapping
-* MANUAL - single short blink per second
-* DETECTED - LED constant on
+* MANUAL - 1 short blink per second
+* DETECTED - 2 short blinks per second
 * TRACKING - 4 short blinks per second
 
 short blink is a sequence `on -> off` with 250ms duration
@@ -73,7 +73,7 @@ short blink is a sequence `on -> off` with 250ms duration
 
 ### Power supply
 The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage equal to 7.4V (3.7V each). The power buses are distributed as follows:
-* 7V power bus provided by one of the LM2596 voltage converter. Used by L293D for DC motor inputs. Note that due to quite high voltage drops on L293D the effective voltage for DC motors whould oscilate around ~5V. This is not impressive and is the area to implrove in the further project iterations.
+* 7V power bus provided by one of the LM2596 voltage converter. Used by L293D for DC motor inputs. Note that due to quite high voltage drops on L293D the effective voltage for DC motors whould oscilate around ~5V. This is not impressive and is the area to improve in the further project iterations.
 * 5V power bus provided by the second LM2596 voltage converter. Used by L293D logic and the MCU
 * 3.3V power bus provided by MCU. Used by the Dualshock2 receiver and state indicator
 * 3.3V analog power bus provided by MCU. Used by line sensor
@@ -132,10 +132,6 @@ st-flash write build/Debug/app/route-runner.bin 0x08000000
 
 ### Application architecture
 
-#### Big picture
-![bit-picture](./doc/img/architecture-1.png)
+Software architecture is inspired by the hexagonal (ports and adapters) pattern. The main goal of this approach was to be abe to embed the domain into any other MCU platform, wherher to use RTOS or bare metal, with or without STM32 HAL, etc. Any infrastructure change must not imply the domain logic changes.
 
-Software architecture is inspired by the onion pattern. The main goal of this approach was to be abe to embed the domain into any other MCU platform, wherher to use RTOS or bare metal, with or without STM32 HAL, etc. Any infrastructure change must not imply the domain logic changes.
-
-#### Library dependencies diagram
-![lib-dependency](./doc/img/architecture-2.png)
+![lib-dependency](./doc/img/architecture-1.png)

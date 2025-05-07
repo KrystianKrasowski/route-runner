@@ -36,7 +36,7 @@ should_stop(linebot_mode_t mode)
     TEST_ASSERT_EQUAL(LINEBOT_MODE_MANUAL, actual_mode);
     TEST_ASSERT_EQUAL(LINEBOT_MODE_MANUAL, applied_mode);
     TEST_ASSERT_EQUAL(0, linebot_port_mock_motion_get_correction());
-    TEST_ASSERT_EQUAL(LINEBOT_MOTION_NONE,
+    TEST_ASSERT_EQUAL(LINEBOT_DIRECTION_NONE,
                       linebot_port_mock_motion_get_direction());
 }
 

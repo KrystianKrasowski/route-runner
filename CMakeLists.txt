@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(route-runner VERSION 1.1.0)
+set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+
+project(route-runner VERSION 1.2.0)
 
 enable_language(C ASM)
 
@@ -15,7 +17,11 @@ if(TARGET_ARCH STREQUAL "test")
     include(${CMAKE_SOURCE_DIR}/cmake/dependencies-test.cmake)
 endif()
 
-add_subdirectory(app)
-add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(test)
+
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+        ${CMAKE_BINARY_DIR}/compile_commands.json
+        ${CMAKE_SOURCE_DIR}/compile_commands.json
+)

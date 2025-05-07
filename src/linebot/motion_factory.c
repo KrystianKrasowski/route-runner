@@ -1,7 +1,9 @@
-#include "motion_factory.h"
 #include "command.h"
+#include "motion_factory.h"
+#include "position.h"
+#include <linebot/motion.h>
 
-static inline linebot_motion_direction_t
+static inline linebot_direction_t
 create_manual_direction(uint16_t const commands);
 
 static inline int8_t
@@ -10,59 +12,56 @@ create_manual_correction(uint16_t const commands);
 linebot_motion_t
 motion_create_by_commands(uint16_t const commands)
 {
-    linebot_motion_t           h_motion;
-    linebot_motion_direction_t direction  = create_manual_direction(commands);
-    int8_t                     correction = create_manual_correction(commands);
-
-    (void)linebot_motion_acquire(direction, correction, &h_motion);
-
-    return h_motion;
+    return (linebot_motion_t){
+        .correction = create_manual_correction(commands),
+        .direction  = create_manual_direction(commands),
+    };
 }
 
 linebot_motion_t
 motion_create_by_position(position_t const h_position)
 {
-    linebot_motion_t h_motion;
-
     if (position_is_on_finish(h_position))
     {
-        (void)linebot_motion_acquire(LINEBOT_MOTION_NONE, 0, &h_motion);
+        return (linebot_motion_t){
+            .correction = 0,
+            .direction  = LINEBOT_DIRECTION_NONE,
+        };
     }
     else
     {
-        int8_t correction = position_regulate(h_position);
-        (void)linebot_motion_acquire(
-            LINEBOT_MOTION_FORWARD, correction, &h_motion);
+        return (linebot_motion_t){
+            .correction = position_regulate(h_position),
+            .direction  = LINEBOT_DIRECTION_FORWARD,
+        };
     }
-
-    return h_motion;
 }
 
 linebot_motion_t
 motion_create_standby(void)
 {
-    linebot_motion_t h_motion;
-    (void)linebot_motion_acquire(LINEBOT_MOTION_NONE, 0, &h_motion);
-
-    return h_motion;
+    return (linebot_motion_t){
+        .correction = 0,
+        .direction  = LINEBOT_DIRECTION_NONE,
+    };
 }
 
-static inline linebot_motion_direction_t
+static inline linebot_direction_t
 create_manual_direction(uint16_t const commands)
 {
-    linebot_motion_direction_t direction;
+    linebot_direction_t direction;
 
     if (command_has_forward(commands))
     {
-        direction = LINEBOT_MOTION_FORWARD;
+        direction = LINEBOT_DIRECTION_FORWARD;
     }
     else if (command_has_backward(commands))
     {
-        direction = LINEBOT_MOTION_BACKWARD;
+        direction = LINEBOT_DIRECTION_BACKWARD;
     }
     else
     {
-        direction = LINEBOT_MOTION_NONE;
+        direction = LINEBOT_DIRECTION_NONE;
     }
 
     return direction;

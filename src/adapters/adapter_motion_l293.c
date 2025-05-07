@@ -1,82 +1,59 @@
-#include <l293.h>
+#include <devices/l293.h>
+#include <errno.h>
+#include <linebot/motion.h>
 #include <linebot/port.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
-#include <tim3.h>
+#include <utils/result.h>
+
+#define MOTOR_LEFT  DEVICE_L293_CHANNEL_12
+#define MOTOR_RIGHT DEVICE_L293_CHANNEL_34
 
 #define DUTY_CYCLE(pid) (abs(-2 * abs(pid) + 100))
 
-static l293_t motor_left;
-static l293_t motor_right;
+static inline uint8_t
+duty_cycle_left_compute(linebot_motion_t const *p_motion);
 
 static inline uint8_t
-compute_duty_cycle_left(int8_t correction);
+duty_cycle_right_compute(linebot_motion_t const *p_motion);
 
-static inline uint8_t
-compute_duty_cycle_right(int8_t correction);
+static inline linebot_direction_t
+direction_left_compute(linebot_motion_t const *p_motion);
 
-static inline linebot_motion_direction_t
-compute_direction_left(linebot_motion_direction_t direction, int8_t correction);
+static inline linebot_direction_t
+direction_right_compute(linebot_motion_t const *p_motion);
 
-static inline linebot_motion_direction_t
-compute_direction_right(linebot_motion_direction_t direction,
-                        int8_t                     correction);
-
-static inline void
-apply_direction_left(linebot_motion_direction_t direction);
-
-static inline void
-apply_direction_right(linebot_motion_direction_t direction);
-
-static linebot_motion_direction_t
-flip_direction(linebot_motion_direction_t direction);
+static void
+rotation_apply(device_l293_t h_motor, linebot_direction_t direction);
 
 void
-adapters_motion_init(void)
+linebot_port_motion_apply(linebot_motion_t const *p_motion)
 {
-    l293_t channel_left  = l293_create_channel_left();
-    l293_t channel_right = l293_create_channel_right();
-    memcpy(&motor_left, &channel_left, sizeof(l293_t));
-    memcpy(&motor_right, &channel_right, sizeof(l293_t));
+    device_l293_disable(MOTOR_LEFT);
+    device_l293_disable(MOTOR_RIGHT);
 
-    l293_init(&motor_left);
-    l293_init(&motor_right);
-}
+    uint8_t             duty_cycle_left  = duty_cycle_left_compute(p_motion);
+    uint8_t             duty_cycle_right = duty_cycle_right_compute(p_motion);
+    linebot_direction_t dir_left         = direction_left_compute(p_motion);
+    linebot_direction_t dir_right        = direction_right_compute(p_motion);
 
-void
-linebot_port_motion_apply(linebot_motion_t const motion)
-{
-    l293_disable(&motor_left);
-    l293_disable(&motor_right);
+    rotation_apply(MOTOR_LEFT, dir_left);
+    rotation_apply(MOTOR_RIGHT, dir_right);
 
-    int8_t correction = linebot_motion_get_correction(motion);
-    linebot_motion_direction_t direction = linebot_motion_get_direction(motion);
-
-    uint8_t duty_cycle_left  = compute_duty_cycle_left(correction);
-    uint8_t duty_cycle_right = compute_duty_cycle_right(correction);
-
-    linebot_motion_direction_t direction_left =
-        compute_direction_left(direction, correction);
-    linebot_motion_direction_t direction_right =
-        compute_direction_right(direction, correction);
-
-    tim3_pwm_set_duty_cycle(&motor_left.pwm_channel, duty_cycle_left);
-    tim3_pwm_set_duty_cycle(&motor_right.pwm_channel, duty_cycle_right);
-    apply_direction_left(direction_left);
-    apply_direction_right(direction_right);
-
-    l293_enable(&motor_left);
-    l293_enable(&motor_right);
+    device_l293_enable(MOTOR_LEFT, duty_cycle_left);
+    device_l293_enable(MOTOR_RIGHT, duty_cycle_right);
 }
 
 static inline uint8_t
-compute_duty_cycle_left(int8_t correction)
+duty_cycle_left_compute(linebot_motion_t const *p_motion)
 {
-    if (correction >= -100 && correction < 0)
+    if (LINEBOT_DIRECTION_NONE == p_motion->direction)
     {
-        return DUTY_CYCLE(correction);
+        return 0;
+    }
+    else if (p_motion->correction >= -100 && p_motion->correction < 0)
+    {
+        return DUTY_CYCLE(p_motion->correction);
     }
     else
     {
@@ -85,11 +62,15 @@ compute_duty_cycle_left(int8_t correction)
 }
 
 static inline uint8_t
-compute_duty_cycle_right(int8_t correction)
+duty_cycle_right_compute(linebot_motion_t const *p_motion)
 {
-    if (correction > 0 && correction <= 100)
+    if (LINEBOT_DIRECTION_NONE == p_motion->direction)
     {
-        return DUTY_CYCLE(correction);
+        return 0;
+    }
+    else if (p_motion->correction > 0 && p_motion->correction <= 100)
+    {
+        return DUTY_CYCLE(p_motion->correction);
     }
     else
     {
@@ -97,77 +78,57 @@ compute_duty_cycle_right(int8_t correction)
     }
 }
 
-static inline linebot_motion_direction_t
-compute_direction_left(linebot_motion_direction_t direction, int8_t correction)
+static inline linebot_direction_t
+direction_left_compute(linebot_motion_t const *p_motion)
 {
-    if (correction < -50)
+    if (p_motion->correction < -50)
     {
-        return flip_direction(direction);
+        return linebot_motion_invert_direction(p_motion);
+    }
+    else if (-50 == p_motion->correction)
+    {
+        return LINEBOT_DIRECTION_NONE;
     }
     else
     {
-        return direction;
+        return p_motion->direction;
     }
 }
 
-static inline linebot_motion_direction_t
-compute_direction_right(linebot_motion_direction_t direction, int8_t correction)
+static inline linebot_direction_t
+direction_right_compute(linebot_motion_t const *p_motion)
 {
-    if (correction > 50)
+    if (p_motion->correction > 50)
     {
-        return flip_direction(direction);
+        return linebot_motion_invert_direction(p_motion);
+    }
+    else if (50 == p_motion->correction)
+    {
+        return LINEBOT_DIRECTION_NONE;
     }
     else
     {
-        return direction;
+        return p_motion->direction;
     }
 }
 
-static inline void
-apply_direction_left(linebot_motion_direction_t direction)
+static void
+rotation_apply(device_l293_t h_motor, linebot_direction_t direction)
 {
+    // ommit result value - adapter object dependencies should be already
+    // validated
     switch (direction)
     {
-        case LINEBOT_MOTION_FORWARD:
-            l293_set_right(&motor_left);
+        case LINEBOT_DIRECTION_FORWARD:
+            (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_RIGHT);
             break;
-        case LINEBOT_MOTION_BACKWARD:
-            l293_set_left(&motor_left);
-            break;
-        case LINEBOT_MOTION_NONE:
-        default:
-            l293_set_stop(&motor_left);
-    }
-}
 
-static inline void
-apply_direction_right(linebot_motion_direction_t direction)
-{
-    switch (direction)
-    {
-        case LINEBOT_MOTION_FORWARD:
-            l293_set_right(&motor_right);
+        case LINEBOT_DIRECTION_BACKWARD:
+            (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_LEFT);
             break;
-        case LINEBOT_MOTION_BACKWARD:
-            l293_set_left(&motor_right);
-            break;
-        case LINEBOT_MOTION_NONE:
-        default:
-            l293_set_stop(&motor_right);
-    }
-}
 
-static linebot_motion_direction_t
-flip_direction(linebot_motion_direction_t direction)
-{
-    switch (direction)
-    {
-        case LINEBOT_MOTION_FORWARD:
-            return LINEBOT_MOTION_BACKWARD;
-        case LINEBOT_MOTION_BACKWARD:
-            return LINEBOT_MOTION_FORWARD;
-        case LINEBOT_MOTION_NONE:
+        case LINEBOT_DIRECTION_NONE:
         default:
-            return LINEBOT_MOTION_NONE;
+            (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_STOP);
     }
 }

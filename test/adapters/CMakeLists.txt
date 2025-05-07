@@ -1,6 +1,8 @@
 set(TEST_SUITE
     adapter_motion_l293_test.c
-    adapter_mode_indicator_and_guard_test.c
+    adapter_control_dualshock2_test.c
+    adapter_coords_qtrhd06a_test.c
+    adapter_mode_listener_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
@@ -16,9 +18,8 @@ foreach(FILE ${TEST_SUITE})
     target_link_libraries(${TEST_NAME}
         PRIVATE
             linebot
+            devices_mock
             adapters
-            drivers_components
-            drivers_peripherals_mock
             unity
     )   
 

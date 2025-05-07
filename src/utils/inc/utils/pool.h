@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <stddef.h>
 #include <string.h>
 
 #define POOL_DECLARE(name, type, size)                                         \
@@ -33,6 +33,20 @@
         }                                                                      \
                                                                                \
         return false;                                                          \
+    }                                                                          \
+                                                                               \
+    static inline bool name##_pool_alloc_at(name##_pool_t *p_pool,             \
+                                            uint8_t        ind)                \
+    {                                                                          \
+        if (ind < size)                                                        \
+        {                                                                      \
+            p_pool->used[ind] = true;                                          \
+            return true;                                                       \
+        }                                                                      \
+        else                                                                   \
+        {                                                                      \
+            return false;                                                      \
+        }                                                                      \
     }                                                                          \
                                                                                \
     static inline type *name##_pool_get(name##_pool_t *p_pool, uint8_t h_obj)  \
