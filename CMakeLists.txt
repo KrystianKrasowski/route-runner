@@ -17,7 +17,6 @@ if(TARGET_ARCH STREQUAL "test")
     include(${CMAKE_SOURCE_DIR}/cmake/dependencies-test.cmake)
 endif()
 
-add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(test)
 

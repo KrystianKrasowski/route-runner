@@ -12,6 +12,7 @@ main(void)
 
     linebot_coords_t h_coords;
     // TODO: Handle error
+    // TODO: Create default linebot configuration
     (void)linebot_coords_acquire((uint8_t[]){0, 0, 0, 0, 0, 0}, 6, &h_coords);
 
     linebot_t h_linebot;
