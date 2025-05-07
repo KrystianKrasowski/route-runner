@@ -6,6 +6,7 @@
 #include <utils/pool.h>
 #include <utils/result.h>
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(timeout_guard,
              timeout_guard_conf_t,
              DEVICE_TIMEOUT_GUARD_INSTANCES_NUM)
@@ -15,7 +16,7 @@ static timeout_guard_pool_t pool;
 int
 device_timeout_guard_start(device_timeout_guard_t const h_self)
 {
-    timeout_guard_conf_t *p_self = timeout_guard_pool_get(&pool, h_self);
+    timeout_guard_conf_t const *p_self = timeout_guard_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
@@ -30,7 +31,7 @@ device_timeout_guard_start(device_timeout_guard_t const h_self)
 int
 device_timeout_guard_stop(device_timeout_guard_t const h_self)
 {
-    timeout_guard_conf_t *p_self = timeout_guard_pool_get(&pool, h_self);
+    timeout_guard_conf_t const *p_self = timeout_guard_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
@@ -46,7 +47,7 @@ device_timeout_guard_stop(device_timeout_guard_t const h_self)
 int
 device_timeout_guard_read(device_timeout_guard_t const h_self)
 {
-    timeout_guard_conf_t *p_self = timeout_guard_pool_get(&pool, h_self);
+    timeout_guard_conf_t const *p_self = timeout_guard_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {

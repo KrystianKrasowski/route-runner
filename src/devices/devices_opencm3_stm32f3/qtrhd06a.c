@@ -5,6 +5,7 @@
 #include <utils/pool.h>
 #include <utils/result.h>
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(qtrhd06a, qtrhd06a_conf_t, DEVICE_QTRHD06A_INSTANCES_NUM)
 
 static qtrhd06a_pool_t pool;

@@ -11,6 +11,7 @@ typedef struct
     uint8_t          toggles_num;
 } blink_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(blink, blink_instance_t, DEVICE_BLINK_INSTANCES_NUM)
 
 #define HALF_INTERVAL 125
@@ -18,7 +19,7 @@ POOL_DECLARE(blink, blink_instance_t, DEVICE_BLINK_INSTANCES_NUM)
 static blink_pool_t pool;
 
 static inline uint32_t
-count_period(blink_instance_t *p_self);
+count_period(blink_instance_t const *p_self);
 
 int
 device_blink_set_toggles(device_blink_t const h_self, uint8_t num)
@@ -94,7 +95,7 @@ blink_update(device_blink_t const h_self)
 }
 
 static inline uint32_t
-count_period(blink_instance_t *p_self)
+count_period(blink_instance_t const *p_self)
 {
     return 1000 - p_self->toggles_num * HALF_INTERVAL + HALF_INTERVAL;
 }

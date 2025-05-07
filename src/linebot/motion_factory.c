@@ -1,7 +1,7 @@
 #include "command.h"
-#include "linebot/motion.h"
 #include "motion_factory.h"
 #include "position.h"
+#include <linebot/motion.h>
 
 static inline linebot_direction_t
 create_manual_direction(uint16_t const commands);

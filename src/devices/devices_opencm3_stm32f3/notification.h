@@ -11,9 +11,9 @@ typedef enum
 #define NOTIFICATIONS_LENGTH 2
 
 void
-notification_give(notification_t notification);
+notification_give(notification_t id);
 
 bool
-notification_take(notification_t notification);
+notification_take(notification_t id);
 
 #endif

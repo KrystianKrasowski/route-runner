@@ -1,14 +1,16 @@
-#include "mode.h"
 #include "command.h"
 #include "coords.h"
+#include "mode.h"
 
 bool
+// cppcheck-suppress staticFunction
 linebot_mode_is_manual(linebot_mode_t const self)
 {
     return self == LINEBOT_MODE_MANUAL;
 }
 
 bool
+// cppcheck-suppress staticFunction
 linebot_mode_is_detected(linebot_mode_t const self)
 {
     return self == LINEBOT_MODE_DETECTED;

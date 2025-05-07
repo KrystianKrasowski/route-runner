@@ -5,6 +5,7 @@
 #include <utils/pool.h>
 #include <utils/result.h>
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(l293, l293_conf_t, 2)
 
 static l293_pool_t pool;

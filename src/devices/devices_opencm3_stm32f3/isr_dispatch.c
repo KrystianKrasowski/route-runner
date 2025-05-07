@@ -25,6 +25,7 @@ isr_dispatch_init(void)
 }
 
 void
+// cppcheck-suppress unusedFunction
 tim1_cc_isr(void)
 {
     if (timer_get_flag(TIM1, TIM_SR_CC1IF))
@@ -35,6 +36,7 @@ tim1_cc_isr(void)
 }
 
 void
+// cppcheck-suppress unusedFunction
 tim1_brk_tim15_isr(void)
 {
     if (timer_get_flag(TIM15, TIM_SR_UIF))
@@ -45,6 +47,7 @@ tim1_brk_tim15_isr(void)
 }
 
 void
+// cppcheck-suppress unusedFunction
 tim2_isr(void)
 {
     if (timer_get_flag(TIM2, TIM_SR_UIF))
@@ -57,6 +60,7 @@ tim2_isr(void)
 }
 
 void
+// cppcheck-suppress unusedFunction
 spi1_isr(void)
 {
     if (SPI_SR(SPI1) & SPI_SR_TXE)
@@ -94,6 +98,7 @@ spi1_isr(void)
 }
 
 void
+// cppcheck-suppress unusedFunction
 dma1_channel1_isr(void)
 {
     if (dma_get_interrupt_flag(DMA1, DMA_CHANNEL1, DMA_TCIF))

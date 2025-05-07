@@ -22,6 +22,7 @@ typedef struct
     volatile bool    handled;
 } dualshock2_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(dualshock2, dualshock2_instance_t, 1)
 
 static uint8_t PAYLOAD[PAYLOAD_SIZE] = {
@@ -30,7 +31,7 @@ static uint8_t PAYLOAD[PAYLOAD_SIZE] = {
 static dualshock2_pool_t pool;
 
 static inline bool
-state_is_valid(volatile uint8_t const response[]);
+state_is_valid(volatile uint8_t const state[]);
 
 int
 device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands)
@@ -93,7 +94,7 @@ dualshock2_create(device_dualshock2_t const handle,
 int
 dualshock2_poll(device_dualshock2_t const h_self)
 {
-    dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, h_self);
+    dualshock2_instance_t const *p_self = dualshock2_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {

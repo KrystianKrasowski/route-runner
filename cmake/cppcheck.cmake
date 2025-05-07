@@ -2,7 +2,7 @@ find_program(CPPCHECK_EXECUTABLE cppcheck)
 
 if(CPPCHECK_EXECUTABLE)
     add_custom_target(
-        run_cppcheck
+        cppcheck
         COMMAND ${CPPCHECK_EXECUTABLE} --enable=all --inconclusive --std=c23
                 -I${CMAKE_SOURCE_DIR}/src
                 -I${CMAKE_SOURCE_DIR}/src/utils/inc

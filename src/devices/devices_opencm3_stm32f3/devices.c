@@ -1,6 +1,5 @@
 #include "blink.h"
 #include "data_store.h"
-#include "devices/blink.h"
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "l293.h"
@@ -9,6 +8,7 @@
 #include "qtrhd06a.h"
 #include "spi_transmittion.h"
 #include "timeout_guard.h"
+#include <devices/blink.h>
 #include <devices/devices.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
@@ -47,7 +47,7 @@ devices_init(void)
     spi_transmittion_init();
     qtrhd06a_init();
     blink_init();
-    timeout_guard_route_create_device();
+    timeout_guard_init();
 
     // TODO: error handling
     (void)l293_create_channel_12();

@@ -21,6 +21,7 @@ typedef struct
     bool     busy;
 } spi_tx_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(spi_tx, spi_tx_instance_t, 1)
 
 static spi_tx_pool_t pool;
