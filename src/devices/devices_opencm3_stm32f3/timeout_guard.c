@@ -38,6 +38,7 @@ device_timeout_guard_stop(device_timeout_guard_t const h_self)
     }
 
     timer_disable_counter(p_self->timer);
+    timer_set_counter(p_self->timer, 0);
 
     return RESULT_OK;
 }

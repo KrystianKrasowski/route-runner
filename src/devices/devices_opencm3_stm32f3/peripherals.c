@@ -213,7 +213,7 @@ tim6_config(void)
 static inline void
 tim15_config(void)
 {
-    timer_set_prescaler(TIM15, 16 - 1);
+    timer_set_prescaler(TIM15, 16000 - 1);
     timer_set_period(TIM15, 500 - 1);
     timer_generate_event(TIM15, TIM_EGR_UG);
     timer_clear_flag(TIM15, TIM_SR_UIF);

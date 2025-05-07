@@ -1,6 +1,7 @@
 #include "task.h"
 #include <adapters/control_dualshock2.h>
 #include <adapters/coords_qtrhd06a.h>
+#include <adapters/route_guard.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
 #include <utils/result.h>
@@ -31,12 +32,12 @@ task_handle_route_tracking(linebot_t const linebot)
     }
 }
 
-// void
-// task_handle_immediate_stop(linebot_t const linebot)
-// {
-// if (adapters_is_route_guard_timeout())
-// {
-// // TODO: Handle failures
-// (void)linebot_handle_immediate_stop(linebot);
-// }
-//}
+void
+task_handle_immediate_stop(linebot_t const linebot)
+{
+    if (adapter_route_guard_read() == RESULT_TIMEOUT)
+    {
+        // TODO: Handle failures
+        (void)linebot_handle_immediate_stop(linebot);
+    }
+}

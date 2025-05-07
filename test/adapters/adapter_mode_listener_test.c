@@ -1,19 +1,23 @@
 #include <devices/blink_mock.h>
+#include <devices/timeout_guard_mock.h>
 #include <linebot/mode.h>
 #include <linebot/port.h>
 #include <unity.h>
 #include <unity_config.h>
+#include <utils/result.h>
 
 void
 setUp(void)
 {
     device_blink_mock_init();
+    device_timeout_guard_mock_init();
 }
 
 void
 tearDown(void)
 {
     device_blink_mock_deinit();
+    device_timeout_guard_mock_deinit();
 }
 
 void
@@ -28,6 +32,28 @@ should_indicate_mode(linebot_mode_t mode, uint8_t expected_toggles_num)
     TEST_ASSERT_EQUAL(expected_toggles_num, actual_toggles_num);
 }
 
+void
+should_start_guard(linebot_mode_t mode)
+{
+    // when
+    linebot_port_mode_changed(mode);
+
+    // then
+    TEST_ASSERT_TRUE(
+        device_timeout_guard_mock_is_started(DEVICE_TIEMOUT_GUARD_ROUTE));
+}
+
+void
+should_stop_guard(linebot_mode_t mode)
+{
+    // when
+    linebot_port_mode_changed(mode);
+
+    // then
+    TEST_ASSERT_TRUE(
+        device_timeout_guard_mock_is_stopped(DEVICE_TIEMOUT_GUARD_ROUTE));
+}
+
 int
 main(void)
 {
@@ -37,6 +63,12 @@ main(void)
     RUN_PARAM_TEST(should_indicate_mode, LINEBOT_MODE_DETECTED, 4);
     RUN_PARAM_TEST(should_indicate_mode, LINEBOT_MODE_FOLLOWING, 8);
     RUN_PARAM_TEST(should_indicate_mode, LINEBOT_MODE_RECOVERING, 8);
+
+    RUN_PARAM_TEST(should_start_guard, LINEBOT_MODE_RECOVERING);
+
+    RUN_PARAM_TEST(should_stop_guard, LINEBOT_MODE_MANUAL);
+    RUN_PARAM_TEST(should_stop_guard, LINEBOT_MODE_DETECTED);
+    RUN_PARAM_TEST(should_stop_guard, LINEBOT_MODE_FOLLOWING);
 
     return UNITY_END();
 }
