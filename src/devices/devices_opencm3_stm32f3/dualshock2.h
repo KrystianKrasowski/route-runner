@@ -19,7 +19,10 @@ dualshock2_create(device_dualshock2_t const handle,
                   dualshock2_conf_t const  *p_conf);
 
 int
-dualshock2_poll(device_dualshock2_t const h_self);
+dualshock2_poll_start(device_dualshock2_t const h_self);
+
+int
+dualshock2_poll_end(device_dualshock2_t const h_self);
 
 int
 dualshock2_set_state(device_dualshock2_t const h_self,

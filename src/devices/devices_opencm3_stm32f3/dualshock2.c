@@ -1,4 +1,6 @@
+#include "data_store.h"
 #include "dualshock2.h"
+#include "notification.h"
 #include "spi_transmittion.h"
 #include <devices/dualshock2.h>
 #include <errno.h>
@@ -43,21 +45,21 @@ device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands)
         return -ENODEV;
     }
 
-    if (p_self->handled)
+    if (!notification_take(NOTIFICATION_DUALSHOCK2))
     {
         return RESULT_NOT_READY;
     }
 
-    if (state_is_valid(p_self->state))
+    volatile uint8_t *state = data_store_get_dualshock2_rbuff();
+
+    if (state_is_valid(state))
     {
-        *p_commands = ~(((uint16_t)p_self->state[4] << 8) | p_self->state[3]);
+        *p_commands = ~(((uint16_t)state[4] << 8) | state[3]);
     }
     else
     {
         *p_commands = DS2_NONE;
     }
-
-    p_self->handled = true;
 
     return RESULT_OK;
 }
@@ -82,9 +84,6 @@ dualshock2_create(device_dualshock2_t const handle,
     p_self->device_select_port = p_conf->device_select_port;
     p_self->device_select_pin  = p_conf->device_select_pin;
     p_self->spi_port           = p_conf->spi_port;
-    p_self->handled            = false;
-
-    memset_volatile(p_self->state, 0, sizeof(p_self->state));
 
     gpio_set(p_self->device_select_port, p_self->device_select_pin);
 
@@ -92,7 +91,7 @@ dualshock2_create(device_dualshock2_t const handle,
 }
 
 int
-dualshock2_poll(device_dualshock2_t const h_self)
+dualshock2_poll_start(device_dualshock2_t const h_self)
 {
     dualshock2_instance_t const *p_self = dualshock2_pool_get(&pool, h_self);
 
@@ -101,13 +100,28 @@ dualshock2_poll(device_dualshock2_t const h_self)
         return -ENODEV;
     }
 
-    spi_transmittion_conf_t conf = {
-        .spi_port           = p_self->spi_port,
-        .device_select_port = p_self->device_select_port,
-        .device_select_pin  = p_self->device_select_pin,
-    };
+    spi_enable_tx_dma(p_self->spi_port);
+    spi_enable_rx_dma(p_self->spi_port);
+    spi_enable(p_self->spi_port);
+    gpio_clear(p_self->device_select_port, p_self->device_select_pin);
 
-    spi_transmittion_start(SPI_TRANSMITTION_SPI1, &conf, PAYLOAD, PAYLOAD_SIZE);
+    return RESULT_OK;
+}
+
+int
+dualshock2_poll_end(device_dualshock2_t const h_self)
+{
+    dualshock2_instance_t const *p_self = dualshock2_pool_get(&pool, h_self);
+
+    if (NULL == p_self)
+    {
+        return -ENODEV;
+    }
+
+    spi_disable(p_self->spi_port);
+    spi_disable_tx_dma(p_self->spi_port);
+    spi_disable_rx_dma(p_self->spi_port);
+    gpio_set(p_self->device_select_port, p_self->device_select_pin);
 
     return RESULT_OK;
 }
@@ -121,10 +135,6 @@ dualshock2_set_state(device_dualshock2_t const h_self, uint8_t const response[])
     {
         return -ENODEV;
     }
-
-    memcpy_volatile(p_self->state, response, PAYLOAD_SIZE);
-
-    p_self->handled = false;
 
     return RESULT_OK;
 }
