@@ -242,8 +242,6 @@ spi_config(void)
     spi_set_master_mode(SPI1);
     spi_set_data_size(SPI1, SPI_CR2_DS_8BIT);
     spi_fifo_reception_threshold_8bit(SPI1);
-    // number of bits is odd
-    // SPI_CR2(SPI1) |= SPI_CR2_LDMA_RX | SPI_CR2_LDMA_TX;
 }
 
 static inline void
