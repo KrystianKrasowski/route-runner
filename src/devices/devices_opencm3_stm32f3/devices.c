@@ -106,6 +106,7 @@ qtrhd06a_create_device(void)
     qtrhd06a_conf_t conf = {
         .p_raw_values      = data_store_get_route_rbuff(),
         .raw_values_length = DATA_STORE_ROUTE_BUFF_LENGTH,
+        .notification_id   = NOTIFICATION_ROUTE_CONVERSIONS,
     };
 
     return qtrhd06a_create(DEVICE_QTRHD06A_1, &conf);
