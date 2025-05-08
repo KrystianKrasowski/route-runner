@@ -6,7 +6,6 @@
 #include "notification.h"
 #include "peripherals.h"
 #include "qtrhd06a.h"
-#include "spi_transmittion.h"
 #include "timeout_guard.h"
 #include <devices/blink.h>
 #include <devices/devices.h>
@@ -44,7 +43,6 @@ devices_init(void)
 
     l293_init();
     dualshock2_init();
-    spi_transmittion_init();
     qtrhd06a_init();
     blink_init();
     timeout_guard_init();
@@ -95,6 +93,8 @@ dualshock2_create_device(void)
         .device_select_port = GPIOF,
         .device_select_pin  = GPIO0,
         .spi_port           = SPI1,
+        .notification_id    = NOTIFICATION_DUALSHOCK2,
+        .p_state            = data_store_get_dualshock2_rbuff(),
     };
 
     return dualshock2_create(DEVICE_DUALSHOCK2_1, &conf);
@@ -104,8 +104,9 @@ static inline int
 qtrhd06a_create_device(void)
 {
     qtrhd06a_conf_t conf = {
-        .p_raw_values      = data_store_get_route_read_buffer(),
-        .raw_values_length = DATA_STORE_ROUTE_BUFFER_LENGTH,
+        .p_raw_values      = data_store_get_route_rbuff(),
+        .raw_values_length = DATA_STORE_ROUTE_BUFF_LENGTH,
+        .notification_id   = NOTIFICATION_ROUTE_CONVERSIONS,
     };
 
     return qtrhd06a_create(DEVICE_QTRHD06A_1, &conf);

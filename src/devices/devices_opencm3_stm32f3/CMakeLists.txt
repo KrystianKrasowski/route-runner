@@ -4,7 +4,6 @@ add_library(devices_opencm3_stm32f3 STATIC
     devices.c
     l293.c
     dualshock2.c
-    spi_transmittion.c
     isr_dispatch.c
     data_store.c
     qtrhd06a.c

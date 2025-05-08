@@ -8,18 +8,28 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define DATA_STORE_ROUTE_BUFFER_LENGTH 40
+#define DATA_STORE_ROUTE_BUFF_LENGTH      40
+#define DATA_STORE_DUALSHOCK2_BUFF_LENGTH 5
 
 uint32_t
-data_store_get_route_write_buffer_addr(void);
+data_store_get_route_wbuff_addr(void);
 
 void
-data_store_receive_adc_route(void);
+data_store_update_route(void);
 
 volatile uint16_t *
-data_store_get_route_read_buffer(void);
+data_store_get_route_rbuff(void);
 
-volatile bool *
-data_store_get_route_handled_flag(void);
+uint32_t
+data_store_get_dualshock2_request_addr(void);
+
+uint32_t
+data_store_get_dualshock2_wbuff_addr(void);
+
+void
+data_store_update_dualshock2(void);
+
+volatile uint8_t *
+data_store_get_dualshock2_rbuff(void);
 
 #endif

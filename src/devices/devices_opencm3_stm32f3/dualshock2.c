@@ -1,5 +1,5 @@
+#include "data_store.h"
 #include "dualshock2.h"
-#include "spi_transmittion.h"
 #include <devices/dualshock2.h>
 #include <errno.h>
 #include <libopencm3/stm32/gpio.h>
@@ -11,22 +11,8 @@
 #include <utils/result.h>
 #include <utils/volatile_string.h>
 
-#define PAYLOAD_SIZE 9
-
-typedef struct
-{
-    uint32_t         device_select_port;
-    uint16_t         device_select_pin;
-    uint32_t         spi_port;
-    volatile uint8_t state[PAYLOAD_SIZE];
-    volatile bool    handled;
-} dualshock2_instance_t;
-
 // cppcheck-suppress unusedFunction
-POOL_DECLARE(dualshock2, dualshock2_instance_t, 1)
-
-static uint8_t PAYLOAD[PAYLOAD_SIZE] = {
-    0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+POOL_DECLARE(dualshock2, dualshock2_conf_t, 1)
 
 static dualshock2_pool_t pool;
 
@@ -36,28 +22,28 @@ state_is_valid(volatile uint8_t const state[]);
 int
 device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands)
 {
-    dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, h_self);
+    dualshock2_conf_t *p_self = dualshock2_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
         return -ENODEV;
     }
 
-    if (p_self->handled)
+    if (!notification_take(p_self->notification_id))
     {
         return RESULT_NOT_READY;
     }
 
-    if (state_is_valid(p_self->state))
+    if (state_is_valid(p_self->p_state))
     {
-        *p_commands = ~(((uint16_t)p_self->state[4] << 8) | p_self->state[3]);
+        uint8_t msb = p_self->p_state[4];
+        uint8_t lsb = p_self->p_state[3];
+        *p_commands = ~(((uint16_t)msb << 8) | lsb);
     }
     else
     {
         *p_commands = DS2_NONE;
     }
-
-    p_self->handled = true;
 
     return RESULT_OK;
 }
@@ -77,54 +63,46 @@ dualshock2_create(device_dualshock2_t const handle,
         return -ENOMEM;
     }
 
-    dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, handle);
+    dualshock2_conf_t *p_self = dualshock2_pool_get(&pool, handle);
 
-    p_self->device_select_port = p_conf->device_select_port;
-    p_self->device_select_pin  = p_conf->device_select_pin;
-    p_self->spi_port           = p_conf->spi_port;
-    p_self->handled            = false;
-
-    memset_volatile(p_self->state, 0, sizeof(p_self->state));
-
+    memcpy(p_self, p_conf, sizeof(*p_self));
     gpio_set(p_self->device_select_port, p_self->device_select_pin);
 
     return RESULT_OK;
 }
 
 int
-dualshock2_poll(device_dualshock2_t const h_self)
+dualshock2_poll_start(device_dualshock2_t const h_self)
 {
-    dualshock2_instance_t const *p_self = dualshock2_pool_get(&pool, h_self);
+    dualshock2_conf_t const *p_self = dualshock2_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
         return -ENODEV;
     }
 
-    spi_transmittion_conf_t conf = {
-        .spi_port           = p_self->spi_port,
-        .device_select_port = p_self->device_select_port,
-        .device_select_pin  = p_self->device_select_pin,
-    };
-
-    spi_transmittion_start(SPI_TRANSMITTION_SPI1, &conf, PAYLOAD, PAYLOAD_SIZE);
+    spi_enable_tx_dma(p_self->spi_port);
+    spi_enable_rx_dma(p_self->spi_port);
+    spi_enable(p_self->spi_port);
+    gpio_clear(p_self->device_select_port, p_self->device_select_pin);
 
     return RESULT_OK;
 }
 
 int
-dualshock2_set_state(device_dualshock2_t const h_self, uint8_t const response[])
+dualshock2_poll_end(device_dualshock2_t const h_self)
 {
-    dualshock2_instance_t *p_self = dualshock2_pool_get(&pool, h_self);
+    dualshock2_conf_t const *p_self = dualshock2_pool_get(&pool, h_self);
 
     if (NULL == p_self)
     {
         return -ENODEV;
     }
 
-    memcpy_volatile(p_self->state, response, PAYLOAD_SIZE);
-
-    p_self->handled = false;
+    spi_disable(p_self->spi_port);
+    spi_disable_tx_dma(p_self->spi_port);
+    spi_disable_rx_dma(p_self->spi_port);
+    gpio_set(p_self->device_select_port, p_self->device_select_pin);
 
     return RESULT_OK;
 }
