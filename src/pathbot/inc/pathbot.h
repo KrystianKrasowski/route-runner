@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define PATHBOT_MAX_COORDS_LENGTH 6
+#define PATHBOT_COORDS_WEIGHTS_6  {-100, -40, -10, 10, 40, 100}
+
 typedef enum
 {
     PATHBOT_COMMAND_NONE     = 0,
@@ -22,7 +25,19 @@ typedef enum
     PATHBOT_MODE_RECOVERING,
 } pathbot_mode_t;
 
+typedef struct
+{
+    uint8_t const coords[PATHBOT_MAX_COORDS_LENGTH];
+    uint8_t const weights[PATHBOT_MAX_COORDS_LENGTH];
+    uint8_t const length;
+} pathbot_coords_t;
+
 pathbot_mode_t
-pathbot_update_mode_manual(pathbot_mode_t current, uint16_t commands);
+pathbot_update_mode_manual(pathbot_mode_t const current,
+                           uint16_t const       commands);
+
+pathbot_mode_t
+pathbot_update_mode_tracking(pathbot_mode_t const    current,
+                             pathbot_coords_t const *p_coords);
 
 #endif

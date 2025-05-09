@@ -1,6 +1,7 @@
 add_library(pathbot STATIC
     pathbot.c
     mode.c
+    coords.c
 )
 
 target_include_directories(pathbot
