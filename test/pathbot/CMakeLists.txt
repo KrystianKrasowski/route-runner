@@ -1,5 +1,5 @@
 set(TEST_SUITE
-    pathbot_mode_update_test.c
+    pathbot_test.c
 )
 
 # extract some function here

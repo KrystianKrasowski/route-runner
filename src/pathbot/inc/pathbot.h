@@ -19,11 +19,24 @@ typedef enum
 
 typedef enum
 {
-    PATHBOT_MODE_MANUAL,
+    PATHBOT_MODE_MANUAL = 0,
     PATHBOT_MODE_DETECTED,
     PATHBOT_MODE_FOLLOWING,
     PATHBOT_MODE_RECOVERING,
 } pathbot_mode_t;
+
+typedef enum
+{
+    PATHBOT_DIRECTION_NONE = 0,
+    PATHBOT_DIRECTION_FORWARD,
+    PATHBOT_DIRECTION_BACKWARD,
+} pathbot_direction_t;
+
+typedef struct
+{
+    pathbot_direction_t const direction;
+    int8_t const              correction;
+} pathbot_motion_t;
 
 typedef struct
 {
@@ -33,11 +46,15 @@ typedef struct
 } pathbot_coords_t;
 
 pathbot_mode_t
-pathbot_update_mode_manual(pathbot_mode_t const current,
+pathbot_update_mode_manual(pathbot_mode_t const current_mode,
                            uint16_t const       commands);
 
 pathbot_mode_t
-pathbot_update_mode_tracking(pathbot_mode_t const    current,
+pathbot_update_mode_tracking(pathbot_mode_t const    current_mode,
                              pathbot_coords_t const *p_coords);
+
+pathbot_motion_t
+pathbot_create_motion_manual(pathbot_mode_t const current_mode,
+                             uint16_t const       commands);
 
 #endif
