@@ -1,6 +1,9 @@
 set(TEST_SUITE
-    pathbot_test.c
+    pathbot_update_mode_manual_test.c
+    pathbot_update_mode_tracking_test.c
+    pathbot_create_motion_manual_test.c
     pathbot_compute_position_error_test.c
+    pathbot_create_motion_pid_test.c
 )
 
 # extract some function here
