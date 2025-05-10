@@ -2,9 +2,10 @@
 #define _PATHBOT_H
 
 #include <stdint.h>
+#include <utils/stack.h>
 
 #define PATHBOT_MAX_COORDS_LENGTH 6
-#define PATHBOT_COORDS_WEIGHTS_6  {-100, -40, -10, 10, 40, 100}
+#define PATHBOT_COORDS6_WEIGHTS   {-100, -40, -20, 20, 40, 100}
 
 typedef enum
 {
@@ -41,9 +42,17 @@ typedef struct
 typedef struct
 {
     uint8_t const coords[PATHBOT_MAX_COORDS_LENGTH];
-    uint8_t const weights[PATHBOT_MAX_COORDS_LENGTH];
+    int8_t const  weights[PATHBOT_MAX_COORDS_LENGTH];
     uint8_t const length;
 } pathbot_coords_t;
+
+typedef struct
+{
+    float    kp;
+    float    ki;
+    float    kd;
+    stack_t *p_errors;
+} pathbot_pid_conf_t;
 
 pathbot_mode_t
 pathbot_update_mode_manual(pathbot_mode_t const current_mode,
@@ -56,5 +65,13 @@ pathbot_update_mode_tracking(pathbot_mode_t const    current_mode,
 pathbot_motion_t
 pathbot_create_motion_manual(pathbot_mode_t const current_mode,
                              uint16_t const       commands);
+
+int8_t
+pathbot_compute_position_error(pathbot_coords_t const *p_coords);
+
+pathbot_motion_t
+pathbot_create_motion_pid(pathbot_mode_t const           current_mode,
+                          pathbot_coords_t const * const p_coords,
+                          pathbot_pid_conf_t * const     p_pid_conf);
 
 #endif

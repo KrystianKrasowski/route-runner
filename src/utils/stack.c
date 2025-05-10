@@ -1,5 +1,5 @@
-#include <utils/stack.h>
 #include <string.h>
+#include <utils/stack.h>
 
 stack_t
 stack(uint8_t size)
@@ -13,8 +13,26 @@ stack(uint8_t size)
     memset(&stack, 0, sizeof(stack));
     stack.size = size;
     stack.top  = -1;
-    
+
     return stack;
+}
+
+stack_t
+stack_of(uint8_t size, ...)
+{
+    stack_t st = stack(size);
+
+    va_list elements;
+    va_start(elements, size);
+
+    for (uint8_t i = 0; i < size; i++)
+    {
+        stack_push(&st, va_arg(elements, int));
+    }
+
+    va_end(elements);
+
+    return st;
 }
 
 stack_result_t

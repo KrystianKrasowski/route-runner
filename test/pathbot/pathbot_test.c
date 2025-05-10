@@ -1,24 +1,7 @@
+#include "fixtures.h"
 #include <pathbot.h>
 #include <unity.h>
 #include <unity_config.h>
-
-static pathbot_coords_t const COORDS_ON_ROUTE = {
-    .coords  = {0, 0, 100, 100, 0, 0},
-    .weights = PATHBOT_COORDS_WEIGHTS_6,
-    .length  = 6,
-};
-
-static pathbot_coords_t const COORDS_OFF_ROUTE = {
-    .coords  = {0, 0, 0, 0, 0, 0},
-    .weights = PATHBOT_COORDS_WEIGHTS_6,
-    .length  = 6,
-};
-
-static pathbot_coords_t const COORDS_ON_FINISH = {
-    .coords  = {5, 0, 0, 0, 0, 5},
-    .weights = PATHBOT_COORDS_WEIGHTS_6,
-    .length  = 6,
-};
 
 void
 setUp(void)
@@ -63,6 +46,32 @@ should_create_manual_motion(pathbot_mode_t      current_mode,
     // when
     pathbot_motion_t motion =
         pathbot_create_motion_manual(current_mode, commands);
+
+    // then
+    TEST_ASSERT_EQUAL(expected_direction, motion.direction);
+    TEST_ASSERT_EQUAL(expected_correction, motion.correction);
+}
+
+void
+should_create_pid_motion(pathbot_mode_t      mode,
+                         pathbot_coords_t    coords,
+                         float               kp,
+                         float               ki,
+                         float               kd,
+                         stack_t             errors,
+                         pathbot_direction_t expected_direction,
+                         int8_t              expected_correction)
+{
+    // given
+    pathbot_pid_conf_t pid = {
+        .kp       = kp,
+        .ki       = ki,
+        .kd       = kd,
+        .p_errors = &errors,
+    };
+
+    // when
+    pathbot_motion_t motion = pathbot_create_motion_pid(mode, &coords, &pid);
 
     // then
     TEST_ASSERT_EQUAL(expected_direction, motion.direction);
@@ -216,52 +225,52 @@ main(void)
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_MANUAL,
-                   COORDS_ON_ROUTE,
+                   FIXTURES_COORDS6_ON_ROUTE,
                    PATHBOT_MODE_DETECTED);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_DETECTED,
-                   COORDS_OFF_ROUTE,
+                   FIXTURES_COORDS6_OFF_ROUTE,
                    PATHBOT_MODE_MANUAL);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_FOLLOWING,
-                   COORDS_OFF_ROUTE,
+                   FIXTURES_COORDS6_OFF_ROUTE,
                    PATHBOT_MODE_RECOVERING);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_RECOVERING,
-                   COORDS_ON_ROUTE,
+                   FIXTURES_COORDS6_ON_ROUTE,
                    PATHBOT_MODE_FOLLOWING);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_FOLLOWING,
-                   COORDS_ON_FINISH,
+                   FIXTURES_COORDS6_ON_FINISH,
                    PATHBOT_MODE_MANUAL);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_RECOVERING,
-                   COORDS_ON_FINISH,
+                   FIXTURES_COORDS6_ON_FINISH,
                    PATHBOT_MODE_MANUAL);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_MANUAL,
-                   COORDS_OFF_ROUTE,
+                   FIXTURES_COORDS6_OFF_ROUTE,
                    PATHBOT_MODE_MANUAL);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_DETECTED,
-                   COORDS_ON_ROUTE,
+                   FIXTURES_COORDS6_ON_ROUTE,
                    PATHBOT_MODE_DETECTED);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_FOLLOWING,
-                   COORDS_ON_ROUTE,
+                   FIXTURES_COORDS6_ON_ROUTE,
                    PATHBOT_MODE_FOLLOWING);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_RECOVERING,
-                   COORDS_OFF_ROUTE,
+                   FIXTURES_COORDS6_OFF_ROUTE,
                    PATHBOT_MODE_RECOVERING);
 
     RUN_PARAM_TEST(should_create_manual_motion,
@@ -453,6 +462,76 @@ main(void)
     RUN_PARAM_TEST(should_create_manual_motion,
                    PATHBOT_MODE_RECOVERING,
                    PATHBOT_COMMAND_BREAK,
+                   PATHBOT_DIRECTION_NONE,
+                   0);
+
+    RUN_PARAM_TEST(should_create_pid_motion,
+                   PATHBOT_MODE_MANUAL,
+                   fixtures_coords6_of(0, 0, 100, 100, 0, 0),
+                   0.6,
+                   0,
+                   3.2,
+                   stack_of(5, 0, 0, 0, 0, 0),
+                   PATHBOT_DIRECTION_NONE,
+                   0);
+
+    RUN_PARAM_TEST(should_create_pid_motion,
+                   PATHBOT_MODE_DETECTED,
+                   fixtures_coords6_of(0, 0, 100, 100, 0, 0),
+                   0.6,
+                   0,
+                   3.2,
+                   stack_of(5, 0, 0, 0, 0, 0),
+                   PATHBOT_DIRECTION_NONE,
+                   0);
+
+    RUN_PARAM_TEST(should_create_pid_motion,
+                   PATHBOT_MODE_FOLLOWING,
+                   fixtures_coords6_of(0, 0, 100, 100, 0, 0),
+                   0.6,
+                   0,
+                   3.2,
+                   stack_of(5, 0, 0, 0, 0, 0),
+                   PATHBOT_DIRECTION_FORWARD,
+                   0);
+
+    RUN_PARAM_TEST(should_create_pid_motion,
+                   PATHBOT_MODE_FOLLOWING,
+                   fixtures_coords6_of(0, 10, 100, 90, 0, 0),
+                   0.6,
+                   0,
+                   3.2,
+                   stack_of(5, 0, 0, 0, 0, 0),
+                   PATHBOT_DIRECTION_FORWARD,
+                   -11);
+
+    RUN_PARAM_TEST(should_create_pid_motion,
+                   PATHBOT_MODE_FOLLOWING,
+                   fixtures_coords6_of(0, 20, 100, 80, 0, 0),
+                   0.6,
+                   0,
+                   3.2,
+                   stack_of(5, 0, 0, 0, 0, -7),
+                   PATHBOT_DIRECTION_FORWARD,
+                   0);
+
+    RUN_PARAM_TEST(should_create_pid_motion,
+                   PATHBOT_MODE_FOLLOWING,
+                   fixtures_coords6_of(0, 30, 100, 70, 0, 0),
+                   0.6,
+                   0,
+                   3.2,
+                   stack_of(5, 0, 0, 0, -7, -5),
+                   PATHBOT_DIRECTION_FORWARD,
+                   0);
+
+    RUN_PARAM_TEST(should_create_pid_motion,
+                   PATHBOT_MODE_FOLLOWING,
+                   FIXTURES_COORDS6_ON_FINISH,
+                   0.6,
+                   0,
+                   3.2,
+                   stack_of(5, 0, 0, 0, 0, 0),
                    PATHBOT_DIRECTION_NONE,
                    0);
 

@@ -1,5 +1,4 @@
 #include "coords.h"
-#include <stdint.h>
 
 #define COORDS_DETECTION_TRESHOLD 3
 
@@ -42,4 +41,25 @@ coords_is_on_finish(pathbot_coords_t const *p_self)
     }
 
     return b_1st_on_route && b_mid_off_route && b_last_on_route;
+}
+
+int8_t
+coords_compute_mass_center(pathbot_coords_t const *p_self)
+{
+    int16_t mass_center = 0;
+    int16_t sum         = 0;
+    int16_t weight_sum  = 0;
+
+    for (uint8_t i = 0; i < p_self->length; i++)
+    {
+        sum += p_self->coords[i];
+        weight_sum += (p_self->weights[i] * p_self->coords[i]);
+    }
+
+    if (sum != 0)
+    {
+        mass_center = weight_sum / sum;
+    }
+
+    return (uint8_t)mass_center;
 }

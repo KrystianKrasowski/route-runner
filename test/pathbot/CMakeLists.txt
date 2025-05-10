@@ -1,12 +1,13 @@
 set(TEST_SUITE
     pathbot_test.c
+    pathbot_compute_position_error_test.c
 )
 
 # extract some function here
 foreach(FILE ${TEST_SUITE})
     get_filename_component(TEST_NAME ${FILE} NAME_WE)
 
-    add_executable(${TEST_NAME} ${FILE})
+    add_executable(${TEST_NAME} fixtures.c ${FILE})
 
     target_include_directories(${TEST_NAME}
         PRIVATE
