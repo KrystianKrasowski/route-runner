@@ -3,6 +3,7 @@ add_library(pathbot STATIC
     mode.c
     coords.c
     commands.c
+    motion.c
 )
 
 target_include_directories(pathbot
