@@ -14,6 +14,17 @@ tearDown(void)
 }
 
 void
+should_keep_mode_on_null_coords(void)
+{
+    // when
+    pathbot_mode_t actual =
+        pathbot_update_mode_tracking(PATHBOT_MODE_MANUAL, NULL);
+
+    // then
+    TEST_ASSERT_EQUAL(PATHBOT_MODE_MANUAL, actual);
+}
+
+void
 should_update_tracking_mode(pathbot_mode_t   current_mode,
                             pathbot_coords_t coords,
                             pathbot_mode_t   expected)
@@ -29,6 +40,8 @@ int
 main(void)
 {
     UNITY_BEGIN();
+
+    RUN_TEST(should_keep_mode_on_null_coords);
 
     RUN_PARAM_TEST(should_update_tracking_mode,
                    PATHBOT_MODE_MANUAL,

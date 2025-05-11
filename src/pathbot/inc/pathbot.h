@@ -48,10 +48,9 @@ typedef struct
 
 typedef struct
 {
-    float    kp;
-    float    ki;
-    float    kd;
-    stack_t *p_errors;
+    float kp;
+    float ki;
+    float kd;
 } pathbot_pid_conf_t;
 
 pathbot_mode_t
@@ -59,19 +58,18 @@ pathbot_update_mode_manual(pathbot_mode_t const current_mode,
                            uint16_t const       commands);
 
 pathbot_mode_t
-pathbot_update_mode_tracking(pathbot_mode_t const    current_mode,
-                             pathbot_coords_t const *p_coords);
+pathbot_update_mode_tracking(pathbot_mode_t const           current_mode,
+                             pathbot_coords_t const * const p_coords);
 
 pathbot_motion_t
-pathbot_create_motion_manual(pathbot_mode_t const current_mode,
-                             uint16_t const       commands);
+pathbot_create_motion_manual(uint16_t const commands);
 
 int8_t
-pathbot_compute_position_error(pathbot_coords_t const *p_coords);
+pathbot_compute_position_error(pathbot_coords_t const * const p_coords);
 
 pathbot_motion_t
-pathbot_create_motion_pid(pathbot_mode_t const           current_mode,
-                          pathbot_coords_t const * const p_coords,
-                          pathbot_pid_conf_t * const     p_pid_conf);
+pathbot_create_motion_pid(int8_t const                     error,
+                          stack_t const * const            p_past_errors,
+                          pathbot_pid_conf_t const * const p_conf);
 
 #endif

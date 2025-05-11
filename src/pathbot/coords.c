@@ -44,9 +44,9 @@ coords_is_on_finish(pathbot_coords_t const *p_self)
 }
 
 int8_t
-coords_compute_mass_center(pathbot_coords_t const *p_self)
+coords_compute_mass_center(pathbot_coords_t const * const p_self)
 {
-    int16_t mass_center = 0;
+    int8_t  mass_center = 0;
     int16_t sum         = 0;
     int16_t weight_sum  = 0;
 
@@ -61,5 +61,5 @@ coords_compute_mass_center(pathbot_coords_t const *p_self)
         mass_center = weight_sum / sum;
     }
 
-    return (uint8_t)mass_center;
+    return mass_center;
 }

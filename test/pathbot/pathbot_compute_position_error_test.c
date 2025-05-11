@@ -14,6 +14,16 @@ tearDown(void)
 }
 
 void
+should_return_0_for_null_coords(void)
+{
+    // when
+    int8_t error = pathbot_compute_position_error(NULL);
+
+    // then
+    TEST_ASSERT_EQUAL(0, error);
+}
+
+void
 should_compute_position_error(pathbot_coords_t coords, int8_t expected_error)
 {
     // when
@@ -27,6 +37,8 @@ int
 main(void)
 {
     UNITY_BEGIN();
+
+    RUN_TEST(should_return_0_for_null_coords);
 
     RUN_PARAM_TEST(should_compute_position_error,
                    fixtures_coords6_of(100, 0, 0, 0, 0, 0),
