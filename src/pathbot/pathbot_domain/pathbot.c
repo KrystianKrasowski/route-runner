@@ -1,7 +1,7 @@
 #include "coords.h"
 #include "mode.h"
 #include "motion.h"
-#include <pathbot.h>
+#include <pathbot/domain.h>
 #include <stddef.h>
 #include <stdint.h>
 

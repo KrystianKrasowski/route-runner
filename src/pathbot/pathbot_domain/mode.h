@@ -1,7 +1,7 @@
 #ifndef _PATHBOT_MODE_H
 #define _PATHBOT_MODE_H
 
-#include <pathbot.h>
+#include <pathbot/domain.h>
 #include <stdbit.h>
 
 pathbot_mode_t

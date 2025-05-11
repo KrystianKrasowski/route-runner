@@ -1,7 +1,7 @@
 #ifndef _PATHBOT_COORDS_H
 #define _PATHBOT_COORDS_H
 
-#include <pathbot.h>
+#include <pathbot/domain.h>
 #include <stdbool.h>
 #include <stdint.h>
 

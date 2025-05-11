@@ -1,7 +1,7 @@
 #ifndef _PATHBOT_FIXTURES_H
 #define _PATHBOT_FIXTURES_H
 
-#include <pathbot.h>
+#include <pathbot/domain.h>
 
 extern pathbot_coords_t const FIXTURES_COORDS6_ON_ROUTE;
 extern pathbot_coords_t const FIXTURES_COORDS6_OFF_ROUTE;

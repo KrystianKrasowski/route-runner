@@ -1,7 +1,7 @@
 #ifndef _PATHBOT_MOTION_H
 #define _PATHBOT_MOTION_H
 
-#include <pathbot.h>
+#include <pathbot/domain.h>
 
 pathbot_motion_t
 motion_create_manual(uint16_t const commands);

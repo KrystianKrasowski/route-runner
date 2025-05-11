@@ -1,5 +1,5 @@
 #include "commands.h"
-#include <pathbot.h>
+#include <pathbot/domain.h>
 
 bool
 commands_has_forward(uint16_t const commands)
