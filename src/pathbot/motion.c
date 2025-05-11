@@ -41,11 +41,8 @@ motion_create_pid(int8_t const                     error,
                   pathbot_pid_conf_t const * const p_pid_conf)
 {
     int16_t errors_sum     = stack_sum(p_past_errors);
-    int16_t previous_error = 0;
+    int8_t  previous_error = stack_peek_or(p_past_errors, 0);
 
-    stack_peek(p_past_errors, &previous_error);
-
-    pathbot_direction_t direction = PATHBOT_DIRECTION_FORWARD;
     int8_t correction = p_pid_conf->kp * error + p_pid_conf->ki * errors_sum +
                         p_pid_conf->kd * (error - previous_error);
 
@@ -60,7 +57,7 @@ motion_create_pid(int8_t const                     error,
     }
 
     pathbot_motion_t motion = {
-        .direction  = direction,
+        .direction  = PATHBOT_DIRECTION_FORWARD,
         .correction = correction,
     };
 

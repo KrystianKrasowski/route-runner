@@ -62,6 +62,19 @@ stack_peek(stack_t const *p_self, int16_t *p_element)
     return STACK_SUCCESS;
 }
 
+int16_t
+stack_peek_or(stack_t const *p_self, int16_t default_value)
+{
+    if (stack_is_empty(p_self))
+    {
+        return default_value;
+    }
+    else
+    {
+        return p_self->elements[p_self->top];
+    }
+}
+
 stack_result_t
 // cppcheck-suppress unusedFunction
 stack_push(stack_t *p_self, int16_t element)
