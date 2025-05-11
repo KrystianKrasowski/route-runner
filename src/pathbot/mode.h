@@ -4,19 +4,11 @@
 #include <pathbot.h>
 #include <stdbit.h>
 
-bool
-mode_is_tracking(pathbot_mode_t const mode);
+pathbot_mode_t
+mode_update_manual(pathbot_mode_t const current_mode, uint16_t const commands);
 
-bool
-mode_is_detected(pathbot_mode_t const mode);
-
-bool
-mode_is_manual(pathbot_mode_t const mode);
-
-bool
-mode_is_following(pathbot_mode_t const mode);
-
-bool
-mode_is_recovering(pathbot_mode_t const mode);
+pathbot_mode_t
+mode_update_tracking(pathbot_mode_t const           current_mode,
+                     pathbot_coords_t const * const p_coords);
 
 #endif
