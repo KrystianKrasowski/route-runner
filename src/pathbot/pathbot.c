@@ -13,8 +13,8 @@ pathbot_update_mode_manual(pathbot_mode_t const current_mode,
 }
 
 pathbot_mode_t
-pathbot_update_mode_tracking(pathbot_mode_t const           current_mode,
-                             pathbot_coords_t const * const p_coords)
+pathbot_update_mode_tracking(pathbot_mode_t const     current_mode,
+                             pathbot_coords_t * const p_coords)
 {
     pathbot_mode_t mode = current_mode;
 
@@ -33,7 +33,7 @@ pathbot_create_motion_manual(uint16_t const commands)
 }
 
 int8_t
-pathbot_compute_position_error(pathbot_coords_t const * const p_coords)
+pathbot_compute_position_error(pathbot_coords_t * const p_coords)
 {
     int8_t error = 0;
 

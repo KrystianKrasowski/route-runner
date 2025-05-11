@@ -36,8 +36,8 @@ mode_update_manual(pathbot_mode_t const current_mode, uint16_t const commands)
 }
 
 pathbot_mode_t
-mode_update_tracking(pathbot_mode_t const           current_mode,
-                     pathbot_coords_t const * const p_coords)
+mode_update_tracking(pathbot_mode_t const     current_mode,
+                     pathbot_coords_t * const p_coords)
 {
     pathbot_mode_t mode = current_mode;
 

@@ -3,7 +3,7 @@
 #define COORDS_DETECTION_TRESHOLD 3
 
 bool
-coords_is_on_route(pathbot_coords_t const *p_self)
+coords_is_on_route(pathbot_coords_t * const p_self)
 {
     for (uint8_t i = 0; i < p_self->length; i++)
     {
@@ -17,7 +17,7 @@ coords_is_on_route(pathbot_coords_t const *p_self)
 }
 
 bool
-coords_is_on_finish(pathbot_coords_t const *p_self)
+coords_is_on_finish(pathbot_coords_t * const p_self)
 {
     uint8_t last_ix = p_self->length - 1;
     uint8_t mid_ix  = p_self->length / 2;
@@ -44,7 +44,7 @@ coords_is_on_finish(pathbot_coords_t const *p_self)
 }
 
 int8_t
-coords_compute_mass_center(pathbot_coords_t const * const p_self)
+coords_compute_mass_center(pathbot_coords_t * const p_self)
 {
     int8_t  mass_center = 0;
     int16_t sum         = 0;
