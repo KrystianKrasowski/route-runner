@@ -35,8 +35,8 @@ typedef enum
 
 typedef struct
 {
-    pathbot_direction_t const direction;
-    int8_t const              correction;
+    pathbot_direction_t direction;
+    int8_t              correction;
 } pathbot_motion_t;
 
 typedef struct
@@ -53,16 +53,20 @@ typedef struct
     float kd;
 } pathbot_pid_conf_t;
 
-pathbot_mode_t
-pathbot_update_mode_manual(pathbot_mode_t const current_mode,
-                           uint16_t const       commands);
+bool
+pathbot_mode_is_tracking(pathbot_mode_t const mode);
 
-pathbot_mode_t
-pathbot_update_mode_tracking(pathbot_mode_t const     current_mode,
-                             pathbot_coords_t * const p_coords);
+bool
+pathbot_update_mode_manual(uint16_t const         commands,
+                           pathbot_mode_t * const p_mode);
 
-pathbot_motion_t
-pathbot_create_motion_manual(uint16_t const commands);
+bool
+pathbot_update_mode_tracking(pathbot_coords_t * const p_coords,
+                             pathbot_mode_t * const   p_mode);
+
+bool
+pathbot_update_motion_manual(uint16_t const           commands,
+                             pathbot_motion_t * const p_motion);
 
 int8_t
 pathbot_compute_position_error(pathbot_coords_t * const p_coords);

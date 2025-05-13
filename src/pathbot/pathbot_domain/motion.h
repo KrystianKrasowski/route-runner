@@ -3,6 +3,10 @@
 
 #include <pathbot/domain.h>
 
+bool
+motion_equals(pathbot_motion_t const * const p_self,
+              pathbot_motion_t const * const p_other);
+
 pathbot_motion_t
 motion_create_manual(uint16_t const commands);
 

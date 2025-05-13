@@ -5,31 +5,45 @@
 #include <stddef.h>
 #include <stdint.h>
 
-pathbot_mode_t
-pathbot_update_mode_manual(pathbot_mode_t const current_mode,
-                           uint16_t const       commands)
+bool
+pathbot_mode_is_tracking(pathbot_mode_t const mode)
 {
-    return mode_update_manual(current_mode, commands);
+    return mode_is_tracking(mode);
 }
 
-pathbot_mode_t
-pathbot_update_mode_tracking(pathbot_mode_t const     current_mode,
-                             pathbot_coords_t * const p_coords)
+bool
+pathbot_update_mode_manual(uint16_t const         commands,
+                           pathbot_mode_t * const p_mode)
 {
-    pathbot_mode_t mode = current_mode;
-
-    if (NULL != p_coords)
+    if (NULL != p_mode)
     {
-        mode = mode_update_tracking(current_mode, p_coords);
+        return mode_update_manual(commands, p_mode);
     }
 
-    return mode;
+    return false;
 }
 
-pathbot_motion_t
-pathbot_create_motion_manual(uint16_t const commands)
+bool
+pathbot_update_mode_tracking(pathbot_coords_t * const p_coords,
+                             pathbot_mode_t * const   p_mode)
 {
-    return motion_create_manual(commands);
+    if (NULL != p_coords && NULL != p_mode)
+    {
+        return mode_update_tracking(p_coords, p_mode);
+    }
+
+    return false;
+}
+
+bool
+pathbot_update_motion_manual(uint16_t const           commands,
+                             pathbot_motion_t * const p_motion)
+{
+    pathbot_motion_t current_motion = *p_motion;
+
+    *p_motion = motion_create_manual(commands);
+
+    return !motion_equals(p_motion, &current_motion);
 }
 
 int8_t

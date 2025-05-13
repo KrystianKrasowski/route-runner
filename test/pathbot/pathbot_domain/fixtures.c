@@ -18,6 +18,11 @@ pathbot_coords_t const FIXTURES_COORDS6_ON_FINISH = {
     .length  = 6,
 };
 
+pathbot_motion_t const FIXTURES_MOTION_NONE = {
+    .direction  = PATHBOT_DIRECTION_NONE,
+    .correction = 0,
+};
+
 pathbot_coords_t
 fixtures_coords6_of(
     uint8_t l3, uint8_t l2, uint8_t l1, uint8_t r1, uint8_t r2, uint8_t r3)
@@ -29,4 +34,26 @@ fixtures_coords6_of(
     };
 
     return coords;
+}
+
+pathbot_motion_t
+fixtures_motion_forward(int8_t correction)
+{
+    pathbot_motion_t motion = {
+        .direction  = PATHBOT_DIRECTION_FORWARD,
+        .correction = correction,
+    };
+
+    return motion;
+}
+
+pathbot_motion_t
+fixtures_motion_backward(int8_t correction)
+{
+    pathbot_motion_t motion = {
+        .direction  = PATHBOT_DIRECTION_BACKWARD,
+        .correction = correction,
+    };
+
+    return motion;
 }

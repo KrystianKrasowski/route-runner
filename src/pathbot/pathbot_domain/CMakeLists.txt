@@ -6,6 +6,8 @@ add_library(pathbot_domain STATIC
     motion.c
 )
 
+set_property(TARGET pathbot_domain PROPERTY C_STANDARD 11)
+
 target_include_directories(pathbot_domain
     PUBLIC
         "./inc"

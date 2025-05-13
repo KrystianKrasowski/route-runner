@@ -1,6 +1,14 @@
 #include "commands.h"
 #include "motion.h"
 
+bool
+motion_equals(pathbot_motion_t const * const p_self,
+              pathbot_motion_t const * const p_other)
+{
+    return p_self->correction == p_other->correction &&
+           p_self->direction == p_other->direction;
+}
+
 pathbot_motion_t
 motion_create_manual(uint16_t const commands)
 {
