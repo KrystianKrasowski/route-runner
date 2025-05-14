@@ -33,6 +33,20 @@ should_do_nothing_on_same_command(void)
 }
 
 void
+should_store_new_commands(uint16_t current_commands, uint16_t new_commands)
+{
+    // given
+    p_store->commands = current_commands;
+
+    // when
+    int result = pathbot_handle_commands(new_commands);
+
+    // then
+    TEST_ASSERT_EQUAL(PATHBOT_RESULT_OK, result);
+    TEST_ASSERT_EQUAL(new_commands, p_store->commands);
+}
+
+void
 should_apply_manual_motion(pathbot_mode_t      current_mode,
                            uint16_t            current_commands,
                            uint16_t            commands,
@@ -56,6 +70,68 @@ main(void)
     UNITY_BEGIN();
 
     RUN_TEST(should_do_nothing_on_same_command);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_NONE,
+                   PATHBOT_COMMAND_FORWARD);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_NONE,
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_NONE,
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_NONE,
+                   PATHBOT_COMMAND_BACKWARD);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_NONE,
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_NONE,
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT);
+
+    RUN_PARAM_TEST(
+        should_store_new_commands, PATHBOT_COMMAND_NONE, PATHBOT_COMMAND_BREAK);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_NONE,
+                   PATHBOT_COMMAND_FOLLOW);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_FORWARD,
+                   PATHBOT_COMMAND_NONE);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT,
+                   PATHBOT_COMMAND_NONE);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT,
+                   PATHBOT_COMMAND_NONE);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_BACKWARD,
+                   PATHBOT_COMMAND_NONE);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT,
+                   PATHBOT_COMMAND_NONE);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT,
+                   PATHBOT_COMMAND_NONE);
+
+    RUN_PARAM_TEST(
+        should_store_new_commands, PATHBOT_COMMAND_BREAK, PATHBOT_COMMAND_NONE);
+
+    RUN_PARAM_TEST(should_store_new_commands,
+                   PATHBOT_COMMAND_FOLLOW,
+                   PATHBOT_COMMAND_NONE);
 
     RUN_PARAM_TEST(should_apply_manual_motion,
                    PATHBOT_MODE_MANUAL,

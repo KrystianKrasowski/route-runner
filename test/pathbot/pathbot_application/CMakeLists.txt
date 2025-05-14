@@ -16,6 +16,7 @@ foreach(FILE ${TEST_SUITE})
     target_link_libraries(${TEST_NAME}
         PRIVATE
             pathbot_application
+            pathbot_port_mock
             utils
             unity
     )   
