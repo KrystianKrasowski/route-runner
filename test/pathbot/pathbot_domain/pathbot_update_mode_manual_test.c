@@ -1,4 +1,3 @@
-#include "fixtures.h"
 #include <pathbot/domain.h>
 #include <unity.h>
 #include <unity_config.h>

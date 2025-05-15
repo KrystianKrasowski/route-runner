@@ -14,6 +14,6 @@ target_include_directories(pathbot_domain
 )
 
 target_link_libraries(pathbot_domain
-    PRIVATE
+    PUBLIC
         utils
 )

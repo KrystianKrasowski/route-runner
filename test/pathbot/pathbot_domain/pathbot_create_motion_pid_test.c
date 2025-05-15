@@ -1,5 +1,5 @@
-#include "fixtures.h"
 #include <pathbot/domain.h>
+#include <pathbot/fixtures.h>
 #include <unity.h>
 #include <unity_config.h>
 

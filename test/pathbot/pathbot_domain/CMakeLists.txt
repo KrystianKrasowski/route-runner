@@ -10,7 +10,7 @@ set(TEST_SUITE
 foreach(FILE ${TEST_SUITE})
     get_filename_component(TEST_NAME ${FILE} NAME_WE)
 
-    add_executable(${TEST_NAME} fixtures.c ${FILE})
+    add_executable(${TEST_NAME} ${FILE})
 
     target_include_directories(${TEST_NAME}
         PRIVATE
@@ -20,6 +20,7 @@ foreach(FILE ${TEST_SUITE})
     target_link_libraries(${TEST_NAME}
         PRIVATE
             pathbot_domain
+            pathbot_fixtures
             utils
             unity
     )   

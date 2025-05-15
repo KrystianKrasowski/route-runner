@@ -1,4 +1,4 @@
-#include "fixtures.h"
+#include <pathbot/fixtures.h>
 
 pathbot_coords_t const FIXTURES_COORDS6_ON_ROUTE = {
     .coords  = {0, 0, 100, 100, 0, 0},

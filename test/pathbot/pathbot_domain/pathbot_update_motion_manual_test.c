@@ -1,5 +1,5 @@
-#include "fixtures.h"
 #include <pathbot/domain.h>
+#include <pathbot/fixtures.h>
 #include <unity.h>
 #include <unity_config.h>
 
@@ -176,6 +176,30 @@ main(void)
                    PATHBOT_COMMAND_NONE,
                    FIXTURES_MOTION_NONE,
                    true);
+
+    RUN_PARAM_TEST(should_update_manual_motion,
+                   fixtures_motion_forward(0),
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_FOLLOW,
+                   fixtures_motion_forward(0),
+                   false);
+
+    RUN_PARAM_TEST(should_update_manual_motion,
+                   fixtures_motion_backward(0),
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_FOLLOW,
+                   fixtures_motion_backward(0),
+                   false);
+
+    RUN_PARAM_TEST(should_update_manual_motion,
+                   fixtures_motion_forward(0),
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_BREAK,
+                   fixtures_motion_forward(0),
+                   false);
+
+    RUN_PARAM_TEST(should_update_manual_motion,
+                   fixtures_motion_backward(0),
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_BREAK,
+                   fixtures_motion_backward(0),
+                   false);
 
     return UNITY_END();
 }

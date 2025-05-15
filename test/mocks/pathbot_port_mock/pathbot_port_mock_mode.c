@@ -16,6 +16,13 @@ pathbot_port_mode_changed(pathbot_mode_t const mode)
     mock.changed_mode = mode;
 }
 
+void
+pathbot_port_mock_mode_reset(void)
+{
+    mock.changed_mode  = PATHBOT_MODE_MANUAL;
+    mock.changed_calls = 0;
+}
+
 int
 pathbot_port_mock_mode_verify_changed_calls(void)
 {
