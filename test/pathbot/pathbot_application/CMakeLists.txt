@@ -1,5 +1,5 @@
 set(TEST_SUITE
-    handle_commands_test.c
+    pathbot_handle_commands_test.c
 )
 
 # extract some function here
