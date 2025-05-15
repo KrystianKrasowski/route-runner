@@ -1,6 +1,6 @@
+#include "fixtures.h"
 #include <pathbot/api.h>
 #include <pathbot/domain.h>
-#include <pathbot/fixtures.h>
 #include <pathbot/port_mock_mode.h>
 #include <pathbot/port_mock_motion.h>
 #include <pathbot/store.h>

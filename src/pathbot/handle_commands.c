@@ -1,3 +1,5 @@
+#include "mode.h"
+#include "motion.h"
 #include <pathbot/api.h>
 #include <pathbot/port.h>
 #include <pathbot/store.h>
@@ -30,7 +32,7 @@ pathbot_handle_commands(uint16_t const commands)
 static inline void
 handle_mode_transition(pathbot_store_t * const p_store)
 {
-    if (pathbot_update_mode_manual(p_store->commands, &p_store->mode))
+    if (mode_update_manual(p_store->commands, &p_store->mode))
     {
         pathbot_port_mode_changed(p_store->mode);
     }
@@ -39,8 +41,8 @@ handle_mode_transition(pathbot_store_t * const p_store)
 static inline void
 handle_motion_apply(pathbot_store_t * const p_store)
 {
-    if (!pathbot_mode_is_tracking(p_store->mode) &&
-        pathbot_update_motion_manual(p_store->commands, &p_store->motion))
+    if (!mode_is_tracking(p_store->mode) &&
+        motion_update_manual(p_store->commands, &p_store->motion))
     {
         pathbot_port_motion_apply(&p_store->motion);
     }

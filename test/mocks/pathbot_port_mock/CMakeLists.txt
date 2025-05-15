@@ -10,6 +10,6 @@ target_include_directories(pathbot_port_mock
 
 target_link_libraries(pathbot_port_mock
     PRIVATE
-        pathbot_application
+        pathbot
         utils
 )

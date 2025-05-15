@@ -1,2 +1,20 @@
-add_subdirectory(pathbot_application)
-add_subdirectory(pathbot_domain)
+add_library(pathbot STATIC
+    handle_commands.c
+    mode.c
+    motion.c
+    commands.c
+    coords.c
+    store.c
+)
+
+set_property(TARGET pathbot PROPERTY C_STANDARD 11)
+
+target_include_directories(pathbot
+    PUBLIC
+        "./inc"
+)
+
+target_link_libraries(pathbot
+    PRIVATE
+        utils
+)
