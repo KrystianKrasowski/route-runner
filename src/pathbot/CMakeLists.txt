@@ -1,6 +1,7 @@
 add_library(pathbot STATIC
     handle_commands.c
     handle_coords.c
+    handle_route_guard_timeout.c
     mode.c
     motion.c
     commands.c

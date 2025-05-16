@@ -1,6 +1,7 @@
 set(TEST_SUITE
     pathbot_handle_commands_test.c
     pathbot_handle_coords_test.c
+    pathbot_handle_route_guard_timeout_test.c
     pathbot_position_error_test.c
 )
 

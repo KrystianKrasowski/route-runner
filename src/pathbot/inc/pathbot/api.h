@@ -16,4 +16,7 @@ pathbot_handle_commands(uint16_t const commands);
 int
 pathbot_handle_coords(pathbot_coords_t const coords);
 
+int
+pathbot_handle_route_guard_timeout(void);
+
 #endif
