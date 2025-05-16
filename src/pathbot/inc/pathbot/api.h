@@ -11,6 +11,9 @@ typedef enum
 } pathbot_result_t;
 
 int
-pathbot_handle_commands(uint16_t commands);
+pathbot_handle_commands(uint16_t const commands);
+
+int
+pathbot_handle_coords(pathbot_coords_t const coords);
 
 #endif

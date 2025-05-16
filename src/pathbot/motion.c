@@ -46,8 +46,8 @@ motion_update_pid(int8_t const                     error,
     int16_t errors_sum     = stack_sum(p_past_errors);
     int8_t  previous_error = stack_peek_or(p_past_errors, 0);
 
-    int8_t correction = p_pid->kp * error + p_pid->ki * errors_sum +
-                        p_pid->kd * (error - previous_error);
+    int16_t correction = p_pid->kp * error + p_pid->ki * errors_sum +
+                         p_pid->kd * (error - previous_error);
 
     if (correction > 100)
     {
@@ -60,9 +60,16 @@ motion_update_pid(int8_t const                     error,
     }
 
     p_motion->direction  = PATHBOT_DIRECTION_FORWARD;
-    p_motion->correction = correction;
+    p_motion->correction = (uint8_t)correction;
 
     return !motion_equals(p_motion, &current);
+}
+
+void
+motion_stop(pathbot_motion_t * const p_motion)
+{
+    p_motion->correction = 0;
+    p_motion->direction  = PATHBOT_DIRECTION_NONE;
 }
 
 bool

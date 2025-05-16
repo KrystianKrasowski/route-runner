@@ -13,6 +13,9 @@ motion_update_pid(int8_t const                     error,
                   pathbot_pid_conf_t const * const p_pid,
                   pathbot_motion_t * const         p_motion);
 
+void
+motion_stop(pathbot_motion_t * const p_motion);
+
 bool
 motion_equals(pathbot_motion_t const * const p_self,
               pathbot_motion_t const * const p_other);

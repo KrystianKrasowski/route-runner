@@ -41,9 +41,9 @@ typedef struct
 
 typedef struct
 {
-    uint8_t const coords[PATHBOT_MAX_COORDS_LENGTH];
-    int8_t const  weights[PATHBOT_MAX_COORDS_LENGTH];
-    uint8_t const length;
+    uint8_t coords[PATHBOT_MAX_COORDS_LENGTH];
+    int8_t  weights[PATHBOT_MAX_COORDS_LENGTH];
+    uint8_t length;
 } pathbot_coords_t;
 
 typedef struct
@@ -57,7 +57,8 @@ typedef struct
 // pathbot_mode_is_tracking(pathbot_mode_t const mode);
 
 // bool
-// pathbot_update_mode_manual(uint16_t const         commands,
+// p
+// athbot_update_mode_manual(uint16_t const         commands,
 // pathbot_mode_t * const p_mode);
 
 // bool
