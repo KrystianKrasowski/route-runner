@@ -16,8 +16,8 @@ pathbot_handle_commands(uint16_t const commands)
 {
     pathbot_store_t * const p_store = pathbot_store_get();
 
-    handle_mode_transition(commands, p_store);
     handle_motion_apply(commands, p_store);
+    handle_mode_transition(commands, p_store);
 
     return PATHBOT_RESULT_OK;
 }
