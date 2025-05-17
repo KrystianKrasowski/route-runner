@@ -53,28 +53,4 @@ typedef struct
     float kd;
 } pathbot_pid_conf_t;
 
-// bool
-// pathbot_mode_is_tracking(pathbot_mode_t const mode);
-
-// bool
-// p
-// athbot_update_mode_manual(uint16_t const         commands,
-// pathbot_mode_t * const p_mode);
-
-// bool
-// pathbot_update_mode_tracking(pathbot_coords_t * const p_coords,
-// pathbot_mode_t * const   p_mode);
-
-// bool
-// pathbot_update_motion_manual(uint16_t const           commands,
-// pathbot_motion_t * const p_motion);
-
-// int8_t
-// pathbot_compute_position_error(pathbot_coords_t * const p_coords);
-
-// pathbot_motion_t
-// pathbot_create_motion_pid(int8_t const                     error,
-// stack_t const * const            p_past_errors,
-// pathbot_pid_conf_t const * const p_conf);
-
 #endif
