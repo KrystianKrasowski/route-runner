@@ -18,6 +18,7 @@ stack(uint8_t size)
 }
 
 stack_t
+// cppcheck-suppress unusedFunction
 stack_of(uint8_t size, ...)
 {
     stack_t st = stack(size);
@@ -76,7 +77,7 @@ stack_peek_or(stack_t const *p_self, int16_t default_value)
 }
 
 stack_result_t
-// cppcheck-suppress unusedFunction
+// cppcheck-suppress staticFunction
 stack_push(stack_t *p_self, int16_t element)
 {
     if (p_self->top >= p_self->size - 1)

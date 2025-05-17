@@ -90,6 +90,7 @@ motion_stop(pathbot_motion_t * const p_motion)
 }
 
 bool
+// cppcheck-suppress staticFunction
 motion_equals(pathbot_motion_t const * const p_self,
               pathbot_motion_t const * const p_other)
 {
