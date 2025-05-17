@@ -1,7 +1,7 @@
 #include <adapters/coords_qtrhd06a.h>
 #include <devices/qtrhd06a.h>
 #include <devices/qtrhd06a_mock.h>
-#include <linebot/coords.h>
+#include <pathbot/domain.h>
 #include <stdint.h>
 #include <unity.h>
 #include <unity_config.h>
@@ -23,7 +23,7 @@ void
 should_return_not_ready(bool b_ready, int expected_result)
 {
     // given
-    linebot_coords_t h_coords;
+    pathbot_coords_t h_coords;
     device_qtrhd06a_mock_set_ready(DEVICE_QTRHD06A_1, b_ready);
 
     // when
@@ -31,9 +31,6 @@ should_return_not_ready(bool b_ready, int expected_result)
 
     // then
     TEST_ASSERT_EQUAL(expected_result, result);
-
-    // finally
-    linebot_coords_release(h_coords);
 }
 
 /*

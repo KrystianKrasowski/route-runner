@@ -1,7 +1,7 @@
 #include <devices/l293.h>
 #include <errno.h>
-#include <linebot/motion.h>
-#include <linebot/port.h>
+#include <pathbot/api.h>
+#include <pathbot/port.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <utils/result.h>
@@ -12,30 +12,30 @@
 #define DUTY_CYCLE(pid) (abs(-2 * abs(pid) + 100))
 
 static inline uint8_t
-duty_cycle_left_compute(linebot_motion_t const *p_motion);
+duty_cycle_left_compute(pathbot_motion_t const *p_motion);
 
 static inline uint8_t
-duty_cycle_right_compute(linebot_motion_t const *p_motion);
+duty_cycle_right_compute(pathbot_motion_t const *p_motion);
 
-static inline linebot_direction_t
-direction_left_compute(linebot_motion_t const *p_motion);
+static inline pathbot_direction_t
+direction_left_compute(pathbot_motion_t const *p_motion);
 
-static inline linebot_direction_t
-direction_right_compute(linebot_motion_t const *p_motion);
+static inline pathbot_direction_t
+direction_right_compute(pathbot_motion_t const *p_motion);
 
 static void
-rotation_apply(device_l293_t h_motor, linebot_direction_t direction);
+rotation_apply(device_l293_t h_motor, pathbot_direction_t direction);
 
 void
-linebot_port_motion_apply(linebot_motion_t const *p_motion)
+pathbot_port_motion_apply(pathbot_motion_t const *p_motion)
 {
     device_l293_disable(MOTOR_LEFT);
     device_l293_disable(MOTOR_RIGHT);
 
     uint8_t             duty_cycle_left  = duty_cycle_left_compute(p_motion);
     uint8_t             duty_cycle_right = duty_cycle_right_compute(p_motion);
-    linebot_direction_t dir_left         = direction_left_compute(p_motion);
-    linebot_direction_t dir_right        = direction_right_compute(p_motion);
+    pathbot_direction_t dir_left         = direction_left_compute(p_motion);
+    pathbot_direction_t dir_right        = direction_right_compute(p_motion);
 
     rotation_apply(MOTOR_LEFT, dir_left);
     rotation_apply(MOTOR_RIGHT, dir_right);
@@ -45,9 +45,9 @@ linebot_port_motion_apply(linebot_motion_t const *p_motion)
 }
 
 static inline uint8_t
-duty_cycle_left_compute(linebot_motion_t const *p_motion)
+duty_cycle_left_compute(pathbot_motion_t const *p_motion)
 {
-    if (LINEBOT_DIRECTION_NONE == p_motion->direction)
+    if (PATHBOT_DIRECTION_NONE == p_motion->direction)
     {
         return 0;
     }
@@ -62,9 +62,9 @@ duty_cycle_left_compute(linebot_motion_t const *p_motion)
 }
 
 static inline uint8_t
-duty_cycle_right_compute(linebot_motion_t const *p_motion)
+duty_cycle_right_compute(pathbot_motion_t const *p_motion)
 {
-    if (LINEBOT_DIRECTION_NONE == p_motion->direction)
+    if (PATHBOT_DIRECTION_NONE == p_motion->direction)
     {
         return 0;
     }
@@ -78,16 +78,16 @@ duty_cycle_right_compute(linebot_motion_t const *p_motion)
     }
 }
 
-static inline linebot_direction_t
-direction_left_compute(linebot_motion_t const *p_motion)
+static inline pathbot_direction_t
+direction_left_compute(pathbot_motion_t const *p_motion)
 {
     if (p_motion->correction < -50)
     {
-        return linebot_motion_invert_direction(p_motion);
+        return pathbot_motion_invert_direction(p_motion);
     }
     else if (-50 == p_motion->correction)
     {
-        return LINEBOT_DIRECTION_NONE;
+        return PATHBOT_DIRECTION_NONE;
     }
     else
     {
@@ -95,16 +95,16 @@ direction_left_compute(linebot_motion_t const *p_motion)
     }
 }
 
-static inline linebot_direction_t
-direction_right_compute(linebot_motion_t const *p_motion)
+static inline pathbot_direction_t
+direction_right_compute(pathbot_motion_t const *p_motion)
 {
     if (p_motion->correction > 50)
     {
-        return linebot_motion_invert_direction(p_motion);
+        return pathbot_motion_invert_direction(p_motion);
     }
     else if (50 == p_motion->correction)
     {
-        return LINEBOT_DIRECTION_NONE;
+        return PATHBOT_DIRECTION_NONE;
     }
     else
     {
@@ -113,21 +113,21 @@ direction_right_compute(linebot_motion_t const *p_motion)
 }
 
 static void
-rotation_apply(device_l293_t h_motor, linebot_direction_t direction)
+rotation_apply(device_l293_t h_motor, pathbot_direction_t direction)
 {
     // ommit result value - adapter object dependencies should be already
     // validated
     switch (direction)
     {
-        case LINEBOT_DIRECTION_FORWARD:
+        case PATHBOT_DIRECTION_FORWARD:
             (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_RIGHT);
             break;
 
-        case LINEBOT_DIRECTION_BACKWARD:
+        case PATHBOT_DIRECTION_BACKWARD:
             (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_LEFT);
             break;
 
-        case LINEBOT_DIRECTION_NONE:
+        case PATHBOT_DIRECTION_NONE:
         default:
             (void)device_l293_rotate(h_motor, DEVICE_L293_ROTATION_STOP);
     }

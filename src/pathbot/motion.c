@@ -1,6 +1,23 @@
 #include "commands.h"
 #include "motion.h"
 
+pathbot_direction_t
+pathbot_motion_invert_direction(pathbot_motion_t const * const p_motion)
+{
+    switch (p_motion->direction)
+    {
+        case PATHBOT_DIRECTION_FORWARD:
+            return PATHBOT_DIRECTION_BACKWARD;
+
+        case PATHBOT_DIRECTION_BACKWARD:
+            return PATHBOT_DIRECTION_FORWARD;
+
+        case PATHBOT_DIRECTION_NONE:
+        default:
+            return PATHBOT_DIRECTION_NONE;
+    }
+}
+
 bool
 motion_update_manual(uint16_t const commands, pathbot_motion_t * const p_motion)
 {

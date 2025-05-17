@@ -17,7 +17,7 @@ foreach(FILE ${TEST_SUITE})
 
     target_link_libraries(${TEST_NAME}
         PRIVATE
-            linebot
+            pathbot
             devices_mock
             adapters
             unity

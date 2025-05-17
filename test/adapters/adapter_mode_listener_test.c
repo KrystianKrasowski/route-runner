@@ -1,7 +1,7 @@
 #include <devices/blink_mock.h>
 #include <devices/timeout_guard_mock.h>
-#include <linebot/mode.h>
-#include <linebot/port.h>
+#include <pathbot/domain.h>
+#include <pathbot/port.h>
 #include <unity.h>
 #include <unity_config.h>
 #include <utils/result.h>
@@ -21,10 +21,10 @@ tearDown(void)
 }
 
 void
-should_indicate_mode(linebot_mode_t mode, uint8_t expected_toggles_num)
+should_indicate_mode(pathbot_mode_t mode, uint8_t expected_toggles_num)
 {
     // when
-    linebot_port_mode_changed(mode);
+    pathbot_port_mode_changed(mode);
     uint8_t actual_toggles_num =
         device_blink_mock_verify_toggles_num(DEVICE_BLINK_1);
 
@@ -33,10 +33,10 @@ should_indicate_mode(linebot_mode_t mode, uint8_t expected_toggles_num)
 }
 
 void
-should_start_guard(linebot_mode_t mode)
+should_start_guard(pathbot_mode_t mode)
 {
     // when
-    linebot_port_mode_changed(mode);
+    pathbot_port_mode_changed(mode);
 
     // then
     TEST_ASSERT_TRUE(
@@ -44,10 +44,10 @@ should_start_guard(linebot_mode_t mode)
 }
 
 void
-should_stop_guard(linebot_mode_t mode)
+should_stop_guard(pathbot_mode_t mode)
 {
     // when
-    linebot_port_mode_changed(mode);
+    pathbot_port_mode_changed(mode);
 
     // then
     TEST_ASSERT_TRUE(
@@ -59,16 +59,16 @@ main(void)
 {
     UNITY_BEGIN();
 
-    RUN_PARAM_TEST(should_indicate_mode, LINEBOT_MODE_MANUAL, 2);
-    RUN_PARAM_TEST(should_indicate_mode, LINEBOT_MODE_DETECTED, 4);
-    RUN_PARAM_TEST(should_indicate_mode, LINEBOT_MODE_FOLLOWING, 8);
-    RUN_PARAM_TEST(should_indicate_mode, LINEBOT_MODE_RECOVERING, 8);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_MANUAL, 2);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_DETECTED, 4);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_FOLLOWING, 8);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_RECOVERING, 8);
 
-    RUN_PARAM_TEST(should_start_guard, LINEBOT_MODE_RECOVERING);
+    RUN_PARAM_TEST(should_start_guard, PATHBOT_MODE_RECOVERING);
 
-    RUN_PARAM_TEST(should_stop_guard, LINEBOT_MODE_MANUAL);
-    RUN_PARAM_TEST(should_stop_guard, LINEBOT_MODE_DETECTED);
-    RUN_PARAM_TEST(should_stop_guard, LINEBOT_MODE_FOLLOWING);
+    RUN_PARAM_TEST(should_stop_guard, PATHBOT_MODE_MANUAL);
+    RUN_PARAM_TEST(should_stop_guard, PATHBOT_MODE_DETECTED);
+    RUN_PARAM_TEST(should_stop_guard, PATHBOT_MODE_FOLLOWING);
 
     return UNITY_END();
 }

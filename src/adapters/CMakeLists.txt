@@ -15,7 +15,7 @@ target_include_directories(adapters
 
 target_link_libraries(adapters
     PRIVATE
-        linebot
+        pathbot
         devices
         utils
 )

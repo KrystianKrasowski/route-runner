@@ -7,8 +7,8 @@ static inline void
 normalize(uint8_t *p_value);
 
 int
-adapter_coords_qtrhd06a_read(device_qtrhd06a_t const h_device,
-                             linebot_coords_t       *ph_coords)
+adapter_coords_qtrhd06a_read(device_qtrhd06a_t const  h_device,
+                             pathbot_coords_t * const p_coords)
 {
     uint8_t coords_size = DEVICE_QTRHD06A_VALUES_LENGTH;
     uint8_t values[coords_size];
@@ -21,11 +21,7 @@ adapter_coords_qtrhd06a_read(device_qtrhd06a_t const h_device,
     for (uint8_t i = 0; i < coords_size; i++)
     {
         normalize(&values[i]);
-    }
-
-    if (linebot_coords_acquire(values, coords_size, ph_coords))
-    {
-        return -ENOMEM;
+        p_coords->coords[i] = values[i];
     }
 
     return RESULT_OK;

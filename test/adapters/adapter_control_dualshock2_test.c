@@ -1,7 +1,7 @@
 #include <adapters/control_dualshock2.h>
 #include <devices/dualshock2.h>
 #include <devices/dualshock2_mock.h>
-#include <linebot/command.h>
+#include <pathbot/domain.h>
 #include <stdint.h>
 #include <unity.h>
 #include <unity_config.h>
@@ -38,31 +38,31 @@ main(void)
 {
     UNITY_BEGIN();
 
-    RUN_PARAM_TEST(should_read_commands, DS2_NONE, LINEBOT_COMMAND_NONE);
-    RUN_PARAM_TEST(should_read_commands, DS2_R2, LINEBOT_COMMAND_FORWARD);
-    RUN_PARAM_TEST(should_read_commands, DS2_L2, LINEBOT_COMMAND_BACKWARD);
-    RUN_PARAM_TEST(should_read_commands, DS2_RIGHT, LINEBOT_COMMAND_RIGHT);
-    RUN_PARAM_TEST(should_read_commands, DS2_LEFT, LINEBOT_COMMAND_LEFT);
+    RUN_PARAM_TEST(should_read_commands, DS2_NONE, PATHBOT_COMMAND_NONE);
+    RUN_PARAM_TEST(should_read_commands, DS2_R2, PATHBOT_COMMAND_FORWARD);
+    RUN_PARAM_TEST(should_read_commands, DS2_L2, PATHBOT_COMMAND_BACKWARD);
+    RUN_PARAM_TEST(should_read_commands, DS2_RIGHT, PATHBOT_COMMAND_RIGHT);
+    RUN_PARAM_TEST(should_read_commands, DS2_LEFT, PATHBOT_COMMAND_LEFT);
 
     RUN_PARAM_TEST(should_read_commands,
                    DS2_R2 | DS2_RIGHT,
-                   LINEBOT_COMMAND_FORWARD | LINEBOT_COMMAND_RIGHT);
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT);
 
     RUN_PARAM_TEST(should_read_commands,
                    DS2_R2 | DS2_LEFT,
-                   LINEBOT_COMMAND_FORWARD | LINEBOT_COMMAND_LEFT);
+                   PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT);
 
     RUN_PARAM_TEST(should_read_commands,
                    DS2_L2 | DS2_RIGHT,
-                   LINEBOT_COMMAND_BACKWARD | LINEBOT_COMMAND_RIGHT);
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT);
 
     RUN_PARAM_TEST(should_read_commands,
                    DS2_L2 | DS2_LEFT,
-                   LINEBOT_COMMAND_BACKWARD | LINEBOT_COMMAND_LEFT);
+                   PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT);
 
-    RUN_PARAM_TEST(should_read_commands, DS2_CIRCLE, LINEBOT_COMMAND_BREAK);
+    RUN_PARAM_TEST(should_read_commands, DS2_CIRCLE, PATHBOT_COMMAND_BREAK);
 
-    RUN_PARAM_TEST(should_read_commands, DS2_CROSS, LINEBOT_COMMAND_FOLLOW);
+    RUN_PARAM_TEST(should_read_commands, DS2_CROSS, PATHBOT_COMMAND_FOLLOW);
 
     return UNITY_END();
 }

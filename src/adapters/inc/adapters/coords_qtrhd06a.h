@@ -2,10 +2,10 @@
 #define _ADAPTER_COORDS_QTRHD06A_H
 
 #include <devices/qtrhd06a.h>
-#include <linebot/coords.h>
+#include <pathbot/domain.h>
 
 int
-adapter_coords_qtrhd06a_read(device_qtrhd06a_t const h_device,
-                             linebot_coords_t       *ph_coords);
+adapter_coords_qtrhd06a_read(device_qtrhd06a_t const  h_device,
+                             pathbot_coords_t * const p_coords);
 
 #endif

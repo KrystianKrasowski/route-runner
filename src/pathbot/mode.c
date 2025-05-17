@@ -1,6 +1,7 @@
 #include "commands.h"
 #include "coords.h"
 #include "mode.h"
+#include <pathbot/api.h>
 #include <stddef.h>
 
 static inline bool
@@ -14,6 +15,12 @@ is_following(pathbot_mode_t const mode);
 
 static inline bool
 is_recovering(pathbot_mode_t const mode);
+
+bool
+pathbot_mode_is_recovering(pathbot_mode_t const mode)
+{
+    return is_recovering(mode);
+}
 
 bool
 mode_is_tracking(pathbot_mode_t mode)
