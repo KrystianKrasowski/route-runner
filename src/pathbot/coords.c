@@ -46,7 +46,7 @@ coords_is_on_finish(pathbot_coords_t const * const p_self)
 
 int
 coords_compute_mass_center(pathbot_coords_t const * const p_self,
-                           int8_t * const                 p_result)
+                           int8_t * const                 p_center)
 {
     int16_t sum        = 0;
     int16_t weight_sum = 0;
@@ -59,7 +59,7 @@ coords_compute_mass_center(pathbot_coords_t const * const p_self,
 
     if (sum != 0)
     {
-        *p_result = weight_sum / sum;
+        *p_center = weight_sum / sum;
 
         return RESULT_OK;
     }
