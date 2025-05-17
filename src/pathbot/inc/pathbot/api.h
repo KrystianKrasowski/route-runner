@@ -13,6 +13,9 @@ typedef enum
 bool
 pathbot_mode_is_recovering(pathbot_mode_t const mode);
 
+bool
+pathbot_mode_is_tracking(pathbot_mode_t const mode);
+
 pathbot_direction_t
 pathbot_motion_invert_direction(pathbot_motion_t const * const p_motion);
 

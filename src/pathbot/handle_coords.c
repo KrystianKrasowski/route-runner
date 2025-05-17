@@ -20,14 +20,9 @@ pathbot_handle_coords(pathbot_coords_t const * const p_coords)
         pathbot_port_mode_changed(p_store->mode);
     }
 
-    if (mode_is_tracking(p_store->mode))
+    if (pathbot_mode_is_tracking(p_store->mode))
     {
         handle_pid_motion(p_coords, p_store);
-    }
-    else
-    {
-        motion_stop(&p_store->motion);
-        pathbot_port_motion_apply(&p_store->motion);
     }
 
     return PATHBOT_RESULT_OK;

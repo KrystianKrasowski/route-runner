@@ -1,4 +1,3 @@
-#include "pathbot/domain.h"
 #include "task.h"
 #include <adapters/control_dualshock2.h>
 #include <adapters/coords_qtrhd06a.h>

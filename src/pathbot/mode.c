@@ -13,19 +13,16 @@ is_manual(pathbot_mode_t const mode);
 static inline bool
 is_following(pathbot_mode_t const mode);
 
-static inline bool
-is_recovering(pathbot_mode_t const mode);
-
 bool
 pathbot_mode_is_recovering(pathbot_mode_t const mode)
 {
-    return is_recovering(mode);
+    return PATHBOT_MODE_RECOVERING == mode;
 }
 
 bool
-mode_is_tracking(pathbot_mode_t mode)
+pathbot_mode_is_tracking(pathbot_mode_t mode)
 {
-    return PATHBOT_MODE_FOLLOWING == mode || PATHBOT_MODE_RECOVERING == mode;
+    return is_following(mode) || pathbot_mode_is_recovering(mode);
 }
 
 bool
@@ -33,7 +30,7 @@ mode_update_manual(uint16_t const commands, pathbot_mode_t * const p_mode)
 {
     pathbot_mode_t current_mode = *p_mode;
 
-    if (mode_is_tracking(current_mode) && commands_has_break(commands))
+    if (pathbot_mode_is_tracking(current_mode) && commands_has_break(commands))
     {
         *p_mode = PATHBOT_MODE_MANUAL;
     }
@@ -63,11 +60,13 @@ mode_update_tracking(pathbot_coords_t const * const p_coords,
     {
         *p_mode = PATHBOT_MODE_RECOVERING;
     }
-    else if (mode_is_tracking(current_mode) && coords_is_on_finish(p_coords))
+    else if (pathbot_mode_is_tracking(current_mode) &&
+             coords_is_on_finish(p_coords))
     {
         *p_mode = PATHBOT_MODE_MANUAL;
     }
-    else if (is_recovering(current_mode) && coords_is_on_route(p_coords))
+    else if (pathbot_mode_is_recovering(current_mode) &&
+             coords_is_on_route(p_coords))
     {
         *p_mode = PATHBOT_MODE_FOLLOWING;
     }
@@ -91,10 +90,4 @@ static inline bool
 is_following(pathbot_mode_t const mode)
 {
     return PATHBOT_MODE_FOLLOWING == mode;
-}
-
-static inline bool
-is_recovering(pathbot_mode_t const mode)
-{
-    return PATHBOT_MODE_RECOVERING == mode;
 }

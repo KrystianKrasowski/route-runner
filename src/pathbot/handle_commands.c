@@ -41,7 +41,7 @@ handle_mode_transition(pathbot_store_t * const p_store)
 static inline void
 handle_motion_apply(pathbot_store_t * const p_store)
 {
-    if (!mode_is_tracking(p_store->mode) &&
+    if (!pathbot_mode_is_tracking(p_store->mode) &&
         motion_update_manual(p_store->commands, &p_store->motion))
     {
         pathbot_port_motion_apply(&p_store->motion);
