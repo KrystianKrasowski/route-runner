@@ -11,18 +11,18 @@ handle_pid_motion(pathbot_coords_t const * const p_coords,
                   pathbot_store_t * const        p_store);
 
 int
-pathbot_handle_coords(pathbot_coords_t const coords)
+pathbot_handle_coords(pathbot_coords_t const * const p_coords)
 {
     pathbot_store_t *p_store = pathbot_store_get();
 
-    if (mode_update_tracking(&coords, &p_store->mode))
+    if (mode_update_tracking(p_coords, &p_store->mode))
     {
         pathbot_port_mode_changed(p_store->mode);
     }
 
     if (mode_is_tracking(p_store->mode))
     {
-        handle_pid_motion(&coords, p_store);
+        handle_pid_motion(p_coords, p_store);
     }
     else
     {

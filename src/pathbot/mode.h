@@ -2,7 +2,6 @@
 #define _PATHBOT_MODE_H
 
 #include <pathbot/domain.h>
-#include <stdbit.h>
 
 bool
 mode_is_tracking(pathbot_mode_t const mode);

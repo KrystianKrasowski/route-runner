@@ -27,7 +27,7 @@ should_compute_position_error(pathbot_coords_t coords, int8_t expexted_error)
     p_store->mode = PATHBOT_MODE_FOLLOWING;
 
     // when
-    (void)pathbot_handle_coords(coords);
+    (void)pathbot_handle_coords(&coords);
     int8_t actual_error = stack_peek_or(&p_store->past_errors, -128);
 
     // then

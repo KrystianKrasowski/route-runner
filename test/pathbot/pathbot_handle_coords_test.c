@@ -32,7 +32,7 @@ should_update_mode(pathbot_mode_t   current_mode,
     p_store->mode = current_mode;
 
     // when
-    int            result       = pathbot_handle_coords(new_coords);
+    int            result       = pathbot_handle_coords(&new_coords);
     int            change_calls = pathbot_port_mock_mode_verify_changed_calls();
     pathbot_mode_t actual_mode  = pathbot_port_mock_mode_get_changed_mode();
 
@@ -50,7 +50,7 @@ should_be_turning_left(pathbot_coords_t coords)
     p_store->motion = fixtures_motion_forward(0);
 
     // when
-    int result              = pathbot_handle_coords(coords);
+    int result              = pathbot_handle_coords(&coords);
     int apply_calls         = pathbot_port_mock_motion_verify_apply_calls();
     pathbot_motion_t motion = pathbot_port_mock_motion_get_applied();
 
@@ -69,7 +69,7 @@ should_be_turning_right(pathbot_coords_t coords)
     p_store->motion = fixtures_motion_forward(0);
 
     // when
-    int result              = pathbot_handle_coords(coords);
+    int result              = pathbot_handle_coords(&coords);
     int apply_calls         = pathbot_port_mock_motion_verify_apply_calls();
     pathbot_motion_t motion = pathbot_port_mock_motion_get_applied();
 
@@ -88,15 +88,16 @@ should_stop_running_on_finish(void)
     p_store->motion = fixtures_motion_forward(0);
 
     // when
-    int result              = pathbot_handle_coords(FIXTURES_COORDS6_ON_FINISH);
-    int apply_calls         = pathbot_port_mock_motion_verify_apply_calls();
+    pathbot_coords_t coords = FIXTURES_COORDS6_ON_FINISH;
+    int              result = pathbot_handle_coords(&coords);
+    int              calls  = pathbot_port_mock_motion_verify_apply_calls();
     pathbot_motion_t motion = pathbot_port_mock_motion_get_applied();
 
     // then
     TEST_ASSERT_EQUAL(PATHBOT_RESULT_OK, result);
     TEST_ASSERT_EQUAL(PATHBOT_DIRECTION_NONE, motion.direction);
     TEST_ASSERT_EQUAL(0, motion.correction);
-    TEST_ASSERT_EQUAL(1, apply_calls);
+    TEST_ASSERT_EQUAL(1, calls);
 }
 
 int
