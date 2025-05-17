@@ -24,6 +24,7 @@ void
 task_handle_route_tracking()
 {
     pathbot_coords_t coords = {
+        .coords  = {0, 0, 0, 0, 0, 0},
         .length  = PATHBOT_MAX_COORDS_LENGTH,
         .weights = PATHBOT_COORDS6_WEIGHTS,
     };
