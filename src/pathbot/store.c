@@ -4,7 +4,7 @@
 static pathbot_store_t store;
 
 void
-pathbot_store_init(pathbot_store_t * const p_self)
+pathbot_store_init(pathbot_store_t const * const p_self)
 {
     if (NULL == p_self)
     {

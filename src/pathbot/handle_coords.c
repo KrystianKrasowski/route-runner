@@ -18,11 +18,12 @@ pathbot_handle_coords(pathbot_coords_t const * const p_coords)
 
     if (pathbot_mode_is_tracking(p_store->mode))
     {
-        int8_t              error = coords_compute_mass_center(p_coords);
-        stack_t            *p_past_errors = &p_store->past_errors;
-        pathbot_pid_conf_t *p_pid         = &p_store->pid_conf;
+        int8_t error = coords_compute_mass_center(p_coords);
 
-        if (motion_update_pid(error, p_past_errors, p_pid, &p_store->motion))
+        if (motion_update_pid(error,
+                              &p_store->past_errors,
+                              &p_store->pid_conf,
+                              &p_store->motion))
         {
             pathbot_port_motion_apply(&p_store->motion);
         }

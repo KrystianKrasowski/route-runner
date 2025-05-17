@@ -51,6 +51,7 @@ stack_pop(stack_t *p_self, int16_t *p_element)
 }
 
 stack_result_t
+// cppcheck-suppress unusedFunction
 stack_peek(stack_t const *p_self, int16_t *p_element)
 {
     if (stack_is_empty(p_self))

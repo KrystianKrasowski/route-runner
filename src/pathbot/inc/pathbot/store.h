@@ -14,7 +14,7 @@ typedef struct
 } pathbot_store_t;
 
 void
-pathbot_store_init(pathbot_store_t * const p_self);
+pathbot_store_init(pathbot_store_t const * const p_self);
 
 pathbot_store_t *
 pathbot_store_get(void);
