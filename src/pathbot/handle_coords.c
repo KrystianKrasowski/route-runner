@@ -14,7 +14,7 @@ static inline void
 handle_tracking(pathbot_coords_t const * const p_coords,
                 pathbot_store_t * const        p_store);
 
-int
+void
 pathbot_handle_coords(pathbot_coords_t const * const p_coords)
 {
     pathbot_store_t *p_store = pathbot_store_get();
@@ -29,8 +29,6 @@ pathbot_handle_coords(pathbot_coords_t const * const p_coords)
     {
         pathbot_port_mode_changed(p_store->mode);
     }
-
-    return PATHBOT_RESULT_OK;
 }
 
 static inline void

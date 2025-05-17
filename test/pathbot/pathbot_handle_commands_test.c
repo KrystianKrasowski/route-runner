@@ -33,13 +33,13 @@ should_update_manual_motion(pathbot_motion_t current_motion,
     p_store->motion = current_motion;
 
     // when
-    int result         = pathbot_handle_commands(new_commands);
+    pathbot_handle_commands(new_commands);
+
     int motion_changes = pathbot_port_mock_motion_verify_apply_calls();
     int mode_changes   = pathbot_port_mock_mode_verify_changed_calls();
     pathbot_motion_t actual_motion = pathbot_port_mock_motion_get_applied();
 
     // then
-    TEST_ASSERT_EQUAL(PATHBOT_RESULT_OK, result);
     TEST_ASSERT_EQUAL(expected_motion.correction, actual_motion.correction);
     TEST_ASSERT_EQUAL(expected_motion.direction, actual_motion.direction);
     TEST_ASSERT_EQUAL(1, motion_changes);
@@ -56,12 +56,12 @@ should_keep_current_motion(pathbot_mode_t   current_mode,
     p_store->motion = current_motion;
 
     // when
-    int result         = pathbot_handle_commands(new_commands);
+    pathbot_handle_commands(new_commands);
+
     int motion_changes = pathbot_port_mock_motion_verify_apply_calls();
     int mode_changes   = pathbot_port_mock_mode_verify_changed_calls();
 
     // then
-    TEST_ASSERT_EQUAL(PATHBOT_RESULT_OK, result);
     TEST_ASSERT_EQUAL(p_store->motion.correction, current_motion.correction);
     TEST_ASSERT_EQUAL(p_store->motion.direction, current_motion.direction);
     TEST_ASSERT_EQUAL(0, motion_changes);
@@ -77,12 +77,12 @@ should_update_mode(pathbot_mode_t current_mode,
     p_store->mode = current_mode;
 
     // when
-    int            result       = pathbot_handle_commands(new_commands);
+    pathbot_handle_commands(new_commands);
+
     int            change_calls = pathbot_port_mock_mode_verify_changed_calls();
     pathbot_mode_t actual_mode  = pathbot_port_mock_mode_get_changed_mode();
 
     // then
-    TEST_ASSERT_EQUAL(PATHBOT_RESULT_OK, result);
     TEST_ASSERT_EQUAL(expected_mode, actual_mode);
     TEST_ASSERT_EQUAL(1, change_calls);
 }

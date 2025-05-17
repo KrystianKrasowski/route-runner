@@ -11,15 +11,13 @@ handle_mode_transition(uint16_t commands, pathbot_store_t * const p_store);
 static inline void
 handle_motion_apply(uint16_t commands, pathbot_store_t * const p_store);
 
-int
+void
 pathbot_handle_commands(uint16_t const commands)
 {
     pathbot_store_t * const p_store = pathbot_store_get();
 
     handle_motion_apply(commands, p_store);
     handle_mode_transition(commands, p_store);
-
-    return PATHBOT_RESULT_OK;
 }
 
 static inline void

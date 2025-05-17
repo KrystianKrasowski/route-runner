@@ -15,14 +15,14 @@ task_handle_manual_control()
     if (adapter_control_dualshock2_read(DEVICE_DUALSHOCK2_1, &commands) ==
         RESULT_OK)
     {
-        // No need for handling result
-        (void)pathbot_handle_commands(commands);
+        pathbot_handle_commands(commands);
     }
 }
 
 void
 task_handle_route_tracking()
 {
+    // TODO: Some factory here
     pathbot_coords_t coords = {
         .coords  = {0, 0, 0, 0, 0, 0},
         .length  = PATHBOT_MAX_COORDS_LENGTH,
@@ -31,8 +31,7 @@ task_handle_route_tracking()
 
     if (adapter_coords_qtrhd06a_read(DEVICE_QTRHD06A_1, &coords) == RESULT_OK)
     {
-        // No need for handling result
-        (void)pathbot_handle_coords(&coords);
+        pathbot_handle_coords(&coords);
     }
 }
 
@@ -41,7 +40,6 @@ task_handle_immediate_stop()
 {
     if (adapter_route_guard_read() == RESULT_TIMEOUT)
     {
-        // No need for handling result
-        (void)pathbot_handle_route_guard_timeout();
+        pathbot_handle_route_guard_timeout();
     }
 }
