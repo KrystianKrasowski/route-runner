@@ -28,7 +28,7 @@ pathbot_handle_coords(pathbot_coords_t const * const p_coords)
             pathbot_port_motion_apply(&p_store->motion);
         }
 
-        stack_push_rolling(p_past_errors, error);
+        stack_push_rolling(&p_store->past_errors, error);
     }
 
     return PATHBOT_RESULT_OK;
