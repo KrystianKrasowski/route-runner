@@ -37,8 +37,7 @@ handle_finish(pathbot_coords_t const * const p_coords,
 {
     if (coords_is_on_finish(p_coords))
     {
-        p_store->motion.direction  = PATHBOT_DIRECTION_NONE;
-        p_store->motion.correction = 0;
+        motion_stop(&p_store->motion);
         pathbot_port_motion_apply(&p_store->motion);
     }
 }
