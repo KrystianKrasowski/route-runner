@@ -1,2 +1,2 @@
-add_subdirectory(linebot_port_mock)
+add_subdirectory(pathbot_port_mock)
 add_subdirectory(devices_mock)

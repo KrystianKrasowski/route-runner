@@ -1,6 +1,6 @@
 #include <adapters/control_dualshock2.h>
 #include <devices/dualshock2.h>
-#include <linebot/command.h>
+#include <pathbot/domain.h>
 #include <stdint.h>
 #include <utils/result.h>
 
@@ -11,38 +11,38 @@ adapter_control_dualshock2_read(device_dualshock2_t const h_dualshock,
     int result = RESULT_OK;
 
     uint16_t raw      = DS2_NONE;
-    uint16_t commands = LINEBOT_COMMAND_NONE;
+    uint16_t commands = PATHBOT_COMMAND_NONE;
 
     if (RESULT_OK == device_dualshock2_read(h_dualshock, &raw))
     {
         if (raw & DS2_R2)
         {
-            commands |= LINEBOT_COMMAND_FORWARD;
+            commands |= PATHBOT_COMMAND_FORWARD;
         }
 
         if (raw & DS2_L2)
         {
-            commands |= LINEBOT_COMMAND_BACKWARD;
+            commands |= PATHBOT_COMMAND_BACKWARD;
         }
 
         if (raw & DS2_RIGHT)
         {
-            commands |= LINEBOT_COMMAND_RIGHT;
+            commands |= PATHBOT_COMMAND_RIGHT;
         }
 
         if (raw & DS2_LEFT)
         {
-            commands |= LINEBOT_COMMAND_LEFT;
+            commands |= PATHBOT_COMMAND_LEFT;
         }
 
         if (raw & DS2_CIRCLE)
         {
-            commands |= LINEBOT_COMMAND_BREAK;
+            commands |= PATHBOT_COMMAND_BREAK;
         }
 
         if (raw & DS2_CROSS)
         {
-            commands |= LINEBOT_COMMAND_FOLLOW;
+            commands |= PATHBOT_COMMAND_FOLLOW;
         }
 
         *p_commands = commands;

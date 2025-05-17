@@ -1,5 +1,5 @@
-#include <utils/stack.h>
 #include <string.h>
+#include <utils/stack.h>
 
 stack_t
 stack(uint8_t size)
@@ -13,8 +13,27 @@ stack(uint8_t size)
     memset(&stack, 0, sizeof(stack));
     stack.size = size;
     stack.top  = -1;
-    
+
     return stack;
+}
+
+stack_t
+// cppcheck-suppress unusedFunction
+stack_of(uint8_t size, ...)
+{
+    stack_t st = stack(size);
+
+    va_list elements;
+    va_start(elements, size);
+
+    for (uint8_t i = 0; i < size; i++)
+    {
+        stack_push(&st, va_arg(elements, int));
+    }
+
+    va_end(elements);
+
+    return st;
 }
 
 stack_result_t
@@ -32,6 +51,7 @@ stack_pop(stack_t *p_self, int16_t *p_element)
 }
 
 stack_result_t
+// cppcheck-suppress unusedFunction
 stack_peek(stack_t const *p_self, int16_t *p_element)
 {
     if (stack_is_empty(p_self))
@@ -44,8 +64,21 @@ stack_peek(stack_t const *p_self, int16_t *p_element)
     return STACK_SUCCESS;
 }
 
+int16_t
+stack_peek_or(stack_t const *p_self, int16_t default_value)
+{
+    if (stack_is_empty(p_self))
+    {
+        return default_value;
+    }
+    else
+    {
+        return p_self->elements[p_self->top];
+    }
+}
+
 stack_result_t
-// cppcheck-suppress unusedFunction
+// cppcheck-suppress staticFunction
 stack_push(stack_t *p_self, int16_t element)
 {
     if (p_self->top >= p_self->size - 1)

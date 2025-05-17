@@ -7,5 +7,6 @@
 #define RESULT_BUFFER_FULL   3
 #define RESULT_END_OF_BUFFER 4
 #define RESULT_TIMEOUT       5
+#define RESULT_NOOP          6
 
 #endif

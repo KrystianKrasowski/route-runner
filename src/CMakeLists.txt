@@ -1,4 +1,4 @@
-add_subdirectory(linebot)
+add_subdirectory(pathbot)
 add_subdirectory(utils)
 add_subdirectory(devices)
 add_subdirectory(adapters)

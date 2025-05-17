@@ -69,7 +69,7 @@ dma1_channel1_isr(void)
 }
 
 void
-// cppcheck-supress unusedFunction
+// cppcheck-suppress unusedFunction
 dma1_channel2_isr(void)
 {
     if (dma_get_interrupt_flag(DMA1, DMA_CHANNEL2, DMA_TCIF))

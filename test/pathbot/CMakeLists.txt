@@ -1,14 +1,15 @@
 set(TEST_SUITE
-    adapter_motion_l293_test.c
-    adapter_control_dualshock2_test.c
-    adapter_coords_qtrhd06a_test.c
-    adapter_mode_listener_test.c
+    pathbot_handle_commands_test.c
+    pathbot_handle_coords_test.c
+    pathbot_handle_route_guard_timeout_test.c
+    pathbot_position_error_test.c
 )
 
+# extract some function here
 foreach(FILE ${TEST_SUITE})
     get_filename_component(TEST_NAME ${FILE} NAME_WE)
 
-    add_executable(${TEST_NAME} ${FILE})
+    add_executable(${TEST_NAME} fixtures.c ${FILE})
 
     target_include_directories(${TEST_NAME}
         PRIVATE
@@ -18,8 +19,8 @@ foreach(FILE ${TEST_SUITE})
     target_link_libraries(${TEST_NAME}
         PRIVATE
             pathbot
-            devices_mock
-            adapters
+            pathbot_port_mock
+            utils
             unity
     )   
 

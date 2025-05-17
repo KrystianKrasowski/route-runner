@@ -1,6 +1,7 @@
 #ifndef _STACK_H
 #define _STACK_H
 
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -25,11 +26,17 @@ typedef struct stack
 stack_t
 stack(uint8_t size);
 
+stack_t
+stack_of(uint8_t size, ...);
+
 stack_result_t
 stack_pop(stack_t *p_self, int16_t *p_element);
 
 stack_result_t
 stack_peek(stack_t const *p_self, int16_t *p_element);
+
+int16_t
+stack_peek_or(stack_t const *p_self, int16_t default_value);
 
 stack_result_t
 stack_push(stack_t *p_self, int16_t element);
