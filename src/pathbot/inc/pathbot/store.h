@@ -6,7 +6,6 @@
 
 typedef struct
 {
-    uint16_t           commands;
     pathbot_mode_t     mode;
     stack_t            past_errors;
     pathbot_pid_conf_t pid_conf;

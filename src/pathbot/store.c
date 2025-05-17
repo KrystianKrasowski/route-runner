@@ -8,7 +8,6 @@ pathbot_store_init(pathbot_store_t const * const p_self)
 {
     if (NULL == p_self)
     {
-        store.commands    = PATHBOT_COMMAND_NONE;
         store.mode        = PATHBOT_MODE_MANUAL;
         store.past_errors = stack(20);
         store.pid_conf.kp = 0.6;
