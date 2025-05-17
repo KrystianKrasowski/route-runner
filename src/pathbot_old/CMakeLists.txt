@@ -1,2 +1,0 @@
-add_subdirectory(pathbot_application)
-add_subdirectory(pathbot_domain)

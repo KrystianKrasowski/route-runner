@@ -1,3 +1,0 @@
-add_subdirectory(pathbot_application)
-add_subdirectory(pathbot_domain)
-add_subdirectory(pathbot_fixtures)
