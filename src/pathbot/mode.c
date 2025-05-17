@@ -56,14 +56,14 @@ mode_update_tracking(pathbot_coords_t const * const p_coords,
     {
         *p_mode = PATHBOT_MODE_MANUAL;
     }
-    else if (is_following(current_mode) && !coords_is_on_route(p_coords))
-    {
-        *p_mode = PATHBOT_MODE_RECOVERING;
-    }
     else if (pathbot_mode_is_tracking(current_mode) &&
              coords_is_on_finish(p_coords))
     {
         *p_mode = PATHBOT_MODE_MANUAL;
+    }
+    else if (is_following(current_mode) && !coords_is_on_route(p_coords))
+    {
+        *p_mode = PATHBOT_MODE_RECOVERING;
     }
     else if (pathbot_mode_is_recovering(current_mode) &&
              coords_is_on_route(p_coords))

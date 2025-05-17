@@ -4,6 +4,7 @@
 #include <pathbot/domain.h>
 #include <stdint.h>
 
+// TODO: Remove this in favour of utils result
 typedef enum
 {
     PATHBOT_RESULT_OK = 0,

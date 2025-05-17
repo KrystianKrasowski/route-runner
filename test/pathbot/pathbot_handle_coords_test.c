@@ -80,6 +80,26 @@ should_be_turning_right(pathbot_coords_t coords)
     TEST_ASSERT_EQUAL(1, apply_calls);
 }
 
+void
+should_stop_on_finish(void)
+{
+    // given
+    p_store->mode   = PATHBOT_MODE_FOLLOWING;
+    p_store->motion = fixtures_motion_forward(0);
+
+    // when
+    pathbot_coords_t coords = FIXTURES_COORDS6_ON_FINISH;
+    int              result = pathbot_handle_coords(&coords);
+    int apply_calls         = pathbot_port_mock_motion_verify_apply_calls();
+    pathbot_motion_t motion = pathbot_port_mock_motion_get_applied();
+
+    // then
+    TEST_ASSERT_EQUAL(PATHBOT_RESULT_OK, result);
+    TEST_ASSERT_EQUAL(PATHBOT_DIRECTION_NONE, motion.direction);
+    TEST_ASSERT_EQUAL(0, motion.correction);
+    TEST_ASSERT_EQUAL(1, apply_calls);
+}
+
 int
 main(void)
 {
@@ -200,6 +220,8 @@ main(void)
 
     RUN_PARAM_TEST(should_be_turning_right,
                    fixtures_coords6_of(0, 0, 0, 0, 0, 100));
+
+    RUN_TEST(should_stop_on_finish);
 
     return UNITY_END();
 }
