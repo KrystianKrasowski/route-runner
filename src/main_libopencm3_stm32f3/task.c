@@ -1,7 +1,7 @@
 #include "task.h"
 #include <adapters/control_dualshock2.h>
 #include <adapters/coords_qtrhd06a.h>
-#include <adapters/debug_usart.h>
+#include <adapters/dump_serial.h>
 #include <adapters/route_guard.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
@@ -48,7 +48,7 @@ task_handle_immediate_stop(void)
 void
 task_handle_domain_dump(void)
 {
-    if (adapter_debug_read() == RESULT_OK)
+    if (adapter_domain_dump_request_read() == RESULT_OK)
     {
         pathbot_handle_store_dump();
     }
