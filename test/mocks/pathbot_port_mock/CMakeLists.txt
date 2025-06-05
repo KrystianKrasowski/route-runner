@@ -1,6 +1,7 @@
 add_library(pathbot_port_mock STATIC
     pathbot_port_mock_mode.c
     pathbot_port_mock_motion.c
+    pathbot_port_mock_dump.c
 )
 
 target_include_directories(pathbot_port_mock

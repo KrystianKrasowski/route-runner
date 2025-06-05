@@ -1,6 +1,7 @@
 #include "task.h"
 #include <adapters/control_dualshock2.h>
 #include <adapters/coords_qtrhd06a.h>
+#include <adapters/debug_usart.h>
 #include <adapters/route_guard.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
@@ -8,7 +9,7 @@
 #include <utils/result.h>
 
 void
-task_handle_manual_control()
+task_handle_manual_control(void)
 {
     uint16_t commands;
 
@@ -20,7 +21,7 @@ task_handle_manual_control()
 }
 
 void
-task_handle_route_tracking()
+task_handle_route_tracking(void)
 {
     // TODO: Some factory here
     pathbot_coords_t coords = {
@@ -36,10 +37,19 @@ task_handle_route_tracking()
 }
 
 void
-task_handle_immediate_stop()
+task_handle_immediate_stop(void)
 {
     if (adapter_route_guard_read() == RESULT_TIMEOUT)
     {
         pathbot_handle_route_guard_timeout();
+    }
+}
+
+void
+task_handle_domain_dump(void)
+{
+    if (adapter_debug_read() == RESULT_OK)
+    {
+        pathbot_handle_store_dump();
     }
 }

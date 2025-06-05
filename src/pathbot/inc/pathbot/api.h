@@ -22,4 +22,7 @@ pathbot_handle_coords(pathbot_coords_t const * const p_coords);
 void
 pathbot_handle_route_guard_timeout(void);
 
+void
+pathbot_handle_store_dump(void);
+
 #endif

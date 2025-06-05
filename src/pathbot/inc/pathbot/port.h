@@ -9,4 +9,7 @@ pathbot_port_mode_changed(pathbot_mode_t const mode);
 void
 pathbot_port_motion_apply(pathbot_motion_t const * const motion);
 
+void
+pathbot_port_dump_mode(pathbot_mode_t const mode);
+
 #endif
