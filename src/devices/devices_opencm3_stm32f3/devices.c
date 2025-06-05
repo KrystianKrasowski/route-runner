@@ -1,11 +1,13 @@
 #include "blink.h"
 #include "data_store.h"
+#include "devices/serial_in.h"
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "l293.h"
 #include "notification.h"
 #include "peripherals.h"
 #include "qtrhd06a.h"
+#include "serial_in.h"
 #include "timeout_guard.h"
 #include <devices/blink.h>
 #include <devices/devices.h>
@@ -35,6 +37,9 @@ blink_create_device(void);
 static inline int
 timeout_guard_route_create_device(void);
 
+static inline int
+serial_in_create_device(void);
+
 void
 devices_init(void)
 {
@@ -46,6 +51,7 @@ devices_init(void)
     qtrhd06a_init();
     blink_init();
     timeout_guard_init();
+    serial_in_init();
 
     // TODO: error handling
     (void)l293_create_channel_12();
@@ -54,6 +60,7 @@ devices_init(void)
     (void)qtrhd06a_create_device();
     (void)blink_create_device();
     (void)timeout_guard_route_create_device();
+    (void)serial_in_create_device();
 }
 
 static inline int
@@ -132,4 +139,10 @@ timeout_guard_route_create_device(void)
     };
 
     return timeout_guard_create(DEVICE_TIEMOUT_GUARD_ROUTE, &conf);
+}
+
+static inline int
+serial_in_create_device(void)
+{
+    return serial_in_create(DEVICE_SERIAL_IN_1, NOTIFICATION_SERIAL_IN);
 }

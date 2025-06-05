@@ -10,6 +10,17 @@
 
 #define DATA_STORE_ROUTE_BUFF_LENGTH      40
 #define DATA_STORE_DUALSHOCK2_BUFF_LENGTH 5
+#define DATA_STORE_SERIAL_IN_BUFF_LENGTH  2
+
+typedef struct
+{
+    volatile uint16_t route_wbuff[DATA_STORE_ROUTE_BUFF_LENGTH];
+    volatile uint16_t route_rbuff[DATA_STORE_ROUTE_BUFF_LENGTH];
+    uint8_t           dualshock2_request[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
+    volatile uint8_t  dualshock2_wbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
+    volatile uint8_t  dualshock2_rbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
+    volatile char     serial_in_request[DATA_STORE_SERIAL_IN_BUFF_LENGTH];
+} data_store_t;
 
 uint32_t
 data_store_get_route_wbuff_addr(void);
@@ -31,5 +42,8 @@ data_store_update_dualshock2(void);
 
 volatile uint8_t *
 data_store_get_dualshock2_rbuff(void);
+
+data_store_t *
+data_store_get(void);
 
 #endif

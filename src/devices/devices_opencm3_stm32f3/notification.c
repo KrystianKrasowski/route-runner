@@ -14,6 +14,18 @@ notification_give(notification_t id)
 bool
 notification_take(notification_t id)
 {
+    if (notification_peek(id))
+    {
+        notifications[id] = false;
+        return true;
+    }
+
+    return false;
+}
+
+bool
+notification_peek(notification_t id)
+{
     if (id >= NOTIFICATIONS_LENGTH)
     {
         return false;
@@ -21,7 +33,6 @@ notification_take(notification_t id)
 
     if (notifications[id])
     {
-        notifications[id] = false;
         return true;
     }
 

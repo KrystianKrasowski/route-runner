@@ -2,15 +2,6 @@
 #include <stdint.h>
 #include <utils/volatile_string.h>
 
-typedef struct
-{
-    volatile uint16_t route_wbuff[DATA_STORE_ROUTE_BUFF_LENGTH];
-    volatile uint16_t route_rbuff[DATA_STORE_ROUTE_BUFF_LENGTH];
-    uint8_t           dualshock2_request[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
-    volatile uint8_t  dualshock2_wbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
-    volatile uint8_t  dualshock2_rbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
-} data_store_t;
-
 static data_store_t store = {
     .dualshock2_request = {0x1, 0x42, 0x0, 0x0, 0x0},
 };
@@ -57,4 +48,10 @@ volatile uint8_t *
 data_store_get_dualshock2_rbuff(void)
 {
     return store.dualshock2_rbuff;
+}
+
+data_store_t *
+data_store_get(void)
+{
+    return &store;
 }
