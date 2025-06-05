@@ -10,7 +10,6 @@
 
 #define DATA_STORE_ROUTE_BUFF_LENGTH      40
 #define DATA_STORE_DUALSHOCK2_BUFF_LENGTH 5
-#define DATA_STORE_SERIAL_IN_BUFF_LENGTH  2
 
 typedef struct
 {
@@ -19,7 +18,7 @@ typedef struct
     uint8_t           dualshock2_request[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
     volatile uint8_t  dualshock2_wbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
     volatile uint8_t  dualshock2_rbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
-    volatile char     serial_in_request[DATA_STORE_SERIAL_IN_BUFF_LENGTH];
+    volatile char     serial_in_request;
 } data_store_t;
 
 uint32_t

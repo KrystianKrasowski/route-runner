@@ -14,11 +14,8 @@ POOL_DECLARE(serial_in, serial_in_t, DEVICE_SERIAL_IN_INSTANCES_NUM)
 
 static serial_in_pool_t pool;
 
-static inline bool
-is_command_match(char *command);
-
 int
-device_serial_in_read(device_serial_in_t const h_self, char *command)
+device_serial_in_read(device_serial_in_t const h_self, char const command)
 {
     serial_in_t const *p_self = serial_in_pool_get(&pool, h_self);
 
@@ -27,12 +24,11 @@ device_serial_in_read(device_serial_in_t const h_self, char *command)
         return -ENODEV;
     }
 
-    bool b_is_notification = notification_peek(p_self->notification_id);
-    bool b_is_command      = is_command_match(command);
+    data_store_t *p_store         = data_store_get();
+    bool          b_command_match = p_store->serial_in_request == command;
 
-    if (b_is_notification && b_is_command)
+    if (b_command_match && notification_take(p_self->notification_id))
     {
-        (void)notification_take(p_self->notification_id);
         return RESULT_OK;
     }
 
@@ -59,20 +55,4 @@ serial_in_create(device_serial_in_t const h_self,
     p_self->notification_id = notification_id;
 
     return RESULT_OK;
-}
-
-static inline bool
-is_command_match(char *command)
-{
-    data_store_t *p_store = data_store_get();
-
-    for (uint8_t i = 0; i < DATA_STORE_SERIAL_IN_BUFF_LENGTH; i++)
-    {
-        if (p_store->serial_in_request[i] != command[i])
-        {
-            return false;
-        }
-    }
-
-    return true;
 }

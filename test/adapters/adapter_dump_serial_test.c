@@ -17,7 +17,7 @@ tearDown(void)
 }
 
 void
-should_read_domain_dump_request(char *command, int expected_result)
+should_read_domain_dump_request(char command, int expected_result)
 {
     // given
     device_serial_in_mock_set_requested(DEVICE_SERIAL_IN_1, command);
@@ -39,11 +39,11 @@ main(void)
 {
     UNITY_BEGIN();
 
-    RUN_PARAM_TEST(should_read_domain_dump_request, "dd", RESULT_OK);
-    RUN_PARAM_TEST(should_read_domain_dump_request, "da", RESULT_NOT_READY);
-    RUN_PARAM_TEST(should_read_domain_dump_request, "db", RESULT_NOT_READY);
-    RUN_PARAM_TEST(should_read_domain_dump_request, "dc", RESULT_NOT_READY);
-    RUN_PARAM_TEST(should_read_domain_dump_request, "de", RESULT_NOT_READY);
+    RUN_PARAM_TEST(should_read_domain_dump_request, 'd', RESULT_OK);
+    RUN_PARAM_TEST(should_read_domain_dump_request, 'a', RESULT_NOT_READY);
+    RUN_PARAM_TEST(should_read_domain_dump_request, 'b', RESULT_NOT_READY);
+    RUN_PARAM_TEST(should_read_domain_dump_request, 'c', RESULT_NOT_READY);
+    RUN_PARAM_TEST(should_read_domain_dump_request, 'e', RESULT_NOT_READY);
 
     return UNITY_END();
 }

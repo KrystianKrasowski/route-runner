@@ -6,7 +6,7 @@
 int
 adapter_domain_dump_request_read(void)
 {
-    if (device_serial_in_read(DEVICE_SERIAL_IN_1, "dd") == RESULT_OK)
+    if (device_serial_in_read(DEVICE_SERIAL_IN_1, 'd') == RESULT_OK)
     {
         return RESULT_OK;
     }

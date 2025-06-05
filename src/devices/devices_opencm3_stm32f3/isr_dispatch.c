@@ -7,9 +7,11 @@
 #include <devices/dualshock2.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/f3/usart.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/usart.h>
 #include <stdint.h>
 #include <utils/result.h>
 
@@ -21,6 +23,7 @@ isr_dispatch_init(void)
     nvic_enable_irq(NVIC_TIM2_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
+    nvic_enable_irq(NVIC_USART2_EXTI26_IRQ);
 }
 
 void
@@ -78,5 +81,17 @@ dma1_channel2_isr(void)
         dualshock2_poll_end(DEVICE_DUALSHOCK2_1);
         data_store_update_dualshock2();
         notification_give(NOTIFICATION_DUALSHOCK2);
+    }
+}
+
+void
+// cppcheck-suppress unusedFunction
+usart2_exti26_isr(void)
+{
+    if (usart_get_flag(USART2, USART_ISR_RXNE))
+    {
+        data_store_t *p_store      = data_store_get();
+        p_store->serial_in_request = usart_recv(USART2);
+        notification_give(NOTIFICATION_SERIAL_IN);
     }
 }

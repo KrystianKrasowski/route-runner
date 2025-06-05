@@ -4,10 +4,14 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/adc.h>
 #include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/f3/gpio.h>
+#include <libopencm3/stm32/f3/rcc.h>
+#include <libopencm3/stm32/f3/usart.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/usart.h>
 #include <stdint.h>
 
 static inline void
@@ -49,6 +53,9 @@ dma1_channel3_config(void);
 static inline void
 adc12_config(void);
 
+static inline void
+usart2_config(void);
+
 void
 peripherals_init(void)
 {
@@ -65,6 +72,7 @@ peripherals_init(void)
     adc12_config();
     tim6_config();
     tim15_config();
+    usart2_config();
 }
 
 static inline void
@@ -101,6 +109,7 @@ rcc_periph_clocks_config(void)
     rcc_periph_clock_enable(RCC_ADC12);
     rcc_adc_prescale(RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_2,
                      RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_1);
+    rcc_periph_clock_enable(RCC_USART2);
 }
 
 static inline void
@@ -144,6 +153,10 @@ gpio_config(void)
                     GPIO_MODE_ANALOG,
                     GPIO_PUPD_NONE,
                     GPIO1 | GPIO3 | GPIO4 | GPIO5 | GPIO6 | GPIO7);
+
+    // USART2 receiver
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO15);
+    gpio_set_af(GPIOA, GPIO_AF7, GPIO15);
 }
 
 static inline void
@@ -331,4 +344,15 @@ adc12_config(void)
     adc_power_on(ADC2);
 
     adc_start_conversion_regular(ADC1);
+}
+
+static inline void
+usart2_config(void)
+{
+    usart_set_databits(USART2, 8);
+    usart_set_baudrate(USART2, 115200);
+    usart_set_stopbits(USART2, USART_CR2_STOPBITS_1);
+    usart_enable(USART2);
+    usart_set_mode(USART2, USART_MODE_RX);
+    usart_enable_rx_interrupt(USART2);
 }

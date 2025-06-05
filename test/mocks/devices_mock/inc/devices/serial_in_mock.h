@@ -11,6 +11,6 @@ device_serial_in_mock_deinit(void);
 
 void
 device_serial_in_mock_set_requested(device_serial_in_t const h_device,
-                                    char                    *command);
+                                    char const               command);
 
 #endif

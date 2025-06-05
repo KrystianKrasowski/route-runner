@@ -9,6 +9,6 @@ typedef enum
 } device_serial_in_t;
 
 int
-device_serial_in_read(device_serial_in_t const h_self, char *command);
+device_serial_in_read(device_serial_in_t const h_self, char const command);
 
 #endif

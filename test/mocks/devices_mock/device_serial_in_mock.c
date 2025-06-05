@@ -6,7 +6,7 @@
 
 typedef struct
 {
-    char command[2];
+    char command;
 } serial_in_mock_t;
 
 POOL_DECLARE(serial_in_mock, serial_in_mock_t, DEVICE_SERIAL_IN_INSTANCES_NUM)
@@ -14,15 +14,13 @@ POOL_DECLARE(serial_in_mock, serial_in_mock_t, DEVICE_SERIAL_IN_INSTANCES_NUM)
 static serial_in_mock_pool_t pool;
 
 int
-device_serial_in_read(device_serial_in_t const h_self, char *command)
+device_serial_in_read(device_serial_in_t const h_self, char const command)
 {
     serial_in_mock_t *p_self = serial_in_mock_pool_get(&pool, h_self);
 
     assert(NULL != p_self);
 
-    int compare = memcmp(p_self->command, command, sizeof(p_self->command));
-
-    return compare == 0 ? RESULT_OK : RESULT_NOT_READY;
+    return p_self->command == command ? RESULT_OK : RESULT_NOT_READY;
 }
 
 void
@@ -47,11 +45,11 @@ device_serial_in_mock_deinit(void)
 
 void
 device_serial_in_mock_set_requested(device_serial_in_t const h_device,
-                                    char                    *command)
+                                    char const               command)
 {
     serial_in_mock_t *p_self = serial_in_mock_pool_get(&pool, h_device);
 
     assert(NULL != p_self);
 
-    memcpy(p_self->command, command, sizeof(p_self->command));
+    p_self->command = command;
 }
