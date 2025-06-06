@@ -10,7 +10,7 @@ typedef enum
     NOTIFICATION_SERIAL_IN,
 } notification_t;
 
-#define NOTIFICATIONS_LENGTH 3
+#define NOTIFICATIONS_LENGTH 4
 
 void
 notification_give(notification_t id);
