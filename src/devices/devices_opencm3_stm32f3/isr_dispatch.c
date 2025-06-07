@@ -91,8 +91,8 @@ usart2_exti26_isr(void)
 {
     if (usart_get_flag(USART2, USART_ISR_RXNE))
     {
-        data_store_t *p_store      = data_store_get();
-        p_store->serial_in_request = usart_recv(USART2);
-        notification_give(NOTIFICATION_SERIAL_IN);
+        data_store_t *p_store   = data_store_get();
+        p_store->serial_request = usart_recv(USART2);
+        notification_give(NOTIFICATION_SERIAL_REQUEST);
     }
 }

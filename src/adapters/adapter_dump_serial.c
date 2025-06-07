@@ -1,12 +1,12 @@
 #include <adapters/dump_serial.h>
-#include <devices/serial_in.h>
+#include <devices/serial.h>
 #include <pathbot/domain.h>
 #include <utils/result.h>
 
 int
 adapter_domain_dump_request_read(void)
 {
-    if (device_serial_in_read(DEVICE_SERIAL_IN_1, 'd') == RESULT_OK)
+    if (device_serial_read(DEVICE_SERIAL_1, 'd') == RESULT_OK)
     {
         return RESULT_OK;
     }

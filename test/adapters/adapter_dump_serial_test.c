@@ -1,5 +1,5 @@
 #include <adapters/dump_serial.h>
-#include <devices/serial_in_mock.h>
+#include <devices/serial_mock.h>
 #include <unity.h>
 #include <unity_config.h>
 #include <utils/result.h>
@@ -7,20 +7,20 @@
 void
 setUp(void)
 {
-    device_serial_in_mock_init();
+    device_serial_mock_init();
 }
 
 void
 tearDown(void)
 {
-    device_serial_in_mock_deinit();
+    device_serial_mock_deinit();
 }
 
 void
 should_read_domain_dump_request(char command, int expected_result)
 {
     // given
-    device_serial_in_mock_set_requested(DEVICE_SERIAL_IN_1, command);
+    device_serial_mock_set_requested(DEVICE_SERIAL_1, command);
 
     // when
     int result = adapter_domain_dump_request_read();

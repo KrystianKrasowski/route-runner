@@ -18,7 +18,7 @@ typedef struct
     uint8_t           dualshock2_request[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
     volatile uint8_t  dualshock2_wbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
     volatile uint8_t  dualshock2_rbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
-    volatile char     serial_in_request;
+    volatile char     serial_request;
 } data_store_t;
 
 uint32_t
