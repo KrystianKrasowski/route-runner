@@ -1,5 +1,8 @@
 #include <adapters/dump_serial.h>
 #include <devices/serial_mock.h>
+#include <pathbot/domain.h>
+#include <pathbot/port.h>
+#include <string.h>
 #include <unity.h>
 #include <unity_config.h>
 #include <utils/result.h>
@@ -30,8 +33,18 @@ should_read_domain_dump_request(char command, int expected_result)
 }
 
 void
-should_return_ok(void)
+should_dump_mode(pathbot_mode_t mode, char *expected_msg)
 {
+    // given
+    uint8_t const length = strlen(expected_msg) + 1;
+
+    // when
+    pathbot_port_dump_mode(mode);
+
+    char *actual_msg = device_serial_mock_get_applied_msg(DEVICE_SERIAL_1);
+
+    // then
+    TEST_ASSERT_EQUAL_CHAR_ARRAY(expected_msg, actual_msg, length);
 }
 
 int
@@ -44,6 +57,13 @@ main(void)
     RUN_PARAM_TEST(should_read_domain_dump_request, 'b', RESULT_NOT_READY);
     RUN_PARAM_TEST(should_read_domain_dump_request, 'c', RESULT_NOT_READY);
     RUN_PARAM_TEST(should_read_domain_dump_request, 'e', RESULT_NOT_READY);
+
+    RUN_PARAM_TEST(should_dump_mode, PATHBOT_MODE_MANUAL, "MODE: manual\n");
+    RUN_PARAM_TEST(should_dump_mode, PATHBOT_MODE_DETECTED, "MODE: detected\n");
+    RUN_PARAM_TEST(
+        should_dump_mode, PATHBOT_MODE_RECOVERING, "MODE: recovering\n");
+    RUN_PARAM_TEST(
+        should_dump_mode, PATHBOT_MODE_FOLLOWING, "MODE: following\n");
 
     return UNITY_END();
 }

@@ -3,6 +3,7 @@
 #include "mode.h"
 #include <pathbot/api.h>
 #include <stddef.h>
+#include <string.h>
 
 static inline bool
 is_detected(pathbot_mode_t const mode);
@@ -23,6 +24,29 @@ bool
 pathbot_mode_is_tracking(pathbot_mode_t mode)
 {
     return is_following(mode) || pathbot_mode_is_recovering(mode);
+}
+
+void
+pathbot_mode_get_name(pathbot_mode_t const mode, char *name)
+{
+    switch (mode)
+    {
+        case PATHBOT_MODE_DETECTED:
+            strcpy(name, "detected");
+            break;
+
+        case PATHBOT_MODE_RECOVERING:
+            strcpy(name, "recovering");
+            break;
+
+        case PATHBOT_MODE_FOLLOWING:
+            strcpy(name, "following");
+            break;
+
+        default:
+        case PATHBOT_MODE_MANUAL:
+            strcpy(name, "manual");
+    }
 }
 
 bool

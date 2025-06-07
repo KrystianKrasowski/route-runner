@@ -1,7 +1,10 @@
 #ifndef _DEVICES_SERIAL_H
 #define _DEVICES_SERIAL_H
 
-#define DEVICE_SERIAL_INSTANCES_NUM 1
+#include <stdint.h>
+
+#define DEVICE_SERIAL_INSTANCES_NUM   1
+#define DEVICE_SERIAL_MAX_LINE_LENGTH 80
 
 typedef enum
 {
@@ -10,5 +13,10 @@ typedef enum
 
 int
 device_serial_read(device_serial_t const h_self, char const command);
+
+int
+device_serial_write(device_serial_t const h_self,
+                    char const            message[],
+                    uint8_t               length);
 
 #endif

@@ -144,5 +144,9 @@ timeout_guard_route_create_device(void)
 static inline int
 serial_in_create_device(void)
 {
-    return serial_create(DEVICE_SERIAL_1, NOTIFICATION_SERIAL_REQUEST);
+    serial_conf_t conf = {
+        .notification_id = NOTIFICATION_SERIAL_REQUEST,
+    };
+
+    return serial_create(DEVICE_SERIAL_1, &conf);
 }

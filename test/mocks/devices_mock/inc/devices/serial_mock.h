@@ -13,4 +13,7 @@ void
 device_serial_mock_set_requested(device_serial_t const h_device,
                                  char const            command);
 
+char *
+device_serial_mock_get_applied_msg(device_serial_t const h_device);
+
 #endif
