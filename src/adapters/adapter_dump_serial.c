@@ -31,5 +31,5 @@ pathbot_port_dump_mode(pathbot_mode_t const mode)
     pathbot_mode_get_name(mode, mode_name);
     sprintf(message, "MODE: %s\n", mode_name);
 
-    device_serial_write(DEVICE_SERIAL_1, message, MESSAGE_LENGTH_MODE);
+    device_serial_send(DEVICE_SERIAL_1, message, MESSAGE_LENGTH_MODE);
 }

@@ -15,8 +15,8 @@ int
 device_serial_read(device_serial_t const h_self, char const command);
 
 int
-device_serial_write(device_serial_t const h_self,
-                    char const            message[],
-                    uint8_t               length);
+device_serial_send(device_serial_t const h_self,
+                   char const            message[],
+                   uint8_t               length);
 
 #endif

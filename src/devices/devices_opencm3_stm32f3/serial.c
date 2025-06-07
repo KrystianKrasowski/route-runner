@@ -22,10 +22,9 @@ device_serial_read(device_serial_t const h_self, char const command)
         return -ENODEV;
     }
 
-    data_store_t *p_store         = data_store_get();
-    bool          b_command_match = p_store->serial_request == command;
+    volatile char serial_request = data_store_get_serial_request();
 
-    if (b_command_match && notification_take(p_self->notification_id))
+    if (serial_request == command && notification_take(p_self->notification_id))
     {
         return RESULT_OK;
     }
@@ -34,9 +33,9 @@ device_serial_read(device_serial_t const h_self, char const command)
 }
 
 int
-device_serial_write(device_serial_t const h_self,
-                    char const            message[],
-                    uint8_t               length)
+device_serial_send(device_serial_t const h_self,
+                   char const            message[],
+                   uint8_t               length)
 {
     serial_conf_t const *p_self = serial_pool_get(&pool, h_self);
 
