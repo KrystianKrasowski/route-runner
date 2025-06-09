@@ -11,7 +11,6 @@ typedef struct
     notification_t notification_tx;
     uint32_t       dma_port;
     uint8_t        dma_channel;
-    uint32_t       usart_data_address;
 } serial_conf_t;
 
 void
