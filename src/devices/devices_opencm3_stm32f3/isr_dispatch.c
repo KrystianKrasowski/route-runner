@@ -3,11 +3,13 @@
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "notification.h"
+#include "serial.h"
 #include <devices/blink.h>
 #include <devices/dualshock2.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/common/usart_common_v2.h>
 #include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/f3/nvic.h>
 #include <libopencm3/stm32/f3/usart.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
@@ -21,6 +23,7 @@ isr_dispatch_init(void)
 {
     nvic_enable_irq(NVIC_TIM1_CC_IRQ);
     nvic_enable_irq(NVIC_TIM1_BRK_TIM15_IRQ);
+    nvic_enable_irq(NVIC_TIM1_UP_TIM16_IRQ);
     nvic_enable_irq(NVIC_TIM2_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
@@ -46,6 +49,17 @@ tim1_brk_tim15_isr(void)
     {
         timer_clear_flag(TIM15, TIM_SR_UIF);
         notification_give(NOTIFICATION_TIMEOUT_GUARD_ROUTE);
+    }
+}
+
+void
+// cppcheck-suppress unusedFunction
+tim1_up_tim16_isr(void)
+{
+    if (timer_get_flag(TIM16, TIM_SR_UIF))
+    {
+        timer_clear_flag(TIM16, TIM_SR_UIF);
+        serial_transmit(DEVICE_SERIAL_1);
     }
 }
 

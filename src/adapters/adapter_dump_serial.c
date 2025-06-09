@@ -6,7 +6,7 @@
 #include <string.h>
 #include <utils/result.h>
 
-#define MESSAGE_LENGTH_MODE 19
+#define MESSAGE_MODE_LENGTH 20
 
 int
 adapter_domain_dump_request_read(void)
@@ -23,13 +23,13 @@ void
 pathbot_port_dump_mode(pathbot_mode_t const mode)
 {
     char mode_name[11];
-    char message[MESSAGE_LENGTH_MODE];
+    char message[MESSAGE_MODE_LENGTH];
 
     memset(mode_name, 0, 10);
-    memset(message, 0, MESSAGE_LENGTH_MODE);
+    memset(message, 0, MESSAGE_MODE_LENGTH);
 
     pathbot_mode_get_name(mode, mode_name);
-    sprintf(message, "MODE: %s\n", mode_name);
+    sprintf(message, "MODE: %s\n\r", mode_name);
 
-    device_serial_send(DEVICE_SERIAL_1, message, MESSAGE_LENGTH_MODE);
+    device_serial_send(DEVICE_SERIAL_1, message);
 }

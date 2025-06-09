@@ -58,12 +58,13 @@ main(void)
     RUN_PARAM_TEST(should_read_domain_dump_request, 'c', RESULT_NOT_READY);
     RUN_PARAM_TEST(should_read_domain_dump_request, 'e', RESULT_NOT_READY);
 
-    RUN_PARAM_TEST(should_dump_mode, PATHBOT_MODE_MANUAL, "MODE: manual\n");
-    RUN_PARAM_TEST(should_dump_mode, PATHBOT_MODE_DETECTED, "MODE: detected\n");
+    RUN_PARAM_TEST(should_dump_mode, PATHBOT_MODE_MANUAL, "MODE: manual\n\r");
     RUN_PARAM_TEST(
-        should_dump_mode, PATHBOT_MODE_RECOVERING, "MODE: recovering\n");
+        should_dump_mode, PATHBOT_MODE_DETECTED, "MODE: detected\n\r");
     RUN_PARAM_TEST(
-        should_dump_mode, PATHBOT_MODE_FOLLOWING, "MODE: following\n");
+        should_dump_mode, PATHBOT_MODE_RECOVERING, "MODE: recovering\n\r");
+    RUN_PARAM_TEST(
+        should_dump_mode, PATHBOT_MODE_FOLLOWING, "MODE: following\n\r");
 
     return UNITY_END();
 }

@@ -26,19 +26,11 @@ device_serial_read(device_serial_t const h_self, char const command)
 }
 
 int
-device_serial_write(device_serial_t const h_self,
-                    char const            message[],
-                    uint8_t               length)
+device_serial_send(device_serial_t const h_self, char const message[])
 {
     serial_mock_t *p_self = serial_mock_pool_get(&pool, h_self);
 
     assert(NULL != p_self);
-
-    if (length > DEVICE_SERIAL_MAX_LINE_LENGTH)
-    {
-        length = DEVICE_SERIAL_MAX_LINE_LENGTH;
-    }
-
     strcpy(p_self->message, message);
 
     return RESULT_OK;

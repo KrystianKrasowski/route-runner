@@ -10,6 +10,7 @@
 
 #define DATA_STORE_ROUTE_BUFF_LENGTH      40
 #define DATA_STORE_DUALSHOCK2_BUFF_LENGTH 5
+#define DATA_STORE_SERIAL_TXBUFF_LENGTH   100
 
 uint32_t
 data_store_get_route_wbuff_addr(void);
@@ -37,5 +38,14 @@ data_store_update_serial_request(char const request);
 
 char
 data_store_get_serial_request(void);
+
+volatile char *
+data_store_get_serial_txbuff(void);
+
+uint32_t
+data_store_get_serial_txbuff_addr(void);
+
+void
+data_store_clear_serial_txbuff(void);
 
 #endif

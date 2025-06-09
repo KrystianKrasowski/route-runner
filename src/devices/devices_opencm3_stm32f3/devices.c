@@ -14,9 +14,11 @@
 #include <devices/qtrhd06a.h>
 #include <devices/serial.h>
 #include <devices/timeout_guard.h>
+#include <libopencm3/stm32/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/usart.h>
 #include <stdint.h>
 
 static inline int
@@ -145,7 +147,10 @@ static inline int
 serial_in_create_device(void)
 {
     serial_conf_t conf = {
-        .notification_id = NOTIFICATION_SERIAL_REQUEST,
+        .notification_id    = NOTIFICATION_SERIAL_REQUEST,
+        .dma_port           = DMA1,
+        .dma_channel        = DMA_CHANNEL7,
+        .usart_data_address = (uint32_t)&USART2_TDR,
     };
 
     return serial_create(DEVICE_SERIAL_1, &conf);
