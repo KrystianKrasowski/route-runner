@@ -51,6 +51,9 @@ static inline void
 dma1_channel3_config(void);
 
 static inline void
+dma1_channel7_config(void);
+
+static inline void
 adc12_config(void);
 
 static inline void
@@ -69,6 +72,7 @@ peripherals_init(void)
     dma1_channel1_config();
     dma1_channel2_config();
     dma1_channel3_config();
+    dma1_channel7_config();
     adc12_config();
     tim6_config();
     tim15_config();
@@ -337,6 +341,21 @@ dma1_channel3_config(void)
     dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL3);
     dma_set_peripheral_size(DMA1, DMA_CHANNEL3, DMA_CCR_PSIZE_8BIT);
     dma_set_memory_size(DMA1, DMA_CHANNEL3, DMA_CCR_MSIZE_8BIT);
+}
+
+static inline void
+dma1_channel7_config(void)
+{
+    uint32_t periph_addr = (uint32_t)&USART_TDR(USART2);
+    uint32_t memory_addr = data_store_get_serial_txbuff_addr();
+
+    dma_disable_channel(DMA1, DMA_CHANNEL7);
+    dma_set_peripheral_address(DMA1, DMA_CHANNEL7, periph_addr);
+    dma_set_memory_address(DMA1, DMA_CHANNEL7, memory_addr);
+    dma_set_read_from_memory(DMA1, DMA_CHANNEL7);
+    dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL7);
+    dma_set_peripheral_size(DMA1, DMA_CHANNEL7, DMA_CCR_PSIZE_8BIT);
+    dma_set_memory_size(DMA1, DMA_CHANNEL7, DMA_CCR_MSIZE_8BIT);
 }
 
 static inline void

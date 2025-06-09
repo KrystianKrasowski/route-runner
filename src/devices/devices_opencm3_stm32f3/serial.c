@@ -20,7 +20,6 @@ typedef struct
     notification_t    notification_tx;
     uint32_t          dma_port;
     uint8_t           dma_channel;
-    uint32_t          usart_data_address;
     character_queue_t chars_to_send;
 } serial_instance_t;
 
@@ -91,11 +90,10 @@ serial_create(device_serial_t const h_self, serial_conf_t const *p_conf)
 
     serial_instance_t *p_self = serial_pool_get(&pool, h_self);
 
-    p_self->notification_rx    = p_conf->notification_rx;
-    p_self->notification_tx    = p_conf->notification_tx;
-    p_self->dma_port           = p_conf->dma_port;
-    p_self->dma_channel        = p_conf->dma_channel;
-    p_self->usart_data_address = p_conf->usart_data_address;
+    p_self->notification_rx = p_conf->notification_rx;
+    p_self->notification_tx = p_conf->notification_tx;
+    p_self->dma_port        = p_conf->dma_port;
+    p_self->dma_channel     = p_conf->dma_channel;
 
     character_queue_init(&p_self->chars_to_send);
 
@@ -118,21 +116,12 @@ serial_transmit(device_serial_t const h_self)
         return RESULT_NOT_READY;
     }
 
-    uint8_t  data_length     = dump_character_queue(p_self);
-    uint32_t dma             = p_self->dma_port;
-    uint8_t  channel         = p_self->dma_channel;
-    uint32_t usart_data_addr = p_self->usart_data_address;
-    uint32_t txbuff_addr     = data_store_get_serial_txbuff_addr();
+    uint8_t  data_length = dump_character_queue(p_self);
+    uint32_t dma         = p_self->dma_port;
+    uint8_t  channel     = p_self->dma_channel;
 
     dma_disable_channel(dma, channel);
-    dma_channel_reset(dma, channel);
-    dma_set_peripheral_address(dma, channel, usart_data_addr);
-    dma_set_memory_address(dma, channel, txbuff_addr);
     dma_set_number_of_data(dma, channel, data_length);
-    dma_set_read_from_memory(dma, channel);
-    dma_enable_memory_increment_mode(dma, channel);
-    dma_set_peripheral_size(dma, channel, DMA_CCR_PSIZE_8BIT);
-    dma_set_memory_size(dma, channel, DMA_CCR_MSIZE_8BIT);
     dma_enable_channel(dma, channel);
 
     return RESULT_OK;

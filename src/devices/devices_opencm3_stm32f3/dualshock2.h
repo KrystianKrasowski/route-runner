@@ -9,7 +9,6 @@ typedef struct
 {
     uint32_t const           device_select_port;
     uint16_t const           device_select_pin;
-    uint32_t const           spi_port;
     uint32_t const           spi_dma_port;
     uint8_t const            spi_dma_tx_channel;
     uint8_t const            spi_dma_rx_channel;

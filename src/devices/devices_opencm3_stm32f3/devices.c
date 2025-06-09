@@ -101,7 +101,6 @@ dualshock2_create_device(void)
     dualshock2_conf_t conf = {
         .device_select_port = GPIOF,
         .device_select_pin  = GPIO0,
-        .spi_port           = SPI1,
         .spi_dma_port       = DMA1,
         .spi_dma_tx_channel = DMA_CHANNEL2,
         .spi_dma_rx_channel = DMA_CHANNEL3,
@@ -150,11 +149,10 @@ static inline int
 serial_create_device(void)
 {
     serial_conf_t conf = {
-        .notification_rx    = NOTIFICATION_SERIAL_REQUEST,
-        .notification_tx    = NOTIFICATION_SERIAL_TRANSMITTION,
-        .dma_port           = DMA1,
-        .dma_channel        = DMA_CHANNEL7,
-        .usart_data_address = (uint32_t)&USART2_TDR,
+        .notification_rx = NOTIFICATION_SERIAL_REQUEST,
+        .notification_tx = NOTIFICATION_SERIAL_TRANSMITTION,
+        .dma_port        = DMA1,
+        .dma_channel     = DMA_CHANNEL7,
     };
 
     return serial_create(DEVICE_SERIAL_1, &conf);
