@@ -8,6 +8,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/usart.h>
 #include <stdint.h>
 
 static inline void
@@ -35,6 +36,9 @@ static inline void
 tim15_config(void);
 
 static inline void
+tim16_config(void);
+
+static inline void
 spi_config(void);
 
 static inline void
@@ -48,6 +52,9 @@ dma1_channel3_config(void);
 
 static inline void
 adc12_config(void);
+
+static inline void
+usart2_config(void);
 
 void
 peripherals_init(void)
@@ -65,6 +72,8 @@ peripherals_init(void)
     adc12_config();
     tim6_config();
     tim15_config();
+    tim16_config();
+    usart2_config();
 }
 
 static inline void
@@ -96,11 +105,13 @@ rcc_periph_clocks_config(void)
     rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TIM6);
     rcc_periph_clock_enable(RCC_TIM15);
+    rcc_periph_clock_enable(RCC_TIM16);
     rcc_periph_clock_enable(RCC_SPI1);
     rcc_periph_clock_enable(RCC_DMA1);
     rcc_periph_clock_enable(RCC_ADC12);
     rcc_adc_prescale(RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_2,
                      RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_1);
+    rcc_periph_clock_enable(RCC_USART2);
 }
 
 static inline void
@@ -144,6 +155,14 @@ gpio_config(void)
                     GPIO_MODE_ANALOG,
                     GPIO_PUPD_NONE,
                     GPIO1 | GPIO3 | GPIO4 | GPIO5 | GPIO6 | GPIO7);
+
+    // USART2 receiver
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO15);
+    gpio_set_af(GPIOA, GPIO_AF7, GPIO15);
+
+    // USART2 transmitter
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO2);
+    gpio_set_af(GPIOA, GPIO_AF7, GPIO2);
 }
 
 static inline void
@@ -221,11 +240,34 @@ tim6_config(void)
 static inline void
 tim15_config(void)
 {
+    // set timer frequency to 2Hz
     timer_set_prescaler(TIM15, 16000 - 1);
     timer_set_period(TIM15, 500 - 1);
+
+    // reinitialize the counter and update the registers on update event
     timer_generate_event(TIM15, TIM_EGR_UG);
     timer_clear_flag(TIM15, TIM_SR_UIF);
+
+    // enable update interrupt
     timer_enable_irq(TIM15, TIM_DIER_UIE);
+}
+
+static inline void
+tim16_config(void)
+{
+    // set timer frequency to 1kHz
+    timer_set_prescaler(TIM16, 16 - 1);
+    timer_set_period(TIM16, 1000 - 1);
+
+    // reinitialize the counter and update the registers on update event
+    timer_generate_event(TIM15, TIM_EGR_UG);
+    timer_clear_flag(TIM15, TIM_SR_UIF);
+
+    // enable update interrupt
+    timer_enable_irq(TIM16, TIM_DIER_UIE);
+
+    // enable timer
+    timer_enable_counter(TIM16);
 }
 
 static inline void
@@ -331,4 +373,16 @@ adc12_config(void)
     adc_power_on(ADC2);
 
     adc_start_conversion_regular(ADC1);
+}
+
+static inline void
+usart2_config(void)
+{
+    usart_set_databits(USART2, 8);
+    usart_set_baudrate(USART2, 115200);
+    usart_set_stopbits(USART2, USART_CR2_STOPBITS_1);
+    usart_enable(USART2);
+    usart_set_mode(USART2, USART_MODE_TX_RX);
+    usart_enable_rx_interrupt(USART2);
+    usart_enable_tx_dma(USART2);
 }

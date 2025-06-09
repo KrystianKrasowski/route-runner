@@ -3,6 +3,7 @@
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "notification.h"
+#include "serial.h"
 #include <devices/blink.h>
 #include <devices/dualshock2.h>
 #include <libopencm3/cm3/nvic.h>
@@ -10,6 +11,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/usart.h>
 #include <stdint.h>
 #include <utils/result.h>
 
@@ -18,9 +20,11 @@ isr_dispatch_init(void)
 {
     nvic_enable_irq(NVIC_TIM1_CC_IRQ);
     nvic_enable_irq(NVIC_TIM1_BRK_TIM15_IRQ);
+    nvic_enable_irq(NVIC_TIM1_UP_TIM16_IRQ);
     nvic_enable_irq(NVIC_TIM2_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
+    nvic_enable_irq(NVIC_USART2_EXTI26_IRQ);
 }
 
 void
@@ -42,6 +46,17 @@ tim1_brk_tim15_isr(void)
     {
         timer_clear_flag(TIM15, TIM_SR_UIF);
         notification_give(NOTIFICATION_TIMEOUT_GUARD_ROUTE);
+    }
+}
+
+void
+// cppcheck-suppress unusedFunction
+tim1_up_tim16_isr(void)
+{
+    if (timer_get_flag(TIM16, TIM_SR_UIF))
+    {
+        timer_clear_flag(TIM16, TIM_SR_UIF);
+        serial_transmit(DEVICE_SERIAL_1);
     }
 }
 
@@ -78,5 +93,17 @@ dma1_channel2_isr(void)
         dualshock2_poll_end(DEVICE_DUALSHOCK2_1);
         data_store_update_dualshock2();
         notification_give(NOTIFICATION_DUALSHOCK2);
+    }
+}
+
+void
+// cppcheck-suppress unusedFunction
+usart2_exti26_isr(void)
+{
+    if (usart_get_flag(USART2, USART_ISR_RXNE))
+    {
+        char request = usart_recv(USART2);
+        data_store_update_serial_request(request);
+        notification_give(NOTIFICATION_SERIAL_REQUEST);
     }
 }

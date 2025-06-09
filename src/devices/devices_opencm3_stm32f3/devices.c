@@ -6,15 +6,19 @@
 #include "notification.h"
 #include "peripherals.h"
 #include "qtrhd06a.h"
+#include "serial.h"
 #include "timeout_guard.h"
 #include <devices/blink.h>
 #include <devices/devices.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
+#include <devices/serial.h>
 #include <devices/timeout_guard.h>
+#include <libopencm3/stm32/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/usart.h>
 #include <stdint.h>
 
 static inline int
@@ -35,6 +39,9 @@ blink_create_device(void);
 static inline int
 timeout_guard_route_create_device(void);
 
+static inline int
+serial_create_device(void);
+
 void
 devices_init(void)
 {
@@ -46,6 +53,7 @@ devices_init(void)
     qtrhd06a_init();
     blink_init();
     timeout_guard_init();
+    serial_init();
 
     // TODO: error handling
     (void)l293_create_channel_12();
@@ -54,6 +62,7 @@ devices_init(void)
     (void)qtrhd06a_create_device();
     (void)blink_create_device();
     (void)timeout_guard_route_create_device();
+    (void)serial_create_device();
 }
 
 static inline int
@@ -132,4 +141,18 @@ timeout_guard_route_create_device(void)
     };
 
     return timeout_guard_create(DEVICE_TIEMOUT_GUARD_ROUTE, &conf);
+}
+
+static inline int
+serial_create_device(void)
+{
+    serial_conf_t conf = {
+        .notification_rx    = NOTIFICATION_SERIAL_REQUEST,
+        .notification_tx    = NOTIFICATION_SERIAL_TRANSMITTION,
+        .dma_port           = DMA1,
+        .dma_channel        = DMA_CHANNEL7,
+        .usart_data_address = (uint32_t)&USART2_TDR,
+    };
+
+    return serial_create(DEVICE_SERIAL_1, &conf);
 }

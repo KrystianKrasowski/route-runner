@@ -1,6 +1,9 @@
 #ifndef _DEVICE_QTRHD06A_MOCK_H
 #define _DEVICE_QTRHD06A_MOCK_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 void
 device_qtrhd06a_mock_init(void);
 

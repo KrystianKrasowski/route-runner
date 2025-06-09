@@ -3,6 +3,7 @@ set(TEST_SUITE
     adapter_control_dualshock2_test.c
     adapter_coords_qtrhd06a_test.c
     adapter_mode_listener_test.c
+    adapter_dump_serial_test.c
 )
 
 foreach(FILE ${TEST_SUITE})

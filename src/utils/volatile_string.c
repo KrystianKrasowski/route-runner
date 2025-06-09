@@ -1,7 +1,6 @@
 #include <utils/volatile_string.h>
 
 void
-// cppcheck-suppress unusedFunction
 memset_volatile(volatile void *s, int c, size_t n)
 {
     volatile char *p = s;

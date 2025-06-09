@@ -81,10 +81,10 @@ dualshock2_poll_start(device_dualshock2_t const h_self)
         return -ENODEV;
     }
 
+    gpio_clear(p_self->device_select_port, p_self->device_select_pin);
     spi_enable_tx_dma(p_self->spi_port);
     spi_enable_rx_dma(p_self->spi_port);
     spi_enable(p_self->spi_port);
-    gpio_clear(p_self->device_select_port, p_self->device_select_pin);
 
     return RESULT_OK;
 }

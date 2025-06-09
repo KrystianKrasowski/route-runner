@@ -9,6 +9,8 @@ typedef struct
     uint8_t           dualshock2_request[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
     volatile uint8_t  dualshock2_wbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
     volatile uint8_t  dualshock2_rbuff[DATA_STORE_DUALSHOCK2_BUFF_LENGTH];
+    volatile char     serial_request;
+    volatile char     serial_txbuff[DATA_STORE_SERIAL_TXBUFF_LENGTH];
 } data_store_t;
 
 static data_store_t store = {
@@ -57,4 +59,34 @@ volatile uint8_t *
 data_store_get_dualshock2_rbuff(void)
 {
     return store.dualshock2_rbuff;
+}
+
+void
+data_store_update_serial_request(char const request)
+{
+    store.serial_request = request;
+}
+
+char
+data_store_get_serial_request(void)
+{
+    return store.serial_request;
+}
+
+volatile char *
+data_store_get_serial_txbuff(void)
+{
+    return store.serial_txbuff;
+}
+
+uint32_t
+data_store_get_serial_txbuff_addr(void)
+{
+    return (uint32_t)store.serial_txbuff;
+}
+
+void
+data_store_clear_serial_txbuff(void)
+{
+    memset_volatile(store.serial_txbuff, 0, sizeof(store.serial_txbuff));
 }

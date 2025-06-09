@@ -2,6 +2,7 @@
 #define _QUEUE_H
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -23,7 +24,7 @@
     }                                                                          \
                                                                                \
     static inline int name##_queue_push(name##_queue_t *p_self,                \
-                                        type           *p_element)             \
+                                        type const     *p_element)             \
     {                                                                          \
         int result = 0;                                                        \
                                                                                \
@@ -58,6 +59,11 @@
         }                                                                      \
                                                                                \
         return result;                                                         \
+    }                                                                          \
+                                                                               \
+    static inline bool name##_queue_empty(name##_queue_t const *p_self)        \
+    {                                                                          \
+        return p_self->head == p_self->tail;                                   \
     }                                                                          \
                                                                                \
     static inline void name##_queue_clear(name##_queue_t *p_self)              \
