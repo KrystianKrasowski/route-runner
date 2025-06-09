@@ -284,6 +284,9 @@ spi_config(void)
     spi_set_master_mode(SPI1);
     spi_set_data_size(SPI1, SPI_CR2_DS_8BIT);
     spi_fifo_reception_threshold_8bit(SPI1);
+    spi_enable_tx_dma(SPI1);
+    spi_enable_rx_dma(SPI1);
+    spi_enable(SPI1);
 }
 
 static inline void
@@ -310,19 +313,15 @@ dma1_channel2_config(void)
 {
     uint32_t periph_addr = (uint32_t)&SPI_DR(SPI1);
     uint32_t memory_addr = data_store_get_dualshock2_wbuff_addr();
-    uint16_t data_length = DATA_STORE_DUALSHOCK2_BUFF_LENGTH;
 
     dma_disable_channel(DMA1, DMA_CHANNEL2);
     dma_set_peripheral_address(DMA1, DMA_CHANNEL2, periph_addr);
     dma_set_memory_address(DMA1, DMA_CHANNEL2, memory_addr);
-    dma_set_number_of_data(DMA1, DMA_CHANNEL2, data_length);
     dma_set_read_from_peripheral(DMA1, DMA_CHANNEL2);
     dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL2);
-    dma_enable_circular_mode(DMA1, DMA_CHANNEL2);
     dma_set_peripheral_size(DMA1, DMA_CHANNEL2, DMA_CCR_PSIZE_8BIT);
     dma_set_memory_size(DMA1, DMA_CHANNEL2, DMA_CCR_MSIZE_8BIT);
     dma_enable_transfer_complete_interrupt(DMA1, DMA_CHANNEL2);
-    dma_enable_channel(DMA1, DMA_CHANNEL2);
 }
 
 static inline void
@@ -330,18 +329,14 @@ dma1_channel3_config(void)
 {
     uint32_t periph_addr = (uint32_t)&SPI_DR(SPI1);
     uint32_t memory_addr = data_store_get_dualshock2_request_addr();
-    uint16_t data_length = DATA_STORE_DUALSHOCK2_BUFF_LENGTH;
 
     dma_disable_channel(DMA1, DMA_CHANNEL3);
     dma_set_peripheral_address(DMA1, DMA_CHANNEL3, periph_addr);
     dma_set_memory_address(DMA1, DMA_CHANNEL3, memory_addr);
-    dma_set_number_of_data(DMA1, DMA_CHANNEL3, data_length);
     dma_set_read_from_memory(DMA1, DMA_CHANNEL3);
     dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL3);
-    dma_enable_circular_mode(DMA1, DMA_CHANNEL3);
     dma_set_peripheral_size(DMA1, DMA_CHANNEL3, DMA_CCR_PSIZE_8BIT);
     dma_set_memory_size(DMA1, DMA_CHANNEL3, DMA_CCR_MSIZE_8BIT);
-    dma_enable_channel(DMA1, DMA_CHANNEL3);
 }
 
 static inline void

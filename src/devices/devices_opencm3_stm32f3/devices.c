@@ -102,6 +102,9 @@ dualshock2_create_device(void)
         .device_select_port = GPIOF,
         .device_select_pin  = GPIO0,
         .spi_port           = SPI1,
+        .spi_dma_port       = DMA1,
+        .spi_dma_tx_channel = DMA_CHANNEL2,
+        .spi_dma_rx_channel = DMA_CHANNEL3,
         .notification_id    = NOTIFICATION_DUALSHOCK2,
         .p_state            = data_store_get_dualshock2_rbuff(),
     };

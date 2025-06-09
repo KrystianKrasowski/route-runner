@@ -2,6 +2,7 @@
 #include "dualshock2.h"
 #include <devices/dualshock2.h>
 #include <errno.h>
+#include <libopencm3/stm32/dma.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <stdbool.h>
@@ -81,10 +82,16 @@ dualshock2_poll_start(device_dualshock2_t const h_self)
         return -ENODEV;
     }
 
+    uint32_t dma             = p_self->spi_dma_port;
+    uint8_t  dma_channel_tx  = p_self->spi_dma_tx_channel;
+    uint8_t  dma_channel_rx  = p_self->spi_dma_rx_channel;
+    uint8_t  dma_data_length = DATA_STORE_DUALSHOCK2_BUFF_LENGTH;
+
     gpio_clear(p_self->device_select_port, p_self->device_select_pin);
-    spi_enable_tx_dma(p_self->spi_port);
-    spi_enable_rx_dma(p_self->spi_port);
-    spi_enable(p_self->spi_port);
+    dma_set_number_of_data(dma, dma_channel_tx, dma_data_length);
+    dma_set_number_of_data(dma, dma_channel_rx, dma_data_length);
+    dma_enable_channel(dma, dma_channel_tx);
+    dma_enable_channel(dma, dma_channel_rx);
 
     return RESULT_OK;
 }
@@ -99,9 +106,8 @@ dualshock2_poll_end(device_dualshock2_t const h_self)
         return -ENODEV;
     }
 
-    spi_disable(p_self->spi_port);
-    spi_disable_tx_dma(p_self->spi_port);
-    spi_disable_rx_dma(p_self->spi_port);
+    dma_disable_channel(p_self->spi_dma_port, p_self->spi_dma_tx_channel);
+    dma_disable_channel(p_self->spi_dma_port, p_self->spi_dma_rx_channel);
     gpio_set(p_self->device_select_port, p_self->device_select_pin);
 
     return RESULT_OK;
