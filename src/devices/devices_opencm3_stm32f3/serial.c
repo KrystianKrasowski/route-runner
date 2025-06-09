@@ -11,17 +11,20 @@
 #include <utils/queue.h>
 #include <utils/result.h>
 
+// cppcheck-suppress unusedFunction
 QUEUE_DECLARE(character, char, DATA_STORE_SERIAL_TXBUFF_LENGTH)
 
 typedef struct
 {
-    notification_t    notification_id;
+    notification_t    notification_rx;
+    notification_t    notification_tx;
     uint32_t          dma_port;
     uint8_t           dma_channel;
     uint32_t          usart_data_address;
     character_queue_t chars_to_send;
 } serial_instance_t;
 
+// cppcheck-suppress unusedFunction
 POOL_DECLARE(serial, serial_instance_t, DEVICE_SERIAL_INSTANCES_NUM)
 
 static serial_pool_t pool;
@@ -41,7 +44,7 @@ device_serial_read(device_serial_t const h_self, char const command)
 
     volatile char serial_request = data_store_get_serial_request();
 
-    if (serial_request == command && notification_take(p_self->notification_id))
+    if (serial_request == command && notification_take(p_self->notification_rx))
     {
         return RESULT_OK;
     }
@@ -67,6 +70,8 @@ device_serial_send(device_serial_t const h_self, char const message[])
         char_index++;
     }
 
+    notification_give(p_self->notification_tx);
+
     return RESULT_OK;
 }
 
@@ -86,7 +91,8 @@ serial_create(device_serial_t const h_self, serial_conf_t const *p_conf)
 
     serial_instance_t *p_self = serial_pool_get(&pool, h_self);
 
-    p_self->notification_id    = p_conf->notification_id;
+    p_self->notification_rx    = p_conf->notification_rx;
+    p_self->notification_tx    = p_conf->notification_tx;
     p_self->dma_port           = p_conf->dma_port;
     p_self->dma_channel        = p_conf->dma_channel;
     p_self->usart_data_address = p_conf->usart_data_address;
@@ -106,7 +112,8 @@ serial_transmit(device_serial_t const h_self)
         return -ENODEV;
     }
 
-    if (character_queue_empty(&p_self->chars_to_send))
+    if (character_queue_empty(&p_self->chars_to_send) ||
+        notification_take(p_self->notification_tx))
     {
         return RESULT_NOT_READY;
     }

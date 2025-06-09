@@ -8,4 +8,5 @@ pathbot_handle_store_dump(void)
     pathbot_store_t *p_store = pathbot_store_get();
 
     pathbot_port_dump_mode(p_store->mode);
+    pathbot_port_dump_pid_conf(&p_store->pid_conf);
 }

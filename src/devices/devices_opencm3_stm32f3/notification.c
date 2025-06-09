@@ -24,6 +24,7 @@ notification_take(notification_t id)
 }
 
 bool
+// cppcheck-suppress staticFunction
 notification_peek(notification_t id)
 {
     if (id >= NOTIFICATIONS_LENGTH)

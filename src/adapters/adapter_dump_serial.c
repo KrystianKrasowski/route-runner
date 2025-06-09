@@ -7,6 +7,7 @@
 #include <utils/result.h>
 
 #define MESSAGE_MODE_LENGTH 20
+#define MESSAGE_PID_LENGTH  35
 
 int
 adapter_domain_dump_request_read(void)
@@ -30,6 +31,19 @@ pathbot_port_dump_mode(pathbot_mode_t const mode)
 
     pathbot_mode_get_name(mode, mode_name);
     sprintf(message, "MODE: %s\n\r", mode_name);
+
+    device_serial_send(DEVICE_SERIAL_1, message);
+}
+
+void
+pathbot_port_dump_pid_conf(pathbot_pid_conf_t const *p_pid_conf)
+{
+    char message[MESSAGE_PID_LENGTH];
+    int  kp = (int)(p_pid_conf->kp * 100);
+    int  ki = (int)(p_pid_conf->ki * 100);
+    int  kd = (int)(p_pid_conf->kd * 100);
+
+    sprintf(message, "PID: kp %d; ki %d; kd %d\n\r", kp, ki, kd);
 
     device_serial_send(DEVICE_SERIAL_1, message);
 }

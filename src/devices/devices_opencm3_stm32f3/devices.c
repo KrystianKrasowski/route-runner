@@ -147,7 +147,8 @@ static inline int
 serial_in_create_device(void)
 {
     serial_conf_t conf = {
-        .notification_id    = NOTIFICATION_SERIAL_REQUEST,
+        .notification_rx    = NOTIFICATION_SERIAL_REQUEST,
+        .notification_tx    = NOTIFICATION_SERIAL_TRANSMITTION,
         .dma_port           = DMA1,
         .dma_channel        = DMA_CHANNEL7,
         .usart_data_address = (uint32_t)&USART2_TDR,
