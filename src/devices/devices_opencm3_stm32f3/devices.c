@@ -40,7 +40,7 @@ static inline int
 timeout_guard_route_create_device(void);
 
 static inline int
-serial_in_create_device(void);
+serial_create_device(void);
 
 void
 devices_init(void)
@@ -62,7 +62,7 @@ devices_init(void)
     (void)qtrhd06a_create_device();
     (void)blink_create_device();
     (void)timeout_guard_route_create_device();
-    (void)serial_in_create_device();
+    (void)serial_create_device();
 }
 
 static inline int
@@ -144,7 +144,7 @@ timeout_guard_route_create_device(void)
 }
 
 static inline int
-serial_in_create_device(void)
+serial_create_device(void)
 {
     serial_conf_t conf = {
         .notification_rx    = NOTIFICATION_SERIAL_REQUEST,
