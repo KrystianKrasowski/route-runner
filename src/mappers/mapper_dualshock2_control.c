@@ -1,5 +1,5 @@
-#include "mappers/dualshock2_control.h"
 #include <devices/dualshock2.h>
+#include <mappers/dualshock2_control.h>
 #include <pathbot/domain.h>
 
 uint16_t
