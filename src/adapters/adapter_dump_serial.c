@@ -1,4 +1,3 @@
-#include <adapters/dump_serial.h>
 #include <devices/serial.h>
 #include <pathbot/api.h>
 #include <pathbot/domain.h>
@@ -8,17 +7,6 @@
 
 #define MESSAGE_MODE_LENGTH 20
 #define MESSAGE_PID_LENGTH  35
-
-int
-adapter_domain_dump_request_read(void)
-{
-    if (device_serial_read(DEVICE_SERIAL_1, 'd') == RESULT_OK)
-    {
-        return RESULT_OK;
-    }
-
-    return RESULT_NOT_READY;
-}
 
 void
 pathbot_port_dump_mode(pathbot_mode_t const mode)

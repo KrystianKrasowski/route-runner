@@ -1,7 +1,6 @@
 set(TEST_SUITE
-    adapter_motion_l293_test.c
-    adapter_mode_listener_test.c
-    adapter_dump_serial_test.c
+    mapper_dualshock2_control_test.c
+    mapper_qtrhd06a_coords_test.c
 )
 
 foreach(FILE ${TEST_SUITE})
@@ -18,7 +17,7 @@ foreach(FILE ${TEST_SUITE})
         PRIVATE
             pathbot
             devices_mock
-            adapters
+            mappers
             unity
     )   
 

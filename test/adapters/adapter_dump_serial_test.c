@@ -20,19 +20,6 @@ tearDown(void)
 }
 
 void
-should_read_domain_dump_request(char command, int expected_result)
-{
-    // given
-    device_serial_mock_set_requested(DEVICE_SERIAL_1, command);
-
-    // when
-    int result = adapter_domain_dump_request_read();
-
-    // then
-    TEST_ASSERT_EQUAL(expected_result, result);
-}
-
-void
 should_dump_mode(pathbot_mode_t mode, char *expected_msg)
 {
     // given
@@ -71,12 +58,6 @@ int
 main(void)
 {
     UNITY_BEGIN();
-
-    RUN_PARAM_TEST(should_read_domain_dump_request, 'd', RESULT_OK);
-    RUN_PARAM_TEST(should_read_domain_dump_request, 'a', RESULT_NOT_READY);
-    RUN_PARAM_TEST(should_read_domain_dump_request, 'b', RESULT_NOT_READY);
-    RUN_PARAM_TEST(should_read_domain_dump_request, 'c', RESULT_NOT_READY);
-    RUN_PARAM_TEST(should_read_domain_dump_request, 'e', RESULT_NOT_READY);
 
     RUN_PARAM_TEST(should_dump_mode, PATHBOT_MODE_MANUAL, "MODE: manual\n\r");
     RUN_PARAM_TEST(

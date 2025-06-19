@@ -7,6 +7,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
         pathbot
         adapters
+        mappers
         devices_opencm3_stm32f3
 )
 
