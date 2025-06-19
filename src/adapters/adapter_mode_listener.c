@@ -41,10 +41,10 @@ apply_route_guard(pathbot_mode_t const mode)
 {
     if (pathbot_mode_is_recovering(mode))
     {
-        device_timeout_guard_start(DEVICE_TIEMOUT_GUARD_ROUTE);
+        device_timeout_guard_start(DEVICE_TIMEOUT_GUARD_ROUTE);
     }
     else
     {
-        device_timeout_guard_stop(DEVICE_TIEMOUT_GUARD_ROUTE);
+        device_timeout_guard_stop(DEVICE_TIMEOUT_GUARD_ROUTE);
     }
 }

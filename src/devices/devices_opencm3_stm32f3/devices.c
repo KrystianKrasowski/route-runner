@@ -142,7 +142,7 @@ timeout_guard_route_create_device(void)
         .timeout_notification = NOTIFICATION_TIMEOUT_GUARD_ROUTE,
     };
 
-    return timeout_guard_create(DEVICE_TIEMOUT_GUARD_ROUTE, &conf);
+    return timeout_guard_create(DEVICE_TIMEOUT_GUARD_ROUTE, &conf);
 }
 
 static inline int

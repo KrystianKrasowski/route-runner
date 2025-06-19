@@ -3,7 +3,7 @@
 
 typedef enum
 {
-    DEVICE_TIEMOUT_GUARD_ROUTE
+    DEVICE_TIMEOUT_GUARD_ROUTE
 } device_timeout_guard_t;
 
 #define DEVICE_TIMEOUT_GUARD_INSTANCES_NUM 1

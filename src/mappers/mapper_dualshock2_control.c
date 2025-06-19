@@ -3,7 +3,7 @@
 #include <pathbot/domain.h>
 
 uint16_t
-mapper_dualshock2_control_read(uint16_t dualshock2_state)
+mapper_dualshock2_control_read(uint16_t const dualshock2_state)
 {
     uint16_t commands = PATHBOT_COMMAND_NONE;
 

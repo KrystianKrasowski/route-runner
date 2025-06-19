@@ -1,9 +1,8 @@
 #include "task.h"
-#include <adapters/coords_qtrhd06a.h>
-#include <adapters/dump_serial.h>
-#include <adapters/route_guard.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
+#include <devices/serial.h>
+#include <devices/timeout_guard.h>
 #include <mappers/dualshock2_control.h>
 #include <mappers/qtrhd06a_coords.h>
 #include <pathbot/api.h>
@@ -44,7 +43,7 @@ task_handle_route_tracking(void)
 void
 task_handle_immediate_stop(void)
 {
-    if (adapter_route_guard_read() == RESULT_TIMEOUT)
+    if (device_timeout_guard_read(DEVICE_TIMEOUT_GUARD_ROUTE) == RESULT_TIMEOUT)
     {
         pathbot_handle_route_guard_timeout();
     }
@@ -53,7 +52,7 @@ task_handle_immediate_stop(void)
 void
 task_handle_domain_dump(void)
 {
-    if (adapter_domain_dump_request_read() == RESULT_OK)
+    if (device_serial_read(DEVICE_SERIAL_1, 'd') == RESULT_OK)
     {
         pathbot_handle_store_dump();
     }
