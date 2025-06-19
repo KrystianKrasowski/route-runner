@@ -5,6 +5,7 @@
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
 #include <mappers/dualshock2_control.h>
+#include <mappers/qtrhd06a_coords.h>
 #include <pathbot/api.h>
 #include <utils/result.h>
 
@@ -23,15 +24,19 @@ task_handle_manual_control(void)
 void
 task_handle_route_tracking(void)
 {
-    // TODO: Some factory here
-    pathbot_coords_t coords = {
-        .coords  = {0, 0, 0, 0, 0, 0},
-        .length  = PATHBOT_MAX_COORDS_LENGTH,
-        .weights = PATHBOT_COORDS6_WEIGHTS,
-    };
+    uint8_t const coords_size = DEVICE_QTRHD06A_VALUES_LENGTH;
+    uint8_t       raw_values[coords_size];
 
-    if (adapter_coords_qtrhd06a_read(DEVICE_QTRHD06A_1, &coords) == RESULT_OK)
+    if (device_qtrhd06a_read(DEVICE_QTRHD06A_1, raw_values) == RESULT_OK)
     {
+        // TODO: Some factory here
+        pathbot_coords_t coords = {
+            .coords  = {0, 0, 0, 0, 0, 0},
+            .length  = PATHBOT_MAX_COORDS_LENGTH,
+            .weights = PATHBOT_COORDS6_WEIGHTS,
+        };
+
+        mapper_qtrhd06a_coords_read(raw_values, coords_size, &coords);
         pathbot_handle_coords(&coords);
     }
 }
