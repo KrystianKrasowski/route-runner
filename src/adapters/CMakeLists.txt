@@ -1,6 +1,5 @@
 add_library(adapters STATIC
     adapter_motion_l293.c
-    adapter_control_dualshock2.c
     adapter_mode_listener.c
     adapter_coords_qtrhd06a.c
     adapter_route_guard.c

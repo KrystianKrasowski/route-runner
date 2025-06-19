@@ -1,21 +1,21 @@
 #include "task.h"
-#include <adapters/control_dualshock2.h>
 #include <adapters/coords_qtrhd06a.h>
 #include <adapters/dump_serial.h>
 #include <adapters/route_guard.h>
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
+#include <mappers/dualshock2_control.h>
 #include <pathbot/api.h>
 #include <utils/result.h>
 
 void
 task_handle_manual_control(void)
 {
-    uint16_t commands;
+    uint16_t raw = DS2_NONE;
 
-    if (adapter_control_dualshock2_read(DEVICE_DUALSHOCK2_1, &commands) ==
-        RESULT_OK)
+    if (device_dualshock2_read(DEVICE_DUALSHOCK2_1, &raw) == RESULT_OK)
     {
+        uint16_t commands = mapper_dualshock2_control_read(raw);
         pathbot_handle_commands(commands);
     }
 }
