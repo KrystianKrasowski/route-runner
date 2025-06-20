@@ -1,3 +1,4 @@
+#include "notifications.h"
 #include "task.h"
 #include <devices/dualshock2.h>
 #include <devices/qtrhd06a.h>
@@ -11,6 +12,11 @@
 void
 task_handle_manual_control(void)
 {
+    if (notifications_take(NOTIFICATION_MANUAL_CONTROL) != RESULT_OK)
+    {
+        return;
+    }
+
     uint16_t raw = DS2_NONE;
 
     if (device_dualshock2_read(DEVICE_DUALSHOCK2_1, &raw) == RESULT_OK)
@@ -23,6 +29,11 @@ task_handle_manual_control(void)
 void
 task_handle_route_tracking(void)
 {
+    if (notifications_take(NOTIFICATION_ROUTE_TRACKING) != RESULT_OK)
+    {
+        return;
+    }
+
     uint8_t const coords_size = DEVICE_QTRHD06A_VALUES_LENGTH;
     uint8_t       raw_values[coords_size];
 
@@ -43,15 +54,22 @@ task_handle_route_tracking(void)
 void
 task_handle_immediate_stop(void)
 {
-    if (device_timeout_guard_read(DEVICE_TIMEOUT_GUARD_ROUTE) == RESULT_TIMEOUT)
+    if (notifications_take(NOTIFICATION_IMMEDIATE_STOP) != RESULT_OK)
     {
-        pathbot_handle_route_guard_timeout();
+        return;
     }
+
+    pathbot_handle_route_guard_timeout();
 }
 
 void
 task_handle_domain_dump(void)
 {
+    if (notifications_take(NOTIFICATION_DOMAIN_DUMP) != RESULT_OK)
+    {
+        return;
+    }
+
     if (device_serial_read(DEVICE_SERIAL_1, 'd') == RESULT_OK)
     {
         pathbot_handle_store_dump();

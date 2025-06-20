@@ -1,3 +1,4 @@
+#include "notifications.h"
 #include "task.h"
 #include <devices/devices.h>
 #include <pathbot/store.h>
@@ -8,6 +9,7 @@ int
 main(void)
 {
     devices_init();
+    notifications_init();
     pathbot_store_init(NULL);
 
     while (1)

@@ -1,10 +1,10 @@
 #include "data_store.h"
-#include "notification.h"
 #include "serial.h"
 #include <errno.h>
 #include <libopencm3/stm32/dma.h>
 #include <libopencm3/stm32/f3/usart.h>
 #include <libopencm3/stm32/usart.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 #include <utils/pool.h>
@@ -16,11 +16,10 @@ QUEUE_DECLARE(character, char, DATA_STORE_SERIAL_TXBUFF_LENGTH)
 
 typedef struct
 {
-    notification_t    notification_rx;
-    notification_t    notification_tx;
     uint32_t          dma_port;
     uint8_t           dma_channel;
     character_queue_t chars_to_send;
+    bool              busy;
 } serial_instance_t;
 
 // cppcheck-suppress unusedFunction
@@ -43,7 +42,7 @@ device_serial_read(device_serial_t const h_self, char const command)
 
     volatile char serial_request = data_store_get_serial_request();
 
-    if (serial_request == command && notification_take(p_self->notification_rx))
+    if (serial_request == command)
     {
         return RESULT_OK;
     }
@@ -63,13 +62,15 @@ device_serial_send(device_serial_t const h_self, char const message[])
 
     uint8_t char_index = 0;
 
+    p_self->busy = true;
+
     while (message[char_index] != '\0')
     {
         character_queue_push(&p_self->chars_to_send, &message[char_index]);
         char_index++;
     }
 
-    notification_give(p_self->notification_tx);
+    p_self->busy = false;
 
     return RESULT_OK;
 }
@@ -90,10 +91,9 @@ serial_create(device_serial_t const h_self, serial_conf_t const *p_conf)
 
     serial_instance_t *p_self = serial_pool_get(&pool, h_self);
 
-    p_self->notification_rx = p_conf->notification_rx;
-    p_self->notification_tx = p_conf->notification_tx;
-    p_self->dma_port        = p_conf->dma_port;
-    p_self->dma_channel     = p_conf->dma_channel;
+    p_self->dma_port    = p_conf->dma_port;
+    p_self->dma_channel = p_conf->dma_channel;
+    p_self->busy        = false;
 
     character_queue_init(&p_self->chars_to_send);
 
@@ -110,8 +110,7 @@ serial_transmit(device_serial_t const h_self)
         return -ENODEV;
     }
 
-    if (character_queue_empty(&p_self->chars_to_send) ||
-        notification_take(p_self->notification_tx))
+    if (character_queue_empty(&p_self->chars_to_send) || true == p_self->busy)
     {
         return RESULT_NOT_READY;
     }

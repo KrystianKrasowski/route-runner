@@ -6,8 +6,7 @@
 
 typedef struct
 {
-    uint32_t       timer;
-    notification_t timeout_notification;
+    uint32_t timer;
 } timeout_guard_conf_t;
 
 void

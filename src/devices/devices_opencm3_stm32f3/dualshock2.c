@@ -30,11 +30,6 @@ device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands)
         return -ENODEV;
     }
 
-    if (!notification_take(p_self->notification_id))
-    {
-        return RESULT_NOT_READY;
-    }
-
     if (state_is_valid(p_self->p_state))
     {
         uint8_t msb = p_self->p_state[4];

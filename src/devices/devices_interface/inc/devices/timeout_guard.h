@@ -14,7 +14,4 @@ device_timeout_guard_start(device_timeout_guard_t const h_self);
 int
 device_timeout_guard_stop(device_timeout_guard_t const h_self);
 
-int
-device_timeout_guard_read(device_timeout_guard_t const h_self);
-
 #endif

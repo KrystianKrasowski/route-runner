@@ -10,7 +10,6 @@ add_library(devices_opencm3_stm32f3 STATIC
     systick.c
     peripherals.c
     blink.c
-    notification.c
     timeout_guard.c
     serial.c
 )

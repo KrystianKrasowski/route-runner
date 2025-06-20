@@ -1,7 +1,6 @@
 #ifndef _DEVICES_OPENCM3_STM32F3_DUALSHOCK2_H
 #define _DEVICES_OPENCM3_STM32F3_DUALSHOCK2_H
 
-#include "notification.h"
 #include <devices/dualshock2.h>
 #include <stdint.h>
 
@@ -12,7 +11,6 @@ typedef struct
     uint32_t const           spi_dma_port;
     uint8_t const            spi_dma_tx_channel;
     uint8_t const            spi_dma_rx_channel;
-    notification_t const     notification_id;
     volatile uint8_t * const p_state;
 } dualshock2_conf_t;
 

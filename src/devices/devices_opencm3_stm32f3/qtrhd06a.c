@@ -1,4 +1,3 @@
-#include "notification.h"
 #include "qtrhd06a.h"
 #include <errno.h>
 #include <stdint.h>
@@ -39,11 +38,6 @@ device_qtrhd06a_read(device_qtrhd06a_t const h_self, uint8_t values[])
     if (NULL == p_self)
     {
         return -ENODEV;
-    }
-
-    if (!notification_take(p_self->notification_id))
-    {
-        return RESULT_NOT_READY;
     }
 
     // TODO: handle values size
