@@ -1,4 +1,3 @@
-#include "notification.h"
 #include "timeout_guard.h"
 #include <errno.h>
 #include <libopencm3/stm32/timer.h>
@@ -40,24 +39,6 @@ device_timeout_guard_stop(device_timeout_guard_t const h_self)
 
     timer_disable_counter(p_self->timer);
     timer_set_counter(p_self->timer, 0);
-
-    return RESULT_OK;
-}
-
-int
-device_timeout_guard_read(device_timeout_guard_t const h_self)
-{
-    timeout_guard_conf_t const *p_self = timeout_guard_pool_get(&pool, h_self);
-
-    if (NULL == p_self)
-    {
-        return -ENODEV;
-    }
-
-    if (notification_take(p_self->timeout_notification))
-    {
-        return RESULT_TIMEOUT;
-    }
 
     return RESULT_OK;
 }

@@ -1,16 +1,13 @@
 #ifndef _DEVICES_OPENCM3_STM32F3_SERIAL_H
 #define _DEVICES_OPENCM3_STM32F3_SERIAL_H
 
-#include "notification.h"
 #include <devices/serial.h>
 #include <stdint.h>
 
 typedef struct
 {
-    notification_t notification_rx;
-    notification_t notification_tx;
-    uint32_t       dma_port;
-    uint8_t        dma_channel;
+    uint32_t dma_port;
+    uint8_t  dma_channel;
 } serial_conf_t;
 
 void

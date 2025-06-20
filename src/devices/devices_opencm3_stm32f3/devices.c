@@ -3,7 +3,6 @@
 #include "dualshock2.h"
 #include "isr_dispatch.h"
 #include "l293.h"
-#include "notification.h"
 #include "peripherals.h"
 #include "qtrhd06a.h"
 #include "serial.h"
@@ -104,7 +103,6 @@ dualshock2_create_device(void)
         .spi_dma_port       = DMA1,
         .spi_dma_tx_channel = DMA_CHANNEL2,
         .spi_dma_rx_channel = DMA_CHANNEL3,
-        .notification_id    = NOTIFICATION_DUALSHOCK2,
         .p_state            = data_store_get_dualshock2_rbuff(),
     };
 
@@ -117,7 +115,6 @@ qtrhd06a_create_device(void)
     qtrhd06a_conf_t conf = {
         .p_raw_values      = data_store_get_route_rbuff(),
         .raw_values_length = DATA_STORE_ROUTE_BUFF_LENGTH,
-        .notification_id   = NOTIFICATION_ROUTE_CONVERSIONS,
     };
 
     return qtrhd06a_create(DEVICE_QTRHD06A_1, &conf);
@@ -138,8 +135,7 @@ static inline int
 timeout_guard_route_create_device(void)
 {
     timeout_guard_conf_t conf = {
-        .timer                = TIM15,
-        .timeout_notification = NOTIFICATION_TIMEOUT_GUARD_ROUTE,
+        .timer = TIM15,
     };
 
     return timeout_guard_create(DEVICE_TIMEOUT_GUARD_ROUTE, &conf);
@@ -149,10 +145,8 @@ static inline int
 serial_create_device(void)
 {
     serial_conf_t conf = {
-        .notification_rx = NOTIFICATION_SERIAL_REQUEST,
-        .notification_tx = NOTIFICATION_SERIAL_TRANSMITTION,
-        .dma_port        = DMA1,
-        .dma_channel     = DMA_CHANNEL7,
+        .dma_port    = DMA1,
+        .dma_channel = DMA_CHANNEL7,
     };
 
     return serial_create(DEVICE_SERIAL_1, &conf);
