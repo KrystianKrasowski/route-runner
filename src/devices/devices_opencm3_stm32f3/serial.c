@@ -19,7 +19,6 @@ typedef struct
     uint32_t          dma_port;
     uint8_t           dma_channel;
     character_queue_t chars_to_send;
-    bool              busy;
 } serial_instance_t;
 
 // cppcheck-suppress unusedFunction
@@ -62,15 +61,11 @@ device_serial_send(device_serial_t const h_self, char const message[])
 
     uint8_t char_index = 0;
 
-    p_self->busy = true;
-
     while (message[char_index] != '\0')
     {
         character_queue_push(&p_self->chars_to_send, &message[char_index]);
         char_index++;
     }
-
-    p_self->busy = false;
 
     return RESULT_OK;
 }
@@ -93,7 +88,6 @@ serial_create(device_serial_t const h_self, serial_conf_t const *p_conf)
 
     p_self->dma_port    = p_conf->dma_port;
     p_self->dma_channel = p_conf->dma_channel;
-    p_self->busy        = false;
 
     character_queue_init(&p_self->chars_to_send);
 
@@ -110,7 +104,7 @@ serial_transmit(device_serial_t const h_self)
         return -ENODEV;
     }
 
-    if (character_queue_empty(&p_self->chars_to_send) || true == p_self->busy)
+    if (character_queue_empty(&p_self->chars_to_send))
     {
         return RESULT_NOT_READY;
     }

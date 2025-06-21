@@ -259,9 +259,9 @@ tim15_config(void)
 static inline void
 tim16_config(void)
 {
-    // set timer frequency to 1kHz
-    timer_set_prescaler(TIM16, 16 - 1);
-    timer_set_period(TIM16, 1000 - 1);
+    // set timer frequency to 10Hz
+    timer_set_prescaler(TIM16, 16000 - 1);
+    timer_set_period(TIM16, 100 - 1);
 
     // reinitialize the counter and update the registers on update event
     timer_generate_event(TIM15, TIM_EGR_UG);
