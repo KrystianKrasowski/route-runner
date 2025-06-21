@@ -1,6 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/cmake/libopencm3-stm32f3.cmake)
-
-add_library(devices_opencm3_stm32f3 STATIC
+add_library(devices_libopencm3_stm32f3 STATIC
     devices.c
     l293.c
     dualshock2.c
@@ -14,12 +12,12 @@ add_library(devices_opencm3_stm32f3 STATIC
     serial.c
 )
 
-set_property(TARGET devices_opencm3_stm32f3 PROPERTY C_STANDARD 11)
+set_property(TARGET devices_libopencm3_stm32f3 PROPERTY C_STANDARD 11)
 
-target_link_libraries(devices_opencm3_stm32f3
+target_link_libraries(devices_libopencm3_stm32f3
     PUBLIC
-        opencm3_stm32f3
         devices
     PRIVATE
+        libopencm3_stm32f3
         utils
 )

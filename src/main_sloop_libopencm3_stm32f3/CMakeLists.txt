@@ -9,7 +9,7 @@ target_link_libraries(${PROJECT_NAME}
         pathbot
         adapters
         mappers
-        devices_opencm3_stm32f3
+        devices_libopencm3_stm32f3
 )
 
 target_link_options(${PROJECT_NAME}
@@ -30,6 +30,6 @@ add_custom_command(TARGET ${PROJECT_NAME}
 
 add_custom_target(flash
     COMMAND st-flash write ${PROJECT_NAME}.bin 0x08000000
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/main_libopencm3_stm32f3
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/main_sloop_libopencm3_stm32f3
     COMMENT "Flashing ${PROJECT_NAME}.bin"
 )
