@@ -40,7 +40,7 @@ should_start_guard(pathbot_mode_t mode)
 
     // then
     TEST_ASSERT_TRUE(
-        device_timeout_guard_mock_is_started(DEVICE_TIEMOUT_GUARD_ROUTE));
+        device_timeout_guard_mock_is_started(DEVICE_TIMEOUT_GUARD_ROUTE));
 }
 
 void
@@ -51,7 +51,7 @@ should_stop_guard(pathbot_mode_t mode)
 
     // then
     TEST_ASSERT_TRUE(
-        device_timeout_guard_mock_is_stopped(DEVICE_TIEMOUT_GUARD_ROUTE));
+        device_timeout_guard_mock_is_stopped(DEVICE_TIMEOUT_GUARD_ROUTE));
 }
 
 int
