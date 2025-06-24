@@ -6,4 +6,6 @@ if(TARGET_ARCH STREQUAL "test")
     add_subdirectory(unity)
 endif()
 
-#add_subdirectory(freertos_kernel)
+if(TARGET_RUNTIME STREQUAL "freertos")
+    add_subdirectory(freertos_kernel)
+endif()
