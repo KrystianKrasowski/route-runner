@@ -1,5 +1,6 @@
 add_executable(${PROJECT_NAME}
     main.c
+    application.c
     notifications.c
 )
 
