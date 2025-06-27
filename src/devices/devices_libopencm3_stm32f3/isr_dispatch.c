@@ -45,7 +45,8 @@ tim1_brk_tim15_isr(void)
     if (timer_get_flag(TIM15, TIM_SR_UIF))
     {
         timer_clear_flag(TIM15, TIM_SR_UIF);
-        devices_port_notification_give(DEVICE_NOTIFICATION_TIMEOUT_GUARD_ROUTE);
+        devices_port_isr_notification_give(
+            DEVICE_NOTIFICATION_TIMEOUT_GUARD_ROUTE);
     }
 }
 
@@ -79,7 +80,8 @@ dma1_channel1_isr(void)
     {
         dma_clear_interrupt_flags(DMA1, DMA_CHANNEL1, DMA_TCIF);
         data_store_update_route();
-        devices_port_notification_give(DEVICE_NOTIFICATION_ROUTE_CONVERTIONS);
+        devices_port_isr_notification_give(
+            DEVICE_NOTIFICATION_ROUTE_CONVERTIONS);
     }
 }
 
@@ -92,7 +94,7 @@ dma1_channel2_isr(void)
         dma_clear_interrupt_flags(DMA1, DMA_CHANNEL2, DMA_TCIF);
         dualshock2_poll_end(DEVICE_DUALSHOCK2_1);
         data_store_update_dualshock2();
-        devices_port_notification_give(DEVICE_NOTIFICATION_DUALSHOCK2);
+        devices_port_isr_notification_give(DEVICE_NOTIFICATION_DUALSHOCK2);
     }
 }
 
@@ -104,6 +106,6 @@ usart2_exti26_isr(void)
     {
         char request = usart_recv(USART2);
         data_store_update_serial_request(request);
-        devices_port_notification_give(DEVICE_NOTIFICATION_SERIAL_REQUEST);
+        devices_port_isr_notification_give(DEVICE_NOTIFICATION_SERIAL_REQUEST);
     }
 }

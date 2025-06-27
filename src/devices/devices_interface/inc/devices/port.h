@@ -10,6 +10,6 @@ typedef enum
 } device_notification_t;
 
 void
-devices_port_notification_give(device_notification_t id);
+devices_port_isr_notification_give(device_notification_t id);
 
 #endif

@@ -34,7 +34,7 @@ notifications_put(device_notification_t id, TaskHandle_t h_task)
 }
 
 void
-devices_port_notification_give(device_notification_t id)
+devices_port_isr_notification_give(device_notification_t id)
 {
     BaseType_t   higher_priority_task_woken = pdFALSE;
     TaskHandle_t h_task                     = NULL;
