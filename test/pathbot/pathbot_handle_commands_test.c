@@ -8,6 +8,9 @@
 #include <unity.h>
 #include <unity_config.h>
 
+#define CORRECTION_LEFT  -30
+#define CORRECTION_RIGHT 30
+
 static pathbot_store_t *p_store;
 
 void
@@ -102,12 +105,12 @@ main(void)
     RUN_PARAM_TEST(should_update_manual_motion,
                    FIXTURES_MOTION_NONE,
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_forward(-50));
+                   fixtures_motion_forward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    FIXTURES_MOTION_NONE,
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_forward(50));
+                   fixtures_motion_forward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    FIXTURES_MOTION_NONE,
@@ -117,12 +120,12 @@ main(void)
     RUN_PARAM_TEST(should_update_manual_motion,
                    FIXTURES_MOTION_NONE,
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_backward(-50));
+                   fixtures_motion_backward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    FIXTURES_MOTION_NONE,
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_backward(50));
+                   fixtures_motion_backward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_forward(0),
@@ -132,12 +135,12 @@ main(void)
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_forward(0),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_forward(-50));
+                   fixtures_motion_forward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_forward(0),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_forward(50));
+                   fixtures_motion_forward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_forward(0),
@@ -147,72 +150,72 @@ main(void)
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_forward(0),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_backward(-50));
+                   fixtures_motion_backward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_forward(0),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_backward(50));
+                   fixtures_motion_backward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_NONE,
                    FIXTURES_MOTION_NONE);
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_FORWARD,
                    fixtures_motion_forward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_forward(50));
+                   fixtures_motion_forward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_BACKWARD,
                    fixtures_motion_backward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_backward(-50));
+                   fixtures_motion_backward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_backward(50));
+                   fixtures_motion_backward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_NONE,
                    FIXTURES_MOTION_NONE);
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_FORWARD,
                    fixtures_motion_forward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_forward(-50));
+                   fixtures_motion_forward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_BACKWARD,
                    fixtures_motion_backward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_backward(-50));
+                   fixtures_motion_backward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_backward(50));
+                   fixtures_motion_backward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_backward(0),
@@ -227,82 +230,82 @@ main(void)
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_backward(0),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_forward(-50));
+                   fixtures_motion_forward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_backward(0),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_forward(50));
+                   fixtures_motion_forward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_backward(0),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_backward(-50));
+                   fixtures_motion_backward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
                    fixtures_motion_backward(0),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_backward(50));
+                   fixtures_motion_backward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_NONE,
                    FIXTURES_MOTION_NONE);
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_FORWARD,
                    fixtures_motion_forward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_forward(-50));
+                   fixtures_motion_forward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_forward(50));
+                   fixtures_motion_forward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_BACKWARD,
                    fixtures_motion_backward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_backward(50));
+                   fixtures_motion_backward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_NONE,
                    FIXTURES_MOTION_NONE);
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_FORWARD,
                    fixtures_motion_forward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_forward(-50));
+                   fixtures_motion_forward(CORRECTION_LEFT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT,
-                   fixtures_motion_forward(50));
+                   fixtures_motion_forward(CORRECTION_RIGHT));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_BACKWARD,
                    fixtures_motion_backward(0));
 
     RUN_PARAM_TEST(should_update_manual_motion,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT,
-                   fixtures_motion_backward(-50));
+                   fixtures_motion_backward(CORRECTION_LEFT));
 
     // ---- should_keep_manual_motion
 
@@ -343,25 +346,25 @@ main(void)
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT |
                        PATHBOT_COMMAND_FOLLOW);
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_forward(-50),
+                   fixtures_motion_forward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_LEFT |
                        PATHBOT_COMMAND_BREAK);
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT |
                        PATHBOT_COMMAND_FOLLOW);
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_forward(50),
+                   fixtures_motion_forward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_FORWARD | PATHBOT_COMMAND_RIGHT |
                        PATHBOT_COMMAND_BREAK);
 
@@ -377,25 +380,25 @@ main(void)
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT |
                        PATHBOT_COMMAND_FOLLOW);
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_backward(-50),
+                   fixtures_motion_backward(CORRECTION_LEFT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_LEFT |
                        PATHBOT_COMMAND_BREAK);
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT |
                        PATHBOT_COMMAND_FOLLOW);
 
     RUN_PARAM_TEST(should_keep_current_motion,
                    PATHBOT_MODE_MANUAL,
-                   fixtures_motion_backward(50),
+                   fixtures_motion_backward(CORRECTION_RIGHT),
                    PATHBOT_COMMAND_BACKWARD | PATHBOT_COMMAND_RIGHT |
                        PATHBOT_COMMAND_BREAK);
 
