@@ -3,6 +3,7 @@
 #include "notifications.h"
 #include "task.h"
 #include <devices/devices.h>
+#include <devices/port.h>
 #include <pathbot/store.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -66,10 +67,12 @@ main(void)
                                            task_domain_dump_stack,
                                            &task_domain_dump_tcb);
 
-    notifications_set_dualshock2_task(h_task_manual_control);
-    notifications_set_route_convertions_task(h_task_route_tracking);
-    notifications_set_route_guard_task(h_task_immediate_stop);
-    notifications_set_serial_request_task(h_task_domain_dump);
+    notifications_put(DEVICE_NOTIFICATION_DUALSHOCK2, h_task_manual_control);
+    notifications_put(DEVICE_NOTIFICATION_ROUTE_CONVERTIONS,
+                      h_task_route_tracking);
+    notifications_put(DEVICE_NOTIFICATION_TIMEOUT_GUARD_ROUTE,
+                      h_task_immediate_stop);
+    notifications_put(DEVICE_NOTIFICATION_SERIAL_REQUEST, h_task_domain_dump);
 
     vTaskStartScheduler();
 

@@ -1,48 +1,36 @@
 #include "FreeRTOS.h"
 #include "notifications.h"
-#include <devices/port.h>
+#include "task.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 
+#define DICTIONARY_LENGTH 4
+
 typedef struct
 {
-    TaskHandle_t h_dualshock2_task;
-    TaskHandle_t h_route_convertions_task;
-    TaskHandle_t h_route_guard_task;
-    TaskHandle_t h_serial_request_task;
-} notifications_config_t;
+    device_notification_t keys[DICTIONARY_LENGTH];
+    TaskHandle_t          values[DICTIONARY_LENGTH];
+    uint8_t               free_index;
+} notifications_dictionary_t;
 
-static notifications_config_t config;
+static notifications_dictionary_t dictionary;
 
 void
 notifications_init(void)
 {
-    memset(&config, 0, sizeof(config));
+    memset(&dictionary, 0, sizeof(dictionary));
 }
 
 void
-notifications_set_dualshock2_task(TaskHandle_t h_task)
+notifications_put(device_notification_t id, TaskHandle_t h_task)
 {
-    config.h_dualshock2_task = h_task;
-}
-
-void
-notifications_set_route_convertions_task(TaskHandle_t h_task)
-{
-    config.h_route_convertions_task = h_task;
-}
-
-void
-notifications_set_route_guard_task(TaskHandle_t h_task)
-{
-    config.h_route_guard_task = h_task;
-}
-
-void
-notifications_set_serial_request_task(TaskHandle_t h_task)
-{
-    config.h_serial_request_task = h_task;
+    if (dictionary.free_index < DICTIONARY_LENGTH)
+    {
+        dictionary.keys[dictionary.free_index]   = id;
+        dictionary.values[dictionary.free_index] = h_task;
+        dictionary.free_index++;
+    }
 }
 
 void
@@ -51,24 +39,13 @@ devices_port_notification_give(device_notification_t id)
     BaseType_t   higher_priority_task_woken = pdFALSE;
     TaskHandle_t h_task                     = NULL;
 
-    switch (id)
+    for (uint8_t i = 0; i < DICTIONARY_LENGTH; i++)
     {
-        case DEVICE_NOTIFICATION_ROUTE_CONVERTIONS:
-            h_task = config.h_route_convertions_task;
+        if (dictionary.keys[i] == id)
+        {
+            h_task = dictionary.values[i];
             break;
-
-        case DEVICE_NOTIFICATION_TIMEOUT_GUARD_ROUTE:
-            h_task = config.h_route_guard_task;
-            break;
-
-        case DEVICE_NOTIFICATION_SERIAL_REQUEST:
-            h_task = config.h_serial_request_task;
-            break;
-
-        default:
-        case DEVICE_NOTIFICATION_DUALSHOCK2:
-            h_task = config.h_dualshock2_task;
-            break;
+        }
     }
 
     if (NULL != h_task)

@@ -3,20 +3,13 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include <devices/port.h>
 
 void
 notifications_init(void);
 
+// MUST NOT be called after initialization - not thread safe
 void
-notifications_set_dualshock2_task(TaskHandle_t h_task);
-
-void
-notifications_set_route_convertions_task(TaskHandle_t h_task);
-
-void
-notifications_set_route_guard_task(TaskHandle_t h_task);
-
-void
-notifications_set_serial_request_task(TaskHandle_t h_task);
+notifications_put(device_notification_t id, TaskHandle_t h_task);
 
 #endif
