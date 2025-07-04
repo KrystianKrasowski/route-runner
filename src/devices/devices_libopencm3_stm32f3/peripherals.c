@@ -21,9 +21,6 @@ static inline void
 gpio_config(void);
 
 static inline void
-tim1_config(void);
-
-static inline void
 tim2_config(void);
 
 static inline void
@@ -68,7 +65,6 @@ peripherals_init(void)
     sysclock_config();
     rcc_periph_clocks_config();
     gpio_config();
-    // tim1_config();
     tim2_config();
     tim3_pwm_config();
     spi_config();
@@ -108,7 +104,6 @@ rcc_periph_clocks_config(void)
     rcc_periph_clock_enable(RCC_GPIOA);
     rcc_periph_clock_enable(RCC_GPIOB);
     rcc_periph_clock_enable(RCC_GPIOF);
-    // rcc_periph_clock_enable(RCC_TIM1);
     rcc_periph_clock_enable(RCC_TIM2);
     rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TIM6);
@@ -171,14 +166,6 @@ gpio_config(void)
     // USART2 transmitter
     gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO2);
     gpio_set_af(GPIOA, GPIO_AF7, GPIO2);
-}
-
-static inline void
-tim1_config(void)
-{
-    timer_set_prescaler(TIM1, 16000 - 1);
-    timer_set_period(TIM1, 125 - 1);
-    timer_enable_irq(TIM1, TIM_DIER_CC1IE);
 }
 
 static inline void
