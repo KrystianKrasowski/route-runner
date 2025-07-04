@@ -1,7 +1,7 @@
 #include <devices/serial.h>
 #include <pathbot/api.h>
 #include <pathbot/domain.h>
-#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <utils/result.h>
 
@@ -15,10 +15,9 @@ pathbot_port_dump_mode(pathbot_mode_t const mode)
     memset(mode_name, 0, 10);
     pathbot_mode_get_name(mode, mode_name);
 
-    char message[MESSAGE_MODE_LENGTH] = "MODE: ";
-    strcat(message, mode_name);
-    strcat(message, "\n\r");
+    char message[MESSAGE_MODE_LENGTH];
 
+    snprintf(message, sizeof(message), "MODE: %s\n\r", mode_name);
     device_serial_send(DEVICE_SERIAL_1, message);
 }
 
@@ -29,22 +28,10 @@ pathbot_port_dump_pid_conf(pathbot_pid_conf_t const *p_pid_conf)
     int ki = (int)(p_pid_conf->ki * 100);
     int kd = (int)(p_pid_conf->kd * 100);
 
-    char int_buffer[4];
     char message[MESSAGE_PID_LENGTH] = "PID:";
 
-    itoa(kp, int_buffer, 10);
-    strcat(message, " kp ");
-    strcat(message, int_buffer);
-
-    itoa(ki, int_buffer, 10);
-    strcat(message, " ki ");
-    strcat(message, int_buffer);
-
-    itoa(kd, int_buffer, 10);
-    strcat(message, " kd ");
-    strcat(message, int_buffer);
-
-    strcat(message, "\n\r");
+    snprintf(
+        message, sizeof(message), "PID: kp %d; ki %d; kd %d\n\r", kp, ki, kd);
 
     device_serial_send(DEVICE_SERIAL_1, message);
 }

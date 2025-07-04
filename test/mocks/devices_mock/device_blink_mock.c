@@ -5,7 +5,7 @@
 
 typedef struct
 {
-    uint8_t last_toggles_num;
+    uint8_t last_sequence;
 } blink_mock_t;
 
 POOL_DECLARE(blink_mock, blink_mock_t, DEVICE_BLINK_INSTANCES_NUM)
@@ -13,13 +13,13 @@ POOL_DECLARE(blink_mock, blink_mock_t, DEVICE_BLINK_INSTANCES_NUM)
 static blink_mock_pool_t pool;
 
 int
-device_blink_set_toggles(device_blink_t const h_self, uint8_t num)
+device_blink_set_sequence(device_blink_t const h_self, uint8_t seq)
 {
     blink_mock_t *p_self = blink_mock_pool_get(&pool, h_self);
 
     assert(NULL != p_self);
 
-    p_self->last_toggles_num = num;
+    p_self->last_sequence = seq;
 
     return RESULT_OK;
 }
@@ -45,11 +45,11 @@ device_blink_mock_deinit(void)
 }
 
 uint8_t
-device_blink_mock_verify_toggles_num(device_blink_t const h_self)
+device_blink_mock_verify_sequence(device_blink_t const h_self)
 {
     blink_mock_t *p_self = blink_mock_pool_get(&pool, h_self);
 
     assert(NULL != p_self);
 
-    return p_self->last_toggles_num;
+    return p_self->last_sequence;
 }

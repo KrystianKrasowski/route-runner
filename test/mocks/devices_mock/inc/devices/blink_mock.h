@@ -10,6 +10,6 @@ void
 device_blink_mock_deinit(void);
 
 uint8_t
-device_blink_mock_verify_toggles_num(device_blink_t const h_self);
+device_blink_mock_verify_sequence(device_blink_t const h_self);
 
 #endif

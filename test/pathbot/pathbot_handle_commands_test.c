@@ -8,8 +8,8 @@
 #include <unity.h>
 #include <unity_config.h>
 
-#define CORRECTION_LEFT  -30
-#define CORRECTION_RIGHT 30
+#define CORRECTION_LEFT  -50
+#define CORRECTION_RIGHT 50
 
 static pathbot_store_t *p_store;
 
