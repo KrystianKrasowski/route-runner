@@ -1,5 +1,6 @@
 #include "blink.h"
 #include <errno.h>
+#include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
 #include <utils/pool.h>
 #include <utils/result.h>
@@ -7,22 +8,19 @@
 typedef struct
 {
     uint32_t         timer;
+    uint32_t         gpio_port;
+    uint16_t         gpio_pin;
+    uint8_t          sequence;
     volatile uint8_t toggles_cnt;
-    uint8_t          toggles_num;
 } blink_instance_t;
 
 // cppcheck-suppress unusedFunction
 POOL_DECLARE(blink, blink_instance_t, DEVICE_BLINK_INSTANCES_NUM)
 
-#define HALF_INTERVAL 125
-
 static blink_pool_t pool;
 
-static inline uint32_t
-count_period(blink_instance_t const *p_self);
-
 int
-device_blink_set_toggles(device_blink_t const h_self, uint8_t num)
+device_blink_set_sequence(device_blink_t const h_self, uint8_t seq)
 {
     blink_instance_t *p_self = blink_pool_get(&pool, h_self);
 
@@ -31,14 +29,13 @@ device_blink_set_toggles(device_blink_t const h_self, uint8_t num)
         return -ENODEV;
     }
 
-    num = num % 8;
+    gpio_clear(p_self->gpio_port, p_self->gpio_pin);
+    timer_disable_counter(p_self->timer);
 
-    if (0 == num)
-    {
-        num = 8;
-    }
+    p_self->toggles_cnt = 0;
+    p_self->sequence    = seq;
 
-    p_self->toggles_num = num;
+    timer_enable_counter(p_self->timer);
 
     return RESULT_OK;
 }
@@ -60,7 +57,9 @@ blink_create(device_blink_t const h_self, blink_conf_t const *p_conf)
     blink_instance_t *p_self = blink_pool_get(&pool, h_self);
 
     p_self->timer       = p_conf->timer;
-    p_self->toggles_num = p_conf->toggles_num;
+    p_self->gpio_port   = p_conf->gpio_port;
+    p_self->gpio_pin    = p_conf->gpio_pin;
+    p_self->sequence    = p_conf->sequence;
     p_self->toggles_cnt = 0;
 
     timer_enable_counter(p_self->timer);
@@ -78,24 +77,21 @@ blink_update(device_blink_t const h_self)
         return -ENODEV;
     }
 
-    if (0 == p_self->toggles_cnt)
+    if (p_self->sequence & (1 << p_self->toggles_cnt))
     {
-        timer_set_period(p_self->timer, 125 - 1);
+        gpio_set(p_self->gpio_port, p_self->gpio_pin);
+    }
+    else
+    {
+        gpio_clear(p_self->gpio_port, p_self->gpio_pin);
     }
 
-    p_self->toggles_cnt++;
+    ++p_self->toggles_cnt;
 
-    if (p_self->toggles_cnt >= p_self->toggles_num)
+    if (p_self->toggles_cnt > 7)
     {
         p_self->toggles_cnt = 0;
-        timer_set_period(p_self->timer, count_period(p_self) - 1);
     }
 
     return RESULT_OK;
-}
-
-static inline uint32_t
-count_period(blink_instance_t const *p_self)
-{
-    return 1000 - p_self->toggles_num * HALF_INTERVAL + HALF_INTERVAL;
 }

@@ -95,7 +95,7 @@ vApplicationStackOverflowHook(TaskHandle_t h_task, char *task_name)
     (void)h_task;
     (void)task_name;
 
-    device_blink_set_toggles(DEVICE_BLINK_1, 1);
+    device_blink_set_sequence(DEVICE_BLINK_1, 0xd);
 
     while (1)
     {

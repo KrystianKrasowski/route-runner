@@ -18,24 +18,13 @@
 void
 isr_dispatch_init(void)
 {
-    nvic_enable_irq(NVIC_TIM1_CC_IRQ);
     nvic_enable_irq(NVIC_TIM1_BRK_TIM15_IRQ);
     nvic_enable_irq(NVIC_TIM1_UP_TIM16_IRQ);
     nvic_enable_irq(NVIC_TIM2_IRQ);
+    nvic_enable_irq(NVIC_TIM7_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
     nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
     nvic_enable_irq(NVIC_USART2_EXTI26_IRQ);
-}
-
-void
-// cppcheck-suppress unusedFunction
-tim1_cc_isr(void)
-{
-    if (timer_get_flag(TIM1, TIM_SR_CC1IF))
-    {
-        timer_clear_flag(TIM1, TIM_SR_CC1IF);
-        blink_update(DEVICE_BLINK_1);
-    }
 }
 
 void
@@ -69,6 +58,17 @@ tim2_isr(void)
     {
         timer_clear_flag(TIM2, TIM_SR_UIF);
         (void)dualshock2_poll_start(DEVICE_DUALSHOCK2_1);
+    }
+}
+
+void
+// cppcheck-suppress unusedFunction
+tim7_isr(void)
+{
+    if (timer_get_flag(TIM7, TIM_SR_UIF))
+    {
+        timer_clear_flag(TIM7, TIM_SR_UIF);
+        blink_update(DEVICE_BLINK_1);
     }
 }
 

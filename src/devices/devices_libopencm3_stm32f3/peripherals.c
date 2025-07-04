@@ -33,6 +33,9 @@ static inline void
 tim6_config(void);
 
 static inline void
+tim7_config(void);
+
+static inline void
 tim15_config(void);
 
 static inline void
@@ -65,7 +68,7 @@ peripherals_init(void)
     sysclock_config();
     rcc_periph_clocks_config();
     gpio_config();
-    tim1_config();
+    // tim1_config();
     tim2_config();
     tim3_pwm_config();
     spi_config();
@@ -75,6 +78,7 @@ peripherals_init(void)
     dma1_channel7_config();
     adc12_config();
     tim6_config();
+    tim7_config();
     tim15_config();
     tim16_config();
     usart2_config();
@@ -104,10 +108,11 @@ rcc_periph_clocks_config(void)
     rcc_periph_clock_enable(RCC_GPIOA);
     rcc_periph_clock_enable(RCC_GPIOB);
     rcc_periph_clock_enable(RCC_GPIOF);
-    rcc_periph_clock_enable(RCC_TIM1);
+    // rcc_periph_clock_enable(RCC_TIM1);
     rcc_periph_clock_enable(RCC_TIM2);
     rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TIM6);
+    rcc_periph_clock_enable(RCC_TIM7);
     rcc_periph_clock_enable(RCC_TIM15);
     rcc_periph_clock_enable(RCC_TIM16);
     rcc_periph_clock_enable(RCC_SPI1);
@@ -127,9 +132,8 @@ gpio_config(void)
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_PULLDOWN, GPIO1);
     gpio_set_af(GPIOB, GPIO_AF2, GPIO1);
 
-    // output compare pin for state indicator LED
-    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLDOWN, GPIO8);
-    gpio_set_af(GPIOA, GPIO_AF6, GPIO8);
+    // state indicator LED
+    gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO8);
 
     // SPI SCK
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO3);
@@ -174,9 +178,6 @@ tim1_config(void)
 {
     timer_set_prescaler(TIM1, 16000 - 1);
     timer_set_period(TIM1, 125 - 1);
-    timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_TOGGLE);
-    timer_enable_oc_output(TIM1, TIM_OC1);
-    timer_enable_break_main_output(TIM1);
     timer_enable_irq(TIM1, TIM_DIER_CC1IE);
 }
 
@@ -230,7 +231,7 @@ tim3_pwm_config(void)
 static inline void
 tim6_config(void)
 {
-    // set timer frequency to 1kHz
+    // set timer frequency to 1MHz
     timer_set_prescaler(TIM6, 16 - 1);
     timer_set_period(TIM6, 800 - 1);
 
@@ -239,6 +240,21 @@ tim6_config(void)
 
     // enable timer
     timer_enable_counter(TIM6);
+}
+
+static inline void
+tim7_config(void)
+{
+    // set timer frequency to 1kHz
+    timer_set_prescaler(TIM7, 16000 - 1);
+    timer_set_period(TIM7, 125 - 1);
+
+    // reinitialize the counter and update the registers on update event
+    timer_generate_event(TIM7, TIM_EGR_UG);
+    timer_clear_flag(TIM7, TIM_SR_UIF);
+
+    // enable update interrupt
+    timer_enable_irq(TIM7, TIM_DIER_UIE);
 }
 
 static inline void

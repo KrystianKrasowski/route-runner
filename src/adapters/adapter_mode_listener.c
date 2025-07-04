@@ -22,17 +22,17 @@ apply_mode_indicator(pathbot_mode_t const mode)
     switch (mode)
     {
         case PATHBOT_MODE_DETECTED:
-            device_blink_set_toggles(DEVICE_BLINK_1, 4);
+            device_blink_set_sequence(DEVICE_BLINK_1, 0x5);
             break;
 
         case PATHBOT_MODE_FOLLOWING:
         case PATHBOT_MODE_RECOVERING:
-            device_blink_set_toggles(DEVICE_BLINK_1, 8);
+            device_blink_set_sequence(DEVICE_BLINK_1, 0x55);
             break;
 
         case PATHBOT_MODE_MANUAL:
         default:
-            device_blink_set_toggles(DEVICE_BLINK_1, 2);
+            device_blink_set_sequence(DEVICE_BLINK_1, 0x1);
     }
 }
 

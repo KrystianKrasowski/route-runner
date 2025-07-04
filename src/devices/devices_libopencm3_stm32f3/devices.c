@@ -124,8 +124,10 @@ static inline int
 blink_create_device(void)
 {
     blink_conf_t conf = {
-        .timer       = TIM1,
-        .toggles_num = 2,
+        .timer     = TIM7,
+        .gpio_port = GPIOA,
+        .gpio_pin  = GPIO8,
+        .sequence  = 1,
     };
 
     return blink_create(DEVICE_BLINK_1, &conf);
