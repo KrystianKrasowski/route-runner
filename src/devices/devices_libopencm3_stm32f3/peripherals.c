@@ -220,7 +220,7 @@ tim6_config(void)
 {
     // set timer frequency to 1MHz
     timer_set_prescaler(TIM6, 16 - 1);
-    timer_set_period(TIM6, 800 - 1);
+    timer_set_period(TIM6, 700 - 1);
 
     // enable TRGO on update event
     timer_set_master_mode(TIM6, TIM_CR2_MMS_UPDATE);

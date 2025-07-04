@@ -9,8 +9,8 @@
 #include <stdint.h>
 
 #define STACK_DEPTH_TASK_MANUAL   48
-#define STACK_DEPTH_TASK_TRACKING 128
-#define STACK_DEPTH_TASK_DUMP     256
+#define STACK_DEPTH_TASK_TRACKING 80
+#define STACK_DEPTH_TASK_DUMP     80
 
 StaticTask_t task_manual_control_tcb;
 StackType_t  task_manual_control_stack[STACK_DEPTH_TASK_MANUAL];

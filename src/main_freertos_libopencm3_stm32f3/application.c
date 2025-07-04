@@ -2,6 +2,7 @@
 #include "task.h"
 #include <devices/blink.h>
 #include <devices/dualshock2.h>
+#include <devices/l293.h>
 #include <devices/qtrhd06a.h>
 #include <devices/serial.h>
 #include <mappers/dualshock2_control.h>
@@ -96,6 +97,10 @@ vApplicationStackOverflowHook(TaskHandle_t h_task, char *task_name)
     (void)task_name;
 
     device_blink_set_sequence(DEVICE_BLINK_1, 0xd);
+    device_l293_rotate(DEVICE_L293_CHANNEL_12, DEVICE_L293_ROTATION_STOP);
+    device_l293_rotate(DEVICE_L293_CHANNEL_34, DEVICE_L293_ROTATION_STOP);
+    device_l293_disable(DEVICE_L293_CHANNEL_12);
+    device_l293_disable(DEVICE_L293_CHANNEL_34);
 
     while (1)
     {
