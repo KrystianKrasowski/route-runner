@@ -3,5 +3,3 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
     GIT_TAG v2.6.0
 )
-
-FetchContent_MakeAvailable(unity)

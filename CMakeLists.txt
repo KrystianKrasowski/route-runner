@@ -6,9 +6,10 @@ project(route-runner VERSION 1.2.1)
 
 enable_language(C ASM)
 
+include(FetchContent)
+include(${CMAKE_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/compile-common-options.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
-include(FetchContent)
 
 # For some reason this has to be defined in a top level CMakeLists.txt
 if(TARGET_ARCH STREQUAL "test")
@@ -17,6 +18,7 @@ if(TARGET_ARCH STREQUAL "test")
     include(${CMAKE_SOURCE_DIR}/cmake/dependencies-test.cmake)
 endif()
 
+add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(test)
 

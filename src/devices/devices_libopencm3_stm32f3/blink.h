@@ -7,7 +7,9 @@
 typedef struct
 {
     uint32_t timer;
-    uint8_t  toggles_num;
+    uint32_t gpio_port;
+    uint16_t gpio_pin;
+    uint8_t  sequence;
 } blink_conf_t;
 
 void

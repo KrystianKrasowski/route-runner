@@ -1,4 +1,3 @@
-#include <adapters/dump_serial.h>
 #include <devices/serial_mock.h>
 #include <pathbot/domain.h>
 #include <pathbot/port.h>

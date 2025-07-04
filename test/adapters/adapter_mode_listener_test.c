@@ -21,15 +21,15 @@ tearDown(void)
 }
 
 void
-should_indicate_mode(pathbot_mode_t mode, uint8_t expected_toggles_num)
+should_indicate_mode(pathbot_mode_t mode, uint8_t expected_sequence)
 {
     // when
     pathbot_port_mode_changed(mode);
     uint8_t actual_toggles_num =
-        device_blink_mock_verify_toggles_num(DEVICE_BLINK_1);
+        device_blink_mock_verify_sequence(DEVICE_BLINK_1);
 
     // then
-    TEST_ASSERT_EQUAL(expected_toggles_num, actual_toggles_num);
+    TEST_ASSERT_EQUAL(expected_sequence, actual_toggles_num);
 }
 
 void
@@ -40,7 +40,7 @@ should_start_guard(pathbot_mode_t mode)
 
     // then
     TEST_ASSERT_TRUE(
-        device_timeout_guard_mock_is_started(DEVICE_TIEMOUT_GUARD_ROUTE));
+        device_timeout_guard_mock_is_started(DEVICE_TIMEOUT_GUARD_ROUTE));
 }
 
 void
@@ -51,7 +51,7 @@ should_stop_guard(pathbot_mode_t mode)
 
     // then
     TEST_ASSERT_TRUE(
-        device_timeout_guard_mock_is_stopped(DEVICE_TIEMOUT_GUARD_ROUTE));
+        device_timeout_guard_mock_is_stopped(DEVICE_TIMEOUT_GUARD_ROUTE));
 }
 
 int
@@ -59,10 +59,10 @@ main(void)
 {
     UNITY_BEGIN();
 
-    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_MANUAL, 2);
-    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_DETECTED, 4);
-    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_FOLLOWING, 8);
-    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_RECOVERING, 8);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_MANUAL, 0x1);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_DETECTED, 0x5);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_FOLLOWING, 0x55);
+    RUN_PARAM_TEST(should_indicate_mode, PATHBOT_MODE_RECOVERING, 0x55);
 
     RUN_PARAM_TEST(should_start_guard, PATHBOT_MODE_RECOVERING);
 

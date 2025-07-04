@@ -14,7 +14,8 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "hidden": true,
             "cacheVariables": {
-                "TARGET_ARCH": "opencm3_stm32f3"
+                "TARGET_ARCH": "libopencm3_stm32f3",
+                "TARGET_RUNTIME": "freertos"
             }
         },
         {
@@ -37,6 +38,7 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "TARGET_ARCH": "test",
+                "TARGET_RUNTIME": "none",
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         }

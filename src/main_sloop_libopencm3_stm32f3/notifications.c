@@ -33,7 +33,7 @@ notifications_take(notification_t id)
 }
 
 void
-devices_port_notification_give(device_notification_t id)
+devices_port_isr_notification_give(device_notification_t id)
 {
     switch (id)
     {
