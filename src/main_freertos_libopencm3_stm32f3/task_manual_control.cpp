@@ -38,7 +38,7 @@ task_manual_control::run()
     }
 }
 
-task_manual_control::task_manual_control() : task_base("task_manual", 2)
+task_manual_control::task_manual_control() : task_base("manual", 2)
 {
 }
 

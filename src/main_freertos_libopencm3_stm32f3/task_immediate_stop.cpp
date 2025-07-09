@@ -32,7 +32,7 @@ task_immediate_stop::run()
     }
 }
 
-task_immediate_stop::task_immediate_stop() : task_base("task route guard", 3)
+task_immediate_stop::task_immediate_stop() : task_base("route guard", 3)
 {
 }
 

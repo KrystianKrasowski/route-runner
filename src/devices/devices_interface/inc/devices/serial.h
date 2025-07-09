@@ -1,6 +1,11 @@
 #ifndef _DEVICES_SERIAL_H
 #define _DEVICES_SERIAL_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdint.h>
 
 #define DEVICE_SERIAL_INSTANCES_NUM   1
@@ -16,5 +21,9 @@ device_serial_read(device_serial_t const h_self, char const command);
 
 int
 device_serial_send(device_serial_t const h_self, char const message[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

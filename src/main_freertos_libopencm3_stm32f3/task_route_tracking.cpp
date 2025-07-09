@@ -46,7 +46,7 @@ task_route_tracking::run()
     }
 }
 
-task_route_tracking::task_route_tracking() : task_base("task_tracking", 3)
+task_route_tracking::task_route_tracking() : task_base("tracking", 3)
 {
 }
 
