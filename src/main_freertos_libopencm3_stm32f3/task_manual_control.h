@@ -6,25 +6,24 @@
 namespace app
 {
 
-class task_handle_manual_control
-    : public task_base<task_handle_manual_control, 48>
+class task_manual_control : public task_base<task_manual_control, 48>
 {
 public:
 
-    static task_handle_manual_control&
+    static task_manual_control&
     of();
 
-    task_handle_manual_control(task_handle_manual_control& other) = delete;
+    task_manual_control(task_manual_control& other) = delete;
 
-    task_handle_manual_control&
-    operator=(task_handle_manual_control& other) = delete;
+    task_manual_control&
+    operator=(task_manual_control& other) = delete;
 
     void
     run();
 
 private:
 
-    task_handle_manual_control();
+    task_manual_control();
 };
 
 } // namespace app

@@ -11,18 +11,18 @@
 namespace app
 {
 
-static etl::pool<task_handle_manual_control, 1> pool;
+static etl::pool<task_manual_control, 1> pool;
 
-task_handle_manual_control&
-task_handle_manual_control::of()
+task_manual_control&
+task_manual_control::of()
 {
-    task_handle_manual_control *task = pool.allocate();
-    new (task) task_handle_manual_control;
+    task_manual_control *task = pool.allocate();
+    new (task) task_manual_control;
     return *task;
 }
 
 void
-task_handle_manual_control::run()
+task_manual_control::run()
 {
     while (1)
     {
@@ -38,8 +38,7 @@ task_handle_manual_control::run()
     }
 }
 
-task_handle_manual_control::task_handle_manual_control()
-    : task_base("task_manual", 2)
+task_manual_control::task_manual_control() : task_base("task_manual", 2)
 {
 }
 

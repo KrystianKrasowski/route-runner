@@ -1,6 +1,11 @@
 #ifndef _DEVICE_QTRHD06A_H
 #define _DEVICE_QTRHD06A_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdint.h>
 
 typedef enum
@@ -13,5 +18,9 @@ typedef enum
 
 int
 device_qtrhd06a_read(device_qtrhd06a_t const h_self, uint8_t values[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
