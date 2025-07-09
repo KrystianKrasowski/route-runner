@@ -1,7 +1,8 @@
 add_executable(${PROJECT_NAME}
-    main.c
+    main.cpp
     application.c
     notifications.c
+    task_manual_control.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -12,6 +13,7 @@ target_link_libraries(${PROJECT_NAME}
         devices_libopencm3_stm32f3
         freertos_kernel
         utils
+        etl
 )
 
 target_link_options(${PROJECT_NAME}

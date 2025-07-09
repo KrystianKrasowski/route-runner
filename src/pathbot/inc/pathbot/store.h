@@ -1,6 +1,11 @@
 #ifndef _PATHBOT_STORE_H
 #define _PATHBOT_STORE_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <pathbot/domain.h>
 #include <utils/stack.h>
 
@@ -17,5 +22,9 @@ pathbot_store_init(pathbot_store_t const * const p_self);
 
 pathbot_store_t *
 pathbot_store_get(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

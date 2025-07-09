@@ -1,6 +1,11 @@
 #ifndef _PATHBOT_API_H
 #define _PATHBOT_API_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <pathbot/domain.h>
 #include <stdint.h>
 
@@ -27,5 +32,10 @@ pathbot_handle_route_guard_timeout(void);
 
 void
 pathbot_handle_store_dump(void);
+
+#ifdef __cplusplus
+#include "projdefs.h"
+}
+#endif
 
 #endif

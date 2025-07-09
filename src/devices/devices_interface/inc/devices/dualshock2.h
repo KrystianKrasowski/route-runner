@@ -1,6 +1,11 @@
 #ifndef _DEVICE_DUALSHOCK2_H
 #define _DEVICE_DUALSHOCK2_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdint.h>
 
 typedef enum
@@ -33,5 +38,9 @@ typedef enum
 
 int
 device_dualshock2_read(device_dualshock2_t const h_self, uint16_t *p_commands);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
