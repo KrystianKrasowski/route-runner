@@ -5,16 +5,9 @@
 #include "notifications.h"
 #include "pathbot/store.h"
 #include "task.h"
+#include "task_immediate_stop.h"
 #include "task_manual_control.h"
 #include "task_route_tracking.h"
-
-StaticTask_t task_route_tracking_tcb;
-StackType_t  task_route_tracking_stack[80];
-TaskHandle_t h_task_route_tracking;
-
-StaticTask_t task_immediate_stop_tcb;
-StackType_t  task_immediate_stop_stack[48];
-TaskHandle_t h_task_immediate_stop;
 
 StaticTask_t task_domain_dump_tcb;
 StackType_t  task_domain_dump_stack[80];
@@ -29,19 +22,11 @@ main()
 
     auto& task_manual_control = app::task_manual_control::of();
     auto& task_route_tracking = app::task_route_tracking::of();
+    auto& task_immediate_stop = app::task_immediate_stop::of();
 
     auto h_task_manual_control = task_manual_control.register_rtos_task();
     auto h_task_route_tracking = task_route_tracking.register_rtos_task();
-
-    h_task_immediate_stop = xTaskCreateStatic(
-        app_handle_immediate_stop,
-        "task route guard",
-        48,
-        NULL,
-        3,
-        task_immediate_stop_stack,
-        &task_immediate_stop_tcb
-    );
+    auto h_task_immediate_stop = task_immediate_stop.register_rtos_task();
 
     h_task_domain_dump = xTaskCreateStatic(
         app_handle_domain_dump,

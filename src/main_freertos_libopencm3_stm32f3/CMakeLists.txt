@@ -4,6 +4,7 @@ add_executable(${PROJECT_NAME}
     notifications.c
     task_manual_control.cpp
     task_route_tracking.cpp
+    task_immediate_stop.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

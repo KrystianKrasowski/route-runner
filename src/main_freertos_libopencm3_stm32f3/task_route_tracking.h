@@ -2,7 +2,6 @@
 #define _APPLICATION_TASK_ROUTE_TRACKING_H
 
 #include "task_base.h"
-#include "task_manual_control.h"
 
 namespace app
 {
