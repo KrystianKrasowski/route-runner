@@ -1,7 +1,7 @@
 #ifndef _APPLICATION_TASK_IMMEDIATE_STOP_H
 #define _APPLICATION_TASK_IMMEDIATE_STOP_H
 
-#include "task_base.h"
+#include "task_base.hpp"
 
 namespace app
 {

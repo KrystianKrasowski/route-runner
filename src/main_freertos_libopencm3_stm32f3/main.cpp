@@ -1,12 +1,11 @@
-#include "application.h"
 #include "devices/devices.h"
 #include "devices/port.h"
 #include "notifications.h"
 #include "pathbot/store.h"
-#include "task_domain_dump.h"
-#include "task_immediate_stop.h"
-#include "task_manual_control.h"
-#include "task_route_tracking.h"
+#include "task_domain_dump.hpp"
+#include "task_immediate_stop.hpp"
+#include "task_manual_control.hpp"
+#include "task_route_tracking.hpp"
 
 int
 main()

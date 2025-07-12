@@ -1,8 +1,7 @@
-#include "FreeRTOS.h"
 #include "devices/serial.h"
 #include "pathbot/api.h"
-#include "task_base.h"
-#include "task_domain_dump.h"
+#include "task_base.hpp"
+#include "task_domain_dump.hpp"
 #include "utils/result.h"
 #include <cstdint>
 #include <etl/pool.h>

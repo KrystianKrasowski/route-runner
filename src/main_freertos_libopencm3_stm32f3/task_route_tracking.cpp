@@ -3,8 +3,8 @@
 #include "mappers/qtrhd06a_coords.h"
 #include "pathbot/api.h"
 #include "pathbot/domain.h"
-#include "task_base.h"
-#include "task_route_tracking.h"
+#include "task_base.hpp"
+#include "task_route_tracking.hpp"
 #include "utils/result.h"
 #include <cstdint>
 #include <etl/pool.h>

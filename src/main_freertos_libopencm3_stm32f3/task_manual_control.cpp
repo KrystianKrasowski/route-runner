@@ -2,8 +2,8 @@
 #include "devices/dualshock2.h"
 #include "mappers/dualshock2_control.h"
 #include "pathbot/api.h"
-#include "task_base.h"
-#include "task_manual_control.h"
+#include "task_base.hpp"
+#include "task_manual_control.hpp"
 #include <etl/pool.h>
 #include <stdint.h>
 #include <utils/result.h>

@@ -9,7 +9,7 @@
 namespace app
 {
 
-template <typename T, uint16_t stack_depth>
+template <class T, uint16_t stack_depth>
 class task_base
 {
 public:

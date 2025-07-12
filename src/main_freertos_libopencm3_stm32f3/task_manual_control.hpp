@@ -1,7 +1,7 @@
 #ifndef _APPLICATION_TASK_MANUAL_CONTROL_H
 #define _APPLICATION_TASK_MANUAL_CONTROL_H
 
-#include "task_base.h"
+#include "task_base.hpp"
 
 namespace app
 {

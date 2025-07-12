@@ -1,7 +1,7 @@
 #include "FreeRTOS.h"
 #include "pathbot/api.h"
-#include "task_base.h"
-#include "task_immediate_stop.h"
+#include "task_base.hpp"
+#include "task_immediate_stop.hpp"
 #include <cstdint>
 #include <etl/pool.h>
 
