@@ -16,6 +16,7 @@
 - [Software](#software)
     - [Build and flash](#build-and-flash)
     - [Application architecture](#application-architecture)
+- [Development](#development)
 
 ## Overview
 Route runner is a name of the line following robot project. It is built using the following components:
@@ -118,20 +119,42 @@ Pins in **bold** are unchangeable. *Italic* pin change may implicate other chang
 
 ## Software
 
-### Build and flash
-
-```bash
-# build
-
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=arm-none-eabi-gcc.cmake -B build/Debug
-cmake --build build/Debug
-
-# flash
-st-flash write build/Debug/app/route-runner.bin 0x08000000
-```
-
 ### Application architecture
 
 Software architecture is inspired by the hexagonal (ports and adapters) pattern. The main goal of this approach was to be abe to embed the domain into any other MCU platform, wherher to use RTOS or bare metal, with or without STM32 HAL, etc. Any infrastructure change must not imply the domain logic changes.
 
 ![lib-dependency](./doc/img/architecture-1.png)
+
+## Development
+
+Requirements:
+* arm-none-eabi toolchain
+* cmake
+
+```bash
+# build for flash
+cmake --preset <release | debug>
+cmake --build --preset <release | debug>
+
+# flash
+cmake --build --preset <release | debug> --target flash
+
+# build for test
+cmake --preset test
+cmake --build --preset test
+ctest --preset test
+```
+
+### Vim + LSP (clangd) setup
+
+In order to work with vim+lsp driven by clangd keep in mind that the clangd must be run with `--query-driver` argument.
+Here is an example of clangd lsp configuration via the vim-lsp-settings plugin
+
+```
+// PROJECT_ROOT/.vim-lsp-settings/settings.json
+{
+    "clangd": {
+        "args": ["--query-driver=/usr/bin/arm-none-eabi-*"]
+    }
+}
+```
