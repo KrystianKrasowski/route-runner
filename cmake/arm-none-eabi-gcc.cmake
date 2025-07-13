@@ -23,11 +23,11 @@ set(CMAKE_EXECUTABLE_SUFFIX_CXX ".elf")
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # CPU and floating-point options
-set(ARM_CPU_FLAGS "-mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard")
+set(ARM_CPU_FLAGS "-mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -ffunction-sections -fdata-sections")
 
 # Common compile flags
 set(CMAKE_C_FLAGS "${ARM_CPU_FLAGS}")
-set(CMAKE_CXX_FLAGS "${ARM_CPU_FLAGS} -fno-exceptions -fno-rtti -fno-use-cxa-atexit")
+set(CMAKE_CXX_FLAGS "${ARM_CPU_FLAGS} -fno-exceptions -fno-rtti -fno-use-cxa-atexit -ffunction-sections -fdata-sections")
 set(CMAKE_ASM_FLAGS "${ARM_CPU_FLAGS}")
 
 # Build type-specific optimization
@@ -35,8 +35,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g3")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g3")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -g0")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -g0")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os")
 endif()
 
 # Linker flags

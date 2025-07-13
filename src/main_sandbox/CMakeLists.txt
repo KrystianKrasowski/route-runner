@@ -1,24 +1,10 @@
 add_executable(${PROJECT_NAME}
     main.cpp
-    application.c
-    notifications.c
-    task_manual_control.cpp
-    task_route_tracking.cpp
-    task_immediate_stop.cpp
-    task_domain_dump.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
-        idevices
         hardware
-        pathbot
-        adapters
-        mappers
-        devices_libopencm3_stm32f3
-        freertos_kernel
-        utils
-        etl
 )
 
 target_link_options(${PROJECT_NAME}
@@ -39,6 +25,6 @@ add_custom_command(TARGET ${PROJECT_NAME}
 
 add_custom_target(flash
     COMMAND st-flash write ${PROJECT_NAME}.bin 0x08000000
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/main_freertos_libopencm3_stm32f3
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/main_sandbox
     COMMENT "Flashing ${PROJECT_NAME}.bin"
 )
