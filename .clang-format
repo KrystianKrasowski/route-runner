@@ -149,7 +149,7 @@ ObjCBlockIndentWidth: 2
 ObjCBreakBeforeNestedBlockParam: true
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
-PackConstructorInitializers: BinPack
+PackConstructorInitializers: Never
 PenaltyBreakAssignment: 2
 PenaltyBreakBeforeFirstCallParameter: 19
 PenaltyBreakComment: 300
@@ -170,7 +170,7 @@ RemoveParentheses: Leave
 RemoveSemicolon: false
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
-SeparateDefinitionBlocks: Leave
+SeparateDefinitionBlocks: Always
 ShortNamespaceLines: 1
 SortIncludes:    CaseSensitive
 SortJavaStaticImport: Before

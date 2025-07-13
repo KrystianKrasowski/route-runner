@@ -3,9 +3,13 @@ add_library(hardware)
 target_sources(hardware
     PRIVATE
         isr_registry.cpp
+        isr_handler_tim2.cpp
         isr_handler_tim7.cpp
-        toggle_sequence_gpio.cpp
+        isr_handler_dma1_channel2.cpp
         peripherals.cpp
+        toggle_sequence_gpio.cpp
+        data_store.cpp
+        dualshock2.cpp
         tree.cpp
 )
 

@@ -1,6 +1,7 @@
-#ifndef _DEVICE_TREE_HH
-#define _DEVICE_TREE_HH
+#pragma once
 
+#include "device/isr_event_emitter.hpp"
+#include "dualshock2.hpp"
 #include "toggle_sequence.hpp"
 
 namespace device
@@ -9,11 +10,10 @@ namespace device
 struct tree
 {
     toggle_sequence& toggle_sequence_;
+    dualshock2&      dualshock2_;
 
     static tree
-    of();
+    of(isr_event_emitter& events);
 };
 
 } // namespace device
-
-#endif
