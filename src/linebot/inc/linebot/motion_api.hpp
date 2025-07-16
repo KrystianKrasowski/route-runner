@@ -1,20 +1,18 @@
 #pragma once
 
+#include "linebot/data_store.hpp"
+#include "linebot/domain/coordinates.hpp"
+#include "linebot/motion_port.hpp"
+
 namespace linebot
 {
-
-class motion_port;
-
-struct coordinates;
-
-struct commands;
 
 class motion_api
 {
 public:
 
     static motion_api&
-    of(motion_port& port);
+    of(data_store& store, motion_port& port);
 
     void
     apply(commands remote_control);
@@ -24,13 +22,14 @@ public:
 
 private:
 
+    data_store&  store_;
     motion_port& port_;
 
-    motion_api(motion_port& port)
-        : port_{port}
+    motion_api(data_store& store, motion_port& port)
+        : store_{store},
+          port_{port}
     {
     }
 };
 
-} // namespace linebot::api
-
+} // namespace linebot

@@ -44,7 +44,7 @@ private:
     bool
     is_requested(int bit_index)
     {
-        return commands_.value_ & (1 << bit_index);
+        return commands_.to_uint16() & (1 << bit_index);
     }
 
     commands::command
@@ -89,7 +89,7 @@ operator<<(std::ostream& os, maneuver mot)
     return os << std::format(
                "Motion[{}, {}]",
                motion_direction_map.at(mot.direction_),
-               mot.correction_
+               mot.correction
            );
 }
 

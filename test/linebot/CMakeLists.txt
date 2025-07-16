@@ -8,6 +8,7 @@ target_sources(
         PRIVATE
             name_helpers.cpp
             motion_manual_update_test.cpp
+            motion_manual_skip_test.cpp
 )
 
 target_link_libraries(

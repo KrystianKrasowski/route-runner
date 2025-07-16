@@ -1,4 +1,5 @@
 #include "linebot/motion_api.hpp"
+#include "linebot/data_store.hpp"
 #include "linebot/domain/commands.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
@@ -9,15 +10,20 @@ namespace linebot
 {
 
 motion_api&
-motion_api::of(motion_port& port)
+motion_api::of(data_store& store, motion_port& port)
 {
-    static motion_api api{port};
+    static motion_api api{store, port};
     return api;
 }
 
 void
 motion_api::apply(commands commands)
 {
+    if (store_.commands_ == commands)
+    {
+        return;
+    }
+
     maneuver::direction direction  = maneuver::NONE;
     int8_t              correction = 0;
 

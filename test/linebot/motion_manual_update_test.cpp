@@ -1,3 +1,4 @@
+#include "linebot/data_store.hpp"
 #include "linebot/domain/commands.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/motion_api.hpp"
@@ -11,6 +12,7 @@
 namespace linebot
 {
 
+using commands::UNDEFINED;
 using commands::BACKWARD;
 using commands::BREAK;
 using commands::FORWARD;
@@ -40,17 +42,20 @@ class motion_manual_update_test : public TestWithParam<test_params>
 protected:
 
     motion_manual_update_test()
-        : api_{motion_api::of(port_)}
+        : api_{motion_api::of(store_, port_)}
     {
     }
 
+    data_store       store_;
     motion_port_mock port_;
     motion_api       api_;
 };
 
-TEST_P(motion_manual_update_test, should_apply_motion_by_commands)
+TEST_P(motion_manual_update_test, should_apply_on_new_command)
 {
     test_params params = GetParam();
+
+    store_.commands_ = commands{UNDEFINED};
 
     EXPECT_CALL(port_, apply(Eq(params.expected_maneuver_))).Times(AtLeast(1));
 

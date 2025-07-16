@@ -9,20 +9,31 @@ struct commands
 {
     enum command
     {
-        NONE     = 1,
-        FORWARD  = 2,
-        BACKWARD = 4,
-        LEFT     = 8,
-        RIGHT    = 16,
-        BREAK    = 32,
-        FOLLOW   = 64,
+        UNDEFINED = 0,
+        NONE      = 1,
+        FORWARD   = 2,
+        BACKWARD  = 4,
+        LEFT      = 8,
+        RIGHT     = 16,
+        BREAK     = 32,
+        FOLLOW    = 64,
     };
 
-    const uint16_t value_;
+    bool
+    operator==(const commands& other) const
+    {
+        return value_ == other.value_;
+    }
 
     explicit commands(uint16_t value)
         : value_{value}
     {
+    }
+
+    uint16_t
+    to_uint16() const
+    {
+        return value_;
     }
 
     bool
@@ -66,6 +77,10 @@ struct commands
     {
         return value_ & FOLLOW;
     }
+
+private:
+
+    uint16_t value_;
 };
 
 } // namespace linebot

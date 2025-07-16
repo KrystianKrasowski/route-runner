@@ -36,7 +36,10 @@ struct maneuver
     }
 
     bool
-    operator==(const maneuver&) const = default;
+    operator==(const maneuver& other) const
+    {
+        return direction_ == other.direction_ && correction_ == other.correction_;
+    }
 };
 
 } // namespace linebot
