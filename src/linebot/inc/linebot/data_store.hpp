@@ -7,7 +7,7 @@ namespace linebot
 
 struct data_store
 {
-    commands commands_ = commands{commands::NONE};
+    commands remote_control_ = commands{commands::NONE};
 };
 
 } // namespace linebot

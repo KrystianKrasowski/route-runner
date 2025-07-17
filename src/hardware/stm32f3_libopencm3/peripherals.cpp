@@ -45,20 +45,19 @@ peripherals_setup(data_store& store)
 static inline void
 rcc_setup()
 {
-    rcc_clock_scale sysclock{
-        .pllsrc           = RCC_CFGR_PLLSRC_HSI_DIV2,
-        .pllmul           = RCC_CFGR_PLLMUL_MUL4,
-        .plldiv           = RCC_CFGR2_PREDIV_NODIV,
-        .usbdiv1          = false,
-        .flash_waitstates = 2,
-        .hpre             = RCC_CFGR_HPRE_NODIV,
-        .ppre1            = RCC_CFGR_PPRE_DIV2,
-        .ppre2            = RCC_CFGR_PPRE_NODIV,
-        .power_save       = 0,
-        .ahb_frequency    = 16000000,
-        .apb1_frequency   = 8000000,
-        .apb2_frequency   = 16000000,
-    };
+    rcc_clock_scale sysclock;
+    sysclock.pllsrc           = RCC_CFGR_PLLSRC_HSI_DIV2;
+    sysclock.pllmul           = RCC_CFGR_PLLMUL_MUL4;
+    sysclock.plldiv           = RCC_CFGR2_PREDIV_NODIV;
+    sysclock.usbdiv1          = false;
+    sysclock.flash_waitstates = 2;
+    sysclock.hpre             = RCC_CFGR_HPRE_NODIV;
+    sysclock.ppre1            = RCC_CFGR_PPRE_DIV2;
+    sysclock.ppre2            = RCC_CFGR_PPRE_NODIV;
+    sysclock.power_save       = 0;
+    sysclock.ahb_frequency    = 16000000;
+    sysclock.apb1_frequency   = 8000000;
+    sysclock.apb2_frequency   = 16000000;
 
     rcc_clock_setup_pll(&sysclock);
 

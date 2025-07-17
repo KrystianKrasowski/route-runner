@@ -1,16 +1,21 @@
 #pragma once
 
+#include "linebot/domain/maneuver.hpp"
 #include "linebot/motion_port.hpp"
-#include "gmock/gmock.h"
+#include <optional>
 
 namespace linebot
 {
 
-class motion_port_mock : public motion_port
+struct motion_port_mock : public motion_port
 {
-public:
+    std::optional<maneuver> applied_maneuver_ = std::nullopt;
 
-    MOCK_METHOD(void, apply, (maneuver & motion), (override));
+    void
+    apply(maneuver& maneuver) override
+    {
+        applied_maneuver_ = std::optional{maneuver};
+    }
 };
 
 } // namespace linebot

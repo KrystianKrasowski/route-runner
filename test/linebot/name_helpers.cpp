@@ -78,9 +78,9 @@ operator<<(std::ostream& os, commands cmds)
 }
 
 std::ostream&
-operator<<(std::ostream& os, maneuver mot)
+operator<<(std::ostream& os, maneuver m)
 {
-    std::map<maneuver::direction, std::string> motion_direction_map = {
+    std::map<maneuver::direction, std::string> directions_map = {
         {maneuver::FORWARD, "FORWARD"},
         {maneuver::BACKWARD, "BACKWARD"},
         {maneuver::NONE, "NONE"},
@@ -88,8 +88,8 @@ operator<<(std::ostream& os, maneuver mot)
 
     return os << std::format(
                "Motion[{}, {}]",
-               motion_direction_map.at(mot.direction_),
-               mot.correction
+               directions_map.at(m.get_direction()),
+               m.get_correction()
            );
 }
 

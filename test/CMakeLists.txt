@@ -1,5 +1,6 @@
 if(TARGET_ARCH STREQUAL "test")
     include(GoogleTest)
+    include(Catch)
     add_subdirectory(pathbot)
     add_subdirectory(linebot)
     add_subdirectory(adapters)

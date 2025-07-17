@@ -9,7 +9,6 @@ struct commands
 {
     enum command
     {
-        UNDEFINED = 0,
         NONE      = 1,
         FORWARD   = 2,
         BACKWARD  = 4,

@@ -4,7 +4,6 @@ endif()
 
 if(TARGET_ARCH STREQUAL "test")
     add_subdirectory(unity)
-    add_subdirectory(gtest)
 endif()
 
 if(TARGET_RUNTIME STREQUAL "freertos")

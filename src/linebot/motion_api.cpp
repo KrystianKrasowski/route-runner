@@ -17,9 +17,9 @@ motion_api::of(data_store& store, motion_port& port)
 }
 
 void
-motion_api::apply(commands commands)
+motion_api::apply(commands remote_control)
 {
-    if (store_.commands_ == commands)
+    if (store_.remote_control_ == remote_control)
     {
         return;
     }
@@ -27,20 +27,20 @@ motion_api::apply(commands commands)
     maneuver::direction direction  = maneuver::NONE;
     int8_t              correction = 0;
 
-    if (commands.have_left())
+    if (remote_control.have_left())
     {
         correction = -50;
     }
-    else if (commands.have_right())
+    else if (remote_control.have_right())
     {
         correction = 50;
     }
 
-    if (commands.have_forward())
+    if (remote_control.have_forward())
     {
         direction = maneuver::FORWARD;
     }
-    else if (commands.have_backward())
+    else if (remote_control.have_backward())
     {
         direction = maneuver::BACKWARD;
     }
@@ -52,6 +52,7 @@ motion_api::apply(commands commands)
 
     maneuver new_maneuver{direction, correction};
     port_.apply(new_maneuver);
+    store_.remote_control_ = remote_control;
 }
 
 void

@@ -8,15 +8,19 @@ target_sources(
         PRIVATE
             name_helpers.cpp
             motion_manual_update_test.cpp
-            motion_manual_skip_test.cpp
+)
+
+target_include_directories(
+    linebot_test
+        PRIVATE
+        ${fakeit_SOURCE_DIR}/single_header/catch
 )
 
 target_link_libraries(
     linebot_test
         PRIVATE
-            GTest::gtest_main
-            GTest::gmock_main
+            Catch2::Catch2WithMain
             linebot
 )
 
-gtest_discover_tests(linebot_test)
+catch_discover_tests(linebot_test)

@@ -1,9 +1,9 @@
 #pragma once
 
+#include "linebot/domain/maneuver.hpp"
+
 namespace linebot
 {
-
-struct maneuver;
 
 // TODO: Consider using callback mechanism instead, etl::function
 class motion_port

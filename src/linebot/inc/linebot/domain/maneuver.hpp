@@ -14,9 +14,6 @@ struct maneuver
         BACKWARD,
     };
 
-    const direction direction_;
-    const int8_t    correction_;
-
     static maneuver
     forward(int8_t correction)
     {
@@ -35,11 +32,36 @@ struct maneuver
         return maneuver{NONE, 0};
     }
 
+    maneuver(maneuver::direction direction, int8_t correction)
+        : direction_{direction},
+          correction_{correction}
+    {
+    }
+
+    // TODO: Check memory footprint
+    direction
+    get_direction()
+    {
+        return direction_;
+    }
+
+    int8_t
+    get_correction()
+    {
+        return correction_;
+    }
+
     bool
     operator==(const maneuver& other) const
     {
-        return direction_ == other.direction_ && correction_ == other.correction_;
+        return direction_ == other.direction_
+            && correction_ == other.correction_;
     }
+
+private:
+
+    direction direction_;
+    int8_t    correction_;
 };
 
 } // namespace linebot
