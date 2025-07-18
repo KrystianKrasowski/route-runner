@@ -40,12 +40,6 @@ private:
 
     inline bool
     is_maneuver_applicable(commands remote_control);
-
-    inline bool
-    is_mode_to_following_switchable(commands remote_control);
-
-    inline bool
-    is_mode_to_manual_switchable(commands remote_control);
 };
 
 } // namespace linebot

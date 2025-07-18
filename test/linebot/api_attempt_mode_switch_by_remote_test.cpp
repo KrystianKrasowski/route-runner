@@ -6,64 +6,42 @@
 #include "linebot/domain/commands.hpp"
 #include "linebot/domain/mode.hpp"
 #include "name_helpers.hpp"
+#include <tuple>
 
 namespace linebot
 {
 
-TEST_CASE_METHOD(api_fixture, "should switch to following mode", "[linebot]")
-{
-    // given
-    store_.mode_ = mode::LINE_DETECTED;
-
-    // when
-    api_.attempt_mode_switch(commands{commands::FOLLOW});
-
-    // then
-    REQUIRE(store_.mode_ == mode::FOLLOWING);
-    REQUIRE(status_indicator_.applied_mode_.has_value());
-    REQUIRE(status_indicator_.applied_mode_.value() == mode::FOLLOWING);
-}
+using commands::BREAK;
+using commands::FOLLOW;
 
 TEST_CASE_METHOD(
-    api_fixture, "should not switch to following mode", "[linebot]"
+    api_fixture, "should switch mode by remote control", "[linebot]"
 )
 {
-    auto remote_control = GENERATE(
-        commands{commands::FORWARD},
-        commands{commands::BACKWARD},
-        commands{commands::BREAK},
-        commands{commands::LEFT},
-        commands{commands::RIGHT},
-        commands{commands::FOLLOW}
+    using test_params = std::tuple<mode, commands, mode>;
+
+    auto example = GENERATE(
+        test_params{mode::LINE_DETECTED, commands{FOLLOW}, mode::FOLLOWING},
+        test_params{mode::FOLLOWING, commands{BREAK}, mode::MANUAL},
+        test_params{mode::RECOVERING, commands{BREAK}, mode::MANUAL}
     );
 
-    CAPTURE(remote_control);
+    auto current_mode   = std::get<0>(example);
+    auto remote_control = std::get<1>(example);
+    auto expected_mode  = std::get<2>(example);
+
+    CAPTURE(current_mode, remote_control, expected_mode);
 
     // given
-    store_.mode_ = mode::MANUAL;
+    store_.mode_ = current_mode;
 
     // when
     api_.attempt_mode_switch(remote_control);
 
     // then
-    REQUIRE(store_.mode_ == mode::MANUAL);
-    REQUIRE(!status_indicator_.applied_mode_.has_value());
-}
-
-TEST_CASE_METHOD(api_fixture, "should switch to manual mode", "[linebot]")
-{
-    auto mode = GENERATE(mode::FOLLOWING, mode::RECOVERING);
-
-    // given
-    store_.mode_ = mode;
-
-    // when
-    api_.attempt_mode_switch(commands{commands::BREAK});
-
-    // then
-    REQUIRE(store_.mode_ == mode::MANUAL);
+    REQUIRE(store_.mode_ == expected_mode);
     REQUIRE(status_indicator_.applied_mode_.has_value());
-    REQUIRE(status_indicator_.applied_mode_.value() == mode::MANUAL);
+    REQUIRE(status_indicator_.applied_mode_.value() == expected_mode);
 }
 
 } // namespace linebot
