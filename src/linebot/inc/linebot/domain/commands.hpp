@@ -9,19 +9,25 @@ struct commands
 {
     enum command
     {
-        STOP      = 1,
-        FORWARD   = 2,
-        BACKWARD  = 4,
-        LEFT      = 8,
-        RIGHT     = 16,
-        BREAK     = 32,
-        FOLLOW    = 64,
+        STOP     = 1,
+        FORWARD  = 2,
+        BACKWARD = 4,
+        LEFT     = 8,
+        RIGHT    = 16,
+        BREAK    = 32,
+        FOLLOW   = 64,
     };
 
     bool
     operator==(const commands& other) const
     {
         return value_ == other.value_;
+    }
+
+    bool
+    operator!=(const commands& other) const
+    {
+        return value_ != other.value_;
     }
 
     explicit commands(uint16_t value)

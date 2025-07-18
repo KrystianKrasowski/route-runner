@@ -18,8 +18,6 @@ constexpr auto FORWARD  = commands::FORWARD;
 constexpr auto LEFT     = commands::LEFT;
 constexpr auto RIGHT    = commands::RIGHT;
 constexpr auto BACKWARD = commands::BACKWARD;
-constexpr auto BREAK    = commands::BREAK;
-constexpr auto FOLLOW   = commands::FOLLOW;
 
 TEST_CASE_METHOD(
     api_fixture,

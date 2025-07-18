@@ -27,6 +27,9 @@ private:
           motion_port_{motion_port}
     {
     }
+
+    bool
+    is_maneuver_applicable(commands remote_control);
 };
 
 } // namespace linebot
