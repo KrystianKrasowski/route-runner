@@ -7,7 +7,8 @@ target_sources(
     linebot_test
         PRIVATE
             name_helpers.cpp
-            api_attempt_maneuver_manual_test.cpp
+            api_attempt_maneuver_by_remote_test.cpp
+            api_attempt_mode_switch_by_remote_test.cpp
 )
 
 target_include_directories(

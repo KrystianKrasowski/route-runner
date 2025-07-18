@@ -15,6 +15,6 @@ std::ostream&
 operator<<(std::ostream& os, maneuver m);
 
 std::ostream&
-operator<<(std::ostream& os, mode m);
+operator<<(std::ostream& os, mode::value m);
 
 } // namespace linebot

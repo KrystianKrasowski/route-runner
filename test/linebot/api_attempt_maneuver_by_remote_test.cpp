@@ -53,8 +53,8 @@ TEST_CASE_METHOD(
     api_.attempt_maneuver(new_remote_control);
 
     // then
-    REQUIRE(motion_port_.applied_maneuver_.has_value());
-    REQUIRE(motion_port_.applied_maneuver_.value() == expected_maneuver);
+    REQUIRE(motion_.applied_maneuver_.has_value());
+    REQUIRE(motion_.applied_maneuver_.value() == expected_maneuver);
     REQUIRE(store_.remote_control_ == new_remote_control);
 }
 
@@ -87,7 +87,7 @@ TEST_CASE_METHOD(
     api_.attempt_maneuver(new_remote_control);
 
     // then
-    REQUIRE(!motion_port_.applied_maneuver_.has_value());
+    REQUIRE(!motion_.applied_maneuver_.has_value());
     REQUIRE(store_.mode_ == mode);
 }
 
@@ -114,7 +114,7 @@ TEST_CASE_METHOD(
     api_.attempt_maneuver(new_remote_control);
 
     // then
-    REQUIRE(!motion_port_.applied_maneuver_.has_value());
+    REQUIRE(!motion_.applied_maneuver_.has_value());
 }
 
 } // namespace linebot

@@ -32,6 +32,12 @@ public:
         return value_ == FOLLOWING || value_ == RECOVERING;
     }
 
+    constexpr bool
+    is_line_detected()
+    {
+        return value_ == LINE_DETECTED;
+    }
+
 private:
 
     mode::value value_ = MANUAL;
