@@ -1,5 +1,7 @@
 #include "linebot/domain/commands.hpp"
+#include "name_helpers.hpp"
 #include "linebot/domain/maneuver.hpp"
+#include "linebot/domain/mode.hpp"
 #include <format>
 #include <map>
 #include <ostream>
@@ -26,9 +28,8 @@ public:
     {
         using namespace std::views;
 
-        auto parsed_commands
-            = iota(0, 16)
-            | filter([&](int index) { return is_requested(index); })
+        auto parsed_commands =
+            iota(0, 16) | filter([&](int index) { return is_requested(index); })
             | transform([&](int index) { return to_command(index); })
             | transform([&](auto command) { return to_command_name(command); })
             | join_with(':');
@@ -63,34 +64,45 @@ private:
 std::ostream&
 operator<<(std::ostream& os, commands cmds)
 {
-    command_names_map names_map = {
+    command_names_map names = {
         {commands::FORWARD, "FORWARD"},
         {commands::BACKWARD, "BACKWARD"},
         {commands::LEFT, "LEFT"},
         {commands::RIGHT, "RIGHT"},
         {commands::BREAK, "BREAK"},
         {commands::FOLLOW, "FOLLOW"},
-        {commands::NONE, "NONE"},
+        {commands::STOP, "NONE"},
     };
 
-    commands_parser parser{cmds, names_map};
+    commands_parser parser{cmds, names};
     return os << parser.to_string();
 }
 
 std::ostream&
 operator<<(std::ostream& os, maneuver m)
 {
-    std::map<maneuver::direction, std::string> directions_map = {
+    std::map<maneuver::direction, std::string> names = {
         {maneuver::FORWARD, "FORWARD"},
         {maneuver::BACKWARD, "BACKWARD"},
         {maneuver::NONE, "NONE"},
     };
 
     return os << std::format(
-               "Motion[{}, {}]",
-               directions_map.at(m.get_direction()),
-               m.get_correction()
+               "Motion[{}, {}]", names.at(m.get_direction()), m.get_correction()
            );
+}
+
+std::ostream&
+operator<<(std::ostream& os, mode m)
+{
+    std::map<mode::value, std::string> names = {
+        {mode::MANUAL, "MANUAL"},
+        {mode::LINE_DETECTED, "LINE_DETECTED"},
+        {mode::FOLLOWING, "FOLLOWING"},
+        {mode::RECOVERING, "RECOVERING"}
+    };
+
+    return os << "mode::" << names.at(m);
 }
 
 } // namespace linebot

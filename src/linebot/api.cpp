@@ -1,4 +1,4 @@
-#include "linebot/motion_api.hpp"
+#include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
 #include "linebot/domain/commands.hpp"
 #include "linebot/domain/coordinates.hpp"
@@ -9,17 +9,22 @@
 namespace linebot
 {
 
-motion_api&
-motion_api::of(data_store& store, motion_port& port)
+api&
+api::of(data_store& store, motion_port& port)
 {
-    static motion_api api{store, port};
+    static api api{store, port};
     return api;
 }
 
 void
-motion_api::apply(commands remote_control)
+api::attempt_maneuver(commands remote_control)
 {
     if (store_.remote_control_ == remote_control)
+    {
+        return;
+    }
+
+    if (store_.mode_.is_tracking())
     {
         return;
     }
@@ -51,13 +56,8 @@ motion_api::apply(commands remote_control)
     }
 
     maneuver new_maneuver{direction, correction};
-    port_.apply(new_maneuver);
+    motion_port_.apply(new_maneuver);
     store_.remote_control_ = remote_control;
-}
-
-void
-motion_api::apply(coordinates line_position)
-{
 }
 
 } // namespace linebot

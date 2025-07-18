@@ -3,7 +3,7 @@ add_library(linebot)
 target_sources(
     linebot
         PRIVATE
-            motion_api.cpp
+            api.cpp
 )
 
 target_include_directories(

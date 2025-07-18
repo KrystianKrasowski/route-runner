@@ -9,7 +9,7 @@ struct commands
 {
     enum command
     {
-        NONE      = 1,
+        STOP      = 1,
         FORWARD   = 2,
         BACKWARD  = 4,
         LEFT      = 8,

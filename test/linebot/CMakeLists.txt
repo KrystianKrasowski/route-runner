@@ -7,7 +7,7 @@ target_sources(
     linebot_test
         PRIVATE
             name_helpers.cpp
-            motion_manual_update_test.cpp
+            api_attempt_maneuver_manual_test.cpp
 )
 
 target_include_directories(
