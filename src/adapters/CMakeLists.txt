@@ -1,14 +1,25 @@
-add_library(adapters STATIC
-    adapter_motion_l293.c
-    adapter_mode_listener.c
-    adapter_dump_serial.c
+add_library(
+    adapters 
+        STATIC
+            adapter_motion_l293.c
+            adapter_mode_listener.c
+            adapter_dump_serial.c
+            motion_adapter_l293.cpp
 )
 
-set_property(TARGET adapters PROPERTY C_STANDARD 11)
+target_link_libraries(
+    adapters
+        PRIVATE
+            pathbot
+            devices
+            utils
+            linebot
+            idevices
+            etl
+)
 
-target_link_libraries(adapters
-    PRIVATE
-        pathbot
-        devices
-        utils
+target_include_directories(
+    adapters
+        PUBLIC
+            "./inc"
 )

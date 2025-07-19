@@ -35,9 +35,9 @@ task_route_tracking::run()
         {
             // TODO: some factory here
             pathbot_coords_t coords = {
-                .coords  = {0, 0, 0, 0, 0, 0},
-                .weights = {-100, -40, -20, 20, 40, 100},
-                .length  = PATHBOT_MAX_COORDS_LENGTH,
+                {0, 0, 0, 0, 0, 0},
+                {-100, -40, -20, 20, 40, 100},
+                PATHBOT_MAX_COORDS_LENGTH,
             };
 
             mapper_qtrhd06a_coords_read(raw, coords_size, &coords);

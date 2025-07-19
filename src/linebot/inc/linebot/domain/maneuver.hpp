@@ -52,6 +52,36 @@ struct maneuver
     }
 
     bool
+    is_forward()
+    {
+        return direction_ == FORWARD;
+    }
+
+    bool
+    is_backward()
+    {
+        return direction_ == BACKWARD;
+    }
+
+    bool
+    is_correction_above(int8_t value)
+    {
+        return correction_ > value;
+    }
+
+    bool
+    is_correction_below(int8_t value)
+    {
+        return correction_ < value;
+    }
+
+    bool
+    is_correction_at(int8_t value)
+    {
+        return correction_ == value;
+    }
+
+    bool
     operator==(const maneuver& other) const
     {
         return direction_ == other.direction_

@@ -12,7 +12,7 @@ struct motion_port_mock : public motion_port
     std::optional<maneuver> applied_maneuver_ = std::nullopt;
 
     void
-    apply(maneuver& maneuver) override
+    apply(maneuver maneuver) override
     {
         applied_maneuver_ = std::optional{maneuver};
     }
