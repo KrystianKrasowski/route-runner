@@ -33,7 +33,7 @@ dualshock2::of(
 uint16_t
 dualshock2::read()
 {
-    uint16_t commands = device::dualshock2_command::NONE;
+    uint16_t commands = device::dualshock2::NONE;
 
     if (is_state_valid())
     {
