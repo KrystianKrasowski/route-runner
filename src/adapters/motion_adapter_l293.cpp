@@ -77,12 +77,12 @@ motion_adapter_l293::compute_right_rotation(linebot::maneuver maneuver)
 {
     if (maneuver.is_correction_above(INVERT_TRESHOLD) && maneuver.is_forward())
     {
-        return device::l293::RIGHT;
+        return device::l293::LEFT;
     }
 
     if (maneuver.is_correction_above(INVERT_TRESHOLD) && maneuver.is_backward())
     {
-        return device::l293::LEFT;
+        return device::l293::RIGHT;
     }
 
     if (maneuver.is_correction_at(INVERT_TRESHOLD))

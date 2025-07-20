@@ -11,12 +11,6 @@ target_sources(
             api_attempt_mode_switch_by_remote_test.cpp
 )
 
-target_include_directories(
-    linebot_test
-        PRIVATE
-        ${fakeit_SOURCE_DIR}/single_header/catch
-)
-
 target_link_libraries(
     linebot_test
         PRIVATE

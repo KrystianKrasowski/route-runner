@@ -14,6 +14,7 @@ target_include_directories(devices_mock
 
 target_link_libraries(devices_mock
     PUBLIC
+        idevices
         devices
         utils
 )
