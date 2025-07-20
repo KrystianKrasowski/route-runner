@@ -1,11 +1,12 @@
+#include "device/tree.hpp"
 #include "data_store.hpp"
 #include "device/isr_event_emitter.hpp"
-#include "device/tree.hpp"
 #include "dualshock2.hpp"
 #include "isr_handler_dma1_channel2.hpp"
 #include "isr_handler_tim2.hpp"
 #include "isr_handler_tim7.hpp"
 #include "isr_registry.hpp"
+#include "l293.hpp"
 #include "peripherals.hpp"
 #include "toggle_sequence_gpio.hpp"
 #include <libopencm3/cm3/nvic.h>
@@ -30,6 +31,12 @@ tree::of(isr_event_emitter& events)
         GPIOF, GPIO0, DMA1, DMA_CHANNEL2, DMA_CHANNEL3, store.p_dualshock2_rbuff
     );
 
+    auto& motor_left =
+        hardware::l293::of(GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3);
+
+    auto& motor_right =
+        hardware::l293::of(GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4);
+
     auto& isr_handler_tim2 = hardware::isr_handler_tim2::of(dualshock2);
     auto& isr_handler_tim7 = hardware::isr_handler_tim7::of(toggle_sequence);
     auto& isr_handler_dma1_channel2 =
@@ -39,7 +46,7 @@ tree::of(isr_event_emitter& events)
     hardware::isr_register(NVIC_TIM7_IRQ, isr_handler_tim7);
     hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, isr_handler_dma1_channel2);
 
-    return tree{toggle_sequence, dualshock2};
+    return tree{toggle_sequence, dualshock2, motor_left, motor_right};
 }
 
 } // namespace device

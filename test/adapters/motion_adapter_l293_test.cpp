@@ -19,7 +19,7 @@ TEST_CASE("should apply motion", "[adapter][motion][l293]")
     device::l293_mock motor_left;
     device::l293_mock motor_right;
 
-    auto adapter = motion_adapter_l293::of(motor_left, motor_right);
+    auto adapter = motion_l293::of(motor_left, motor_right);
 
     SECTION("left motor")
     {

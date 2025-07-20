@@ -1,23 +1,16 @@
 add_executable(${PROJECT_NAME}
     main.cpp
-    application.c
-    notifications.c
     task_manual_control.cpp
-    task_route_tracking.cpp
-    task_immediate_stop.cpp
-    task_domain_dump.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         idevices
         hardware
-        pathbot
+        linebot
         adapters
         mappers
-        devices_libopencm3_stm32f3
         freertos_kernel
-        utils
         etl
 )
 

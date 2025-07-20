@@ -1,37 +1,40 @@
-#include "devices/devices.h"
-#include "devices/port.h"
-#include "notifications.h"
-#include "pathbot/store.h"
-#include "task_domain_dump.hpp"
-#include "task_immediate_stop.hpp"
+#include "FreeRTOS.h"
+#include "adapter/motion_l293.hpp"
+#include "adapter/status_indicator_dummy.hpp"
+#include "device/tree.hpp"
+#include "isr_event_emitter_adapter.hpp"
+#include "linebot/data_store.hpp"
+#include "task.h"
 #include "task_manual_control.hpp"
-#include "task_route_tracking.hpp"
+#include <etl/utility.h>
+
+TaskHandle_t h_task_manual_control;
+
+linebot::data_store store;
+
+app::isr_event_emitter_adapter events{h_task_manual_control};
 
 int
 main()
 {
-    devices_init();
-    pathbot_store_init(NULL);
-    notifications_init();
+    auto devices = device::tree::of(events);
 
-    auto& task_manual_control = app::task_manual_control::of();
-    auto& task_route_tracking = app::task_route_tracking::of();
-    auto& task_immediate_stop = app::task_immediate_stop::of();
-    auto& task_domain_dump    = app::task_domain_dump::of();
+    devices.toggle_sequence_.change_sequence(0x1);
 
-    auto h_task_manual_control = task_manual_control.register_rtos_task();
-    auto h_task_route_tracking = task_route_tracking.register_rtos_task();
-    auto h_task_immediate_stop = task_immediate_stop.register_rtos_task();
-    auto h_task_domain_dump    = task_domain_dump.register_rtos_task();
+    auto& motion =
+        adapter::motion_l293::of(devices.motor_left_, devices.motor_right_);
 
-    notifications_put(DEVICE_NOTIFICATION_DUALSHOCK2, h_task_manual_control);
-    notifications_put(
-        DEVICE_NOTIFICATION_ROUTE_CONVERTIONS, h_task_route_tracking
-    );
-    notifications_put(
-        DEVICE_NOTIFICATION_TIMEOUT_GUARD_ROUTE, h_task_immediate_stop
-    );
-    notifications_put(DEVICE_NOTIFICATION_SERIAL_REQUEST, h_task_domain_dump);
+    auto& status_indicator = adapter::status_indicator_dummy::of();
+
+    auto& api = linebot::api::of(store, motion, status_indicator);
+
+    auto& task_manual_control =
+        app::task_manual_control::of(devices.dualshock2_, api);
+
+    h_task_manual_control = task_manual_control.register_rtos_task();
+
+    // TODO: Code smell. Consider event listener registration in task_base
+    events.enable();
 
     vTaskStartScheduler();
 

@@ -1,4 +1,4 @@
-#include "adapter/motion_adapter_l293.hpp"
+#include "adapter/motion_l293.hpp"
 #include "device/l293.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include <cstdint>
@@ -19,22 +19,15 @@ duty_cycle(int8_t correction)
     return etl::absolute(-2 * etl::absolute(correction) + 100);
 }
 
-static auto rotation_map =
-    etl::make_map<linebot::maneuver::direction, device::l293::rotation>(
-        etl::pair{linebot::maneuver::FORWARD, device::l293::RIGHT},
-        etl::pair{linebot::maneuver::BACKWARD, device::l293::LEFT},
-        etl::pair{linebot::maneuver::NONE, device::l293::NONE}
-    );
-
-motion_adapter_l293&
-motion_adapter_l293::of(device::l293& motor_left, device::l293& motor_right)
+motion_l293&
+motion_l293::of(device::l293& motor_left, device::l293& motor_right)
 {
-    static motion_adapter_l293 adapter{motor_left, motor_right};
-    return adapter;
+    static motion_l293 motion_adapter{motor_left, motor_right};
+    return motion_adapter;
 }
 
 void
-motion_adapter_l293::apply(linebot::maneuver maneuver)
+motion_l293::apply(linebot::maneuver maneuver)
 {
     motor_left_.disable();
     motor_right_.disable();
@@ -50,16 +43,16 @@ motion_adapter_l293::apply(linebot::maneuver maneuver)
     motor_right_.enable(duty_cycle_right);
 }
 
-inline device::l293::rotation
-motion_adapter_l293::compute_left_rotation(linebot::maneuver maneuver)
+device::l293::rotation
+motion_l293::compute_left_rotation(linebot::maneuver maneuver)
 {
-    if (maneuver.is_correction_below(-INVERT_TRESHOLD) && maneuver.is_forward())
+    if (maneuver.is_forward() && maneuver.is_correction_below(-INVERT_TRESHOLD))
     {
         return device::l293::LEFT;
     }
 
-    if (maneuver.is_correction_below(-INVERT_TRESHOLD)
-        && maneuver.is_backward())
+    if (maneuver.is_backward()
+        && maneuver.is_correction_below(-INVERT_TRESHOLD))
     {
         return device::l293::RIGHT;
     }
@@ -69,18 +62,18 @@ motion_adapter_l293::compute_left_rotation(linebot::maneuver maneuver)
         return device::l293::NONE;
     }
 
-    return rotation_map.at(maneuver.get_direction());
+    return to_rotation(maneuver.get_direction());
 }
 
-inline device::l293::rotation
-motion_adapter_l293::compute_right_rotation(linebot::maneuver maneuver)
+device::l293::rotation
+motion_l293::compute_right_rotation(linebot::maneuver maneuver)
 {
-    if (maneuver.is_correction_above(INVERT_TRESHOLD) && maneuver.is_forward())
+    if (maneuver.is_forward() && maneuver.is_correction_above(INVERT_TRESHOLD))
     {
         return device::l293::LEFT;
     }
 
-    if (maneuver.is_correction_above(INVERT_TRESHOLD) && maneuver.is_backward())
+    if (maneuver.is_backward() && maneuver.is_correction_above(INVERT_TRESHOLD))
     {
         return device::l293::RIGHT;
     }
@@ -90,11 +83,11 @@ motion_adapter_l293::compute_right_rotation(linebot::maneuver maneuver)
         return device::l293::NONE;
     }
 
-    return rotation_map.at(maneuver.get_direction());
+    return to_rotation(maneuver.get_direction());
 }
 
-inline uint8_t
-motion_adapter_l293::compute_left_duty_cycle(linebot::maneuver maneuver)
+uint8_t
+motion_l293::compute_left_duty_cycle(linebot::maneuver maneuver)
 {
     if (linebot::maneuver::NONE == maneuver.get_direction())
     {
@@ -109,8 +102,8 @@ motion_adapter_l293::compute_left_duty_cycle(linebot::maneuver maneuver)
     return DUTY_CYCLE_MAX;
 }
 
-inline uint8_t
-motion_adapter_l293::compute_right_duty_cycle(linebot::maneuver maneuver)
+uint8_t
+motion_l293::compute_right_duty_cycle(linebot::maneuver maneuver)
 {
     if (linebot::maneuver::NONE == maneuver.get_direction())
     {
@@ -123,6 +116,23 @@ motion_adapter_l293::compute_right_duty_cycle(linebot::maneuver maneuver)
     }
 
     return DUTY_CYCLE_MAX;
+}
+
+device::l293::rotation
+motion_l293::to_rotation(linebot::maneuver::direction direction)
+{
+    switch (direction)
+    {
+    case linebot::maneuver::FORWARD:
+        return device::l293::RIGHT;
+
+    case linebot::maneuver::BACKWARD:
+        return device::l293::LEFT;
+
+    case linebot::maneuver::NONE:
+    default:
+        return device::l293::NONE;
+    }
 }
 
 } // namespace adapter

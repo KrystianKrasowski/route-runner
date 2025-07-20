@@ -1,24 +1,19 @@
-#include "FreeRTOS.h"
-#include "devices/dualshock2.h"
-#include "mappers/dualshock2_control.h"
-#include "pathbot/api.h"
-#include "task_base.hpp"
 #include "task_manual_control.hpp"
-#include <etl/pool.h>
-#include <stdint.h>
-#include <utils/result.h>
+#include "FreeRTOS.h"
+#include "linebot/api.hpp"
+#include "linebot/domain/commands.hpp"
+#include "mapper/dualshock2_commands.hpp"
+#include "task_base.hpp"
+#include <cstdint>
 
 namespace app
 {
 
-static etl::pool<task_manual_control, 1> pool;
-
 task_manual_control&
-task_manual_control::of()
+task_manual_control::of(device::dualshock2& dualshock2, linebot::api& api)
 {
-    task_manual_control *task = pool.allocate();
-    new (task) task_manual_control;
-    return *task;
+    static task_manual_control task{dualshock2, api};
+    return task;
 }
 
 void
@@ -27,19 +22,15 @@ task_manual_control::run()
     while (1)
     {
         uint32_t count = ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(20));
-        uint16_t raw   = DS2_NONE;
 
-        if (count &&
-            device_dualshock2_read(DEVICE_DUALSHOCK2_1, &raw) == RESULT_OK)
+        if (count)
         {
-            uint16_t commands = mapper_dualshock2_control_read(raw);
-            pathbot_handle_commands(commands);
+            uint16_t          raw_control    = dualshock2_.read();
+            linebot::commands remote_control = mapper::map(raw_control);
+
+            api_.attempt_maneuver(remote_control);
         }
     }
-}
-
-task_manual_control::task_manual_control() : task_base("manual", 2)
-{
 }
 
 } // namespace app

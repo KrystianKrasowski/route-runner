@@ -27,7 +27,7 @@ set(ARM_CPU_FLAGS "-mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -ffunction
 
 # Common compile flags
 set(CMAKE_C_FLAGS "${ARM_CPU_FLAGS}")
-set(CMAKE_CXX_FLAGS "${ARM_CPU_FLAGS} -fno-exceptions -fno-rtti -fno-use-cxa-atexit -ffunction-sections -fdata-sections")
+set(CMAKE_CXX_FLAGS "${ARM_CPU_FLAGS} -fno-exceptions -fno-rtti -fno-use-cxa-atexit -ffunction-sections -fdata-sections -fno-threadsafe-statics")
 set(CMAKE_ASM_FLAGS "${ARM_CPU_FLAGS}")
 
 # Build type-specific optimization

@@ -5,7 +5,8 @@
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #define configUSE_TICKLESS_IDLE                 0
 #define configCPU_CLOCK_HZ                      16000000
-#define configSYSTICK_CLOCK_HZ                  1000000
+// TODO: Revert this setting after ADC implementaion (C++)
+//#define configSYSTICK_CLOCK_HZ                  1000000
 #define configTICK_RATE_HZ                      250
 #define configMAX_PRIORITIES                    4
 #define configMINIMAL_STACK_SIZE                32
@@ -41,7 +42,8 @@
 
 #define configUSE_IDLE_HOOK                0
 #define configUSE_TICK_HOOK                0
-#define configCHECK_FOR_STACK_OVERFLOW     2
+// TODO: This must be enablen in the end
+#define configCHECK_FOR_STACK_OVERFLOW     0
 #define configUSE_MALLOC_FAILED_HOOK       0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK 0
 #define configUSE_SB_COMPLETED_CALLBACK    0

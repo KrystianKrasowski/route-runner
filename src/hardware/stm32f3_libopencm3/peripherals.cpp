@@ -19,6 +19,9 @@ static inline void
 tim2_setup();
 
 static inline void
+tim3_setup();
+
+static inline void
 tim7_setup();
 
 static inline void
@@ -36,6 +39,7 @@ peripherals_setup(data_store& store)
     rcc_setup();
     gpio_setup();
     tim2_setup();
+    tim3_setup();
     tim7_setup();
     spi_setup();
     dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff);
@@ -65,6 +69,7 @@ rcc_setup()
     rcc_periph_clock_enable(RCC_GPIOB);
     rcc_periph_clock_enable(RCC_GPIOF);
     rcc_periph_clock_enable(RCC_TIM2);
+    rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TIM7);
     rcc_periph_clock_enable(RCC_SPI1);
     rcc_periph_clock_enable(RCC_DMA1);
@@ -90,6 +95,20 @@ gpio_setup()
 
     // dualshock CHIP SELECT
     gpio_mode_setup(GPIOF, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0);
+
+    // L293 motor left
+    gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12);
+    gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO10);
+
+    // L293 motor right
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO6);
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
+
+    // output compare pins for tim3 pwm signal
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_PULLDOWN, GPIO0);
+    gpio_set_af(GPIOB, GPIO_AF2, GPIO0);
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_PULLDOWN, GPIO1);
+    gpio_set_af(GPIOB, GPIO_AF2, GPIO1);
 }
 
 static inline void
@@ -110,6 +129,33 @@ tim2_setup()
 
     // enable timer
     timer_enable_counter(TIM2);
+}
+
+static inline void
+tim3_setup()
+{
+    // set timer frequency at 10kHz
+    timer_set_prescaler(TIM3, 16 - 1);
+    timer_set_period(TIM3, 100 - 1);
+
+    // center align mode causes PWM to be at 5kHz frequency
+    timer_set_alignment(TIM3, TIM_CR1_CMS_CENTER_1);
+
+    // reinitialize the counter and update the registers on update event
+    timer_generate_event(TIM3, TIM_EGR_UG);
+
+    // configure PWM on output compare 3
+    timer_set_oc_value(TIM3, TIM_OC3, 90);
+    timer_set_oc_mode(TIM3, TIM_OC3, TIM_OCM_PWM1);
+    timer_enable_oc_preload(TIM3, TIM_OC3);
+
+    // configure PWM on output compare 4
+    timer_set_oc_value(TIM3, TIM_OC4, 90);
+    timer_set_oc_mode(TIM3, TIM_OC4, TIM_OCM_PWM1);
+    timer_enable_oc_preload(TIM3, TIM_OC4);
+
+    // enable the counter
+    timer_enable_counter(TIM3);
 }
 
 static inline void

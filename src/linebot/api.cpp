@@ -27,8 +27,8 @@ api::attempt_maneuver(commands remote_control)
     if (is_maneuver_applicable(remote_control))
     {
         store_.remote_control_ = remote_control;
-        maneuver maneuver      = create_maneuver(remote_control);
-        motion_.apply(maneuver);
+        maneuver motion        = create_maneuver(remote_control);
+        motion_.apply(motion);
     }
 }
 

@@ -8,11 +8,11 @@
 namespace adapter
 {
 
-class motion_adapter_l293 : public linebot::motion_port
+class motion_l293 : public linebot::motion_port
 {
 public:
 
-    static motion_adapter_l293&
+    static motion_l293&
     of(device::l293& motor_left, device::l293& motor_right);
 
     void
@@ -23,7 +23,7 @@ private:
     device::l293& motor_left_;
     device::l293& motor_right_;
 
-    motion_adapter_l293(device::l293& motor_left, device::l293& motor_right)
+    motion_l293(device::l293& motor_left, device::l293& motor_right)
         : motor_left_{motor_left},
           motor_right_{motor_right}
     {
@@ -40,6 +40,9 @@ private:
 
     uint8_t
     compute_right_duty_cycle(linebot::maneuver maneuver);
+
+    device::l293::rotation
+    to_rotation(linebot::maneuver::direction direction);
 };
 
 } // namespace adapter

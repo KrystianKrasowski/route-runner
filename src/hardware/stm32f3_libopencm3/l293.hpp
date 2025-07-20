@@ -20,7 +20,7 @@ public:
        enum tim_oc_id pwm_channel);
 
     void
-    rotate(rotation_direction direction) override;
+    rotate(rotation) override;
 
     void
     enable(uint8_t duty_cycle) override;
@@ -33,7 +33,7 @@ private:
     uint32_t       gpio_1a_port_;
     uint16_t       gpio_1a_pin_;
     uint32_t       gpio_2a_port_;
-    uint16_t       gpio_2s_pin_;
+    uint16_t       gpio_2a_pin_;
     uint32_t       pwm_timer_port_;
     enum tim_oc_id pwm_channel_;
 
@@ -48,7 +48,7 @@ private:
         : gpio_1a_port_{gpio_1a_port},
           gpio_1a_pin_{gpio_1a_pin},
           gpio_2a_port_{gpio_2a_port},
-          gpio_2s_pin_{gpio_2a_pin},
+          gpio_2a_pin_{gpio_2a_pin},
           pwm_timer_port_{pwm_timer_port},
           pwm_channel_{pwm_channel}
     {

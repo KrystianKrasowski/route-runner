@@ -34,23 +34,23 @@ l293::of(
 }
 
 void
-l293::rotate(rotation_direction direction)
+l293::rotate(rotation direction)
 {
     switch (direction)
     {
     case LEFT:
         gpio_set(gpio_1a_port_, gpio_1a_pin_);
-        gpio_clear(gpio_2a_port_, gpio_2s_pin_);
+        gpio_clear(gpio_2a_port_, gpio_2a_pin_);
         break;
 
     case RIGHT:
         gpio_clear(gpio_1a_port_, gpio_1a_pin_);
-        gpio_set(gpio_2a_port_, gpio_2s_pin_);
+        gpio_set(gpio_2a_port_, gpio_2a_pin_);
         break;
 
     case NONE:
         gpio_clear(gpio_1a_port_, gpio_1a_pin_);
-        gpio_clear(gpio_2a_port_, gpio_2s_pin_);
+        gpio_clear(gpio_2a_port_, gpio_2a_pin_);
         break;
     }
 }
