@@ -11,5 +11,7 @@ target_include_directories(mappers
 target_link_libraries(mappers
     PRIVATE
         devices
+        idevices
         pathbot
+        linebot
 )
