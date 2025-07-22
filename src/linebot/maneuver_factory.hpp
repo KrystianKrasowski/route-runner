@@ -1,8 +1,11 @@
 #pragma once
 
+#include "coordinates_error_center_of_mass.hpp"
 #include "linebot/domain/commands.hpp"
+#include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include <cstdint>
+#include <etl/optional.h>
 
 namespace linebot
 {
@@ -24,7 +27,6 @@ create_maneuver(commands remote_control)
     {
         correction = 50;
     }
-
     if (remote_control.have_forward())
     {
         direction = maneuver::FORWARD;
@@ -40,6 +42,27 @@ create_maneuver(commands remote_control)
     }
 
     return {direction, correction};
+}
+
+inline maneuver
+create_maneuver(coordinates& line_position)
+{
+    if (line_position.is_on_finish())
+    {
+        return maneuver::none();
+    }
+
+    coordinates_error_center_of_mass strategy;
+    etl::optional<int8_t> correction = line_position.compute_error(strategy);
+
+    if (correction.has_value())
+    {
+        return maneuver::forward(correction.value());
+    }
+    else
+    {
+        return maneuver::none();
+    }
 }
 
 } // namespace linebot

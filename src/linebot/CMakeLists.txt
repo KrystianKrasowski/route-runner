@@ -4,6 +4,7 @@ target_sources(
     linebot
         PRIVATE
             api.cpp
+            coordinates.cpp
 )
 
 target_include_directories(

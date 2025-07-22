@@ -1,4 +1,4 @@
-#include "adapter/motion_adapter_l293.hpp"
+#include "adapter/motion_l293.hpp"
 #include "device/l293.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include <catch2/catch_test_macros.hpp>

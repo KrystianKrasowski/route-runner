@@ -1,6 +1,7 @@
 #include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
 #include "linebot/domain/commands.hpp"
+#include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/status_indicator_port.hpp"
@@ -28,6 +29,17 @@ api::attempt_maneuver(commands remote_control)
     {
         store_.remote_control_ = remote_control;
         maneuver motion        = create_maneuver(remote_control);
+        motion_.apply(motion);
+    }
+}
+
+void
+api::attempt_maneuver(coordinates& line_position)
+{
+    if (store_.mode_.is_tracking())
+    {
+        maneuver motion = create_maneuver(line_position);
+        store_.errors_.push(motion.get_correction());
         motion_.apply(motion);
     }
 }

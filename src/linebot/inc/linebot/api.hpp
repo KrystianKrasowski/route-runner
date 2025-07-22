@@ -2,6 +2,7 @@
 
 #include "linebot/data_store.hpp"
 #include "linebot/domain/commands.hpp"
+#include "linebot/domain/coordinates.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/status_indicator_port.hpp"
 
@@ -21,6 +22,9 @@ public:
     attempt_maneuver(commands remote_control);
 
     void
+    attempt_maneuver(coordinates& line_positon);
+
+    void
     attempt_mode_switch(commands remote_control);
 
 private:
@@ -38,7 +42,7 @@ private:
     {
     }
 
-    inline bool
+    bool
     is_maneuver_applicable(commands remote_control);
 };
 

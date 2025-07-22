@@ -8,6 +8,7 @@ target_sources(
         PRIVATE
             name_helpers.cpp
             api_attempt_maneuver_by_remote_test.cpp
+            api_attempt_maneuver_by_line_position_test.cpp
             api_attempt_mode_switch_by_remote_test.cpp
 )
 
@@ -18,4 +19,7 @@ target_link_libraries(
             linebot
 )
 
-catch_discover_tests(linebot_test)
+catch_discover_tests(
+    linebot_test
+        ADD_TAGS_AS_LABELS
+)

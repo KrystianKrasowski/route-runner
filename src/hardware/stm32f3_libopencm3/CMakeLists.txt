@@ -10,6 +10,7 @@ target_sources(hardware
         toggle_sequence_gpio.cpp
         data_store.cpp
         dualshock2.cpp
+        qtrhd06a.cpp
         l293.cpp
         tree.cpp
 )

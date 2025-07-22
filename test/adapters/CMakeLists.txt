@@ -44,4 +44,7 @@ target_link_libraries(
             Catch2::Catch2WithMain
 )
 
-catch_discover_tests(adapters_test)
+catch_discover_tests(
+    adapters_test
+        ADD_TAGS_AS_LABELS
+)
