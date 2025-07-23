@@ -11,7 +11,7 @@ namespace mapper
 using device::dualshock2;
 using linebot::commands;
 
-TEST_CASE("should map dualshock2 state to commands")
+TEST_CASE("should map dualshock2 state to commands", "[mapper]")
 {
     using example_type = std::tuple<dualshock2::command, uint16_t>;
 

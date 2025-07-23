@@ -32,6 +32,7 @@ target_sources(
     mappers_test
         PRIVATE
             dualshock2_mapper_commands_test.cpp
+            qtrhd06a_mapper_coordinates_test.cpp
 )
 
 target_link_libraries(
@@ -43,4 +44,7 @@ target_link_libraries(
             Catch2::Catch2WithMain
 )
 
-catch_discover_tests(mappers_test)
+catch_discover_tests(
+    mappers_test
+        ADD_TAGS_AS_LABELS
+)
