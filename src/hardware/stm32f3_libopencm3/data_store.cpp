@@ -13,4 +13,13 @@ data_store::on_dualshock2_rx_isr()
     }
 }
 
+void
+data_store::on_qtrhd06a_conversion_isr()
+{
+    for (uint8_t i = 0; i < qtrhd06a_buffer_length; i++)
+    {
+        p_qtrhd06a_rbuff[i] = p_qtrhd06a_wbuff[i];
+    }
+}
+
 } // namespace hardware

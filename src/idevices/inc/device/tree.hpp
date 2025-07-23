@@ -2,6 +2,7 @@
 
 #include "device/isr_event_emitter.hpp"
 #include "device/l293.hpp"
+#include "device/qtrhd06a.hpp"
 #include "dualshock2.hpp"
 #include "toggle_sequence.hpp"
 
@@ -10,10 +11,11 @@ namespace device
 
 struct tree
 {
-    toggle_sequence& toggle_sequence_;
-    dualshock2&      dualshock2_;
+    toggle_sequence& blink_;
+    dualshock2&      remote_control_;
     l293&            motor_left_;
     l293&            motor_right_;
+    qtrhd06a&        line_sensor_;
 
     static tree
     of(isr_event_emitter& events);

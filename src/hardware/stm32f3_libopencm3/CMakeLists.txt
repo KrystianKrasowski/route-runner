@@ -5,6 +5,7 @@ target_sources(hardware
         isr_registry.cpp
         isr_handler_tim2.cpp
         isr_handler_tim7.cpp
+        isr_handler_dma1_channel1.cpp
         isr_handler_dma1_channel2.cpp
         peripherals.cpp
         toggle_sequence_gpio.cpp

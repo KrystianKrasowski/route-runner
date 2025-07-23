@@ -19,14 +19,16 @@ struct data_store
         0x1, 0x42, 0x0, 0x0, 0x0
     };
 
-    volatile uint8_t p_dualshock2_wbuff[dualshock2_buffer_length];
-
-    volatile uint8_t p_dualshock2_rbuff[dualshock2_buffer_length];
-
-    volatile uint8_t p_qtrhd06a_wbuff[qtrhd06a_buffer_length];
+    volatile uint8_t  p_dualshock2_wbuff[dualshock2_buffer_length];
+    volatile uint8_t  p_dualshock2_rbuff[dualshock2_buffer_length];
+    volatile uint16_t p_qtrhd06a_wbuff[qtrhd06a_buffer_length];
+    volatile uint16_t p_qtrhd06a_rbuff[qtrhd06a_buffer_length];
 
     void
     on_dualshock2_rx_isr();
+
+    void
+    on_qtrhd06a_conversion_isr();
 };
 
 } // namespace hardware

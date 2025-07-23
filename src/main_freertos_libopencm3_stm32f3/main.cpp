@@ -19,7 +19,7 @@ main()
 {
     auto devices = device::tree::of(events);
 
-    devices.toggle_sequence_.change_sequence(0x1);
+    devices.blink_.change_sequence(0x1);
 
     auto& motion =
         adapter::motion_l293::of(devices.motor_left_, devices.motor_right_);
@@ -29,7 +29,7 @@ main()
     auto& api = linebot::api::of(store, motion, status_indicator);
 
     auto& task_manual_control =
-        app::task_manual_control::of(devices.dualshock2_, api);
+        app::task_manual_control::of(devices.remote_control_, api);
 
     h_task_manual_control = task_manual_control.register_rtos_task();
 
