@@ -27,6 +27,9 @@ public:
     void
     attempt_mode_switch(commands remote_control);
 
+    void
+    attempt_mode_switch(coordinates& line_position);
+
 private:
 
     data_store&            store_;

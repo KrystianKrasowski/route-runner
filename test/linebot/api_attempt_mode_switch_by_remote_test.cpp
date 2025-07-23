@@ -39,9 +39,9 @@ TEST_CASE_METHOD(
     api_.attempt_mode_switch(remote_control);
 
     // then
-    REQUIRE(store_.mode_ == expected_mode);
     REQUIRE(status_indicator_.applied_mode_.has_value());
-    REQUIRE(status_indicator_.applied_mode_.value() == expected_mode);
+    CHECK(status_indicator_.applied_mode_.value() == expected_mode);
+    CHECK(store_.mode_ == expected_mode);
 }
 
 } // namespace linebot

@@ -18,6 +18,20 @@ coordinates::of_6(
 }
 
 bool
+coordinates::is_on_route()
+{
+    for (auto value : values_)
+    {
+        if (value >= DETECTION_TRESHOLD)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool
 coordinates::is_on_finish()
 {
     uint8_t last_index = length_ - 1;

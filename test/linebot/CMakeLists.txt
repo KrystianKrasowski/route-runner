@@ -10,6 +10,7 @@ target_sources(
             api_attempt_maneuver_by_remote_test.cpp
             api_attempt_maneuver_by_line_position_test.cpp
             api_attempt_mode_switch_by_remote_test.cpp
+            api_attempt_mode_switch_by_line_position_test.cpp
 )
 
 target_link_libraries(

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "linebot/domain/commands.hpp"
+#include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/mode.hpp"
 
 namespace linebot
@@ -20,6 +21,15 @@ public:
     {
         return maybe_switch_to_following(remote_control)
             || maybe_switch_to_manual(remote_control);
+    }
+
+    bool
+    transit(coordinates& line_position)
+    {
+        return maybe_switch_to_detected(line_position)
+            || maybe_switch_to_manual(line_position)
+            || maybe_switch_to_recovering(line_position)
+            || maybe_switch_to_following(line_position);
     }
 
 private:
@@ -44,6 +54,60 @@ private:
         if (remote_control.have_break() && mode_.is_tracking())
         {
             mode_ = mode::MANUAL;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool
+    maybe_switch_to_manual(coordinates& line_position)
+    {
+        if (mode_.is_line_detected() && !line_position.is_on_route())
+        {
+            mode_ = mode::MANUAL;
+            return true;
+        }
+
+        if (mode_.is_tracking() && line_position.is_on_finish())
+        {
+            mode_ = mode::MANUAL;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool
+    maybe_switch_to_detected(coordinates& line_position)
+    {
+        if (mode_.is_manual() && line_position.is_on_route())
+        {
+            mode_ = mode::LINE_DETECTED;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool
+    maybe_switch_to_recovering(coordinates& line_position)
+    {
+        if (mode_.is_following() && !line_position.is_on_route())
+        {
+            mode_ = mode::RECOVERING;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool
+    maybe_switch_to_following(coordinates& line_position)
+    {
+        if (mode_.is_recovering() && line_position.is_on_route())
+        {
+            mode_ = mode::FOLLOWING;
             return true;
         }
 

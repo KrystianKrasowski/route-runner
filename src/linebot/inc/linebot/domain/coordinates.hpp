@@ -32,6 +32,9 @@ struct coordinates
     is_on_finish();
 
     bool
+    is_on_route();
+
+    bool
     operator==(const coordinates& other) const;
 };
 

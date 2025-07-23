@@ -55,6 +55,17 @@ api::attempt_mode_switch(commands remote_control)
     }
 }
 
+void
+api::attempt_mode_switch(coordinates& line_position)
+{
+    mode_state_machine mode_transition{store_.mode_};
+
+    if (mode_transition.transit(line_position))
+    {
+        status_indicator_.apply(store_.mode_);
+    }
+}
+
 bool
 api::is_maneuver_applicable(commands remote_control)
 {

@@ -27,15 +27,33 @@ public:
     }
 
     constexpr bool
-    is_tracking()
-    {
-        return value_ == FOLLOWING || value_ == RECOVERING;
-    }
-
-    constexpr bool
     is_line_detected()
     {
         return value_ == LINE_DETECTED;
+    }
+
+    constexpr bool
+    is_manual()
+    {
+        return value_ == MANUAL;
+    }
+
+    constexpr bool
+    is_following()
+    {
+        return value_ == FOLLOWING;
+    }
+
+    constexpr bool
+    is_recovering()
+    {
+        return value_ == RECOVERING;
+    }
+
+    constexpr bool
+    is_tracking()
+    {
+        return is_following() || is_recovering();
     }
 
 private:
