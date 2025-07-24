@@ -1,5 +1,6 @@
 #pragma once
 
+#include "linebot/domain/coordinates.hpp"
 #include <cstdint>
 #include <etl/array.h>
 
@@ -7,7 +8,7 @@ namespace mapper
 {
 
 template <size_t N>
-etl::array<uint8_t, N>
+linebot::coordinates
 map(const etl::array<uint8_t, N>& raw_values)
 {
     etl::array<uint8_t, N> result;
@@ -29,7 +30,7 @@ map(const etl::array<uint8_t, N>& raw_values)
         result[i] = value - 20;
     }
 
-    return result;
+    return linebot::coordinates::of_6(result);
 }
 
 } // namespace mapper

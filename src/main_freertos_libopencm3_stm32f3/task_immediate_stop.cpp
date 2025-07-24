@@ -1,21 +1,15 @@
 #include "FreeRTOS.h"
-#include "pathbot/api.h"
-#include "task_base.hpp"
 #include "task_immediate_stop.hpp"
 #include <cstdint>
-#include <etl/pool.h>
 
 namespace app
 {
 
-static etl::pool<task_immediate_stop, 1> pool;
-
 task_immediate_stop&
-task_immediate_stop::of()
+task_immediate_stop::of(linebot::api& api)
 {
-    task_immediate_stop *task = pool.allocate();
-    new (task) task_immediate_stop;
-    return *task;
+    static task_immediate_stop task{api};
+    return task;
 }
 
 void
@@ -27,13 +21,9 @@ task_immediate_stop::run()
 
         if (count)
         {
-            pathbot_handle_route_guard_timeout();
+            api_.halt();
         }
     }
-}
-
-task_immediate_stop::task_immediate_stop() : task_base("route guard", 3)
-{
 }
 
 } // namespace app

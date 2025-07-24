@@ -81,6 +81,20 @@ api::attempt_route_guard_toggle(const coordinates& line_position)
     }
 }
 
+void
+api::halt()
+{
+    commands stop{commands::STOP};
+
+    store_.mode_           = mode::MANUAL;
+    store_.remote_control_ = stop;
+    maneuver motion        = create_maneuver(stop);
+
+    motion_.apply(motion);
+    status_indicator_.apply(store_.mode_);
+    route_guard_.stop();
+}
+
 bool
 api::is_maneuver_applicable(commands remote_control)
 {

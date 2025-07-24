@@ -35,6 +35,9 @@ public:
     void
     attempt_route_guard_toggle(const coordinates& line_position);
 
+    void
+    halt();
+
 private:
 
     data_store&            store_;

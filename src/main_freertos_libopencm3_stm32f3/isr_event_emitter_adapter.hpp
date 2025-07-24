@@ -13,10 +13,13 @@ class isr_event_emitter_adapter : public device::isr_event_emitter
 public:
 
     isr_event_emitter_adapter(
-        TaskHandle_t& task_manual_control, TaskHandle_t& task_route_tracking
+        TaskHandle_t& task_manual_control,
+        TaskHandle_t& task_route_tracking,
+        TaskHandle_t& task_immediate_stop
     )
         : task_manual_control_{task_manual_control},
-          task_route_tracking_{task_route_tracking}
+          task_route_tracking_{task_route_tracking},
+          task_immediate_stop_{task_immediate_stop}
     {
     }
 
@@ -46,6 +49,7 @@ private:
     bool          enabled = false;
     TaskHandle_t& task_manual_control_;
     TaskHandle_t& task_route_tracking_;
+    TaskHandle_t& task_immediate_stop_;
 
     etl::optional<TaskHandle_t>
     get_task(device::event_id event)
@@ -57,6 +61,9 @@ private:
 
         case device::event_id::QTRHD06A_CONVERSION_COMPLETE:
             return etl::optional{task_route_tracking_};
+
+        case device::event_id::TIMEOUT:
+            return etl::optional{task_immediate_stop_};
 
         default:
             return etl::nullopt;

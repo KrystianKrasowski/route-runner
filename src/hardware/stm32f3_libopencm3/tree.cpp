@@ -4,12 +4,14 @@
 #include "dualshock2.hpp"
 #include "isr_handler_dma1_channel1.hpp"
 #include "isr_handler_dma1_channel2.hpp"
+#include "isr_handler_tim15.hpp"
 #include "isr_handler_tim2.hpp"
 #include "isr_handler_tim7.hpp"
 #include "isr_registry.hpp"
 #include "l293.hpp"
 #include "peripherals.hpp"
 #include "qtrhd06a.hpp"
+#include "timeout.hpp"
 #include "toggle_sequence_gpio.hpp"
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/dma.h>
@@ -26,6 +28,7 @@ tree::of(isr_event_emitter& events)
 {
     hardware::peripherals_setup(store);
 
+    // devices
     auto& blink = hardware::toggle_sequence_gpio::of(TIM7, GPIOA, GPIO8);
 
     auto& remote_control = hardware::dualshock2::of(
@@ -42,8 +45,12 @@ tree::of(isr_event_emitter& events)
         store.p_qtrhd06a_rbuff, store.qtrhd06a_buffer_length
     );
 
-    auto& isr_handler_tim2 = hardware::isr_handler_tim2::of(remote_control);
-    auto& isr_handler_tim7 = hardware::isr_handler_tim7::of(blink);
+    auto& offroute_timeout = hardware::timeout::of(TIM15);
+
+    // ISRs
+    auto& isr_handler_tim2  = hardware::isr_handler_tim2::of(remote_control);
+    auto& isr_handler_tim7  = hardware::isr_handler_tim7::of(blink);
+    auto& isr_handler_tim15 = hardware::isr_handler_tim15::of(events);
     auto& isr_handler_dma1_channel2 =
         hardware::isr_handler_dma1_channel2::of(remote_control, store, events);
     auto& isr_handler_dma1_channel1 =
@@ -51,10 +58,18 @@ tree::of(isr_event_emitter& events)
 
     hardware::isr_register(NVIC_TIM2_IRQ, isr_handler_tim2);
     hardware::isr_register(NVIC_TIM7_IRQ, isr_handler_tim7);
+    hardware::isr_register(NVIC_TIM1_BRK_TIM15_IRQ, isr_handler_tim15);
     hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, isr_handler_dma1_channel2);
     hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, isr_handler_dma1_channel1);
 
-    return tree{blink, remote_control, motor_left, motor_right, line_sensor};
+    return tree{
+        blink,
+        remote_control,
+        motor_left,
+        motor_right,
+        line_sensor,
+        offroute_timeout
+    };
 }
 
 } // namespace device

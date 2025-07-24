@@ -33,6 +33,9 @@ static inline void
 tim7_setup();
 
 static inline void
+tim15_setup();
+
+static inline void
 spi_setup();
 
 static inline void
@@ -72,6 +75,7 @@ peripherals_setup(data_store& store)
     tim2_setup();
     tim3_setup();
     tim7_setup();
+    tim15_setup();
     spi_setup();
     dma1_channel1_setup(
         (uint32_t)store.p_qtrhd06a_wbuff, store.qtrhd06a_buffer_length
@@ -109,6 +113,7 @@ rcc_setup()
     rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TIM6);
     rcc_periph_clock_enable(RCC_TIM7);
+    rcc_periph_clock_enable(RCC_TIM15);
     rcc_periph_clock_enable(RCC_SPI1);
     rcc_periph_clock_enable(RCC_DMA1);
     rcc_periph_clock_enable(RCC_ADC12);
@@ -239,6 +244,20 @@ tim7_setup()
 
     // enable update interrupt
     timer_enable_irq(TIM7, TIM_DIER_UIE);
+}
+
+static inline void
+tim15_setup()
+{
+    // set millisecond timer 
+    timer_set_prescaler(TIM15, 16000 - 1);
+
+    // reinitialize the counter and update the registers on update event
+    timer_generate_event(TIM15, TIM_EGR_UG);
+    timer_clear_flag(TIM15, TIM_SR_UIF);
+
+    // enable update interrupt
+    timer_enable_irq(TIM15, TIM_DIER_UIE);
 }
 
 static inline void

@@ -12,6 +12,7 @@ target_sources(
             api_attempt_mode_switch_by_remote_test.cpp
             api_attempt_mode_switch_by_line_position_test.cpp
             api_attempt_route_guard_toggle_test.cpp
+            api_halt_test.cpp
 )
 
 target_link_libraries(

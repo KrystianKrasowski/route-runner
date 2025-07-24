@@ -1,6 +1,5 @@
 #include "task_route_tracking.hpp"
 #include "FreeRTOS.h"
-#include "linebot/domain/coordinates.hpp"
 #include "mapper/qtrhd06a_coordinates.hpp"
 #include "task_base.hpp"
 #include <cstdint>
@@ -25,9 +24,7 @@ task_route_tracking::run()
         if (count)
         {
             auto raw_values  = line_sensor_.read();
-            auto line_values = mapper::map(raw_values);
-            // TODO: This should mapper do
-            auto line_position = linebot::coordinates::of_6(line_values);
+            auto line_position = mapper::map(raw_values);
 
             api_.attempt_route_guard_toggle(line_position);
             api_.attempt_mode_switch(line_position);

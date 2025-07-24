@@ -5,6 +5,7 @@ target_sources(hardware
         isr_registry.cpp
         isr_handler_tim2.cpp
         isr_handler_tim7.cpp
+        isr_handler_tim15.cpp
         isr_handler_dma1_channel1.cpp
         isr_handler_dma1_channel2.cpp
         peripherals.cpp
@@ -13,6 +14,7 @@ target_sources(hardware
         dualshock2.cpp
         qtrhd06a.cpp
         l293.cpp
+        timeout.cpp
         tree.cpp
 )
 
