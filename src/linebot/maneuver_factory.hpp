@@ -4,6 +4,7 @@
 #include "linebot/domain/commands.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
+#include "pid_regulator.hpp"
 #include <cstdint>
 #include <etl/optional.h>
 
@@ -27,6 +28,7 @@ create_maneuver(commands remote_control)
     {
         correction = 50;
     }
+
     if (remote_control.have_forward())
     {
         direction = maneuver::FORWARD;
@@ -45,7 +47,7 @@ create_maneuver(commands remote_control)
 }
 
 inline maneuver
-create_maneuver(coordinates& line_position)
+create_maneuver(const coordinates& line_position, pid_regulator& pid)
 {
     if (line_position.is_on_finish())
     {
@@ -53,16 +55,13 @@ create_maneuver(coordinates& line_position)
     }
 
     coordinates_error_center_of_mass strategy;
-    etl::optional<int8_t> correction = line_position.compute_error(strategy);
 
-    if (correction.has_value())
-    {
-        return maneuver::forward(correction.value());
-    }
-    else
-    {
-        return maneuver::none();
-    }
+    int8_t error =
+        line_position.compute_error(strategy).value_or(pid.get_last_error());
+
+    int8_t correction = pid.regulate(error);
+
+    return maneuver::forward(correction);
 }
 
 } // namespace linebot

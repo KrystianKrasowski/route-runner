@@ -11,7 +11,9 @@ namespace linebot
 
 struct data_store
 {
-    etl::circular_buffer<int16_t, 20> errors_;
+    static constexpr uint8_t ERROR_HISTORY_LENGTH = 20;
+
+    etl::circular_buffer<int8_t, ERROR_HISTORY_LENGTH> errors_;
 
     commands   remote_control_ = commands{commands::STOP};
     mode       mode_           = mode::MANUAL;

@@ -29,6 +29,12 @@ motion_l293::of(device::l293& motor_left, device::l293& motor_right)
 void
 motion_l293::apply(linebot::maneuver maneuver)
 {
+    // TODO: Test this behaviour!
+    if (last_maneuver_ == maneuver)
+    {
+        return;
+    }
+
     motor_left_.disable();
     motor_right_.disable();
 
@@ -41,6 +47,8 @@ motion_l293::apply(linebot::maneuver maneuver)
     motor_right_.rotate(rotation_right);
     motor_left_.enable(duty_cycle_left);
     motor_right_.enable(duty_cycle_right);
+
+    last_maneuver_ = maneuver;
 }
 
 device::l293::rotation

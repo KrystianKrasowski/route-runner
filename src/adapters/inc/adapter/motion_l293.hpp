@@ -4,6 +4,7 @@
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/motion_port.hpp"
 #include <cstdint>
+#include <etl/optional.h>
 
 namespace adapter
 {
@@ -20,8 +21,9 @@ public:
 
 private:
 
-    device::l293& motor_left_;
-    device::l293& motor_right_;
+    device::l293&     motor_left_;
+    device::l293&     motor_right_;
+    linebot::maneuver last_maneuver_ = linebot::maneuver::none();
 
     motion_l293(device::l293& motor_left, device::l293& motor_right)
         : motor_left_{motor_left},

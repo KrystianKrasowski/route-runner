@@ -24,7 +24,7 @@ public:
     attempt_maneuver(commands remote_control);
 
     void
-    attempt_maneuver(coordinates& line_positon);
+    attempt_maneuver(const coordinates& line_positon);
 
     void
     attempt_mode_switch(commands remote_control);

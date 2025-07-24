@@ -7,6 +7,7 @@
 #include "linebot/status_indicator_port.hpp"
 #include "maneuver_factory.hpp"
 #include "mode_state_machine.hpp"
+#include "pid_regulator.hpp"
 
 namespace linebot
 {
@@ -35,12 +36,13 @@ api::attempt_maneuver(commands remote_control)
 }
 
 void
-api::attempt_maneuver(coordinates& line_position)
+api::attempt_maneuver(const coordinates& line_position)
 {
     if (store_.mode_.is_tracking())
     {
-        maneuver motion = create_maneuver(line_position);
-        store_.errors_.push(motion.get_correction());
+        pid_regulator pid{store_.pid_params_, store_.errors_};
+
+        maneuver motion = create_maneuver(line_position, pid);
         motion_.apply(motion);
     }
 }

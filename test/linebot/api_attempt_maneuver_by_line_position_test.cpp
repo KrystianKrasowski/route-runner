@@ -5,7 +5,9 @@
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/domain/mode.hpp"
+#include <cstdint>
 #include <etl/array.h>
+#include <etl/circular_buffer.h>
 #include <tuple>
 
 namespace linebot
@@ -180,9 +182,10 @@ TEST_CASE_METHOD(
 
         // when
         api_.attempt_maneuver(line_position);
+        int actual_error = store_.errors_.back();
 
         // then
-        CHECK(store_.errors_.front() == expected_error);
+        CHECK(actual_error == expected_error);
     }
 }
 

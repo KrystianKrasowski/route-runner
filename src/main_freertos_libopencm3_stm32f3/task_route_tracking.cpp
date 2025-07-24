@@ -28,6 +28,7 @@ task_route_tracking::run()
 
             api_.attempt_route_guard_toggle(line_position);
             api_.attempt_mode_switch(line_position);
+            api_.attempt_maneuver(line_position);
         }
     }
 }
