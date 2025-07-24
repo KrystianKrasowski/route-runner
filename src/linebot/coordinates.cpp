@@ -29,7 +29,7 @@ coordinates::of_6(
 }
 
 bool
-coordinates::is_on_route()
+coordinates::is_on_route() const
 {
     for (auto value : values_)
     {
@@ -43,7 +43,7 @@ coordinates::is_on_route()
 }
 
 bool
-coordinates::is_on_finish()
+coordinates::is_on_finish() const
 {
     uint8_t last_index = length_ - 1;
     uint8_t mid_index  = length_ / 2;

@@ -24,7 +24,7 @@ public:
     }
 
     bool
-    transit(coordinates& line_position)
+    transit(const coordinates& line_position)
     {
         return maybe_switch_to_detected(line_position)
             || maybe_switch_to_manual(line_position)
@@ -61,7 +61,7 @@ private:
     }
 
     bool
-    maybe_switch_to_manual(coordinates& line_position)
+    maybe_switch_to_manual(const coordinates& line_position)
     {
         if (mode_.is_line_detected() && !line_position.is_on_route())
         {
@@ -79,7 +79,7 @@ private:
     }
 
     bool
-    maybe_switch_to_detected(coordinates& line_position)
+    maybe_switch_to_detected(const coordinates& line_position)
     {
         if (mode_.is_manual() && line_position.is_on_route())
         {
@@ -91,7 +91,7 @@ private:
     }
 
     bool
-    maybe_switch_to_recovering(coordinates& line_position)
+    maybe_switch_to_recovering(const coordinates& line_position)
     {
         if (mode_.is_following() && !line_position.is_on_route())
         {
@@ -103,7 +103,7 @@ private:
     }
 
     bool
-    maybe_switch_to_following(coordinates& line_position)
+    maybe_switch_to_following(const coordinates& line_position)
     {
         if (mode_.is_recovering() && line_position.is_on_route())
         {

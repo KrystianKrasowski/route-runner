@@ -15,10 +15,11 @@ api&
 api::of(
     data_store&            store,
     motion_port&           port,
-    status_indicator_port& status_indicator
+    status_indicator_port& status_indicator,
+    route_guard_port&      route_guard
 )
 {
-    static api api{store, port, status_indicator};
+    static api api{store, port, status_indicator, route_guard};
     return api;
 }
 
@@ -56,13 +57,27 @@ api::attempt_mode_switch(commands remote_control)
 }
 
 void
-api::attempt_mode_switch(coordinates& line_position)
+api::attempt_mode_switch(const coordinates& line_position)
 {
     mode_state_machine mode_transition{store_.mode_};
 
     if (mode_transition.transit(line_position))
     {
         status_indicator_.apply(store_.mode_);
+    }
+}
+
+void
+api::attempt_route_guard_toggle(const coordinates& line_position)
+{
+    if (store_.mode_.is_following() && !line_position.is_on_route())
+    {
+        route_guard_.start();
+    }
+
+    if (store_.mode_.is_recovering() && line_position.is_on_route())
+    {
+        route_guard_.stop();
     }
 }
 

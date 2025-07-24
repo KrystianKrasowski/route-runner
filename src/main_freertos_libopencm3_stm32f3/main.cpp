@@ -1,5 +1,6 @@
 #include "FreeRTOS.h"
 #include "adapter/motion_l293.hpp"
+#include "adapter/route_guard_timeout.hpp"
 #include "adapter/status_indicator_toggle_sequence.hpp"
 #include "device/tree.hpp"
 #include "isr_event_emitter_adapter.hpp"
@@ -31,7 +32,9 @@ main()
     auto& status_indicator =
         adapter::status_indicator_toggle_sequence::of(devices.blink_);
 
-    auto& api = linebot::api::of(store, motion, status_indicator);
+    auto& route_guard = adapter::route_guard_timeout::of();
+
+    auto& api = linebot::api::of(store, motion, status_indicator, route_guard);
 
     auto& task_manual_control =
         app::task_manual_control::of(devices.remote_control_, api);

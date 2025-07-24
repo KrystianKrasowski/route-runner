@@ -24,11 +24,12 @@ task_route_tracking::run()
 
         if (count)
         {
-            auto raw_values    = line_sensor_.read();
-            auto line_values   = mapper::map(raw_values);
+            auto raw_values  = line_sensor_.read();
+            auto line_values = mapper::map(raw_values);
             // TODO: This should mapper do
             auto line_position = linebot::coordinates::of_6(line_values);
 
+            api_.attempt_route_guard_toggle(line_position);
             api_.attempt_mode_switch(line_position);
         }
     }

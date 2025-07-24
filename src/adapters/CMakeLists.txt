@@ -6,6 +6,7 @@ add_library(
             adapter_dump_serial.c
             motion_l293.cpp
             status_indicator_toggle_sequence.cpp
+            route_guard_timeout.cpp
 )
 
 target_link_libraries(

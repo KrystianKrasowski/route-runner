@@ -12,7 +12,7 @@ template <typename T>
 struct coordinates_error_strategy
 {
     etl::optional<int8_t>
-    compute(coordinates& line_position)
+    compute(const coordinates& line_position)
     {
         auto* strategy = static_cast<T*>(this);
         return strategy->do_compute(line_position);

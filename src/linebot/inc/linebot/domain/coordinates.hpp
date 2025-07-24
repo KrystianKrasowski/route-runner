@@ -26,16 +26,16 @@ struct coordinates
 
     template <typename T>
     etl::optional<int8_t>
-    compute_error(coordinates_error_strategy<T>& strategy)
+    compute_error(coordinates_error_strategy<T>& strategy) const
     {
         return strategy.compute(*this);
     }
 
     bool
-    is_on_finish();
+    is_on_finish() const;
 
     bool
-    is_on_route();
+    is_on_route() const;
 
     bool
     operator==(const coordinates& other) const;
