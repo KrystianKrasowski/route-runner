@@ -5,7 +5,7 @@ add_library(
             adapter_mode_listener.c
             adapter_dump_serial.c
             motion_l293.cpp
-            status_indicator_dummy.cpp
+            status_indicator_toggle_sequence.cpp
 )
 
 target_link_libraries(

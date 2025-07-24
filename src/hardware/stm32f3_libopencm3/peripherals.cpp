@@ -71,7 +71,6 @@ peripherals_setup(data_store& store)
     gpio_setup();
     tim2_setup();
     tim3_setup();
-    tim6_setup();
     tim7_setup();
     spi_setup();
     dma1_channel1_setup(
@@ -80,6 +79,7 @@ peripherals_setup(data_store& store)
     dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff);
     dma1_channel3_setup((uint32_t)store.p_dualshock2_request);
     adc12_setup();
+    tim6_setup();
 }
 
 // TODO: Global system clock should be passed from the single source of truth
@@ -107,6 +107,7 @@ rcc_setup()
     rcc_periph_clock_enable(RCC_GPIOF);
     rcc_periph_clock_enable(RCC_TIM2);
     rcc_periph_clock_enable(RCC_TIM3);
+    rcc_periph_clock_enable(RCC_TIM6);
     rcc_periph_clock_enable(RCC_TIM7);
     rcc_periph_clock_enable(RCC_SPI1);
     rcc_periph_clock_enable(RCC_DMA1);

@@ -28,6 +28,7 @@ task_manual_control::run()
             uint16_t          raw_control    = dualshock2_.read();
             linebot::commands remote_control = mapper::map(raw_control);
 
+            api_.attempt_mode_switch(remote_control);
             api_.attempt_maneuver(remote_control);
         }
     }

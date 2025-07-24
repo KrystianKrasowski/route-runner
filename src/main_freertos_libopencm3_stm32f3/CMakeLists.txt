@@ -1,6 +1,7 @@
 add_executable(${PROJECT_NAME}
     main.cpp
     task_manual_control.cpp
+    task_route_tracking.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

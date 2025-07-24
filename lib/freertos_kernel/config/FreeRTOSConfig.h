@@ -5,8 +5,7 @@
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #define configUSE_TICKLESS_IDLE                 0
 #define configCPU_CLOCK_HZ                      16000000
-// TODO: Revert this setting after ADC implementaion (C++)
-//#define configSYSTICK_CLOCK_HZ                  1000000
+#define configSYSTICK_CLOCK_HZ                  1000000
 #define configTICK_RATE_HZ                      250
 #define configMAX_PRIORITIES                    4
 #define configMINIMAL_STACK_SIZE                32

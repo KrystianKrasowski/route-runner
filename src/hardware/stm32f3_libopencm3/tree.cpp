@@ -39,7 +39,7 @@ tree::of(isr_event_emitter& events)
         hardware::l293::of(GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4);
 
     auto& line_sensor = hardware::qtrhd06a::of(
-        store.p_qtrhd06a_wbuff, store.qtrhd06a_buffer_length
+        store.p_qtrhd06a_rbuff, store.qtrhd06a_buffer_length
     );
 
     auto& isr_handler_tim2 = hardware::isr_handler_tim2::of(remote_control);

@@ -32,7 +32,8 @@ target_compile_features(adapters_test PRIVATE cxx_std_23)
 target_sources(
     adapters_test
         PRIVATE
-            motion_adapter_l293_test.cpp
+            motion_l293_test.cpp
+            status_indicator_toggle_sequence_test.cpp
 )
 
 target_link_libraries(

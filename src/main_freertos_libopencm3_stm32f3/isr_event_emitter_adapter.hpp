@@ -12,8 +12,11 @@ class isr_event_emitter_adapter : public device::isr_event_emitter
 {
 public:
 
-    isr_event_emitter_adapter(TaskHandle_t& task_manual_control)
-        : task_manual_control_{task_manual_control}
+    isr_event_emitter_adapter(
+        TaskHandle_t& task_manual_control, TaskHandle_t& task_route_tracking
+    )
+        : task_manual_control_{task_manual_control},
+          task_route_tracking_{task_route_tracking}
     {
     }
 
@@ -40,8 +43,9 @@ public:
 
 private:
 
-    bool enabled = false;
+    bool          enabled = false;
     TaskHandle_t& task_manual_control_;
+    TaskHandle_t& task_route_tracking_;
 
     etl::optional<TaskHandle_t>
     get_task(device::event_id event)
@@ -50,6 +54,9 @@ private:
         {
         case device::event_id::DUALSHOCK2_RX_COMPLETE:
             return etl::optional{task_manual_control_};
+
+        case device::event_id::QTRHD06A_CONVERSION_COMPLETE:
+            return etl::optional{task_route_tracking_};
 
         default:
             return etl::nullopt;

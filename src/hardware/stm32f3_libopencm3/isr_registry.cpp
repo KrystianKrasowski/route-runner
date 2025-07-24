@@ -1,14 +1,15 @@
-#include "isr_handler.hpp"
 #include "isr_registry.hpp"
+#include "isr_handler.hpp"
 #include <cstdint>
 #include <libopencm3/cm3/nvic.h>
 
 namespace hardware
 {
 
-isr_handler *tim2_handler          = nullptr;
-isr_handler *tim7_handler          = nullptr;
-isr_handler *dma1_channel2_handler = nullptr;
+isr_handler* tim2_handler          = nullptr;
+isr_handler* tim7_handler          = nullptr;
+isr_handler* dma1_channel2_handler = nullptr;
+isr_handler* dma1_channel1_handler = nullptr;
 
 void
 isr_register(uint8_t nvic_number, isr_handler& handler)
@@ -28,6 +29,11 @@ isr_register(uint8_t nvic_number, isr_handler& handler)
     case NVIC_DMA1_CHANNEL2_IRQ:
         nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
         dma1_channel2_handler = &handler;
+        break;
+
+    case NVIC_DMA1_CHANNEL1_IRQ:
+        nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
+        dma1_channel1_handler = &handler;
         break;
     }
 }
@@ -57,6 +63,18 @@ extern "C"
     void
     dma1_channel2_isr()
     {
-        hardware::dma1_channel2_handler->handle();
+        if (hardware::dma1_channel2_handler)
+        {
+            hardware::dma1_channel2_handler->handle();
+        }
+    }
+
+    void
+    dma1_channel1_isr()
+    {
+        if (hardware::dma1_channel1_handler)
+        {
+            hardware::dma1_channel1_handler->handle();
+        }
     }
 }

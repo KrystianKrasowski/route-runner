@@ -1,5 +1,6 @@
 #include "linebot/domain/coordinates.hpp"
 #include <cstdint>
+#include <etl/array.h>
 
 namespace linebot
 {
@@ -11,10 +12,20 @@ coordinates::of_6(
     uint8_t l3, uint8_t l2, uint8_t l1, uint8_t r1, uint8_t r2, uint8_t r3
 )
 {
-    etl::array<uint8_t, max_length> values{l3, l2, l1, r1, r2, r3};
-    etl::array<int8_t, max_length>  weights{-100, -40, -20, 20, 40, 100};
+    etl::array<uint8_t, MAX_LENGTH> values{l3, l2, l1, r1, r2, r3};
+    etl::array<int8_t, MAX_LENGTH>  weights{-100, -40, -20, 20, 40, 100};
 
-    return {values, weights, max_length};
+    return {values, weights, MAX_LENGTH};
+}
+
+coordinates
+coordinates::of_6(
+        etl::array<uint8_t, MAX_LENGTH> values
+)
+{
+    etl::array<int8_t, MAX_LENGTH>  weights{-100, -40, -20, 20, 40, 100};
+
+    return {values, weights, MAX_LENGTH};
 }
 
 bool
