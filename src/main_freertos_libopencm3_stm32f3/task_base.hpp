@@ -46,6 +46,12 @@ public:
         return handle;
     }
 
+    TaskHandle_t
+    get_handle() const
+    {
+        return handle;
+    }
+
 private:
 
     etl::string<16> name;

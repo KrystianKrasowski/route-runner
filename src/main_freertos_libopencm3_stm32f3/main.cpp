@@ -24,20 +24,18 @@ main()
     auto& route_tracking_task = task_factory.create_route_tracking_task();
     auto& immediate_stop_task = task_factory.create_immediate_stop_task();
 
-    auto h_task_manual_control = manual_control_task.register_rtos_task();
-    auto h_task_route_tracking = route_tracking_task.register_rtos_task();
-    auto h_task_immediate_stop = immediate_stop_task.register_rtos_task();
-
     events.register_task_notification(
-        device::event_id::DUALSHOCK2_RX_COMPLETE, h_task_manual_control
+        device::event_id::DUALSHOCK2_RX_COMPLETE,
+        manual_control_task.get_handle()
     );
 
     events.register_task_notification(
-        device::event_id::QTRHD06A_CONVERSION_COMPLETE, h_task_route_tracking
+        device::event_id::QTRHD06A_CONVERSION_COMPLETE,
+        route_tracking_task.get_handle()
     );
 
     events.register_task_notification(
-        device::event_id::TIMEOUT, h_task_immediate_stop
+        device::event_id::TIMEOUT, immediate_stop_task.get_handle()
     );
 
     vTaskStartScheduler();

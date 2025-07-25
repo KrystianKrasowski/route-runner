@@ -35,19 +35,25 @@ public:
     task_manual_control&
     create_manual_control_task()
     {
-        return task_manual_control::of(devices_.remote_control_, *api_);
+        auto& task = task_manual_control::of(devices_.remote_control_, *api_);
+        task.register_rtos_task();
+        return task;
     }
 
     task_route_tracking&
     create_route_tracking_task()
     {
-        return task_route_tracking::of(devices_.line_sensor_, *api_);
+        auto& task = task_route_tracking::of(devices_.line_sensor_, *api_);
+        task.register_rtos_task();
+        return task;
     }
 
     task_immediate_stop&
     create_immediate_stop_task()
     {
-        return task_immediate_stop::of(*api_);
+        auto& task = task_immediate_stop::of(*api_);
+        task.register_rtos_task();
+        return task;
     }
 
 private:
