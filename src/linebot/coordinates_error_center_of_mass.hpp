@@ -8,7 +8,6 @@
 namespace linebot
 {
 
-// TODO: Should this be in a header?
 struct coordinates_error_center_of_mass
     : public coordinates_error_strategy<coordinates_error_center_of_mass>
 {

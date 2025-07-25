@@ -15,15 +15,23 @@ class task_base
 public:
 
     task_base(etl::string<16> name, UBaseType_t priority)
-        : name{name}, priority{priority}
+        : name{name},
+          priority{priority}
     {
+    }
+
+    static void
+    rtos_entry(void* p_params)
+    {
+        auto p_task = static_cast<T*>(p_params);
+        p_task->run();
     }
 
     TaskHandle_t
     register_rtos_task()
     {
-        auto       *p_task    = static_cast<T *>(this);
-        const char *task_name = name.c_str();
+        auto*       p_task    = static_cast<T*>(this);
+        const char* task_name = name.c_str();
 
         handle = xTaskCreateStatic(
             &task_base::rtos_entry,
@@ -36,13 +44,6 @@ public:
         );
 
         return handle;
-    }
-
-    static void
-    rtos_entry(void *p_params)
-    {
-        auto p_task = static_cast<T *>(p_params);
-        p_task->run();
     }
 
 private:

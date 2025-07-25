@@ -32,51 +32,50 @@ struct maneuver
         return maneuver{NONE, 0};
     }
 
-    maneuver(maneuver::direction direction, int8_t correction)
+    maneuver(direction direction, int8_t correction)
         : direction_{direction},
           correction_{correction}
     {
     }
 
-    // TODO: Check memory footprint
     direction
-    get_direction()
+    get_direction() const
     {
         return direction_;
     }
 
     int8_t
-    get_correction()
+    get_correction() const
     {
         return correction_;
     }
 
     bool
-    is_forward()
+    is_forward() const
     {
         return direction_ == FORWARD;
     }
 
     bool
-    is_backward()
+    is_backward() const
     {
         return direction_ == BACKWARD;
     }
 
     bool
-    is_correction_above(int8_t value)
+    is_correction_above(int8_t value) const
     {
         return correction_ > value;
     }
 
     bool
-    is_correction_below(int8_t value)
+    is_correction_below(int8_t value) const
     {
         return correction_ < value;
     }
 
     bool
-    is_correction_at(int8_t value)
+    is_correction_at(int8_t value) const
     {
         return correction_ == value;
     }

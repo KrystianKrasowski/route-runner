@@ -2,6 +2,7 @@
 #include "adapter/motion_l293.hpp"
 #include "adapter/route_guard_timeout.hpp"
 #include "adapter/status_indicator_toggle_sequence.hpp"
+#include "device/isr_event_emitter.hpp"
 #include "device/tree.hpp"
 #include "isr_event_emitter_adapter.hpp"
 #include "linebot/data_store.hpp"
@@ -11,15 +12,8 @@
 #include "task_route_tracking.hpp"
 #include <etl/utility.h>
 
-TaskHandle_t h_task_manual_control;
-TaskHandle_t h_task_route_tracking;
-TaskHandle_t h_task_immediate_stop;
-
-linebot::data_store store;
-
-app::isr_event_emitter_adapter events{
-    h_task_manual_control, h_task_route_tracking, h_task_immediate_stop
-};
+linebot::data_store            store;
+app::isr_event_emitter_adapter events;
 
 int
 main()
@@ -27,6 +21,8 @@ main()
     auto devices = device::tree::of(events);
 
     devices.blink_.change_sequence(0x1);
+
+    // TODO: introduce task factory
 
     auto& motion =
         adapter::motion_l293::of(devices.motor_left_, devices.motor_right_);
@@ -47,12 +43,21 @@ main()
 
     auto& task_immediate_stop = app::task_immediate_stop::of(api);
 
-    h_task_manual_control = task_manual_control.register_rtos_task();
-    h_task_route_tracking = task_route_tracking.register_rtos_task();
-    h_task_immediate_stop = task_immediate_stop.register_rtos_task();
+    auto h_task_manual_control = task_manual_control.register_rtos_task();
+    auto h_task_route_tracking = task_route_tracking.register_rtos_task();
+    auto h_task_immediate_stop = task_immediate_stop.register_rtos_task();
 
-    // TODO: Code smell. Consider event listener registration in task_base
-    events.enable();
+    events.register_task_notification(
+        device::event_id::DUALSHOCK2_RX_COMPLETE, h_task_manual_control
+    );
+
+    events.register_task_notification(
+        device::event_id::QTRHD06A_CONVERSION_COMPLETE, h_task_route_tracking
+    );
+
+    events.register_task_notification(
+        device::event_id::TIMEOUT, h_task_immediate_stop
+    );
 
     vTaskStartScheduler();
 
