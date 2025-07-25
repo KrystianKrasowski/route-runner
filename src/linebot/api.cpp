@@ -15,12 +15,15 @@ namespace linebot
 api&
 api::of(
     data_store&            store,
-    motion_port&           port,
+    motion_port&           motion,
     status_indicator_port& status_indicator,
     route_guard_port&      route_guard
 )
 {
-    static api api{store, port, status_indicator, route_guard};
+    static api api{store, motion, status_indicator, route_guard};
+
+    status_indicator.apply(store.mode_);
+
     return api;
 }
 

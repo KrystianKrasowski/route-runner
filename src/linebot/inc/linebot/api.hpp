@@ -16,7 +16,7 @@ public:
 
     static api&
     of(data_store&            store,
-       motion_port&           motion_port,
+       motion_port&           motion,
        status_indicator_port& status_indicator,
        route_guard_port&      route_guard);
 

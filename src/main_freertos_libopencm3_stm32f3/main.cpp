@@ -18,8 +18,6 @@ main()
 {
     auto devices = device::tree::of(events);
 
-    devices.blink_.change_sequence(0x1);
-
     app::task_factory task_factory{devices, store};
 
     auto& manual_control_task = task_factory.create_manual_control_task();
