@@ -38,7 +38,7 @@ public:
 
 private:
 
-    etl::map<device::event_id, TaskHandle_t, 3> rtos_notifications_map_;
+    etl::map<device::event_id, TaskHandle_t, 4> rtos_notifications_map_;
 };
 
 } // namespace app

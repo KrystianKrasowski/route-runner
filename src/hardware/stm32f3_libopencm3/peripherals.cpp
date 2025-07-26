@@ -3,6 +3,7 @@
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/adc.h>
 #include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
@@ -50,6 +51,9 @@ dma1_channel3_setup(uint32_t memory_address);
 static inline void
 adc12_setup();
 
+static inline void
+usart2_setup();
+
 static void
 systick_delay_us(uint16_t delay)
 {
@@ -78,12 +82,13 @@ peripherals_setup(data_store& store)
     tim15_setup();
     spi_setup();
     dma1_channel1_setup(
-        (uint32_t)store.p_qtrhd06a_wbuff, store.qtrhd06a_buffer_length
+        (uint32_t)store.p_qtrhd06a_wbuff, store.QTRHD06A_BUFFER_LENGTH
     );
     dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff);
     dma1_channel3_setup((uint32_t)store.p_dualshock2_request);
     adc12_setup();
     tim6_setup();
+    usart2_setup();
 }
 
 // TODO: Global system clock should be passed from the single source of truth
@@ -120,6 +125,7 @@ rcc_setup()
     rcc_adc_prescale(
         RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_2, RCC_CFGR2_ADCxPRES_PLL_CLK_DIV_1
     );
+    rcc_periph_clock_enable(RCC_USART2);
 }
 
 static inline void
@@ -172,6 +178,14 @@ gpio_setup()
         GPIO_PUPD_NONE,
         GPIO1 | GPIO3 | GPIO4 | GPIO5 | GPIO6 | GPIO7
     );
+
+    // USART2 receiver
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO15);
+    gpio_set_af(GPIOA, GPIO_AF7, GPIO15);
+
+    // USART2 transmitter
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO2);
+    gpio_set_af(GPIOA, GPIO_AF7, GPIO2);
 }
 
 static inline void
@@ -249,7 +263,7 @@ tim7_setup()
 static inline void
 tim15_setup()
 {
-    // set millisecond timer 
+    // set millisecond timer
     timer_set_prescaler(TIM15, 16000 - 1);
 
     // reinitialize the counter and update the registers on update event
@@ -363,6 +377,18 @@ adc12_setup()
     adc_power_on(ADC2);
 
     adc_start_conversion_regular(ADC1);
+}
+
+static inline void
+usart2_setup()
+{
+    usart_set_databits(USART2, 8);
+    usart_set_baudrate(USART2, 115200);
+    usart_set_stopbits(USART2, USART_CR2_STOPBITS_1);
+    usart_enable(USART2);
+    usart_set_mode(USART2, USART_MODE_TX_RX);
+    usart_enable_rx_interrupt(USART2);
+    //usart_enable_tx_dma(USART2);
 }
 
 } // namespace hardware

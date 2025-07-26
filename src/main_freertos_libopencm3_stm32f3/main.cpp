@@ -23,6 +23,8 @@ main()
     auto& manual_control_task = task_factory.create_manual_control_task();
     auto& route_tracking_task = task_factory.create_route_tracking_task();
     auto& immediate_stop_task = task_factory.create_immediate_stop_task();
+    auto& shell_command_dispatch_task =
+        task_factory.create_shell_command_dispatch_task();
 
     events.register_task_notification(
         device::event_id::DUALSHOCK2_RX_COMPLETE,
@@ -36,6 +38,11 @@ main()
 
     events.register_task_notification(
         device::event_id::TIMEOUT, immediate_stop_task.get_handle()
+    );
+
+    events.register_task_notification(
+        device::event_id::SHELL_COMMANDED,
+        shell_command_dispatch_task.get_handle()
     );
 
     vTaskStartScheduler();

@@ -3,6 +3,7 @@ add_executable(${PROJECT_NAME}
     task_manual_control.cpp
     task_route_tracking.cpp
     task_immediate_stop.cpp
+    task_shell_command_dispatch.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

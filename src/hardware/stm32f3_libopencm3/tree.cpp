@@ -7,10 +7,12 @@
 #include "isr_handler_tim15.hpp"
 #include "isr_handler_tim2.hpp"
 #include "isr_handler_tim7.hpp"
+#include "isr_handler_usart2.hpp"
 #include "isr_registry.hpp"
 #include "l293.hpp"
 #include "peripherals.hpp"
 #include "qtrhd06a.hpp"
+#include "shell.hpp"
 #include "timeout.hpp"
 #include "toggle_sequence_gpio.hpp"
 #include <libopencm3/cm3/nvic.h>
@@ -42,10 +44,12 @@ tree::of(isr_event_emitter& events)
         hardware::l293::of(GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4);
 
     auto& line_sensor = hardware::qtrhd06a::of(
-        store.p_qtrhd06a_rbuff, store.qtrhd06a_buffer_length
+        store.p_qtrhd06a_rbuff, store.QTRHD06A_BUFFER_LENGTH
     );
 
     auto& offroute_timeout = hardware::timeout::of(TIM15);
+
+    auto& shell = hardware::shell::of();
 
     // ISRs
     auto& isr_handler_tim2  = hardware::isr_handler_tim2::of(remote_control);
@@ -55,12 +59,14 @@ tree::of(isr_event_emitter& events)
         hardware::isr_handler_dma1_channel2::of(remote_control, store, events);
     auto& isr_handler_dma1_channel1 =
         hardware::isr_handler_dma1_channel1::of(line_sensor, store, events);
+    auto& isr_handler_usart2 = hardware::isr_handler_usart2::of(events, store);
 
     hardware::isr_register(NVIC_TIM2_IRQ, isr_handler_tim2);
     hardware::isr_register(NVIC_TIM7_IRQ, isr_handler_tim7);
     hardware::isr_register(NVIC_TIM1_BRK_TIM15_IRQ, isr_handler_tim15);
     hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, isr_handler_dma1_channel2);
     hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, isr_handler_dma1_channel1);
+    hardware::isr_register(NVIC_USART2_EXTI26_IRQ, isr_handler_usart2);
 
     return tree{
         blink,
@@ -68,7 +74,8 @@ tree::of(isr_event_emitter& events)
         motor_left,
         motor_right,
         line_sensor,
-        offroute_timeout
+        offroute_timeout,
+        shell
     };
 }
 

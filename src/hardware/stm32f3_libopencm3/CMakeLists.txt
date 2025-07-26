@@ -8,6 +8,7 @@ target_sources(hardware
         isr_handler_tim15.cpp
         isr_handler_dma1_channel1.cpp
         isr_handler_dma1_channel2.cpp
+        isr_handler_usart2.cpp
         peripherals.cpp
         toggle_sequence_gpio.cpp
         data_store.cpp
@@ -15,6 +16,7 @@ target_sources(hardware
         qtrhd06a.cpp
         l293.cpp
         timeout.cpp
+        shell.cpp
         tree.cpp
 )
 

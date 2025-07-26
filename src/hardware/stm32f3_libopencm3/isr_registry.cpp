@@ -2,7 +2,7 @@
 #include "isr_handler.hpp"
 #include <cstdint>
 #include <libopencm3/cm3/nvic.h>
-#include <libopencm3/stm32/f3/nvic.h>
+#include <libopencm3/stm32/usart.h>
 
 namespace hardware
 {
@@ -12,6 +12,7 @@ isr_handler* tim7_handler          = nullptr;
 isr_handler* tim15_handler         = nullptr;
 isr_handler* dma1_channel2_handler = nullptr;
 isr_handler* dma1_channel1_handler = nullptr;
+isr_handler* usart2_handler        = nullptr;
 
 void
 isr_register(uint8_t nvic_number, isr_handler& handler)
@@ -41,6 +42,11 @@ isr_register(uint8_t nvic_number, isr_handler& handler)
     case NVIC_DMA1_CHANNEL1_IRQ:
         nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
         dma1_channel1_handler = &handler;
+        break;
+
+    case NVIC_USART2_EXTI26_IRQ:
+        nvic_enable_irq(NVIC_USART2_EXTI26_IRQ);
+        usart2_handler = &handler;
         break;
     }
 }
@@ -91,6 +97,15 @@ extern "C"
         if (hardware::dma1_channel1_handler)
         {
             hardware::dma1_channel1_handler->handle();
+        }
+    }
+
+    void
+    usart2_exti26_isr()
+    {
+        if (hardware::usart2_handler)
+        {
+            hardware::usart2_handler->handle();
         }
     }
 }

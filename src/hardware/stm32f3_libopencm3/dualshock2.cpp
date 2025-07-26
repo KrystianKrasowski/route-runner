@@ -51,10 +51,10 @@ dualshock2::poll_start()
 {
     gpio_clear(chip_select_port, chip_select_pin);
     dma_set_number_of_data(
-        spi_dma_port, spi_dma_tx_channel, data_store::dualshock2_buffer_length
+        spi_dma_port, spi_dma_tx_channel, data_store::DUALSHOCK2_BUFFER_LENGTH
     );
     dma_set_number_of_data(
-        spi_dma_port, spi_dma_rx_channel, data_store::dualshock2_buffer_length
+        spi_dma_port, spi_dma_rx_channel, data_store::DUALSHOCK2_BUFFER_LENGTH
     );
     dma_enable_channel(spi_dma_port, spi_dma_tx_channel);
     dma_enable_channel(spi_dma_port, spi_dma_rx_channel);

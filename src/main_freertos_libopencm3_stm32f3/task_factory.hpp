@@ -1,17 +1,20 @@
 #pragma once
 
 #include "adapter/motion_l293.hpp"
+#include "adapter/printer_shell.hpp"
 #include "adapter/route_guard_timeout.hpp"
 #include "adapter/status_indicator_toggle_sequence.hpp"
 #include "device/tree.hpp"
 #include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
 #include "linebot/motion_port.hpp"
+#include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
 #include "task_immediate_stop.hpp"
 #include "task_manual_control.hpp"
 #include "task_route_tracking.hpp"
+#include "task_shell_command_dispatch.hpp"
 
 namespace app
 {
@@ -53,6 +56,14 @@ public:
         return task;
     }
 
+    task_shell_command_dispatch&
+    create_shell_command_dispatch_task()
+    {
+        auto& task = task_shell_command_dispatch::of(devices_.blink_);
+        task.register_rtos_task();
+        return task;
+    }
+
 private:
 
     device::tree&                   devices_;
@@ -60,6 +71,7 @@ private:
     linebot::motion_port*           motion_           = nullptr;
     linebot::status_indicator_port* status_indicator_ = nullptr;
     linebot::route_guard_port*      route_guard_      = nullptr;
+    linebot::printer_port*          printer_          = nullptr;
     linebot::api*                   api_              = nullptr;
 
     linebot::api&
@@ -70,9 +82,10 @@ private:
             auto& motion           = get_or_create_motion();
             auto& status_indicator = get_or_create_status_indicator();
             auto& route_guard      = get_or_create_route_guard();
+            auto& printer          = get_or_create_printer();
 
             api_ = &linebot::api::of(
-                store_, motion, status_indicator, route_guard
+                store_, motion, status_indicator, route_guard, printer
             );
         }
 
@@ -114,6 +127,17 @@ private:
         }
 
         return *route_guard_;
+    }
+
+    linebot::printer_port&
+    get_or_create_printer()
+    {
+        if (!printer_)
+        {
+            printer_ = &adapter::printer_shell::of(devices_.shell_);
+        }
+
+        return *printer_;
     }
 };
 
