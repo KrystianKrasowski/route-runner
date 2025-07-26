@@ -4,6 +4,7 @@
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/motion_port.hpp"
+#include "linebot/printer_port.hpp"
 #include "linebot/status_indicator_port.hpp"
 #include "maneuver_factory.hpp"
 #include "mode_state_machine.hpp"
@@ -17,10 +18,11 @@ api::of(
     data_store&            store,
     motion_port&           motion,
     status_indicator_port& status_indicator,
-    route_guard_port&      route_guard
+    route_guard_port&      route_guard,
+    printer_port&          printer
 )
 {
-    static api api{store, motion, status_indicator, route_guard};
+    static api api{store, motion, status_indicator, route_guard, printer};
 
     status_indicator.apply(store.mode_);
 
@@ -98,6 +100,13 @@ api::halt()
     motion_.apply(motion);
     status_indicator_.apply(store_.mode_);
     route_guard_.stop();
+}
+
+void
+api::dump_store()
+{
+    printer_.print(store_.mode_);
+    printer_.print(store_.pid_params_);
 }
 
 bool
