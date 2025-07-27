@@ -1,3 +1,6 @@
 [submodule "extern/catch2/catch2-src"]
 	path = extern/catch2/catch2-src
 	url = https://github.com/catchorg/Catch2.git
+[submodule "extern/libopencm3/libopencm3-src"]
+	path = extern/libopencm3/libopencm3-src
+	url = https://github.com/libopencm3/libopencm3.git
