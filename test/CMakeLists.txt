@@ -1,6 +1,4 @@
 if(TARGET_HARDWARE STREQUAL "native_host")
-    include(GoogleTest)
-    include(Catch)
     add_subdirectory(linebot)
     add_subdirectory(adapters)
     add_subdirectory(mocks)

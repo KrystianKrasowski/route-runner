@@ -17,10 +17,10 @@ include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 if(TARGET_HARDWARE STREQUAL "native_host")
     include(CTest)
     enable_testing()
-    include(${CMAKE_SOURCE_DIR}/cmake/dependencies-test.cmake)
 endif()
 
 add_subdirectory(lib)
+add_subdirectory(extern)
 add_subdirectory(src)
 add_subdirectory(test)
 
