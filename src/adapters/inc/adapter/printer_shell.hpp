@@ -4,6 +4,9 @@
 #include "linebot/domain/mode.hpp"
 #include "linebot/domain/pid_params.hpp"
 #include "linebot/printer_port.hpp"
+#include <cstddef>
+#include <etl/optional.h>
+#include <etl/string.h>
 
 namespace adapter
 {
@@ -11,6 +14,8 @@ namespace adapter
 class printer_shell : public linebot::printer_port
 {
 public:
+
+    static constexpr size_t MAX_MODE_NAME_LENGTH = 13;
 
     static printer_shell&
     of(device::shell& shell);
@@ -23,7 +28,8 @@ public:
 
 private:
 
-    device::shell& shell_;
+    device::shell&                         shell_;
+    etl::string<device::shell::MAX_LENGTH> print_buffer_;
 
     printer_shell(device::shell& shell)
         : shell_{shell}

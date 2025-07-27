@@ -7,11 +7,14 @@
 namespace hardware
 {
 
+// TODO: refactor this to dispatch table
+
 isr_handler* tim2_handler          = nullptr;
 isr_handler* tim7_handler          = nullptr;
 isr_handler* tim15_handler         = nullptr;
-isr_handler* dma1_channel2_handler = nullptr;
+isr_handler* tim16_handler         = nullptr;
 isr_handler* dma1_channel1_handler = nullptr;
+isr_handler* dma1_channel2_handler = nullptr;
 isr_handler* usart2_handler        = nullptr;
 
 void
@@ -34,14 +37,19 @@ isr_register(uint8_t nvic_number, isr_handler& handler)
         tim15_handler = &handler;
         break;
 
-    case NVIC_DMA1_CHANNEL2_IRQ:
-        nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
-        dma1_channel2_handler = &handler;
+    case NVIC_TIM1_UP_TIM16_IRQ:
+        nvic_enable_irq(NVIC_TIM1_UP_TIM16_IRQ);
+        tim16_handler = &handler;
         break;
 
     case NVIC_DMA1_CHANNEL1_IRQ:
         nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
         dma1_channel1_handler = &handler;
+        break;
+
+    case NVIC_DMA1_CHANNEL2_IRQ:
+        nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
+        dma1_channel2_handler = &handler;
         break;
 
     case NVIC_USART2_EXTI26_IRQ:
@@ -55,6 +63,15 @@ isr_register(uint8_t nvic_number, isr_handler& handler)
 
 extern "C"
 {
+    // TODO: !!! Refactor these handlers !!!
+    // These handlers are not safe. If an interrupt had occured before handlers are
+    // assigned, the interrupt flags won't be cleared. Now it works only because
+    // the first interrupt occur after assignment, but this is based purely on
+    // each device cvonfiguration. The quickest interrupt would be ADC
+    // conversion. ADC is triggered every 700us, but it takes 40 conversions,
+    // thus DMA triggers apparently after assiginig handlers.
+    //
+    // The interrupt flag clear should be done here, regardless of handler existance
     void
     tim2_isr()
     {
@@ -83,11 +100,11 @@ extern "C"
     }
 
     void
-    dma1_channel2_isr()
+    tim1_up_tim16_isr()
     {
-        if (hardware::dma1_channel2_handler)
+        if (hardware::tim16_handler)
         {
-            hardware::dma1_channel2_handler->handle();
+            hardware::tim16_handler->handle();
         }
     }
 
@@ -97,6 +114,15 @@ extern "C"
         if (hardware::dma1_channel1_handler)
         {
             hardware::dma1_channel1_handler->handle();
+        }
+    }
+
+    void
+    dma1_channel2_isr()
+    {
+        if (hardware::dma1_channel2_handler)
+        {
+            hardware::dma1_channel2_handler->handle();
         }
     }
 

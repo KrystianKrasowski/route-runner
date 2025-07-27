@@ -59,7 +59,8 @@ public:
     task_shell_command_dispatch&
     create_shell_command_dispatch_task()
     {
-        auto& task = task_shell_command_dispatch::of(devices_.blink_);
+        auto& api  = get_or_create_api();
+        auto& task = task_shell_command_dispatch::of(devices_.shell_, api);
         task.register_rtos_task();
         return task;
     }

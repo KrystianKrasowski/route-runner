@@ -1,6 +1,7 @@
 #include "api_fixture.hpp"
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/generators/catch_generators.hpp"
+#include "linebot/api.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/mode.hpp"
 #include <tuple>
@@ -43,6 +44,22 @@ TEST_CASE_METHOD(
     REQUIRE(status_indicator_.applied_mode_.has_value());
     CHECK(status_indicator_.applied_mode_.value() == expected_mode);
     CHECK(store_.mode_ == expected_mode);
+}
+
+TEST_CASE_METHOD(
+    api_fixture, "should not switch to detected when tracking", "[linebot][bug]"
+)
+{
+    // given
+    store_.mode_ = mode::FOLLOWING;
+
+    // when
+    auto coords = coordinates::of_6(20, 20, 20, 20, 20, 20);
+    api_.attempt_mode_switch(coords);
+
+    // then
+    CHECK(store_.mode_ == mode::FOLLOWING);
+    CHECK(mode::FOLLOWING == 2);
 }
 
 } // namespace linebot

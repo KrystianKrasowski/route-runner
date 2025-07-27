@@ -5,6 +5,7 @@
 #include "isr_handler_dma1_channel1.hpp"
 #include "isr_handler_dma1_channel2.hpp"
 #include "isr_handler_tim15.hpp"
+#include "isr_handler_tim16.hpp"
 #include "isr_handler_tim2.hpp"
 #include "isr_handler_tim7.hpp"
 #include "isr_handler_usart2.hpp"
@@ -49,12 +50,13 @@ tree::of(isr_event_emitter& events)
 
     auto& offroute_timeout = hardware::timeout::of(TIM15);
 
-    auto& shell = hardware::shell::of();
+    auto& shell = hardware::shell::of(store, DMA1, DMA_CHANNEL7);
 
     // ISRs
     auto& isr_handler_tim2  = hardware::isr_handler_tim2::of(remote_control);
     auto& isr_handler_tim7  = hardware::isr_handler_tim7::of(blink);
     auto& isr_handler_tim15 = hardware::isr_handler_tim15::of(events);
+    auto& isr_handler_tim16 = hardware::isr_handler_tim16::of(shell);
     auto& isr_handler_dma1_channel2 =
         hardware::isr_handler_dma1_channel2::of(remote_control, store, events);
     auto& isr_handler_dma1_channel1 =
@@ -64,6 +66,7 @@ tree::of(isr_event_emitter& events)
     hardware::isr_register(NVIC_TIM2_IRQ, isr_handler_tim2);
     hardware::isr_register(NVIC_TIM7_IRQ, isr_handler_tim7);
     hardware::isr_register(NVIC_TIM1_BRK_TIM15_IRQ, isr_handler_tim15);
+    hardware::isr_register(NVIC_TIM1_UP_TIM16_IRQ, isr_handler_tim16);
     hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, isr_handler_dma1_channel2);
     hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, isr_handler_dma1_channel1);
     hardware::isr_register(NVIC_USART2_EXTI26_IRQ, isr_handler_usart2);

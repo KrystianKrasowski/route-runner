@@ -25,13 +25,16 @@ struct data_store
     volatile uint16_t p_qtrhd06a_wbuff[QTRHD06A_BUFFER_LENGTH];
     volatile uint16_t p_qtrhd06a_rbuff[QTRHD06A_BUFFER_LENGTH];
     volatile char     shell_command;
-    volatile char     shell_output[SHELL_TXBUFF_LENGTH];
+    volatile char     p_shell_output[SHELL_TXBUFF_LENGTH];
 
     void
     on_dualshock2_rx_isr();
 
     void
     on_qtrhd06a_conversion_isr();
+
+    void
+    clear_shell_output();
 };
 
 } // namespace hardware

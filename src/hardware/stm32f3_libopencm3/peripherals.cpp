@@ -3,11 +3,11 @@
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/adc.h>
 #include <libopencm3/stm32/dma.h>
-#include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/usart.h>
 
 namespace hardware
 {
@@ -37,6 +37,9 @@ static inline void
 tim15_setup();
 
 static inline void
+tim16_setup();
+
+static inline void
 spi_setup();
 
 static inline void
@@ -47,6 +50,9 @@ dma1_channel2_setup(uint32_t memory_address);
 
 static inline void
 dma1_channel3_setup(uint32_t memory_address);
+
+static inline void
+dma1_channel7_setup(uint32_t memory_address);
 
 static inline void
 adc12_setup();
@@ -78,16 +84,18 @@ peripherals_setup(data_store& store)
     gpio_setup();
     tim2_setup();
     tim3_setup();
-    tim7_setup();
-    tim15_setup();
     spi_setup();
     dma1_channel1_setup(
         (uint32_t)store.p_qtrhd06a_wbuff, store.QTRHD06A_BUFFER_LENGTH
     );
     dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff);
     dma1_channel3_setup((uint32_t)store.p_dualshock2_request);
+    dma1_channel7_setup((uint32_t)store.p_shell_output);
     adc12_setup();
     tim6_setup();
+    tim7_setup();
+    tim15_setup();
+    tim16_setup();
     usart2_setup();
 }
 
@@ -119,6 +127,7 @@ rcc_setup()
     rcc_periph_clock_enable(RCC_TIM6);
     rcc_periph_clock_enable(RCC_TIM7);
     rcc_periph_clock_enable(RCC_TIM15);
+    rcc_periph_clock_enable(RCC_TIM16);
     rcc_periph_clock_enable(RCC_SPI1);
     rcc_periph_clock_enable(RCC_DMA1);
     rcc_periph_clock_enable(RCC_ADC12);
@@ -275,6 +284,24 @@ tim15_setup()
 }
 
 static inline void
+tim16_setup()
+{
+    // set timer frequency to 20Hz
+    timer_set_prescaler(TIM16, 16000 - 1);
+    timer_set_period(TIM16, 50 - 1);
+
+    // reinitialize the counter and update the registers on update event
+    timer_generate_event(TIM16, TIM_EGR_UG);
+    timer_clear_flag(TIM16, TIM_SR_UIF);
+
+    // enable update interrupt
+    timer_enable_irq(TIM16, TIM_DIER_UIE);
+
+    // enable timer
+    timer_enable_counter(TIM16);
+}
+
+static inline void
 spi_setup()
 {
     spi_disable(SPI1);
@@ -341,6 +368,20 @@ dma1_channel3_setup(uint32_t memory_address)
 }
 
 static inline void
+dma1_channel7_setup(uint32_t memory_address)
+{
+    uint32_t periph_address = (uint32_t)&USART_TDR(USART2);
+
+    dma_disable_channel(DMA1, DMA_CHANNEL7);
+    dma_set_peripheral_address(DMA1, DMA_CHANNEL7, periph_address);
+    dma_set_memory_address(DMA1, DMA_CHANNEL7, memory_address);
+    dma_set_read_from_memory(DMA1, DMA_CHANNEL7);
+    dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL7);
+    dma_set_peripheral_size(DMA1, DMA_CHANNEL7, DMA_CCR_PSIZE_8BIT);
+    dma_set_memory_size(DMA1, DMA_CHANNEL7, DMA_CCR_MSIZE_8BIT);
+}
+
+static inline void
 adc12_setup()
 {
     // enable voltage regulators
@@ -388,7 +429,7 @@ usart2_setup()
     usart_enable(USART2);
     usart_set_mode(USART2, USART_MODE_TX_RX);
     usart_enable_rx_interrupt(USART2);
-    //usart_enable_tx_dma(USART2);
+    usart_enable_tx_dma(USART2);
 }
 
 } // namespace hardware

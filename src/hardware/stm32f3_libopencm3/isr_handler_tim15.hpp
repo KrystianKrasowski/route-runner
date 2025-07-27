@@ -6,8 +6,6 @@
 namespace hardware
 {
 
-class timeout;
-
 class isr_handler_tim15 : public isr_handler
 {
 public:

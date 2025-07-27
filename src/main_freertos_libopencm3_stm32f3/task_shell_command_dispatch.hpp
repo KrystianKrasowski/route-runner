@@ -1,30 +1,34 @@
 #pragma once
 
-#include "device/toggle_sequence.hpp"
+#include "device/shell.hpp"
+#include "linebot/api.hpp"
 #include "task_base.hpp"
 
 namespace app
 {
 
 class task_shell_command_dispatch
-    : public task_base<task_shell_command_dispatch, 48>
+    : public task_base<task_shell_command_dispatch, 128>
 {
 public:
 
     static task_shell_command_dispatch&
-    of(device::toggle_sequence& blink);
+    of(device::shell& shell, linebot::api& api);
 
     void
     run();
 
 private:
 
-    device::toggle_sequence& blink_;
+    device::shell& shell_;
+    linebot::api&  api_;
 
     // TODO: Task names should be passed by their consturctor - we can have
     // multiple instances of one derived task
-    task_shell_command_dispatch(device::toggle_sequence& blink)
-        : task_base("shell disp", 1), blink_{blink}
+    task_shell_command_dispatch(device::shell& shell, linebot::api& api)
+        : task_base("shell disp", 1),
+          shell_{shell},
+          api_{api}
     {
     }
 };

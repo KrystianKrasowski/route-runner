@@ -22,4 +22,13 @@ data_store::on_qtrhd06a_conversion_isr()
     }
 }
 
+void
+data_store::clear_shell_output()
+{
+    for (uint8_t i = 0; i < SHELL_TXBUFF_LENGTH; i++)
+    {
+        p_shell_output[i] = 0;
+    }
+}
+
 } // namespace hardware

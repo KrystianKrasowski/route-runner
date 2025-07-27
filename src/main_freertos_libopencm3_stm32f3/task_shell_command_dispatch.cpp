@@ -1,16 +1,17 @@
 #include "task_shell_command_dispatch.hpp"
-#include "device/toggle_sequence.hpp"
-#include "projdefs.h"
+#include "FreeRTOS.h"
+#include "linebot/api.hpp"
 #include "task_base.hpp"
 #include <cstdint>
+#include <etl/string.h>
 
 namespace app
 {
 
 task_shell_command_dispatch&
-task_shell_command_dispatch::of(device::toggle_sequence& blink)
+task_shell_command_dispatch::of(device::shell& shell, linebot::api& api)
 {
-    static task_shell_command_dispatch task{blink};
+    static task_shell_command_dispatch task{shell, api};
     return task;
 }
 
@@ -23,7 +24,7 @@ task_shell_command_dispatch::run()
 
         if (count)
         {
-            blink_.change_sequence(0xb);
+            api_.dump_store();
         }
     }
 }
