@@ -23,7 +23,7 @@ target_sources(hardware
 
 target_link_libraries(hardware
     PUBLIC
-        idevices
+        devices
         libopencm3_stm32f3
     PRIVATE
         etl

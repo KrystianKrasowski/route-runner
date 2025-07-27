@@ -14,7 +14,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/compile-common-options.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 
 # For some reason this has to be defined in a top level CMakeLists.txt
-if(TARGET_ARCH STREQUAL "test")
+if(TARGET_HARDWARE STREQUAL "native_host")
     include(CTest)
     enable_testing()
     include(${CMAKE_SOURCE_DIR}/cmake/dependencies-test.cmake)

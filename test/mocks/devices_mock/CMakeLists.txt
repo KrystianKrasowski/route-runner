@@ -1,20 +1,13 @@
-add_library(devices_mock STATIC
-    device_l293_mock.c
-    device_dualshock2_mock.c
-    device_qtrhd06a_mock.c
-    device_blink_mock.c
-    device_timeout_guard_mock.c
-    device_serial_mock.c
+add_library(devices_mock INTERFACE)
+
+target_include_directories(
+    devices_mock
+        INTERFACE
+            "./inc"
 )
 
-target_include_directories(devices_mock
-    PUBLIC
-        "./inc"
-)
-
-target_link_libraries(devices_mock
-    PUBLIC
-        idevices
-        devices
-        utils
+target_link_libraries(
+    devices_mock
+        INTERFACE
+            devices
 )

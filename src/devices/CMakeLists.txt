@@ -1,6 +1,13 @@
-add_subdirectory(devices_interface)
+add_library(devices INTERFACE)
 
-if (TARGET_ARCH STREQUAL "libopencm3_stm32f3")
-    add_subdirectory(devices_libopencm3_stm32f3)
-endif()
+target_include_directories(
+    devices
+        INTERFACE
+            "./inc"
+)
 
+target_link_libraries(
+    devices
+        INTERFACE
+            etl
+)
