@@ -1,5 +1,6 @@
 add_executable(${PROJECT_NAME}
     main.cpp
+    isr_event_emitter_adapter.cpp
     task_manual_control.cpp
     task_route_tracking.cpp
     task_immediate_stop.cpp
