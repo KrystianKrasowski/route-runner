@@ -4,3 +4,6 @@
 [submodule "extern/libopencm3/libopencm3-src"]
 	path = extern/libopencm3/libopencm3-src
 	url = https://github.com/libopencm3/libopencm3.git
+[submodule "extern/etl/etl-src"]
+	path = extern/etl/etl-src
+	url = https://github.com/ETLCPP/etl.git

@@ -5,3 +5,5 @@ endif()
 if(TARGET_HARDWARE STREQUAL "stm32f3_libopencm3")
     add_subdirectory(libopencm3)
 endif()
+
+add_subdirectory(etl)
