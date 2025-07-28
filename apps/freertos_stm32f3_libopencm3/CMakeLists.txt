@@ -35,6 +35,6 @@ add_custom_command(TARGET ${PROJECT_NAME}
 
 add_custom_target(flash
     COMMAND st-flash write ${PROJECT_NAME}.bin 0x08000000
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/main_freertos_libopencm3_stm32f3
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/apps/freertos_stm32f3_libopencm3
     COMMENT "Flashing ${PROJECT_NAME}.bin"
 )

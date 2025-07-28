@@ -19,6 +19,7 @@ endif()
 
 add_subdirectory(src)
 add_subdirectory(extern)
+add_subdirectory(apps)
 add_subdirectory(test)
 
 execute_process(
