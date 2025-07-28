@@ -20,7 +20,7 @@ endif()
 add_subdirectory(src)
 add_subdirectory(extern)
 add_subdirectory(apps)
-add_subdirectory(test)
+add_subdirectory(tests)
 
 execute_process(
     COMMAND ${CMAKE_COMMAND} -E create_symlink

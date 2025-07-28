@@ -19,7 +19,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_link_options(${PROJECT_NAME}
     PRIVATE
-    -T "${CMAKE_SOURCE_DIR}/config/stm32f303.ld"
+    -T "${CMAKE_SOURCE_DIR}/scripts/stm32f3_libopencm3.ld"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME}
