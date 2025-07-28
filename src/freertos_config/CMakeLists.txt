@@ -4,3 +4,4 @@ target_include_directories(freertos_config
     INTERFACE
         "./"
 )
+

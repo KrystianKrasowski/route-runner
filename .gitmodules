@@ -7,3 +7,6 @@
 [submodule "extern/etl/etl-src"]
 	path = extern/etl/etl-src
 	url = https://github.com/ETLCPP/etl.git
+[submodule "extern/freertos_kernel/freertos_kernel-src"]
+	path = extern/freertos_kernel/freertos_kernel-src
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel

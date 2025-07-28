@@ -8,8 +8,6 @@ project(route-runner VERSION 1.2.1)
 
 enable_language(C CXX ASM)
 
-include(FetchContent)
-include(${CMAKE_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/compile-common-options.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 
@@ -19,9 +17,8 @@ if(TARGET_HARDWARE STREQUAL "native_host")
     enable_testing()
 endif()
 
-add_subdirectory(lib)
-add_subdirectory(extern)
 add_subdirectory(src)
+add_subdirectory(extern)
 add_subdirectory(test)
 
 execute_process(
