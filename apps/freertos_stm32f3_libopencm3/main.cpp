@@ -3,6 +3,7 @@
 #include "device/tree.hpp"
 #include "isr_event_emitter_adapter.hpp"
 #include "linebot/data_store.hpp"
+#include "stack_overflow_handler.hpp"
 #include "task.h"
 #include "task_factory.hpp"
 #include "task_immediate_stop.hpp"
@@ -44,6 +45,9 @@ main()
         device::event_id::SHELL_COMMANDED,
         shell_command_dispatch_task.get_handle()
     );
+
+    // don't need an instance for this right now
+    (void)app::stack_overflow_handler::hook(devices.blink_);
 
     vTaskStartScheduler();
 

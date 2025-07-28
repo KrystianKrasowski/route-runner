@@ -8,7 +8,7 @@ namespace app
 {
 
 class task_shell_command_dispatch
-    : public task_base<task_shell_command_dispatch, 144>
+    : public task_base<task_shell_command_dispatch, 168>
 {
 public:
 

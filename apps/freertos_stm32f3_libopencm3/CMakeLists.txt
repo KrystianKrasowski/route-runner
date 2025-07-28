@@ -4,6 +4,7 @@ add_executable(${PROJECT_NAME}
     task_route_tracking.cpp
     task_immediate_stop.cpp
     task_shell_command_dispatch.cpp
+    stack_overflow_handler.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
