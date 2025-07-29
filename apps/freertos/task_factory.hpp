@@ -4,7 +4,9 @@
 #include "adapter/printer_shell.hpp"
 #include "adapter/route_guard_timeout.hpp"
 #include "adapter/status_indicator_toggle_sequence.hpp"
+#include "device/isr_event_emitter.hpp"
 #include "device/tree.hpp"
+#include "isr_event_emitter_adapter.hpp"
 #include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
 #include "linebot/motion_port.hpp"
@@ -23,52 +25,75 @@ class task_factory
 {
 public:
 
-    task_factory(device::tree& devices, linebot::data_store& store)
+    task_factory(
+        device::tree&              devices,
+        linebot::data_store&       store,
+        isr_event_emitter_adapter& events
+    )
         : devices_{devices},
-          store_{store}
+          store_{store},
+          events_{events}
     {
     }
 
     task_manual_control&
     create_manual_control_task()
     {
-        auto& api  = get_or_create_api();
-        auto& task = task_manual_control::of(devices_.remote_control_, api);
+        auto& api      = get_or_create_api();
+        auto& task     = task_manual_control::of(devices_.remote_control_, api);
+        auto  event_id = device::event_id::DUALSHOCK2_RX_COMPLETE;
+
         task.register_rtos_task();
+        events_.register_task_notification(event_id, task.get_handle());
+
         return task;
     }
 
     task_route_tracking&
     create_route_tracking_task()
     {
-        auto& api  = get_or_create_api();
-        auto& task = task_route_tracking::of(devices_.line_sensor_, api);
+        auto& api      = get_or_create_api();
+        auto& task     = task_route_tracking::of(devices_.line_sensor_, api);
+        auto  event_id = device::event_id::QTRHD06A_CONVERSION_COMPLETE;
+
         task.register_rtos_task();
+        events_.register_task_notification(event_id, task.get_handle());
+
         return task;
     }
 
     task_immediate_stop&
     create_immediate_stop_task()
     {
-        auto& api  = get_or_create_api();
-        auto& task = task_immediate_stop::of(api);
+        auto& api      = get_or_create_api();
+        auto& task     = task_immediate_stop::of(api);
+        auto  event_id = device::event_id::TIMEOUT;
+
         task.register_rtos_task();
+        events_.register_task_notification(event_id, task.get_handle());
+
         return task;
     }
 
     task_shell_command_dispatch&
     create_shell_command_task()
     {
-        auto& api  = get_or_create_api();
-        auto& task = task_shell_command_dispatch::of(devices_.shell_, api);
+        auto& api      = get_or_create_api();
+        auto& task     = task_shell_command_dispatch::of(devices_.shell_, api);
+        auto  event_id = device::event_id::SHELL_COMMANDED;
+
         task.register_rtos_task();
+        events_.register_task_notification(event_id, task.get_handle());
+
         return task;
     }
 
 private:
 
-    device::tree&                   devices_;
-    linebot::data_store&            store_;
+    device::tree&              devices_;
+    linebot::data_store&       store_;
+    isr_event_emitter_adapter& events_;
+
     linebot::motion_port*           motion_           = nullptr;
     linebot::status_indicator_port* status_indicator_ = nullptr;
     linebot::route_guard_port*      route_guard_      = nullptr;
