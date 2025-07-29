@@ -1,15 +1,10 @@
 #include "FreeRTOS.h"
-#include "device/isr_event_emitter.hpp"
 #include "device/tree.hpp"
 #include "isr_event_emitter_adapter.hpp"
 #include "linebot/data_store.hpp"
 #include "stack_overflow_handler.hpp"
 #include "task.h"
 #include "task_factory.hpp"
-#include "task_immediate_stop.hpp"
-#include "task_manual_control.hpp"
-#include "task_route_tracking.hpp"
-#include <etl/utility.h>
 
 linebot::data_store            store;
 app::isr_event_emitter_adapter events;
