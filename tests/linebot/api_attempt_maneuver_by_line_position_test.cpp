@@ -51,7 +51,7 @@ TEST_CASE_METHOD(
         maneuver& actual_maneuver = motion_.applied_maneuver_.value();
 
         CHECK(actual_maneuver.get_direction() == maneuver::FORWARD);
-        CHECK(actual_maneuver.get_correction() < 0);
+        CHECK((int)actual_maneuver.get_correction() < 0);
     }
 
     SECTION("turn right")
@@ -86,7 +86,7 @@ TEST_CASE_METHOD(
         maneuver& actual_maneuver = motion_.applied_maneuver_.value();
 
         CHECK(actual_maneuver.get_direction() == maneuver::FORWARD);
-        CHECK(actual_maneuver.get_correction() > 0);
+        CHECK((int)actual_maneuver.get_correction() > 0);
     }
 
     SECTION("stop on finish")
@@ -104,7 +104,7 @@ TEST_CASE_METHOD(
         maneuver& actual_maneuver = motion_.applied_maneuver_.value();
 
         CHECK(actual_maneuver.get_direction() == maneuver::NONE);
-        CHECK(actual_maneuver.get_correction() == 0);
+        CHECK((int)actual_maneuver.get_correction() == 0);
     }
 
     SECTION("compute and store position error")

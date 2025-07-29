@@ -17,7 +17,7 @@ struct data_store
 
     commands   remote_control_ = commands{commands::STOP};
     mode       mode_           = mode::MANUAL;
-    pid_params pid_params_     = pid_params{0.7, 0, 4.1};
+    pid_params pid_params_     = pid_params{70, 0, 410};
 };
 
 } // namespace linebot

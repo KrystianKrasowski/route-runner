@@ -38,11 +38,11 @@ printer_shell::print(linebot::pid_params& pid)
     print_buffer_.clear();
 
     print_buffer_ += "PID: kp ";
-    etl::to_string(pid.get_kp_as_int(), print_buffer_, true);
+    etl::to_string(pid.kp, print_buffer_, true);
     print_buffer_ += ", ki ";
-    etl::to_string(pid.get_ki_as_int(), print_buffer_, true);
+    etl::to_string(pid.ki, print_buffer_, true);
     print_buffer_ += ", kd ";
-    etl::to_string(pid.get_kd_as_int(), print_buffer_, true);
+    etl::to_string(pid.kd, print_buffer_, true);
     print_buffer_ += "\n\r";
 
     shell_.send(print_buffer_);

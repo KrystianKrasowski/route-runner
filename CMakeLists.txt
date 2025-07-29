@@ -10,7 +10,7 @@ enable_language(C CXX ASM)
 
 include(${CMAKE_SOURCE_DIR}/cmake/compile-common-options.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
-
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 # For some reason this has to be defined in a top level CMakeLists.txt
 if(TARGET_HARDWARE STREQUAL "native_host")
     include(CTest)
