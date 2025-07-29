@@ -29,7 +29,3 @@ target_link_libraries(hardware
         etl
 )
 
-target_include_directories(hardware
-    PUBLIC
-        "./inc"
-)
