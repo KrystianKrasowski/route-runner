@@ -4,7 +4,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(route-runner VERSION 1.2.1)
+project(route-runner VERSION 3.0.0)
 
 enable_language(C CXX ASM)
 
