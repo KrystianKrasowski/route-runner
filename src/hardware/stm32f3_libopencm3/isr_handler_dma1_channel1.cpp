@@ -1,0 +1,36 @@
+#include "isr_handler_dma1_channel1.hpp"
+#include "data_store.hpp"
+#include "device/isr_event_emitter.hpp"
+#include "qtrhd06a.hpp"
+#include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/f3/dma.h>
+
+namespace hardware
+{
+
+isr_handler_dma1_channel1&
+isr_handler_dma1_channel1::of(
+    qtrhd06a&                  line_sensor,
+    data_store&                data_store,
+    device::isr_event_emitter& event_emitter
+)
+{
+    static isr_handler_dma1_channel1 handler{
+        line_sensor, data_store, event_emitter
+    };
+
+    return handler;
+}
+
+void
+isr_handler_dma1_channel1::handle()
+{
+    if (dma_get_interrupt_flag(DMA1, DMA_CHANNEL1, DMA_TCIF))
+    {
+        dma_clear_interrupt_flags(DMA1, DMA_CHANNEL1, DMA_TCIF);
+        data_store_.on_qtrhd06a_conversion_isr();
+        event_emitter_.emit(device::event_id::QTRHD06A_CONVERSION_COMPLETE);
+    }
+}
+
+} // namespace hardware

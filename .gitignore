@@ -5,3 +5,4 @@ tags
 .cache/
 compile_commands.json
 .vim-lsp-settings
+VS.Vim.Buffer*

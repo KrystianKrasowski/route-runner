@@ -14,7 +14,7 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "hidden": true,
             "cacheVariables": {
-                "TARGET_ARCH": "libopencm3_stm32f3",
+                "TARGET_HARDWARE": "stm32f3_libopencm3",
                 "TARGET_RUNTIME": "freertos"
             }
         },
@@ -37,7 +37,7 @@
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "TARGET_ARCH": "test",
+                "TARGET_HARDWARE": "native_host",
                 "TARGET_RUNTIME": "none",
                 "CMAKE_BUILD_TYPE": "Debug"
             }

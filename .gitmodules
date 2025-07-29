@@ -1,0 +1,12 @@
+[submodule "extern/catch2/catch2-src"]
+	path = extern/catch2/catch2-src
+	url = https://github.com/catchorg/Catch2.git
+[submodule "extern/libopencm3/libopencm3-src"]
+	path = extern/libopencm3/libopencm3-src
+	url = https://github.com/libopencm3/libopencm3.git
+[submodule "extern/etl/etl-src"]
+	path = extern/etl/etl-src
+	url = https://github.com/ETLCPP/etl.git
+[submodule "extern/freertos_kernel/freertos_kernel-src"]
+	path = extern/freertos_kernel/freertos_kernel-src
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel

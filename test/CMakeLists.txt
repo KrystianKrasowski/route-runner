@@ -1,7 +1,0 @@
-if(TARGET_ARCH STREQUAL "test")
-    add_subdirectory(pathbot)
-    add_subdirectory(adapters)
-    add_subdirectory(utils)
-    add_subdirectory(mocks)
-    add_subdirectory(mappers)
-endif()

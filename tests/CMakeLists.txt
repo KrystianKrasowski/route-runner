@@ -1,0 +1,6 @@
+if(TARGET_HARDWARE STREQUAL "native_host")
+    add_subdirectory(linebot)
+    add_subdirectory(adapters)
+    add_subdirectory(mocks)
+    add_subdirectory(mappers)
+endif()

@@ -1,0 +1,64 @@
+#pragma once
+
+namespace linebot
+{
+
+class mode
+{
+public:
+
+    enum value
+    {
+        MANUAL = 0,
+        LINE_DETECTED,
+        FOLLOWING,
+        RECOVERING,
+    };
+
+    constexpr mode(value val)
+        : value_{val}
+    {
+    }
+
+    constexpr
+    operator value() const
+    {
+        return value_;
+    }
+
+    constexpr bool
+    is_line_detected()
+    {
+        return value_ == LINE_DETECTED;
+    }
+
+    constexpr bool
+    is_manual()
+    {
+        return value_ == MANUAL;
+    }
+
+    constexpr bool
+    is_following()
+    {
+        return value_ == FOLLOWING;
+    }
+
+    constexpr bool
+    is_recovering()
+    {
+        return value_ == RECOVERING;
+    }
+
+    constexpr bool
+    is_tracking()
+    {
+        return is_following() || is_recovering();
+    }
+
+private:
+
+    mode::value value_ = MANUAL;
+};
+
+} // namespace linebot
