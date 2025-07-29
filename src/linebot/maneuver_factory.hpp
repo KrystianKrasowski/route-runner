@@ -17,8 +17,7 @@ constexpr int8_t CORRECTION_MANUAL_RIGHT = 50;
 inline maneuver
 create_maneuver(commands remote_control)
 {
-    maneuver::direction direction  = maneuver::NONE;
-    int8_t              correction = 0;
+    int8_t correction = 0;
 
     if (remote_control.have_left())
     {
@@ -28,6 +27,8 @@ create_maneuver(commands remote_control)
     {
         correction = 50;
     }
+
+    maneuver::direction direction;
 
     if (remote_control.have_forward())
     {

@@ -22,7 +22,7 @@ private:
 
     dualshock2& dualshock_;
 
-    isr_handler_tim2(dualshock2& dualshock2_)
+    explicit isr_handler_tim2(dualshock2& dualshock2_)
         : dualshock_{dualshock2_}
     {
     }

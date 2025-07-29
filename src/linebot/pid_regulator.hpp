@@ -3,6 +3,7 @@
 #include "linebot/data_store.hpp"
 #include "linebot/domain/pid_params.hpp"
 #include <cstdint>
+#include <etl/algorithm.h>
 
 namespace linebot
 {
@@ -23,8 +24,10 @@ public:
     int8_t
     regulate(int8_t error)
     {
-        int16_t errors_sum     = sum_past_errors();
-        int8_t  previous_error = get_last_error();
+        int16_t errors_sum =
+            etl::accumulate(past_errors_.begin(), past_errors_.end(), 0);
+
+        int8_t previous_error = get_last_error();
 
         int32_t p = config_.kp * error;
         int32_t i = config_.ki * errors_sum;
@@ -58,18 +61,6 @@ private:
     const pid_params& config_;
     errors_buffer&    past_errors_;
 
-    int16_t
-    sum_past_errors()
-    {
-        int16_t sum = 0;
-
-        for (auto error : past_errors_)
-        {
-            sum += error;
-        }
-
-        return sum;
-    }
 };
 
 } // namespace linebot

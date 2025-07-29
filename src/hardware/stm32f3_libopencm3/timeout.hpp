@@ -23,7 +23,7 @@ private:
 
     uint32_t timer_port_;
 
-    timeout(uint32_t timer_port)
+    explicit timeout(uint32_t timer_port)
         : timer_port_{timer_port}
     {
     }

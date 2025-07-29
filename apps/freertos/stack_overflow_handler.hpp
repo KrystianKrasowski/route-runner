@@ -19,7 +19,7 @@ private:
 
     device::toggle_sequence& blink_;
 
-    stack_overflow_handler(device::toggle_sequence& blink)
+    explicit stack_overflow_handler(device::toggle_sequence& blink)
         : blink_{blink}
     {
     }

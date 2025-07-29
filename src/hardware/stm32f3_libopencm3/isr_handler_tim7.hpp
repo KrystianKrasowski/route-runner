@@ -22,7 +22,7 @@ private:
 
     toggle_sequence_gpio& toggle_sequence;
 
-    isr_handler_tim7(toggle_sequence_gpio& toggle_sequence)
+    explicit isr_handler_tim7(toggle_sequence_gpio& toggle_sequence)
         : toggle_sequence{toggle_sequence}
     {
     }

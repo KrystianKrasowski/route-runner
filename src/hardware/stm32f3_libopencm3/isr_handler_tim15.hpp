@@ -20,7 +20,7 @@ private:
 
     device::isr_event_emitter& events_;
 
-    isr_handler_tim15(device::isr_event_emitter& events)
+    explicit isr_handler_tim15(device::isr_event_emitter& events)
         : events_{events}
     {
     }

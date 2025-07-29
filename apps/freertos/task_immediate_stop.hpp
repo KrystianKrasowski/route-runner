@@ -26,7 +26,7 @@ private:
 
     linebot::api api_;
 
-    task_immediate_stop(linebot::api& api)
+    explicit task_immediate_stop(linebot::api& api)
         : task_base{"route guard", 3},
           api_{api}
     {

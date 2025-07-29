@@ -6,6 +6,6 @@ namespace hardware
 {
 
 void
-peripherals_setup(data_store& store);
+peripherals_setup(const data_store& store);
 
 }

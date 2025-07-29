@@ -1,11 +1,18 @@
 #include "linebot/domain/coordinates.hpp"
 #include <cstdint>
+#include <etl/algorithm.h>
 #include <etl/array.h>
 
 namespace linebot
 {
 
 static constexpr uint8_t DETECTION_TRESHOLD = 3;
+
+constexpr bool
+is_detected(uint8_t value)
+{
+    return value >= DETECTION_TRESHOLD;
+}
 
 coordinates
 coordinates::of_6(
@@ -19,11 +26,9 @@ coordinates::of_6(
 }
 
 coordinates
-coordinates::of_6(
-        etl::array<uint8_t, MAX_LENGTH> values
-)
+coordinates::of_6(etl::array<uint8_t, MAX_LENGTH> values)
 {
-    etl::array<int8_t, MAX_LENGTH>  weights{-100, -40, -20, 20, 40, 100};
+    etl::array<int8_t, MAX_LENGTH> weights{-100, -40, -20, 20, 40, 100};
 
     return {values, weights, MAX_LENGTH};
 }
@@ -31,15 +36,7 @@ coordinates::of_6(
 bool
 coordinates::is_on_route() const
 {
-    for (auto value : values_)
-    {
-        if (value >= DETECTION_TRESHOLD)
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return etl::any_of(values_.begin(), values_.end(), is_detected);
 }
 
 bool

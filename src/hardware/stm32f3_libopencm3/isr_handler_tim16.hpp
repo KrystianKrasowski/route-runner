@@ -21,7 +21,7 @@ private:
 
     shell& shell_;
 
-    isr_handler_tim16(shell& shell)
+    explicit isr_handler_tim16(shell& shell)
         : shell_{shell}
     {
     }

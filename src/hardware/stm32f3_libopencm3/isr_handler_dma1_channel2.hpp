@@ -13,9 +13,9 @@ class isr_handler_dma1_channel2 : public isr_handler
 public:
 
     static isr_handler_dma1_channel2&
-    of(dualshock2&                dualshock2_,
-       data_store&                data_store_,
-       device::isr_event_emitter& event_emitter_);
+    of(dualshock2&                dualshock2,
+       data_store&                data_store,
+       device::isr_event_emitter& event_emitter);
 
     void
     handle() override;

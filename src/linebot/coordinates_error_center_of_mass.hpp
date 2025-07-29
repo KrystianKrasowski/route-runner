@@ -12,6 +12,7 @@ struct coordinates_error_center_of_mass
     : public coordinates_error_strategy<coordinates_error_center_of_mass>
 {
     etl::optional<int8_t>
+    // cppcheck-suppress unusedFunction
     do_compute(const coordinates& line_position)
     {
         etl::optional<int8_t> result;

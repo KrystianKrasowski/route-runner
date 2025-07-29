@@ -77,7 +77,7 @@ systick_delay_us(uint16_t delay)
 }
 
 void
-peripherals_setup(data_store& store)
+peripherals_setup(const data_store& store)
 {
     rcc_setup();
     systick_setup();

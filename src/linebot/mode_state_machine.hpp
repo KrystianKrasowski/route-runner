@@ -11,7 +11,7 @@ class mode_state_machine
 {
 public:
 
-    mode_state_machine(mode& current_mode)
+    explicit mode_state_machine(mode& current_mode)
         : mode_{current_mode}
     {
     }
