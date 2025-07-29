@@ -1,22 +1,16 @@
-#include "devices/serial.h"
-#include "pathbot/api.h"
-#include "task_base.hpp"
 #include "task_domain_dump.hpp"
-#include "utils/result.h"
-#include <cstdint>
-#include <etl/pool.h>
+#include "FreeRTOS.h"
+#include "projdefs.h"
+#include "task_shell_command.hpp"
 
 namespace app
 {
 
-static etl::pool<task_domain_dump, 1> pool;
-
 task_domain_dump&
-task_domain_dump::of()
+task_domain_dump::of(linebot::api& api, EventGroupHandle_t event_group)
 {
-    task_domain_dump *task = pool.allocate();
-    new (task) task_domain_dump;
-    return *task;
+    static task_domain_dump task{api, event_group};
+    return task;
 }
 
 void
@@ -24,17 +18,17 @@ task_domain_dump::run()
 {
     while (1)
     {
-        uint32_t count = ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(1000));
+        EventBits_t wait_for = task_shell_command::DOMAIN_DUMP_BIT;
 
-        if (count && device_serial_read(DEVICE_SERIAL_1, 'd') == RESULT_OK)
+        EventBits_t bits = xEventGroupWaitBits(
+            event_group_, wait_for, pdTRUE, pdTRUE, pdMS_TO_TICKS(1000)
+        );
+
+        if ((bits & wait_for) != 0)
         {
-            pathbot_handle_store_dump();
+            api_.dump_store();
         }
     }
-}
-
-task_domain_dump::task_domain_dump() : task_base("domain dump", 1)
-{
 }
 
 } // namespace app

@@ -21,6 +21,7 @@ main()
     (void)task_factory.create_route_tracking_task();
     (void)task_factory.create_immediate_stop_task();
     (void)task_factory.create_shell_command_task();
+    (void)task_factory.create_domain_dump_task();
 
     (void)app::stack_overflow_handler::hook(devices.blink_);
 

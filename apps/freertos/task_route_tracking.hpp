@@ -8,7 +8,7 @@
 namespace app
 {
 
-class task_route_tracking : public task_base<task_route_tracking, 80>
+class task_route_tracking : public task_base<task_route_tracking, 96>
 {
 public:
 
