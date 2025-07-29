@@ -29,9 +29,9 @@ public:
 
         int8_t previous_error = get_last_error();
 
-        int32_t p = config_.kp * error;
-        int32_t i = config_.ki * errors_sum;
-        int32_t d = config_.kd * static_cast<int16_t>(error - previous_error);
+        int32_t p = config_.kp_ * error;
+        int32_t i = config_.ki_ * errors_sum;
+        int32_t d = config_.kd_ * static_cast<int16_t>(error - previous_error);
 
         int16_t steering_value = (p + i + d) / pid_params::FIXED_POINT_BASE;
 

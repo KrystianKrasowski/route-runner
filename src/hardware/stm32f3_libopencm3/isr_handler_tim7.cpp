@@ -18,7 +18,7 @@ isr_handler_tim7::handle()
     if (timer_get_flag(TIM7, TIM_SR_UIF))
     {
         timer_clear_flag(TIM7, TIM_SR_UIF);
-        toggle_sequence.toggle();
+        toggle_sequence_.toggle();
     }
 }
 

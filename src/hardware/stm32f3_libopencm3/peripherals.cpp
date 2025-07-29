@@ -86,11 +86,11 @@ peripherals_setup(const data_store& store)
     tim3_setup();
     spi_setup();
     dma1_channel1_setup(
-        (uint32_t)store.p_qtrhd06a_wbuff, store.QTRHD06A_BUFFER_LENGTH
+        (uint32_t)store.p_qtrhd06a_wbuff_, store.QTRHD06A_BUFFER_LENGTH
     );
-    dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff);
-    dma1_channel3_setup((uint32_t)store.p_dualshock2_request);
-    dma1_channel7_setup((uint32_t)store.p_shell_output);
+    dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff_);
+    dma1_channel3_setup((uint32_t)store.p_dualshock2_request_);
+    dma1_channel7_setup((uint32_t)store.p_shell_output_);
     adc12_setup();
     tim6_setup();
     tim7_setup();

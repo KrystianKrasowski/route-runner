@@ -18,7 +18,7 @@ isr_handler_usart2::handle()
 {
     if (usart_get_flag(USART2, USART_ISR_RXNE))
     {
-        store_.shell_command = usart_recv(USART2);
+        store_.shell_command_ = usart_recv(USART2);
         events_.emit(device::event_id::SHELL_COMMANDED);
     }
 }

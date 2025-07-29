@@ -9,14 +9,14 @@ struct pid_params
 {
     static constexpr uint8_t FIXED_POINT_BASE = 100;
 
-    uint16_t kp;
-    uint16_t ki;
-    uint16_t kd;
+    uint16_t kp_;
+    uint16_t ki_;
+    uint16_t kd_;
 
     bool
     operator==(const pid_params& other) const
     {
-        return kp == other.kp && ki == other.ki && kd == other.kd;
+        return kp_ == other.kp_ && ki_ == other.ki_ && kd_ == other.kd_;
     }
 };
 

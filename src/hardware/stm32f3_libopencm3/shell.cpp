@@ -17,7 +17,7 @@ shell::of(data_store& store, uint32_t dma_port, uint8_t dma_channel)
 char
 shell::read()
 {
-    return store_.shell_command;
+    return store_.shell_command_;
 }
 
 void
@@ -57,7 +57,7 @@ shell::dump_queue_to_dma_buffer()
         // not poped into buffer directly, due to volatile
         char chr;
         output_chars_.pop_into(chr);
-        store_.p_shell_output[char_index] = chr;
+        store_.p_shell_output_[char_index] = chr;
         char_index++;
     }
 
