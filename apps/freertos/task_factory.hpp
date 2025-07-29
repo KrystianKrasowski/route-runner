@@ -57,7 +57,7 @@ public:
     }
 
     task_shell_command_dispatch&
-    create_shell_command_dispatch_task()
+    create_shell_command_task()
     {
         auto& api  = get_or_create_api();
         auto& task = task_shell_command_dispatch::of(devices_.shell_, api);
