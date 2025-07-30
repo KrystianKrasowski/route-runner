@@ -1,29 +1,29 @@
 #include "api_fixture.hpp"
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/generators/catch_generators.hpp"
-#include "linebot/domain/commands.hpp"
+#include "linebot/domain/motion_control.hpp"
 #include <cstdint>
 #include <tuple>
 
 namespace linebot
 {
 
-using command::PID_KD_DOWN;
-using command::PID_KD_UP;
-using command::PID_KI_DOWN;
-using command::PID_KI_UP;
-using command::PID_KP_DOWN;
-using command::PID_KP_UP;
+using motion_control::PID_KD_DOWN;
+using motion_control::PID_KD_UP;
+using motion_control::PID_KI_DOWN;
+using motion_control::PID_KI_UP;
+using motion_control::PID_KP_DOWN;
+using motion_control::PID_KP_UP;
 
 TEST_CASE_METHOD(
     api_fixture, "should tune proportional parameter", "[linebot][pid]"
 )
 {
-    using param_type = std::tuple<uint16_t, command, uint16_t>;
+    using param_type = std::tuple<uint16_t, motion_control, uint16_t>;
 
     auto params = GENERATE(
-        param_type{70, command{PID_KP_UP}, 75},
-        param_type{70, command{PID_KP_DOWN}, 65}
+        param_type{70, motion_control{PID_KP_UP}, 75},
+        param_type{70, motion_control{PID_KP_DOWN}, 65}
     );
 
     // given
@@ -43,11 +43,11 @@ TEST_CASE_METHOD(
 )
 {
     SKIP();
-    using param_type = std::tuple<uint16_t, command, uint16_t>;
+    using param_type = std::tuple<uint16_t, motion_control, uint16_t>;
 
     auto params = GENERATE(
-        param_type{10, command{PID_KI_UP}, 15},
-        param_type{10, command{PID_KI_DOWN}, 5}
+        param_type{10, motion_control{PID_KI_UP}, 15},
+        param_type{10, motion_control{PID_KI_DOWN}, 5}
     );
 
     // given
@@ -67,11 +67,11 @@ TEST_CASE_METHOD(
 )
 {
     SKIP();
-    using param_type = std::tuple<uint16_t, command, uint16_t>;
+    using param_type = std::tuple<uint16_t, motion_control, uint16_t>;
 
     auto params = GENERATE(
-        param_type{410, command{PID_KD_UP}, 415},
-        param_type{410, command{PID_KD_DOWN}, 405}
+        param_type{410, motion_control{PID_KD_UP}, 415},
+        param_type{410, motion_control{PID_KD_DOWN}, 405}
     );
 
     // given
@@ -94,9 +94,11 @@ TEST_CASE_METHOD(
 {
     SKIP();
     // given
-    command remote_control_1 = GENERATE(command{PID_KP_UP}, command{PID_KP_DOWN});
-    command remote_control_2 = GENERATE(command{PID_KP_UP}, command{PID_KP_DOWN});
-    store_.pid_params_.kp_    = 70;
+    motion_control remote_control_1 =
+        GENERATE(motion_control{PID_KP_UP}, motion_control{PID_KP_DOWN});
+    motion_control remote_control_2 =
+        GENERATE(motion_control{PID_KP_UP}, motion_control{PID_KP_DOWN});
+    store_.pid_params_.kp_ = 70;
 
     // when
     api_.tune_pid_regulator(remote_control_1);

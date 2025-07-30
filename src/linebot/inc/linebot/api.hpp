@@ -1,8 +1,8 @@
 #pragma once
 
 #include "linebot/data_store.hpp"
-#include "linebot/domain/commands.hpp"
 #include "linebot/domain/coordinates.hpp"
+#include "linebot/domain/motion_control.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
@@ -23,13 +23,13 @@ public:
        printer_port&          printer);
 
     void
-    attempt_maneuver(command remote_control);
+    attempt_maneuver(motion_control control);
 
     void
     attempt_maneuver(const coordinates& line_positon);
 
     void
-    attempt_mode_switch(command remote_control);
+    attempt_mode_switch(motion_control control);
 
     void
     attempt_mode_switch(const coordinates& line_position);
@@ -44,7 +44,7 @@ public:
     dump_store();
 
     void
-    tune_pid_regulator(const command remote_control);
+    tune_pid_regulator(const motion_control control);
 
 private:
 
@@ -70,7 +70,7 @@ private:
     }
 
     bool
-    is_maneuver_applicable(command remote_control);
+    is_maneuver_applicable(motion_control control);
 };
 
 } // namespace linebot

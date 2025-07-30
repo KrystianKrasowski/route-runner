@@ -1,9 +1,9 @@
 #include "api_fixture.hpp"
 #include "catch2/catch_message.hpp"
 #include "linebot/data_store.hpp"
-#include "linebot/domain/commands.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/domain/mode.hpp"
+#include "linebot/domain/motion_control.hpp"
 #include "motion_port_mock.hpp"
 #include "name_helpers.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -13,11 +13,11 @@
 namespace linebot
 {
 
-constexpr auto STOP     = command::STOP;
-constexpr auto FORWARD  = command::FORWARD;
-constexpr auto LEFT     = command::LEFT;
-constexpr auto RIGHT    = command::RIGHT;
-constexpr auto BACKWARD = command::BACKWARD;
+constexpr auto STOP     = motion_control::STOP;
+constexpr auto FORWARD  = motion_control::FORWARD;
+constexpr auto LEFT     = motion_control::LEFT;
+constexpr auto RIGHT    = motion_control::RIGHT;
+constexpr auto BACKWARD = motion_control::BACKWARD;
 
 TEST_CASE_METHOD(
     api_fixture,
@@ -25,19 +25,19 @@ TEST_CASE_METHOD(
     "[linebot]"
 )
 {
-    using example_type = std::tuple<command, maneuver>;
+    using example_type = std::tuple<motion_control, maneuver>;
 
     auto mode    = GENERATE(mode::MANUAL, mode::LINE_DETECTED);
     auto example = GENERATE(
-        example_type{command{FORWARD}, maneuver::forward(0)},
-        example_type{command{FORWARD | LEFT}, maneuver::forward(-50)},
-        example_type{command{FORWARD | RIGHT}, maneuver::forward(50)},
-        example_type{command{BACKWARD}, maneuver::backward(0)},
-        example_type{command{BACKWARD | LEFT}, maneuver::backward(-50)},
-        example_type{command{BACKWARD | RIGHT}, maneuver::backward(50)},
-        example_type{command{LEFT}, maneuver::none()},
-        example_type{command{RIGHT}, maneuver::none()},
-        example_type{command{LEFT | RIGHT}, maneuver::none()}
+        example_type{motion_control{FORWARD}, maneuver::forward(0)},
+        example_type{motion_control{FORWARD | LEFT}, maneuver::forward(-50)},
+        example_type{motion_control{FORWARD | RIGHT}, maneuver::forward(50)},
+        example_type{motion_control{BACKWARD}, maneuver::backward(0)},
+        example_type{motion_control{BACKWARD | LEFT}, maneuver::backward(-50)},
+        example_type{motion_control{BACKWARD | RIGHT}, maneuver::backward(50)},
+        example_type{motion_control{LEFT}, maneuver::none()},
+        example_type{motion_control{RIGHT}, maneuver::none()},
+        example_type{motion_control{LEFT | RIGHT}, maneuver::none()}
     );
 
     auto new_remote_control = std::get<0>(example);
@@ -46,7 +46,7 @@ TEST_CASE_METHOD(
     CAPTURE(mode, new_remote_control, expected_maneuver);
 
     // given
-    store_.remote_control_ = command{STOP};
+    store_.motion_control_ = motion_control{STOP};
     store_.mode_           = mode;
 
     // when
@@ -55,7 +55,7 @@ TEST_CASE_METHOD(
     // then
     REQUIRE(motion_.applied_maneuver_.has_value());
     REQUIRE(motion_.applied_maneuver_.value() == expected_maneuver);
-    REQUIRE(store_.remote_control_ == new_remote_control);
+    REQUIRE(store_.motion_control_ == new_remote_control);
 }
 
 TEST_CASE_METHOD(
@@ -67,20 +67,20 @@ TEST_CASE_METHOD(
     auto mode = GENERATE(mode::FOLLOWING, mode::RECOVERING);
 
     auto new_remote_control = GENERATE(
-        command{FORWARD},
-        command{FORWARD | LEFT},
-        command{FORWARD | RIGHT},
-        command{BACKWARD},
-        command{BACKWARD | LEFT},
-        command{BACKWARD | RIGHT}
+        motion_control{FORWARD},
+        motion_control{FORWARD | LEFT},
+        motion_control{FORWARD | RIGHT},
+        motion_control{BACKWARD},
+        motion_control{BACKWARD | LEFT},
+        motion_control{BACKWARD | RIGHT}
     );
 
-    auto last_remote_control = command{STOP};
+    auto last_remote_control = motion_control{STOP};
 
     CAPTURE(mode, new_remote_control);
 
     // given
-    store_.remote_control_ = last_remote_control;
+    store_.motion_control_ = last_remote_control;
     store_.mode_           = mode;
 
     // when
@@ -96,19 +96,19 @@ TEST_CASE_METHOD(
 )
 {
     auto new_remote_control = GENERATE(
-        command{STOP},
-        command{FORWARD},
-        command{FORWARD | LEFT},
-        command{FORWARD | RIGHT},
-        command{BACKWARD},
-        command{BACKWARD | LEFT},
-        command{BACKWARD | RIGHT}
+        motion_control{STOP},
+        motion_control{FORWARD},
+        motion_control{FORWARD | LEFT},
+        motion_control{FORWARD | RIGHT},
+        motion_control{BACKWARD},
+        motion_control{BACKWARD | LEFT},
+        motion_control{BACKWARD | RIGHT}
     );
 
     CAPTURE(new_remote_control);
 
     // given
-    store_.remote_control_ = new_remote_control;
+    store_.motion_control_ = new_remote_control;
 
     // when
     api_.attempt_maneuver(new_remote_control);

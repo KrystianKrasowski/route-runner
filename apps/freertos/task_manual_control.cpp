@@ -1,7 +1,7 @@
 #include "task_manual_control.hpp"
 #include "FreeRTOS.h"
 #include "linebot/api.hpp"
-#include "linebot/domain/commands.hpp"
+#include "linebot/domain/motion_control.hpp"
 #include "mapper/dualshock2_commands.hpp"
 #include "task_base.hpp"
 #include <cstdint>
@@ -25,11 +25,13 @@ task_manual_control::run()
 
         if (count)
         {
-            uint16_t          raw_control    = dualshock2_.read();
-            linebot::command remote_control = mapper::map(raw_control);
+            uint16_t                raw_control    = dualshock2_.read();
+            linebot::motion_control motion_control = mapper::map(raw_control);
 
-            api_.attempt_mode_switch(remote_control);
-            api_.attempt_maneuver(remote_control);
+            // TODO: Mode should have separate object from motion_control
+            // (mode_control?)
+            api_.attempt_mode_switch(motion_control);
+            api_.attempt_maneuver(motion_control);
         }
     }
 }

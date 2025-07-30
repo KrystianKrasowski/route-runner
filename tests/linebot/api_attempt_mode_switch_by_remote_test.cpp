@@ -3,27 +3,29 @@
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/generators/catch_generators.hpp"
 #include "linebot/api.hpp"
-#include "linebot/domain/commands.hpp"
 #include "linebot/domain/mode.hpp"
+#include "linebot/domain/motion_control.hpp"
 #include "name_helpers.hpp"
 #include <tuple>
 
 namespace linebot
 {
 
-using command::BREAK;
-using command::FOLLOW;
+using motion_control::BREAK;
+using motion_control::FOLLOW;
 
 TEST_CASE_METHOD(
     api_fixture, "should switch mode by remote control", "[linebot]"
 )
 {
-    using test_params = std::tuple<mode, command, mode>;
+    using test_params = std::tuple<mode, motion_control, mode>;
 
     auto example = GENERATE(
-        test_params{mode::LINE_DETECTED, command{FOLLOW}, mode::FOLLOWING},
-        test_params{mode::FOLLOWING, command{BREAK}, mode::MANUAL},
-        test_params{mode::RECOVERING, command{BREAK}, mode::MANUAL}
+        test_params{
+            mode::LINE_DETECTED, motion_control{FOLLOW}, mode::FOLLOWING
+        },
+        test_params{mode::FOLLOWING, motion_control{BREAK}, mode::MANUAL},
+        test_params{mode::RECOVERING, motion_control{BREAK}, mode::MANUAL}
     );
 
     auto current_mode   = std::get<0>(example);

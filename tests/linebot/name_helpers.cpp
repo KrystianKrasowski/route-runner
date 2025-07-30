@@ -1,7 +1,7 @@
-#include "linebot/domain/commands.hpp"
 #include "name_helpers.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/domain/mode.hpp"
+#include "linebot/domain/motion_control.hpp"
 #include <format>
 #include <map>
 #include <ostream>
@@ -11,13 +11,13 @@
 namespace linebot
 {
 
-using command_names_map = std::map<command::value, std::string>;
+using command_names_map = std::map<motion_control::command, std::string>;
 
 class commands_parser
 {
 public:
 
-    commands_parser(command remote_control, command_names_map names)
+    commands_parser(motion_control remote_control, command_names_map names)
         : commands_{remote_control},
           names_map_{names}
     {
@@ -39,7 +39,7 @@ public:
 
 private:
 
-    command         commands_;
+    motion_control    commands_;
     command_names_map names_map_;
 
     bool
@@ -48,30 +48,30 @@ private:
         return commands_.to_uint16() & (1 << bit_index);
     }
 
-    command::value
+    motion_control::command
     to_command(int bit_index)
     {
-        return static_cast<command::value>(1 << bit_index);
+        return static_cast<motion_control::command>(1 << bit_index);
     }
 
     std::string
-    to_command_name(command::value command)
+    to_command_name(motion_control::command command)
     {
         return names_map_.at(command);
     }
 };
 
 std::ostream&
-operator<<(std::ostream& os, command cmds)
+operator<<(std::ostream& os, motion_control cmds)
 {
     command_names_map names = {
-        {command::FORWARD, "FORWARD"},
-        {command::BACKWARD, "BACKWARD"},
-        {command::LEFT, "LEFT"},
-        {command::RIGHT, "RIGHT"},
-        {command::BREAK, "BREAK"},
-        {command::FOLLOW, "FOLLOW"},
-        {command::STOP, "NONE"},
+        {motion_control::FORWARD, "FORWARD"},
+        {motion_control::BACKWARD, "BACKWARD"},
+        {motion_control::LEFT, "LEFT"},
+        {motion_control::RIGHT, "RIGHT"},
+        {motion_control::BREAK, "BREAK"},
+        {motion_control::FOLLOW, "FOLLOW"},
+        {motion_control::STOP, "NONE"},
     };
 
     commands_parser parser{cmds, names};

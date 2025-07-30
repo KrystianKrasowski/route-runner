@@ -1,8 +1,8 @@
 #pragma once
 
-#include "linebot/domain/commands.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/mode.hpp"
+#include "linebot/domain/motion_control.hpp"
 
 namespace linebot
 {
@@ -17,10 +17,10 @@ public:
     }
 
     bool
-    transit(command remote_control)
+    transit(motion_control control)
     {
-        return maybe_switch_to_following(remote_control)
-            || maybe_switch_to_manual(remote_control);
+        return maybe_switch_to_following(control)
+            || maybe_switch_to_manual(control);
     }
 
     bool
@@ -37,9 +37,9 @@ private:
     mode& mode_;
 
     bool
-    maybe_switch_to_following(command remote_control)
+    maybe_switch_to_following(motion_control control)
     {
-        if (remote_control.have_follow() && mode_.is_line_detected())
+        if (control.have_follow() && mode_.is_line_detected())
         {
             mode_ = mode::FOLLOWING;
             return true;
@@ -49,9 +49,9 @@ private:
     }
 
     bool
-    maybe_switch_to_manual(command remote_control)
+    maybe_switch_to_manual(motion_control control)
     {
-        if (remote_control.have_break() && mode_.is_tracking())
+        if (control.have_break() && mode_.is_tracking())
         {
             mode_ = mode::MANUAL;
             return true;

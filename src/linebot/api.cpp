@@ -1,8 +1,8 @@
 #include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
-#include "linebot/domain/commands.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
+#include "linebot/domain/motion_control.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/printer_port.hpp"
 #include "linebot/status_indicator_port.hpp"
@@ -31,12 +31,12 @@ api::of(
 }
 
 void
-api::attempt_maneuver(command remote_control)
+api::attempt_maneuver(motion_control control)
 {
-    if (is_maneuver_applicable(remote_control))
+    if (is_maneuver_applicable(control))
     {
-        store_.remote_control_ = remote_control;
-        maneuver motion        = create_maneuver(remote_control);
+        store_.motion_control_ = control;
+        maneuver motion        = create_maneuver(control);
         motion_.apply(motion);
     }
 }
@@ -54,11 +54,11 @@ api::attempt_maneuver(const coordinates& line_position)
 }
 
 void
-api::attempt_mode_switch(command remote_control)
+api::attempt_mode_switch(motion_control control)
 {
     mode_state_machine mode_transition{store_.mode_};
 
-    if (mode_transition.transit(remote_control))
+    if (mode_transition.transit(control))
     {
         status_indicator_.apply(store_.mode_);
     }
@@ -92,10 +92,10 @@ api::attempt_route_guard_toggle(const coordinates& line_position)
 void
 api::halt()
 {
-    command stop{command::STOP};
+    motion_control stop{motion_control::STOP};
 
     store_.mode_           = mode::MANUAL;
-    store_.remote_control_ = stop;
+    store_.motion_control_ = stop;
     maneuver motion        = create_maneuver(stop);
 
     motion_.apply(motion);
@@ -111,26 +111,25 @@ api::dump_store()
 }
 
 void
-api::tune_pid_regulator(const command remote_control)
+api::tune_pid_regulator(const motion_control control)
 {
-    if (remote_control.has_pid_kp_up() && !locked_)
+    if (control.has_pid_kp_up() && !locked_)
     {
-        locked_                  = true;
+        locked_                 = true;
         store_.pid_params_.kp_ += 5;
     }
 
-    else if (remote_control.has_pid_kp_down() && !locked_)
+    else if (control.has_pid_kp_down() && !locked_)
     {
-        locked_                  = true;
+        locked_                 = true;
         store_.pid_params_.kp_ -= 5;
     }
 }
 
 bool
-api::is_maneuver_applicable(command remote_control)
+api::is_maneuver_applicable(motion_control control)
 {
-    return store_.remote_control_ != remote_control
-        && !store_.mode_.is_tracking();
+    return store_.motion_control_ != control && !store_.mode_.is_tracking();
 }
 
-} // namespace linebot
+} // namespace linebo
