@@ -2,7 +2,7 @@
 #include "FreeRTOS.h"
 #include "linebot/api.hpp"
 #include "linebot/domain/motion_control.hpp"
-#include "mapper/dualshock2_commands.hpp"
+#include "mapper/dualshock2_motion_control.hpp"
 #include "task_base.hpp"
 #include <cstdint>
 
@@ -25,8 +25,8 @@ task_manual_control::run()
 
         if (count)
         {
-            uint16_t                raw_control    = dualshock2_.read();
-            linebot::motion_control motion_control = mapper::map(raw_control);
+            auto raw_control    = dualshock2_.read();
+            auto motion_control = mapper::map_motion_control(raw_control);
 
             // TODO: Mode should have separate object from motion_control
             // (mode_control?)

@@ -111,19 +111,8 @@ api::dump_store()
 }
 
 void
-api::tune_pid_regulator(const motion_control control)
+api::tune_pid_regulator(const pid_control control)
 {
-    if (control.has_pid_kp_up() && !locked_)
-    {
-        locked_                 = true;
-        store_.pid_params_.kp_ += 5;
-    }
-
-    else if (control.has_pid_kp_down() && !locked_)
-    {
-        locked_                 = true;
-        store_.pid_params_.kp_ -= 5;
-    }
 }
 
 bool

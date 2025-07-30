@@ -3,6 +3,7 @@
 #include "linebot/data_store.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/motion_control.hpp"
+#include "linebot/domain/pid_control.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
@@ -44,7 +45,7 @@ public:
     dump_store();
 
     void
-    tune_pid_regulator(const motion_control control);
+    tune_pid_regulator(const pid_control control);
 
 private:
 
