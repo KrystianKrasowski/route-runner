@@ -45,6 +45,12 @@ public:
             steering_value = -100;
         }
 
+        // TODO: This should be the part of duty cycle logic!
+        if (steering_value <= 10 && steering_value >= -10)
+        {
+            steering_value = 0;
+        }
+
         past_errors_.push(error);
 
         return static_cast<int8_t>(steering_value);

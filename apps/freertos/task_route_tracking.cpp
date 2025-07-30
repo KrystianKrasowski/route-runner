@@ -26,9 +26,10 @@ task_route_tracking::run()
             auto raw_values  = line_sensor_.read();
             auto line_position = mapper::map(raw_values);
 
+            // TODO: Probably those use cases should be split to separate tasks.
             api_.attempt_route_guard_toggle(line_position);
-            api_.attempt_mode_switch(line_position);
             api_.attempt_maneuver(line_position);
+            api_.attempt_mode_switch(line_position);
         }
     }
 }

@@ -26,8 +26,8 @@ public:
     bool
     transit(const coordinates& line_position)
     {
-        return maybe_switch_to_detected(line_position)
-            || maybe_switch_to_manual(line_position)
+        return maybe_switch_to_manual(line_position)
+            || maybe_switch_to_detected(line_position)
             || maybe_switch_to_recovering(line_position)
             || maybe_switch_to_following(line_position);
     }

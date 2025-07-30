@@ -7,7 +7,7 @@ namespace linebot
 
 struct pid_params
 {
-    static constexpr uint8_t FIXED_POINT_BASE = 100;
+    static constexpr uint16_t FIXED_POINT_BASE = 1000;
 
     uint16_t kp_;
     uint16_t ki_;

@@ -70,8 +70,11 @@ private:
     {
     }
 
-    bool
-    is_maneuver_applicable(motion_control control);
+    inline bool
+    is_applicable(motion_control control);
+
+    inline bool
+    is_applicable(const pid_control control);
 };
 
 } // namespace linebot

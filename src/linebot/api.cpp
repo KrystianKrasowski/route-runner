@@ -3,6 +3,7 @@
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/domain/motion_control.hpp"
+#include "linebot/domain/pid_control.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/printer_port.hpp"
 #include "linebot/status_indicator_port.hpp"
@@ -33,7 +34,7 @@ api::of(
 void
 api::attempt_maneuver(motion_control control)
 {
-    if (is_maneuver_applicable(control))
+    if (is_applicable(control))
     {
         store_.motion_control_ = control;
         maneuver motion        = create_maneuver(control);
@@ -113,12 +114,27 @@ api::dump_store()
 void
 api::tune_pid_regulator(const pid_control control)
 {
+    if (is_applicable(control))
+    {
+        pid_tuner tuner{control, store_.pid_params_};
+        tuner.tune_proportional();
+        tuner.tune_integral();
+        tuner.tune_derivative();
+
+        store_.pid_control_ = control;
+    }
 }
 
 bool
-api::is_maneuver_applicable(motion_control control)
+api::is_applicable(motion_control control)
 {
     return store_.motion_control_ != control && !store_.mode_.is_tracking();
 }
 
-} // namespace linebo
+bool
+api::is_applicable(const pid_control control)
+{
+    return store_.pid_control_ != control;
+}
+
+} // namespace linebot

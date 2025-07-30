@@ -13,6 +13,7 @@ namespace linebot
 
 using motion_control::BREAK;
 using motion_control::FOLLOW;
+using motion_control::STOP;
 
 TEST_CASE_METHOD(
     api_fixture, "should switch mode by remote control", "[linebot]"
@@ -44,6 +45,23 @@ TEST_CASE_METHOD(
     REQUIRE(status_indicator_.applied_mode_.has_value());
     CHECK(status_indicator_.applied_mode_.value() == expected_mode);
     CHECK(store_.mode_ == expected_mode);
+}
+
+TEST_CASE_METHOD(
+    api_fixture,
+    "should clear motion control on tracking mode enter",
+    "[linebot]"
+)
+{
+    // given
+    store_.mode_           = mode::LINE_DETECTED;
+    store_.motion_control_ = motion_control{STOP};
+
+    // when
+    api_.attempt_mode_switch(motion_control{FOLLOW});
+
+    // then
+    CHECK(store_.motion_control_ != motion_control{STOP});
 }
 
 } // namespace linebot

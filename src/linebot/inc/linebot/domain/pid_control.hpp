@@ -36,15 +36,39 @@ struct pid_control
     }
 
     bool
-    has_pid_kp_up() const
+    has_kp_up() const
     {
-        return value_ & KP_UP;
+        return value_ & KP_UP && !(value_ & KP_DOWN);
     }
 
     bool
-    has_pid_kp_down() const
+    has_kp_down() const
     {
-        return value_ & KP_DOWN;
+        return value_ & KP_DOWN && !(value_ & KP_UP);
+    }
+
+    bool
+    has_ki_up() const
+    {
+        return value_ & KI_UP && !(value_ & KI_DOWN);
+    }
+
+    bool
+    has_ki_down() const
+    {
+        return value_ & KI_DOWN && !(value_ & KI_UP);
+    }
+
+    bool
+    has_kd_up() const
+    {
+        return value_ & KD_UP && !(value_ & KD_DOWN);
+    }
+
+    bool
+    has_kd_down() const
+    {
+        return value_ & KD_DOWN && !(value_ & KD_UP);
     }
 
 private:
