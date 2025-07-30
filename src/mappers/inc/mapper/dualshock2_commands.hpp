@@ -32,12 +32,12 @@ map(uint16_t raw)
         commands |= linebot::commands::LEFT;
     }
 
-    if (raw & device::dualshock2::CIRCLE)
+    if (raw & device::dualshock2::CROSS)
     {
         commands |= linebot::commands::BREAK;
     }
 
-    if (raw & device::dualshock2::CROSS)
+    if (raw & device::dualshock2::START)
     {
         commands |= linebot::commands::FOLLOW;
     }

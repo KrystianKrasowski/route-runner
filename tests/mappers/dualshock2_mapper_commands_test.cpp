@@ -20,8 +20,8 @@ TEST_CASE("should map dualshock2 state to commands", "[mapper]")
         example_type{dualshock2::L2, commands::BACKWARD},
         example_type{dualshock2::RIGHT, commands::RIGHT},
         example_type{dualshock2::LEFT, commands::LEFT},
-        example_type{dualshock2::CIRCLE, commands::BREAK},
-        example_type{dualshock2::CROSS, commands::FOLLOW}
+        example_type{dualshock2::CROSS, commands::BREAK},
+        example_type{dualshock2::START, commands::FOLLOW}
     );
 
     // given
