@@ -11,19 +11,19 @@
 namespace linebot
 {
 
-using commands::BREAK;
-using commands::FOLLOW;
+using command::BREAK;
+using command::FOLLOW;
 
 TEST_CASE_METHOD(
     api_fixture, "should switch mode by remote control", "[linebot]"
 )
 {
-    using test_params = std::tuple<mode, commands, mode>;
+    using test_params = std::tuple<mode, command, mode>;
 
     auto example = GENERATE(
-        test_params{mode::LINE_DETECTED, commands{FOLLOW}, mode::FOLLOWING},
-        test_params{mode::FOLLOWING, commands{BREAK}, mode::MANUAL},
-        test_params{mode::RECOVERING, commands{BREAK}, mode::MANUAL}
+        test_params{mode::LINE_DETECTED, command{FOLLOW}, mode::FOLLOWING},
+        test_params{mode::FOLLOWING, command{BREAK}, mode::MANUAL},
+        test_params{mode::RECOVERING, command{BREAK}, mode::MANUAL}
     );
 
     auto current_mode   = std::get<0>(example);

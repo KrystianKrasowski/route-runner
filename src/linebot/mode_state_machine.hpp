@@ -17,7 +17,7 @@ public:
     }
 
     bool
-    transit(commands remote_control)
+    transit(command remote_control)
     {
         return maybe_switch_to_following(remote_control)
             || maybe_switch_to_manual(remote_control);
@@ -37,7 +37,7 @@ private:
     mode& mode_;
 
     bool
-    maybe_switch_to_following(commands remote_control)
+    maybe_switch_to_following(command remote_control)
     {
         if (remote_control.have_follow() && mode_.is_line_detected())
         {
@@ -49,7 +49,7 @@ private:
     }
 
     bool
-    maybe_switch_to_manual(commands remote_control)
+    maybe_switch_to_manual(command remote_control)
     {
         if (remote_control.have_break() && mode_.is_tracking())
         {

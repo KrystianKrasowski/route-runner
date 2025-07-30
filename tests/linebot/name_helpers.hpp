@@ -9,7 +9,7 @@ namespace linebot
 {
 
 std::ostream&
-operator<<(std::ostream& os, commands c);
+operator<<(std::ostream& os, command c);
 
 std::ostream&
 operator<<(std::ostream& os, maneuver m);

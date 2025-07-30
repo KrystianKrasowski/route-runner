@@ -60,7 +60,6 @@ private:
 
     const pid_params& config_;
     errors_buffer&    past_errors_;
-
 };
 
 } // namespace linebot

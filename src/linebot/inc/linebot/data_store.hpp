@@ -15,7 +15,7 @@ struct data_store
 
     etl::circular_buffer<int8_t, ERROR_HISTORY_LENGTH> errors_;
 
-    commands   remote_control_ = commands{commands::STOP};
+    command    remote_control_ = command{command::STOP};
     mode       mode_           = mode::MANUAL;
     pid_params pid_params_     = pid_params{70, 0, 410};
 };

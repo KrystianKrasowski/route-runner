@@ -7,42 +7,42 @@
 namespace mapper
 {
 
-inline linebot::commands
+inline linebot::command
 map(uint16_t raw)
 {
-    uint16_t commands = 0;
+    uint16_t values = 0;
 
     if (raw & device::dualshock2::R2)
     {
-        commands |= linebot::commands::FORWARD;
+        values |= linebot::command::FORWARD;
     }
 
     if (raw & device::dualshock2::L2)
     {
-        commands |= linebot::commands::BACKWARD;
+        values |= linebot::command::BACKWARD;
     }
 
     if (raw & device::dualshock2::RIGHT)
     {
-        commands |= linebot::commands::RIGHT;
+        values |= linebot::command::RIGHT;
     }
 
     if (raw & device::dualshock2::LEFT)
     {
-        commands |= linebot::commands::LEFT;
+        values |= linebot::command::LEFT;
     }
 
     if (raw & device::dualshock2::CROSS)
     {
-        commands |= linebot::commands::BREAK;
+        values |= linebot::command::BREAK;
     }
 
     if (raw & device::dualshock2::START)
     {
-        commands |= linebot::commands::FOLLOW;
+        values |= linebot::command::FOLLOW;
     }
 
-    return linebot::commands{commands};
+    return linebot::command{values};
 }
 
 } // namespace mapper

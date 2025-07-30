@@ -30,7 +30,7 @@ api::of(
 }
 
 void
-api::attempt_maneuver(commands remote_control)
+api::attempt_maneuver(command remote_control)
 {
     if (is_maneuver_applicable(remote_control))
     {
@@ -53,7 +53,7 @@ api::attempt_maneuver(const coordinates& line_position)
 }
 
 void
-api::attempt_mode_switch(commands remote_control)
+api::attempt_mode_switch(command remote_control)
 {
     mode_state_machine mode_transition{store_.mode_};
 
@@ -91,7 +91,7 @@ api::attempt_route_guard_toggle(const coordinates& line_position)
 void
 api::halt()
 {
-    commands stop{commands::STOP};
+    command stop{command::STOP};
 
     store_.mode_           = mode::MANUAL;
     store_.remote_control_ = stop;
@@ -110,7 +110,7 @@ api::dump_store()
 }
 
 bool
-api::is_maneuver_applicable(commands remote_control)
+api::is_maneuver_applicable(command remote_control)
 {
     return store_.remote_control_ != remote_control
         && !store_.mode_.is_tracking();

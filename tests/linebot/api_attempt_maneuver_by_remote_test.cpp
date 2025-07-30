@@ -13,11 +13,11 @@
 namespace linebot
 {
 
-constexpr auto STOP     = commands::STOP;
-constexpr auto FORWARD  = commands::FORWARD;
-constexpr auto LEFT     = commands::LEFT;
-constexpr auto RIGHT    = commands::RIGHT;
-constexpr auto BACKWARD = commands::BACKWARD;
+constexpr auto STOP     = command::STOP;
+constexpr auto FORWARD  = command::FORWARD;
+constexpr auto LEFT     = command::LEFT;
+constexpr auto RIGHT    = command::RIGHT;
+constexpr auto BACKWARD = command::BACKWARD;
 
 TEST_CASE_METHOD(
     api_fixture,
@@ -25,19 +25,19 @@ TEST_CASE_METHOD(
     "[linebot]"
 )
 {
-    using example_type = std::tuple<commands, maneuver>;
+    using example_type = std::tuple<command, maneuver>;
 
     auto mode    = GENERATE(mode::MANUAL, mode::LINE_DETECTED);
     auto example = GENERATE(
-        example_type{commands{FORWARD}, maneuver::forward(0)},
-        example_type{commands{FORWARD | LEFT}, maneuver::forward(-50)},
-        example_type{commands{FORWARD | RIGHT}, maneuver::forward(50)},
-        example_type{commands{BACKWARD}, maneuver::backward(0)},
-        example_type{commands{BACKWARD | LEFT}, maneuver::backward(-50)},
-        example_type{commands{BACKWARD | RIGHT}, maneuver::backward(50)},
-        example_type{commands{LEFT}, maneuver::none()},
-        example_type{commands{RIGHT}, maneuver::none()},
-        example_type{commands{LEFT | RIGHT}, maneuver::none()}
+        example_type{command{FORWARD}, maneuver::forward(0)},
+        example_type{command{FORWARD | LEFT}, maneuver::forward(-50)},
+        example_type{command{FORWARD | RIGHT}, maneuver::forward(50)},
+        example_type{command{BACKWARD}, maneuver::backward(0)},
+        example_type{command{BACKWARD | LEFT}, maneuver::backward(-50)},
+        example_type{command{BACKWARD | RIGHT}, maneuver::backward(50)},
+        example_type{command{LEFT}, maneuver::none()},
+        example_type{command{RIGHT}, maneuver::none()},
+        example_type{command{LEFT | RIGHT}, maneuver::none()}
     );
 
     auto new_remote_control = std::get<0>(example);
@@ -46,7 +46,7 @@ TEST_CASE_METHOD(
     CAPTURE(mode, new_remote_control, expected_maneuver);
 
     // given
-    store_.remote_control_ = commands{STOP};
+    store_.remote_control_ = command{STOP};
     store_.mode_           = mode;
 
     // when
@@ -67,15 +67,15 @@ TEST_CASE_METHOD(
     auto mode = GENERATE(mode::FOLLOWING, mode::RECOVERING);
 
     auto new_remote_control = GENERATE(
-        commands{FORWARD},
-        commands{FORWARD | LEFT},
-        commands{FORWARD | RIGHT},
-        commands{BACKWARD},
-        commands{BACKWARD | LEFT},
-        commands{BACKWARD | RIGHT}
+        command{FORWARD},
+        command{FORWARD | LEFT},
+        command{FORWARD | RIGHT},
+        command{BACKWARD},
+        command{BACKWARD | LEFT},
+        command{BACKWARD | RIGHT}
     );
 
-    auto last_remote_control = commands{STOP};
+    auto last_remote_control = command{STOP};
 
     CAPTURE(mode, new_remote_control);
 
@@ -96,13 +96,13 @@ TEST_CASE_METHOD(
 )
 {
     auto new_remote_control = GENERATE(
-        commands{STOP},
-        commands{FORWARD},
-        commands{FORWARD | LEFT},
-        commands{FORWARD | RIGHT},
-        commands{BACKWARD},
-        commands{BACKWARD | LEFT},
-        commands{BACKWARD | RIGHT}
+        command{STOP},
+        command{FORWARD},
+        command{FORWARD | LEFT},
+        command{FORWARD | RIGHT},
+        command{BACKWARD},
+        command{BACKWARD | LEFT},
+        command{BACKWARD | RIGHT}
     );
 
     CAPTURE(new_remote_control);

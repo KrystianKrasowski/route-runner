@@ -23,13 +23,13 @@ public:
        printer_port&          printer);
 
     void
-    attempt_maneuver(commands remote_control);
+    attempt_maneuver(command remote_control);
 
     void
     attempt_maneuver(const coordinates& line_positon);
 
     void
-    attempt_mode_switch(commands remote_control);
+    attempt_mode_switch(command remote_control);
 
     void
     attempt_mode_switch(const coordinates& line_position);
@@ -65,7 +65,7 @@ private:
     }
 
     bool
-    is_maneuver_applicable(commands remote_control);
+    is_maneuver_applicable(command remote_control);
 };
 
 } // namespace linebot

@@ -11,14 +11,14 @@
 namespace linebot
 {
 
-using command_names_map = std::map<commands::command, std::string>;
+using command_names_map = std::map<command::value, std::string>;
 
 class commands_parser
 {
 public:
 
-    commands_parser(commands c, command_names_map names)
-        : commands_{c},
+    commands_parser(command remote_control, command_names_map names)
+        : commands_{remote_control},
           names_map_{names}
     {
     }
@@ -39,7 +39,7 @@ public:
 
 private:
 
-    commands          commands_;
+    command         commands_;
     command_names_map names_map_;
 
     bool
@@ -48,30 +48,30 @@ private:
         return commands_.to_uint16() & (1 << bit_index);
     }
 
-    commands::command
+    command::value
     to_command(int bit_index)
     {
-        return static_cast<commands::command>(1 << bit_index);
+        return static_cast<command::value>(1 << bit_index);
     }
 
     std::string
-    to_command_name(commands::command command)
+    to_command_name(command::value command)
     {
         return names_map_.at(command);
     }
 };
 
 std::ostream&
-operator<<(std::ostream& os, commands cmds)
+operator<<(std::ostream& os, command cmds)
 {
     command_names_map names = {
-        {commands::FORWARD, "FORWARD"},
-        {commands::BACKWARD, "BACKWARD"},
-        {commands::LEFT, "LEFT"},
-        {commands::RIGHT, "RIGHT"},
-        {commands::BREAK, "BREAK"},
-        {commands::FOLLOW, "FOLLOW"},
-        {commands::STOP, "NONE"},
+        {command::FORWARD, "FORWARD"},
+        {command::BACKWARD, "BACKWARD"},
+        {command::LEFT, "LEFT"},
+        {command::RIGHT, "RIGHT"},
+        {command::BREAK, "BREAK"},
+        {command::FOLLOW, "FOLLOW"},
+        {command::STOP, "NONE"},
     };
 
     commands_parser parser{cmds, names};

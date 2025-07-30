@@ -18,7 +18,7 @@ TEST_CASE_METHOD(api_fixture, "should halt vehicle", "[linebot]")
     CHECK(motion_.applied_maneuver_.value() == maneuver::none());
     CHECK(status_indicator_.applied_mode_.value() == mode::MANUAL);
     CHECK(route_guard_.stopped);
-    CHECK(store_.remote_control_ == commands{commands::STOP});
+    CHECK(store_.remote_control_ == command{command::STOP});
 }
 
 } // namespace linebot
