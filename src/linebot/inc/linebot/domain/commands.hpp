@@ -9,13 +9,19 @@ struct command
 {
     enum value
     {
-        STOP     = 1,
-        FORWARD  = 2,
-        BACKWARD = 4,
-        LEFT     = 8,
-        RIGHT    = 16,
-        BREAK    = 32,
-        FOLLOW   = 64,
+        STOP        = 1,
+        FORWARD     = 2,
+        BACKWARD    = 4,
+        LEFT        = 8,
+        RIGHT       = 16,
+        BREAK       = 32,
+        FOLLOW      = 64,
+        PID_KP_UP   = 128,
+        PID_KP_DOWN = 256,
+        PID_KI_UP   = 512,
+        PID_KI_DOWN = 1024,
+        PID_KD_UP   = 2048,
+        PID_KD_DOWN = 4096,
     };
 
     bool
