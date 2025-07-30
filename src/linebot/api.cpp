@@ -9,6 +9,7 @@
 #include "maneuver_factory.hpp"
 #include "mode_state_machine.hpp"
 #include "pid_regulator.hpp"
+#include "pid_tuner.hpp"
 
 namespace linebot
 {
@@ -107,6 +108,22 @@ api::dump_store()
 {
     printer_.print(store_.mode_);
     printer_.print(store_.pid_params_);
+}
+
+void
+api::tune_pid_regulator(const command remote_control)
+{
+    if (remote_control.has_pid_kp_up() && !locked_)
+    {
+        locked_                  = true;
+        store_.pid_params_.kp_ += 5;
+    }
+
+    else if (remote_control.has_pid_kp_down() && !locked_)
+    {
+        locked_                  = true;
+        store_.pid_params_.kp_ -= 5;
+    }
 }
 
 bool

@@ -89,6 +89,18 @@ struct command
         return value_ & FOLLOW;
     }
 
+    bool
+    has_pid_kp_up() const
+    {
+        return value_ & PID_KP_UP;
+    }
+
+    bool
+    has_pid_kp_down() const
+    {
+        return value_ & PID_KP_DOWN;
+    }
+
 private:
 
     uint16_t value_;

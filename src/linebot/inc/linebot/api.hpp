@@ -43,6 +43,9 @@ public:
     void
     dump_store();
 
+    void
+    tune_pid_regulator(const command remote_control);
+
 private:
 
     data_store&            store_;
@@ -50,6 +53,8 @@ private:
     status_indicator_port& status_indicator_;
     route_guard_port&      route_guard_;
     printer_port&          printer_;
+
+    bool locked_{false};
 
     api(data_store&            store,
         motion_port&           motion,
