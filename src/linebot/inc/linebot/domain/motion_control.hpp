@@ -9,13 +9,13 @@ struct motion_control
 {
     enum command
     {
-        STOP        = 1,
-        FORWARD     = 2,
-        BACKWARD    = 4,
-        LEFT        = 8,
-        RIGHT       = 16,
-        BREAK       = 32,
-        FOLLOW      = 64,
+        STOP     = 1,
+        FORWARD  = 2,
+        BACKWARD = 4,
+        LEFT     = 8,
+        RIGHT    = 16,
+        BREAK    = 32,
+        FOLLOW   = 64,
     };
 
     bool
