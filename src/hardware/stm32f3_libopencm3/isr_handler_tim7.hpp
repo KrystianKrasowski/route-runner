@@ -20,10 +20,10 @@ public:
 
 private:
 
-    toggle_sequence_gpio& toggle_sequence;
+    toggle_sequence_gpio& toggle_sequence_;
 
     explicit isr_handler_tim7(toggle_sequence_gpio& toggle_sequence)
-        : toggle_sequence{toggle_sequence}
+        : toggle_sequence_{toggle_sequence}
     {
     }
 };

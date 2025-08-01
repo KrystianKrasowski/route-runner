@@ -18,21 +18,21 @@ toggle_sequence_gpio::of(
 void
 toggle_sequence_gpio::change_sequence(uint8_t value)
 {
-    timer_disable_counter(timer_port);
-    gpio_clear(gpio_port, gpio_pin);
+    timer_disable_counter(timer_port_);
+    gpio_clear(gpio_port_,gpio_pin_);
 
-    sequence = value;
+    sequence_ = value;
 
-    timer_enable_counter(timer_port);
+    timer_enable_counter(timer_port_);
 }
 
 void
 toggle_sequence_gpio::toggle()
 {
-    (sequence & (1 << sequence_count)) ? gpio_set(gpio_port, gpio_pin)
-                                       : gpio_clear(gpio_port, gpio_pin);
+    (sequence_ & (1 <<sequence_count_)) ? gpio_set(gpio_port_,gpio_pin_)
+                                       : gpio_clear(gpio_port_,gpio_pin_);
 
-    ++sequence_count &= 0x7;
+    ++sequence_count_ &= 0x7;
 }
 
 } // namespace hardware

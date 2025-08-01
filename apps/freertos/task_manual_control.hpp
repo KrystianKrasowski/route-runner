@@ -8,7 +8,7 @@
 namespace app
 {
 
-class task_manual_control : public task_base<task_manual_control, 48>
+class task_manual_control : public task_base<task_manual_control, 56>
 {
 public:
 

@@ -21,130 +21,241 @@ TEST_CASE("should apply motion", "[adapter][motion][l293]")
 
     auto adapter = motion_l293::of(motor_left, motor_right);
 
-    SECTION("left motor")
+    SECTION("left motor duty cycle characteristic")
     {
-        using example_type = std::tuple<maneuver, uint8_t, l293::rotation>;
+        auto direction = GENERATE(maneuver::FORWARD, maneuver::BACKWARD);
 
-        auto example = GENERATE(
-            example_type{maneuver::forward(-100), 100, l293::LEFT},
-            example_type{maneuver::forward(-90), 80, l293::LEFT},
-            example_type{maneuver::forward(-80), 60, l293::LEFT},
-            example_type{maneuver::forward(-70), 40, l293::LEFT},
-            example_type{maneuver::forward(-60), 20, l293::LEFT},
-            example_type{maneuver::forward(-50), 0, l293::NONE},
-            example_type{maneuver::forward(-40), 20, l293::RIGHT},
-            example_type{maneuver::forward(-30), 40, l293::RIGHT},
-            example_type{maneuver::forward(-20), 60, l293::RIGHT},
-            example_type{maneuver::forward(-10), 80, l293::RIGHT},
-            example_type{maneuver::forward(0), 100, l293::RIGHT},
-            example_type{maneuver::forward(10), 100, l293::RIGHT},
-            example_type{maneuver::forward(20), 100, l293::RIGHT},
-            example_type{maneuver::forward(30), 100, l293::RIGHT},
-            example_type{maneuver::forward(40), 100, l293::RIGHT},
-            example_type{maneuver::forward(50), 100, l293::RIGHT},
-            example_type{maneuver::forward(60), 100, l293::RIGHT},
-            example_type{maneuver::forward(70), 100, l293::RIGHT},
-            example_type{maneuver::forward(80), 100, l293::RIGHT},
-            example_type{maneuver::forward(90), 100, l293::RIGHT},
-            example_type{maneuver::forward(100), 100, l293::RIGHT},
-            example_type{maneuver::backward(-100), 100, l293::RIGHT},
-            example_type{maneuver::backward(-90), 80, l293::RIGHT},
-            example_type{maneuver::backward(-80), 60, l293::RIGHT},
-            example_type{maneuver::backward(-70), 40, l293::RIGHT},
-            example_type{maneuver::backward(-60), 20, l293::RIGHT},
-            example_type{maneuver::backward(-50), 0, l293::NONE},
-            example_type{maneuver::backward(-40), 20, l293::LEFT},
-            example_type{maneuver::backward(-30), 40, l293::LEFT},
-            example_type{maneuver::backward(-20), 60, l293::LEFT},
-            example_type{maneuver::backward(-10), 80, l293::LEFT},
-            example_type{maneuver::backward(0), 100, l293::LEFT},
-            example_type{maneuver::backward(10), 100, l293::LEFT},
-            example_type{maneuver::backward(20), 100, l293::LEFT},
-            example_type{maneuver::backward(30), 100, l293::LEFT},
-            example_type{maneuver::backward(40), 100, l293::LEFT},
-            example_type{maneuver::backward(50), 100, l293::LEFT},
-            example_type{maneuver::backward(60), 100, l293::LEFT},
-            example_type{maneuver::backward(70), 100, l293::LEFT},
-            example_type{maneuver::backward(80), 100, l293::LEFT},
-            example_type{maneuver::backward(90), 100, l293::LEFT},
-            example_type{maneuver::backward(100), 100, l293::LEFT}
+        auto param = GENERATE(
+            std::tuple{-100, 100},
+            std::tuple{-90, 80},
+            std::tuple{-80, 60},
+            std::tuple{-70, 40},
+            std::tuple{-60, 20},
+            std::tuple{-50, 0},
+            std::tuple{-40, 20},
+            std::tuple{-30, 40},
+            std::tuple{-20, 60},
+            std::tuple{-10, 80},
+            std::tuple{-9, 100},
+            std::tuple{-8, 100},
+            std::tuple{-7, 100},
+            std::tuple{-6, 100},
+            std::tuple{-5, 100},
+            std::tuple{-4, 100},
+            std::tuple{-3, 100},
+            std::tuple{-2, 100},
+            std::tuple{-1, 100},
+            std::tuple{0, 100},
+            std::tuple{10, 100},
+            std::tuple{20, 100},
+            std::tuple{30, 100},
+            std::tuple{40, 100},
+            std::tuple{50, 100},
+            std::tuple{60, 100},
+            std::tuple{70, 100},
+            std::tuple{80, 100},
+            std::tuple{90, 100},
+            std::tuple{100, 100}
         );
 
-        auto motion     = std::get<0>(example);
-        auto duty_cycle = std::get<1>(example);
-        auto rotation   = std::get<2>(example);
+        // given
+        int8_t  correction = std::get<0>(param);
+        uint8_t duty_cycle = std::get<1>(param);
+
+        maneuver motion{direction, correction};
 
         // when
         adapter.apply(motion);
 
         // then
-        CHECK(motor_left.applied_duty_cycle_.has_value());
+        REQUIRE(motor_left.applied_duty_cycle_.has_value());
         CHECK(motor_left.applied_duty_cycle_.value() == duty_cycle);
-        CHECK(motor_left.applied_rotation_.has_value());
+    }
+
+    SECTION("left motor spinning direction")
+    {
+        auto param = GENERATE(
+            std::tuple{maneuver::forward(-100), l293::LEFT},
+            std::tuple{maneuver::forward(-90), l293::LEFT},
+            std::tuple{maneuver::forward(-80), l293::LEFT},
+            std::tuple{maneuver::forward(-70), l293::LEFT},
+            std::tuple{maneuver::forward(-60), l293::LEFT},
+            std::tuple{maneuver::forward(-50), l293::NONE},
+            std::tuple{maneuver::forward(-40), l293::RIGHT},
+            std::tuple{maneuver::forward(-30), l293::RIGHT},
+            std::tuple{maneuver::forward(-20), l293::RIGHT},
+            std::tuple{maneuver::forward(-10), l293::RIGHT},
+            std::tuple{maneuver::forward(0), l293::RIGHT},
+            std::tuple{maneuver::forward(10), l293::RIGHT},
+            std::tuple{maneuver::forward(20), l293::RIGHT},
+            std::tuple{maneuver::forward(30), l293::RIGHT},
+            std::tuple{maneuver::forward(40), l293::RIGHT},
+            std::tuple{maneuver::forward(50), l293::RIGHT},
+            std::tuple{maneuver::forward(60), l293::RIGHT},
+            std::tuple{maneuver::forward(70), l293::RIGHT},
+            std::tuple{maneuver::forward(80), l293::RIGHT},
+            std::tuple{maneuver::forward(90), l293::RIGHT},
+            std::tuple{maneuver::forward(100), l293::RIGHT},
+
+            std::tuple{maneuver::backward(-100), l293::RIGHT},
+            std::tuple{maneuver::backward(-90), l293::RIGHT},
+            std::tuple{maneuver::backward(-80), l293::RIGHT},
+            std::tuple{maneuver::backward(-70), l293::RIGHT},
+            std::tuple{maneuver::backward(-60), l293::RIGHT},
+            std::tuple{maneuver::backward(-50), l293::NONE},
+            std::tuple{maneuver::backward(-40), l293::LEFT},
+            std::tuple{maneuver::backward(-30), l293::LEFT},
+            std::tuple{maneuver::backward(-20), l293::LEFT},
+            std::tuple{maneuver::backward(-10), l293::LEFT},
+            std::tuple{maneuver::backward(0), l293::LEFT},
+            std::tuple{maneuver::backward(10), l293::LEFT},
+            std::tuple{maneuver::backward(20), l293::LEFT},
+            std::tuple{maneuver::backward(30), l293::LEFT},
+            std::tuple{maneuver::backward(40), l293::LEFT},
+            std::tuple{maneuver::backward(50), l293::LEFT},
+            std::tuple{maneuver::backward(60), l293::LEFT},
+            std::tuple{maneuver::backward(70), l293::LEFT},
+            std::tuple{maneuver::backward(80), l293::LEFT},
+            std::tuple{maneuver::backward(90), l293::LEFT},
+            std::tuple{maneuver::backward(100), l293::LEFT}
+        );
+
+        // given
+        auto maneuver = std::get<0>(param);
+        auto rotation = std::get<1>(param);
+
+        // when
+        adapter.apply(maneuver);
+
+        // then
+        REQUIRE(motor_left.applied_rotation_.has_value());
         CHECK(motor_left.applied_rotation_.value() == rotation);
     }
 
-    SECTION("right motor")
+    SECTION("right motor duty cycle characteristic")
     {
-        using example_type = std::tuple<maneuver, uint8_t, l293::rotation>;
+        auto direction = GENERATE(maneuver::FORWARD, maneuver::BACKWARD);
 
-        auto example = GENERATE(
-            example_type{maneuver::forward(-100), 100, l293::RIGHT},
-            example_type{maneuver::forward(-90), 100, l293::RIGHT},
-            example_type{maneuver::forward(-80), 100, l293::RIGHT},
-            example_type{maneuver::forward(-70), 100, l293::RIGHT},
-            example_type{maneuver::forward(-60), 100, l293::RIGHT},
-            example_type{maneuver::forward(-50), 100, l293::RIGHT},
-            example_type{maneuver::forward(-40), 100, l293::RIGHT},
-            example_type{maneuver::forward(-30), 100, l293::RIGHT},
-            example_type{maneuver::forward(-20), 100, l293::RIGHT},
-            example_type{maneuver::forward(-10), 100, l293::RIGHT},
-            example_type{maneuver::forward(0), 100, l293::RIGHT},
-            example_type{maneuver::forward(10), 80, l293::RIGHT},
-            example_type{maneuver::forward(20), 60, l293::RIGHT},
-            example_type{maneuver::forward(30), 40, l293::RIGHT},
-            example_type{maneuver::forward(40), 20, l293::RIGHT},
-            example_type{maneuver::forward(50), 0, l293::NONE},
-            example_type{maneuver::forward(60), 20, l293::LEFT},
-            example_type{maneuver::forward(70), 40, l293::LEFT},
-            example_type{maneuver::forward(80), 60, l293::LEFT},
-            example_type{maneuver::forward(90), 80, l293::LEFT},
-            example_type{maneuver::forward(100), 100, l293::LEFT},
-            example_type{maneuver::backward(-100), 100, l293::LEFT},
-            example_type{maneuver::backward(-90), 100, l293::LEFT},
-            example_type{maneuver::backward(-80), 100, l293::LEFT},
-            example_type{maneuver::backward(-70), 100, l293::LEFT},
-            example_type{maneuver::backward(-60), 100, l293::LEFT},
-            example_type{maneuver::backward(-50), 100, l293::LEFT},
-            example_type{maneuver::backward(-40), 100, l293::LEFT},
-            example_type{maneuver::backward(-30), 100, l293::LEFT},
-            example_type{maneuver::backward(-20), 100, l293::LEFT},
-            example_type{maneuver::backward(-10), 100, l293::LEFT},
-            example_type{maneuver::backward(0), 100, l293::LEFT},
-            example_type{maneuver::backward(10), 80, l293::LEFT},
-            example_type{maneuver::backward(20), 60, l293::LEFT},
-            example_type{maneuver::backward(30), 40, l293::LEFT},
-            example_type{maneuver::backward(40), 20, l293::LEFT},
-            example_type{maneuver::backward(50), 0, l293::NONE},
-            example_type{maneuver::backward(60), 20, l293::RIGHT},
-            example_type{maneuver::backward(70), 40, l293::RIGHT},
-            example_type{maneuver::backward(80), 60, l293::RIGHT},
-            example_type{maneuver::backward(90), 80, l293::RIGHT},
-            example_type{maneuver::backward(100), 100, l293::RIGHT}
+        auto param = GENERATE(
+            std::tuple{-100, 100},
+            std::tuple{-90, 100},
+            std::tuple{-80, 100},
+            std::tuple{-70, 100},
+            std::tuple{-60, 100},
+            std::tuple{-50, 100},
+            std::tuple{-40, 100},
+            std::tuple{-30, 100},
+            std::tuple{-20, 100},
+            std::tuple{-10, 100},
+            std::tuple{0, 100},
+            std::tuple{1, 100},
+            std::tuple{2, 100},
+            std::tuple{3, 100},
+            std::tuple{4, 100},
+            std::tuple{5, 100},
+            std::tuple{6, 100},
+            std::tuple{7, 100},
+            std::tuple{8, 100},
+            std::tuple{9, 100},
+            std::tuple{10, 80},
+            std::tuple{20, 60},
+            std::tuple{30, 40},
+            std::tuple{40, 20},
+            std::tuple{50, 0},
+            std::tuple{60, 20},
+            std::tuple{70, 40},
+            std::tuple{80, 60},
+            std::tuple{90, 80},
+            std::tuple{100, 100}
         );
 
-        auto           motion     = std::get<0>(example);
-        int8_t         duty_cycle = std::get<1>(example);
-        l293::rotation rotation   = std::get<2>(example);
+        // given
+        int8_t  correction = std::get<0>(param);
+        uint8_t duty_cycle = std::get<1>(param);
+
+        maneuver motion{direction, correction};
 
         // when
         adapter.apply(motion);
 
         // then
-        CHECK(motor_right.applied_duty_cycle_.has_value());
+        REQUIRE(motor_right.applied_duty_cycle_.has_value());
         CHECK(motor_right.applied_duty_cycle_.value() == duty_cycle);
-        CHECK(motor_right.applied_rotation_.has_value());
+    }
+
+    SECTION("right motor spinning direction")
+    {
+        auto param = GENERATE(
+            std::tuple{maneuver::forward(-100), l293::RIGHT},
+            std::tuple{maneuver::forward(-90), l293::RIGHT},
+            std::tuple{maneuver::forward(-80), l293::RIGHT},
+            std::tuple{maneuver::forward(-70), l293::RIGHT},
+            std::tuple{maneuver::forward(-60), l293::RIGHT},
+            std::tuple{maneuver::forward(-50), l293::RIGHT},
+            std::tuple{maneuver::forward(-40), l293::RIGHT},
+            std::tuple{maneuver::forward(-30), l293::RIGHT},
+            std::tuple{maneuver::forward(-20), l293::RIGHT},
+            std::tuple{maneuver::forward(-10), l293::RIGHT},
+            std::tuple{maneuver::forward(0), l293::RIGHT},
+            std::tuple{maneuver::forward(10), l293::RIGHT},
+            std::tuple{maneuver::forward(20), l293::RIGHT},
+            std::tuple{maneuver::forward(30), l293::RIGHT},
+            std::tuple{maneuver::forward(40), l293::RIGHT},
+            std::tuple{maneuver::forward(50), l293::NONE},
+            std::tuple{maneuver::forward(60), l293::LEFT},
+            std::tuple{maneuver::forward(70), l293::LEFT},
+            std::tuple{maneuver::forward(80), l293::LEFT},
+            std::tuple{maneuver::forward(90), l293::LEFT},
+            std::tuple{maneuver::forward(100), l293::LEFT},
+
+            std::tuple{maneuver::backward(-100), l293::LEFT},
+            std::tuple{maneuver::backward(-90), l293::LEFT},
+            std::tuple{maneuver::backward(-80), l293::LEFT},
+            std::tuple{maneuver::backward(-70), l293::LEFT},
+            std::tuple{maneuver::backward(-60), l293::LEFT},
+            std::tuple{maneuver::backward(-50), l293::LEFT},
+            std::tuple{maneuver::backward(-40), l293::LEFT},
+            std::tuple{maneuver::backward(-30), l293::LEFT},
+            std::tuple{maneuver::backward(-20), l293::LEFT},
+            std::tuple{maneuver::backward(-10), l293::LEFT},
+            std::tuple{maneuver::backward(0), l293::LEFT},
+            std::tuple{maneuver::backward(10), l293::LEFT},
+            std::tuple{maneuver::backward(20), l293::LEFT},
+            std::tuple{maneuver::backward(30), l293::LEFT},
+            std::tuple{maneuver::backward(40), l293::LEFT},
+            std::tuple{maneuver::backward(50), l293::NONE},
+            std::tuple{maneuver::backward(60), l293::RIGHT},
+            std::tuple{maneuver::backward(70), l293::RIGHT},
+            std::tuple{maneuver::backward(80), l293::RIGHT},
+            std::tuple{maneuver::backward(90), l293::RIGHT},
+            std::tuple{maneuver::backward(100), l293::RIGHT}
+        );
+
+        // given
+        auto maneuver = std::get<0>(param);
+        auto rotation = std::get<1>(param);
+
+        // when
+        adapter.apply(maneuver);
+
+        // then
+        REQUIRE(motor_right.applied_rotation_.has_value());
         CHECK(motor_right.applied_rotation_.value() == rotation);
+    }
+
+    SECTION("one motion change per maneuver")
+    {
+        // when
+        auto maneuver = maneuver::forward(80);
+        adapter.apply(maneuver);
+        adapter.apply(maneuver);
+        adapter.apply(maneuver);
+
+        // then
+        CHECK(motor_right.count_rotate_ == 1);
+        CHECK(motor_right.count_enable_ == 1);
+        CHECK(motor_left.count_rotate_ == 1);
+        CHECK(motor_left.count_enable_ == 1);
     }
 }
 

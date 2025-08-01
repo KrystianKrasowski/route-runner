@@ -5,7 +5,7 @@
 namespace linebot
 {
 
-struct commands
+struct motion_control
 {
     enum command
     {
@@ -19,18 +19,18 @@ struct commands
     };
 
     bool
-    operator==(const commands& other) const
+    operator==(const motion_control& other) const
     {
         return value_ == other.value_;
     }
 
     bool
-    operator!=(const commands& other) const
+    operator!=(const motion_control& other) const
     {
         return value_ != other.value_;
     }
 
-    explicit commands(uint16_t value)
+    explicit motion_control(uint16_t value)
         : value_{value}
     {
     }

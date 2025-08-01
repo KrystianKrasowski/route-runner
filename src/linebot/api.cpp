@@ -1,14 +1,16 @@
 #include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
-#include "linebot/domain/commands.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
+#include "linebot/domain/motion_control.hpp"
+#include "linebot/domain/pid_control.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/printer_port.hpp"
 #include "linebot/status_indicator_port.hpp"
 #include "maneuver_factory.hpp"
 #include "mode_state_machine.hpp"
 #include "pid_regulator.hpp"
+#include "pid_tuner.hpp"
 
 namespace linebot
 {
@@ -30,12 +32,12 @@ api::of(
 }
 
 void
-api::attempt_maneuver(commands remote_control)
+api::attempt_maneuver(motion_control control)
 {
-    if (is_maneuver_applicable(remote_control))
+    if (is_applicable(control))
     {
-        store_.remote_control_ = remote_control;
-        maneuver motion        = create_maneuver(remote_control);
+        store_.motion_control_ = control;
+        maneuver motion        = create_maneuver(control);
         motion_.apply(motion);
     }
 }
@@ -53,11 +55,11 @@ api::attempt_maneuver(const coordinates& line_position)
 }
 
 void
-api::attempt_mode_switch(commands remote_control)
+api::attempt_mode_switch(motion_control control)
 {
     mode_state_machine mode_transition{store_.mode_};
 
-    if (mode_transition.transit(remote_control))
+    if (mode_transition.transit(control))
     {
         status_indicator_.apply(store_.mode_);
     }
@@ -91,10 +93,10 @@ api::attempt_route_guard_toggle(const coordinates& line_position)
 void
 api::halt()
 {
-    commands stop{commands::STOP};
+    motion_control stop{motion_control::STOP};
 
     store_.mode_           = mode::MANUAL;
-    store_.remote_control_ = stop;
+    store_.motion_control_ = stop;
     maneuver motion        = create_maneuver(stop);
 
     motion_.apply(motion);
@@ -109,11 +111,30 @@ api::dump_store()
     printer_.print(store_.pid_params_);
 }
 
-bool
-api::is_maneuver_applicable(commands remote_control)
+void
+api::tune_pid_regulator(const pid_control control)
 {
-    return store_.remote_control_ != remote_control
-        && !store_.mode_.is_tracking();
+    if (is_applicable(control))
+    {
+        pid_tuner tuner{control, store_.pid_params_};
+        tuner.tune_proportional();
+        tuner.tune_integral();
+        tuner.tune_derivative();
+
+        store_.pid_control_ = control;
+    }
+}
+
+bool
+api::is_applicable(motion_control control)
+{
+    return store_.motion_control_ != control && !store_.mode_.is_tracking();
+}
+
+bool
+api::is_applicable(const pid_control control)
+{
+    return store_.pid_control_ != control;
 }
 
 } // namespace linebot

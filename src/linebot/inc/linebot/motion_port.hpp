@@ -5,7 +5,6 @@
 namespace linebot
 {
 
-// TODO: Consider using callback mechanism instead, etl::function
 class motion_port
 {
 public:

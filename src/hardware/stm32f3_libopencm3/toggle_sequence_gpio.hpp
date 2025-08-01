@@ -19,16 +19,16 @@ public:
 
 private:
 
-    uint32_t timer_port;
-    uint32_t gpio_port;
-    uint16_t gpio_pin;
-    uint8_t  sequence{0x1};
-    uint8_t  sequence_count{0};
+    uint32_t timer_port_;
+    uint32_t gpio_port_;
+    uint16_t gpio_pin_;
+    uint8_t  sequence_{0x1};
+    uint8_t  sequence_count_{0};
 
     toggle_sequence_gpio(
         uint32_t timer_port, uint32_t gpio_port, uint16_t gpio_pin
     )
-        : timer_port{timer_port}, gpio_port{gpio_port}, gpio_pin{gpio_pin}
+        : timer_port_{timer_port}, gpio_port_{gpio_port}, gpio_pin_{gpio_pin}
     {
     }
 

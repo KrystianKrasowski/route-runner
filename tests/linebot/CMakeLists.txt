@@ -14,6 +14,7 @@ target_sources(
             api_attempt_route_guard_toggle_test.cpp
             api_halt_test.cpp
             api_dump_store_test.cpp
+            api_tune_pid_test.cpp
 )
 
 target_link_libraries(
