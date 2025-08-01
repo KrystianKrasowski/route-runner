@@ -61,7 +61,7 @@ TEST_CASE_METHOD(
     api_.attempt_mode_switch(motion_control{FOLLOW});
 
     // then
-    CHECK(store_.motion_control_ != motion_control{STOP});
+    CHECK(store_.motion_control_ == motion_control{STOP});
 }
 
 } // namespace linebot

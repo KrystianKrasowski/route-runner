@@ -39,7 +39,6 @@ motion_l293::of(device::l293& motor_left, device::l293& motor_right)
 void
 motion_l293::apply(linebot::maneuver maneuver)
 {
-    // TODO: Test this behaviour!
     if (last_maneuver_ == maneuver)
     {
         return;

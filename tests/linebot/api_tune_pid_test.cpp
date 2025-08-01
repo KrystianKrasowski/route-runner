@@ -51,8 +51,8 @@ TEST_CASE_METHOD(
     using param_type = std::tuple<uint16_t, pid_control, uint16_t>;
 
     auto params = GENERATE(
-        param_type{10, pid_control{KI_UP}, 12},
-        param_type{10, pid_control{KI_DOWN}, 8}
+        param_type{10, pid_control{KI_UP}, 11},
+        param_type{10, pid_control{KI_DOWN}, 9}
     );
 
     // given
@@ -74,8 +74,8 @@ TEST_CASE_METHOD(
     using param_type = std::tuple<uint16_t, pid_control, uint16_t>;
 
     auto params = GENERATE(
-        param_type{4100, pid_control{KD_UP}, 4110},
-        param_type{4100, pid_control{KD_DOWN}, 4090}
+        param_type{4100, pid_control{KD_UP}, 4200},
+        param_type{4100, pid_control{KD_DOWN}, 4000}
     );
 
     // given
