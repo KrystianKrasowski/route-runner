@@ -55,8 +55,6 @@ private:
     route_guard_port&      route_guard_;
     printer_port&          printer_;
 
-    bool locked_{false};
-
     api(data_store&            store,
         motion_port&           motion,
         status_indicator_port& status_indicator,
