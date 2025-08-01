@@ -16,7 +16,17 @@ constexpr uint8_t DUTY_CYCLE_MAX  = 100;
 constexpr uint8_t
 duty_cycle(int8_t correction)
 {
-    return etl::absolute(-2 * etl::absolute(correction) + 100);
+    // absolute value of linear function, V-shaped
+    // y = | -2 * |x| + 100 |
+    uint8_t duty_cycle = etl::absolute(-2 * etl::absolute(correction) + 100);
+
+    // eliminate jitter on high values
+    if (duty_cycle > 80)
+    {
+        duty_cycle = 100;
+    }
+
+    return duty_cycle;
 }
 
 motion_l293&
