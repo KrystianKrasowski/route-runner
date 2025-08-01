@@ -242,6 +242,21 @@ TEST_CASE("should apply motion", "[adapter][motion][l293]")
         REQUIRE(motor_right.applied_rotation_.has_value());
         CHECK(motor_right.applied_rotation_.value() == rotation);
     }
+
+    SECTION("one motion change per maneuver")
+    {
+        // when
+        auto maneuver = maneuver::forward(80);
+        adapter.apply(maneuver);
+        adapter.apply(maneuver);
+        adapter.apply(maneuver);
+
+        // then
+        CHECK(motor_right.count_rotate_ == 1);
+        CHECK(motor_right.count_enable_ == 1);
+        CHECK(motor_left.count_rotate_ == 1);
+        CHECK(motor_left.count_enable_ == 1);
+    }
 }
 
 } // namespace adapter
