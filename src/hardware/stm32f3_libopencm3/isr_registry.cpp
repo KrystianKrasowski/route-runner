@@ -2,12 +2,12 @@
 #include "isr_handler.hpp"
 #include <cstdint>
 #include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/dma.h>
+#include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/usart.h>
 
 namespace hardware
 {
-
-// TODO: refactor this to dispatch table
 
 isr_handler* tim2_handler          = nullptr;
 isr_handler* tim7_handler          = nullptr;
@@ -63,12 +63,23 @@ isr_register(uint8_t nvic_number, isr_handler& handler)
 
 extern "C"
 {
+    uint16_t timer_status_flags = TIM_SR_UIF | TIM_SR_CC1IF | TIM_SR_CC2IF
+                                | TIM_SR_CC3IF | TIM_SR_CC4IF | TIM_SR_TIF
+                                | TIM_SR_CC1OF | TIM_SR_CC2OF | TIM_SR_CC3OF
+                                | TIM_SR_CC4OF;
+
+    uint8_t dma_interrupt_flags = DMA_GIF | DMA_TCIF | DMA_HTIF | DMA_TEIF;
+
     void
     tim2_isr()
     {
         if (hardware::tim2_handler)
         {
             hardware::tim2_handler->handle();
+        }
+        else
+        {
+            timer_clear_flag(TIM2, timer_status_flags);
         }
     }
 
@@ -79,6 +90,10 @@ extern "C"
         {
             hardware::tim7_handler->handle();
         }
+        else
+        {
+            timer_clear_flag(TIM7, timer_status_flags);
+        }
     }
 
     void
@@ -87,6 +102,10 @@ extern "C"
         if (hardware::tim15_handler)
         {
             hardware::tim15_handler->handle();
+        }
+        else
+        {
+            timer_clear_flag(TIM15, timer_status_flags);
         }
     }
 
@@ -97,6 +116,10 @@ extern "C"
         {
             hardware::tim16_handler->handle();
         }
+        else
+        {
+            timer_clear_flag(TIM16, timer_status_flags);
+        }
     }
 
     void
@@ -105,6 +128,10 @@ extern "C"
         if (hardware::dma1_channel1_handler)
         {
             hardware::dma1_channel1_handler->handle();
+        }
+        else
+        {
+            dma_clear_interrupt_flags(DMA1, DMA_CHANNEL1, dma_interrupt_flags);
         }
     }
 
@@ -115,6 +142,10 @@ extern "C"
         {
             hardware::dma1_channel2_handler->handle();
         }
+        else
+        {
+            dma_clear_interrupt_flags(DMA1, DMA_CHANNEL2, dma_interrupt_flags);
+        }
     }
 
     void
@@ -123,6 +154,10 @@ extern "C"
         if (hardware::usart2_handler)
         {
             hardware::usart2_handler->handle();
+        }
+        else
+        {
+            USART_RQR(USART2) |= USART_RQR_RXFRQ;
         }
     }
 }
