@@ -18,10 +18,10 @@ public:
     of(device::shell& shell);
 
     void
-    print(linebot::mode mode) override;
+    print(const linebot::mode mode) override;
 
     void
-    print(linebot::pid_params& pid) override;
+    print(const linebot::pid_params& pid) override;
 
 private:
 

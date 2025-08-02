@@ -32,7 +32,7 @@ api::of(
 }
 
 void
-api::attempt_maneuver(motion_control control)
+api::attempt_maneuver(const motion_control control)
 {
     if (is_applicable(control))
     {
@@ -55,7 +55,7 @@ api::attempt_maneuver(const coordinates& line_position)
 }
 
 void
-api::attempt_mode_switch(motion_control control)
+api::attempt_mode_switch(const motion_control control)
 {
     mode_state_machine mode_transition{store_.mode_};
 
@@ -126,7 +126,7 @@ api::tune_pid_regulator(const pid_control control)
 }
 
 bool
-api::is_applicable(motion_control control)
+api::is_applicable(const motion_control control)
 {
     return store_.motion_control_ != control && !store_.mode_.is_tracking();
 }

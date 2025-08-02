@@ -1,5 +1,5 @@
-#include "dualshock2.hpp"
 #include "isr_handler_tim2.hpp"
+#include "dualshock2.hpp"
 #include <libopencm3/stm32/timer.h>
 
 namespace hardware

@@ -24,13 +24,13 @@ public:
        printer_port&          printer);
 
     void
-    attempt_maneuver(motion_control control);
+    attempt_maneuver(const motion_control control);
 
     void
     attempt_maneuver(const coordinates& line_positon);
 
     void
-    attempt_mode_switch(motion_control control);
+    attempt_mode_switch(const motion_control control);
 
     void
     attempt_mode_switch(const coordinates& line_position);
@@ -69,7 +69,7 @@ private:
     }
 
     inline bool
-    is_applicable(motion_control control);
+    is_applicable(const motion_control control);
 
     inline bool
     is_applicable(const pid_control control);

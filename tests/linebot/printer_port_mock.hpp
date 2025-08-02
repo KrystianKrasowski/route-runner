@@ -14,13 +14,13 @@ struct printer_port_mock : public printer_port
     etl::optional<pid_params> printed_pid_params_ = etl::nullopt;
 
     void
-    print(mode mode) override
+    print(const mode mode) override
     {
         printed_mode_ = etl::optional{mode};
     }
 
     void
-    print(pid_params& pid) override
+    print(const pid_params& pid) override
     {
         printed_pid_params_ = etl::optional{pid};
     }
