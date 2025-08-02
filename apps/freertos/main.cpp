@@ -1,12 +1,10 @@
 #include "FreeRTOS.h"
 #include "device/tree.hpp"
 #include "isr_event_emitter_adapter.hpp"
-#include "linebot/data_store.hpp"
 #include "stack_overflow_handler.hpp"
 #include "task.h"
 #include "task_factory.hpp"
 
-linebot::data_store            store;
 app::isr_event_emitter_adapter events;
 
 int
@@ -14,7 +12,7 @@ main()
 {
     auto devices = device::tree::of(events);
 
-    app::task_factory task_factory{devices, store, events};
+    app::task_factory task_factory{devices, events};
 
     // don't need the instances for these right now
     (void)task_factory.create_manual_control_task();
