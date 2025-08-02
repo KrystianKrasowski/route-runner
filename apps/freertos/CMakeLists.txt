@@ -1,3 +1,5 @@
+add_subdirectory(config)
+
 add_executable(${PROJECT_NAME}
     main.cpp
     isr_event_emitter_adapter.cpp

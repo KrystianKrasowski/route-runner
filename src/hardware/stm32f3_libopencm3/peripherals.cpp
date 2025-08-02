@@ -1,3 +1,4 @@
+#include "config.h"
 #include "peripherals.hpp"
 #include <cstdint>
 #include <libopencm3/cm3/systick.h>
@@ -73,7 +74,7 @@ systick_delay_us(uint16_t delay)
             ;
     }
 
-    systick_counter_disable();
+
 }
 
 void
@@ -99,7 +100,6 @@ peripherals_setup(const data_store& store)
     usart2_setup();
 }
 
-// TODO: Global system clock should be passed from the single source of truth
 static inline void
 rcc_setup()
 {
@@ -113,9 +113,9 @@ rcc_setup()
     sysclock.ppre1            = RCC_CFGR_PPRE_DIV2;
     sysclock.ppre2            = RCC_CFGR_PPRE_NODIV;
     sysclock.power_save       = 0;
-    sysclock.ahb_frequency    = 16000000;
-    sysclock.apb1_frequency   = 8000000;
-    sysclock.apb2_frequency   = 16000000;
+    sysclock.ahb_frequency    = APP_AHB_FREQUENCY;
+    sysclock.apb1_frequency   = APP_APB1_FREQUENCY;
+    sysclock.apb2_frequency   = APP_APB2_FREQUENCY;
 
     rcc_clock_setup_pll(&sysclock);
 
@@ -140,7 +140,7 @@ rcc_setup()
 static inline void
 systick_setup()
 {
-    systick_set_frequency(1000000, 16000000);
+    systick_set_frequency(APP_SYSTICK_FREQUENCY, APP_AHB_FREQUENCY);
 }
 
 static inline void
