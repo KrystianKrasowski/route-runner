@@ -18,7 +18,6 @@ isr_handler_tim2::handle()
     if (timer_get_flag(TIM2, TIM_SR_UIF))
     {
         timer_clear_flag(TIM2, TIM_SR_UIF);
-        // TODO: Implement an RTOS task to deal with polling
         dualshock_.poll_start();
     }
 }
