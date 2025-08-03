@@ -74,7 +74,7 @@ systick_delay_us(uint16_t delay)
             ;
     }
 
-
+    systick_counter_disable();
 }
 
 void
