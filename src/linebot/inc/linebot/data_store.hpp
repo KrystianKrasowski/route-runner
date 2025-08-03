@@ -20,6 +20,13 @@ struct data_store
     pid_control    pid_control_{pid_control::NONE};
     mode           mode_{mode::MANUAL};
     pid_params     pid_params_{700, 0, 4100};
+
+    static data_store&
+    of();
+
+private:
+
+    data_store() = default;
 };
 
 } // namespace linebot

@@ -23,11 +23,7 @@ class task_factory
 {
 public:
 
-    task_factory(
-        device::tree&              devices,
-        linebot::data_store&       store,
-        isr_event_emitter_adapter& events
-    );
+    task_factory(device::tree& devices, isr_event_emitter_adapter& events);
 
     task_manual_control&
     create_manual_control_task();
@@ -48,11 +44,10 @@ private:
 
     static StaticEventGroup_t shell_event_group_buffer_;
 
-    device::tree& devices_;
-    // TODO: Store should be instantiated statically like the rest
-    linebot::data_store&       store_;
+    device::tree&              devices_;
     isr_event_emitter_adapter& events_;
 
+    linebot::data_store*            store_             = nullptr;
     linebot::motion_port*           motion_            = nullptr;
     linebot::status_indicator_port* status_indicator_  = nullptr;
     linebot::route_guard_port*      route_guard_       = nullptr;
@@ -62,6 +57,9 @@ private:
 
     linebot::api&
     get_or_create_api();
+
+    linebot::data_store&
+    get_or_create_store();
 
     inline linebot::motion_port&
     get_or_create_motion();

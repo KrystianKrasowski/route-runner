@@ -20,7 +20,10 @@ struct api_fixture
     api                        api_;
 
     api_fixture()
-        : api_{api::of(store_, motion_, status_indicator_, route_guard_, printer_)}
+        : store_{data_store::of()},
+          api_{api::of(
+              store_, motion_, status_indicator_, route_guard_, printer_
+          )}
     {
     }
 };

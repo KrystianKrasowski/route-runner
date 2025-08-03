@@ -15,7 +15,7 @@ class pid_regulator
 
 public:
 
-    pid_regulator(pid_params& config, errors_buffer& past_errors)
+    pid_regulator(const pid_params& config, errors_buffer& past_errors)
         : config_{config},
           past_errors_{past_errors}
     {

@@ -26,12 +26,9 @@ namespace app
 StaticEventGroup_t task_factory::shell_event_group_buffer_;
 
 task_factory::task_factory(
-    device::tree&              devices,
-    linebot::data_store&       store,
-    isr_event_emitter_adapter& events
+    device::tree& devices, isr_event_emitter_adapter& events
 )
     : devices_{devices},
-      store_{store},
       events_{events}
 {
 }
@@ -106,17 +103,29 @@ task_factory::get_or_create_api()
 {
     if (!api_)
     {
+        auto& store            = get_or_create_store();
         auto& motion           = get_or_create_motion();
         auto& status_indicator = get_or_create_status_indicator();
         auto& route_guard      = get_or_create_route_guard();
         auto& printer          = get_or_create_printer();
 
         api_ = &linebot::api::of(
-            store_, motion, status_indicator, route_guard, printer
+            store, motion, status_indicator, route_guard, printer
         );
     }
 
     return *api_;
+}
+
+linebot::data_store&
+task_factory::get_or_create_store()
+{
+    if (!store_)
+    {
+        store_ = &linebot::data_store::of();
+    }
+
+    return *store_;
 }
 
 linebot::motion_port&

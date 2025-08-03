@@ -9,10 +9,10 @@ namespace linebot
 struct printer_port
 {
     virtual void
-    print(mode mode) = 0;
+    print(const mode mode) = 0;
 
     virtual void
-    print(pid_params& pid) = 0;
+    print(const pid_params& pid) = 0;
 };
 
 } // namespace linebot

@@ -21,7 +21,7 @@ printer_shell::of(device::shell& shell)
 }
 
 void
-printer_shell::print(linebot::mode mode)
+printer_shell::print(const linebot::mode mode)
 {
     print_buffer_.clear();
 
@@ -33,7 +33,7 @@ printer_shell::print(linebot::mode mode)
 }
 
 void
-printer_shell::print(linebot::pid_params& pid)
+printer_shell::print(const linebot::pid_params& pid)
 {
     print_buffer_.clear();
 

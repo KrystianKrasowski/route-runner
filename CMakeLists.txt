@@ -17,9 +17,9 @@ if(TARGET_HARDWARE STREQUAL "native_host")
     enable_testing()
 endif()
 
+add_subdirectory(apps)
 add_subdirectory(src)
 add_subdirectory(extern)
-add_subdirectory(apps)
 add_subdirectory(tests)
 
 execute_process(
