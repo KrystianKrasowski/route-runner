@@ -11,22 +11,18 @@
 namespace linebot
 {
 
-using motion_control::BREAK;
-using motion_control::FOLLOW;
+using mode_control::BREAK;
+using mode_control::FOLLOW;
 using motion_control::STOP;
 
 TEST_CASE_METHOD(
     api_fixture, "should switch mode by remote control", "[linebot]"
 )
 {
-    using test_params = std::tuple<mode, motion_control, mode>;
-
     auto example = GENERATE(
-        test_params{
-            mode::LINE_DETECTED, motion_control{FOLLOW}, mode::FOLLOWING
-        },
-        test_params{mode::FOLLOWING, motion_control{BREAK}, mode::MANUAL},
-        test_params{mode::RECOVERING, motion_control{BREAK}, mode::MANUAL}
+        std::tuple{mode::LINE_DETECTED, mode_control{FOLLOW}, mode::FOLLOWING},
+        std::tuple{mode::FOLLOWING, mode_control{BREAK}, mode::MANUAL},
+        std::tuple{mode::RECOVERING, mode_control{BREAK}, mode::MANUAL}
     );
 
     auto current_mode   = std::get<0>(example);
@@ -58,7 +54,7 @@ TEST_CASE_METHOD(
     store_.motion_control_ = motion_control{STOP};
 
     // when
-    api_.attempt_mode_switch(motion_control{FOLLOW});
+    api_.attempt_mode_switch(mode_control{FOLLOW});
 
     // then
     CHECK(store_.motion_control_ == motion_control{STOP});

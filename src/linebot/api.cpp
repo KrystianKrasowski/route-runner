@@ -55,7 +55,7 @@ api::attempt_maneuver(const coordinates& line_position)
 }
 
 void
-api::attempt_mode_switch(const motion_control control)
+api::attempt_mode_switch(const mode_control control)
 {
     mode_state_machine mode_transition{store_.mode_};
 

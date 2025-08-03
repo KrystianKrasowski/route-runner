@@ -45,7 +45,7 @@ private:
     bool
     is_requested(int bit_index)
     {
-        return commands_.to_uint16() & (1 << bit_index);
+        return commands_.to_int() & (1 << bit_index);
     }
 
     motion_control::command
@@ -69,8 +69,6 @@ operator<<(std::ostream& os, motion_control cmds)
         {motion_control::BACKWARD, "BACKWARD"},
         {motion_control::LEFT, "LEFT"},
         {motion_control::RIGHT, "RIGHT"},
-        {motion_control::BREAK, "BREAK"},
-        {motion_control::FOLLOW, "FOLLOW"},
         {motion_control::STOP, "NONE"},
     };
 

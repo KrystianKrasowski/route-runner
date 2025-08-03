@@ -10,7 +10,7 @@ namespace mapper
 inline linebot::motion_control
 map_motion_control(uint16_t raw)
 {
-    uint16_t values = 0;
+    uint8_t values = 0;
 
     if (raw & device::dualshock2::R2)
     {
@@ -30,16 +30,6 @@ map_motion_control(uint16_t raw)
     if (raw & device::dualshock2::LEFT)
     {
         values |= linebot::motion_control::LEFT;
-    }
-
-    if (raw & device::dualshock2::CROSS)
-    {
-        values |= linebot::motion_control::BREAK;
-    }
-
-    if (raw & device::dualshock2::START)
-    {
-        values |= linebot::motion_control::FOLLOW;
     }
 
     return linebot::motion_control{values};

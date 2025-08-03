@@ -2,7 +2,7 @@
 
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/mode.hpp"
-#include "linebot/domain/motion_control.hpp"
+#include "linebot/domain/mode_control.hpp"
 
 namespace linebot
 {
@@ -17,7 +17,7 @@ public:
     }
 
     bool
-    transit(motion_control control)
+    transit(const mode_control control)
     {
         return maybe_switch_to_following(control)
             || maybe_switch_to_manual(control);
@@ -37,9 +37,9 @@ private:
     mode& mode_;
 
     bool
-    maybe_switch_to_following(motion_control control)
+    maybe_switch_to_following(const mode_control control)
     {
-        if (control.have_follow() && mode_.is_line_detected())
+        if (control.has_follow() && mode_.is_line_detected())
         {
             mode_ = mode::FOLLOWING;
             return true;
@@ -49,9 +49,9 @@ private:
     }
 
     bool
-    maybe_switch_to_manual(motion_control control)
+    maybe_switch_to_manual(const mode_control control)
     {
-        if (control.have_break() && mode_.is_tracking())
+        if (control.has_break() && mode_.is_tracking())
         {
             mode_ = mode::MANUAL;
             return true;

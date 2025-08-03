@@ -2,6 +2,7 @@
 
 #include "linebot/data_store.hpp"
 #include "linebot/domain/coordinates.hpp"
+#include "linebot/domain/mode_control.hpp"
 #include "linebot/domain/motion_control.hpp"
 #include "linebot/domain/pid_control.hpp"
 #include "linebot/motion_port.hpp"
@@ -30,7 +31,7 @@ public:
     attempt_maneuver(const coordinates& line_positon);
 
     void
-    attempt_mode_switch(const motion_control control);
+    attempt_mode_switch(const mode_control control);
 
     void
     attempt_mode_switch(const coordinates& line_position);

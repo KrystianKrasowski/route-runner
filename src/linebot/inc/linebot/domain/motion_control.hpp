@@ -14,9 +14,12 @@ struct motion_control
         BACKWARD = 4,
         LEFT     = 8,
         RIGHT    = 16,
-        BREAK    = 32,
-        FOLLOW   = 64,
     };
+
+    explicit motion_control(uint8_t value)
+        : value_{value}
+    {
+    }
 
     bool
     operator==(const motion_control& other) const
@@ -30,62 +33,45 @@ struct motion_control
         return value_ != other.value_;
     }
 
-    explicit motion_control(uint16_t value)
-        : value_{value}
-    {
-    }
-
-    uint16_t
-    to_uint16() const
+    uint8_t
+    to_int() const
     {
         return value_;
     }
 
     bool
-    have_forward() const
+    has_forward() const
     {
         return (value_ & FORWARD) && !(value_ & BACKWARD);
     }
 
     bool
-    have_backward() const
+    has_backward() const
     {
         return (value_ & BACKWARD) && !(value_ & FORWARD);
     }
 
     bool
-    have_left() const
+    has_left() const
     {
         return (value_ & LEFT) && !(value_ & RIGHT);
     }
 
     bool
-    have_right() const
+    has_right() const
     {
         return (value_ & RIGHT) && !(value_ & LEFT);
     }
 
     bool
-    have_move() const
+    has_move() const
     {
-        return have_forward() || have_backward();
-    }
-
-    bool
-    have_break() const
-    {
-        return value_ & BREAK;
-    }
-
-    bool
-    have_follow() const
-    {
-        return value_ & FOLLOW;
+        return has_forward() || has_backward();
     }
 
 private:
 
-    uint16_t value_;
+    uint8_t value_;
 };
 
 } // namespace linebot

@@ -19,22 +19,22 @@ create_maneuver(motion_control control)
 {
     int8_t correction = 0;
 
-    if (control.have_left())
+    if (control.has_left())
     {
         correction = -50;
     }
-    else if (control.have_right())
+    else if (control.has_right())
     {
         correction = 50;
     }
 
     maneuver::direction direction;
 
-    if (control.have_forward())
+    if (control.has_forward())
     {
         direction = maneuver::FORWARD;
     }
-    else if (control.have_backward())
+    else if (control.has_backward())
     {
         direction = maneuver::BACKWARD;
     }
