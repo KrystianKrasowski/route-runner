@@ -47,7 +47,7 @@ private:
     device::tree&              devices_;
     isr_event_emitter_adapter& events_;
 
-    linebot::data_store*            store_;
+    linebot::data_store*            store_             = nullptr;
     linebot::motion_port*           motion_            = nullptr;
     linebot::status_indicator_port* status_indicator_  = nullptr;
     linebot::route_guard_port*      route_guard_       = nullptr;
