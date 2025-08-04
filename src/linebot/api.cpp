@@ -31,6 +31,29 @@ api::of(
     return api;
 }
 
+actions
+api::dispatch(const remote_control commands)
+{
+    uint8_t values = actions::NONE;
+
+    if (commands.has_move())
+    {
+        values |= actions::APPLY_MANEUVER;
+    }
+
+    if (commands.has_pid_tunning())
+    {
+        values |= actions::TUNE_PID;
+    }
+
+    if (commands.has_mode_transition())
+    {
+        values |= actions::CHANGE_MODE;
+    }
+
+    return actions{values};
+}
+
 void
 api::attempt_maneuver(const motion_control control)
 {

@@ -15,6 +15,7 @@ target_sources(
             api_halt_test.cpp
             api_dump_store_test.cpp
             api_tune_pid_test.cpp
+            api_dispatch_test.cpp
 )
 
 target_link_libraries(

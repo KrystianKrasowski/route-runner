@@ -42,18 +42,22 @@ public:
 
 private:
 
+    // Look out for this class growth. If there was more event groups, mutexes,
+    // etc, consider extracting them to separate modules, other factories maybe
     static StaticEventGroup_t shell_event_group_buffer_;
+    static StaticEventGroup_t linebot_event_group_buffer_;
 
     device::tree&              devices_;
     isr_event_emitter_adapter& events_;
 
-    linebot::data_store*            store_             = nullptr;
-    linebot::motion_port*           motion_            = nullptr;
-    linebot::status_indicator_port* status_indicator_  = nullptr;
-    linebot::route_guard_port*      route_guard_       = nullptr;
-    linebot::printer_port*          printer_           = nullptr;
-    linebot::api*                   api_               = nullptr;
-    EventGroupHandle_t              shell_event_group_ = nullptr;
+    linebot::data_store*            store_               = nullptr;
+    linebot::motion_port*           motion_              = nullptr;
+    linebot::status_indicator_port* status_indicator_    = nullptr;
+    linebot::route_guard_port*      route_guard_         = nullptr;
+    linebot::printer_port*          printer_             = nullptr;
+    linebot::api*                   api_                 = nullptr;
+    EventGroupHandle_t              shell_event_group_   = nullptr;
+    EventGroupHandle_t              linebot_event_group_ = nullptr;
 
     linebot::api&
     get_or_create_api();
@@ -75,6 +79,9 @@ private:
 
     inline EventGroupHandle_t
     get_or_create_shell_event_group();
+
+    EventGroupHandle_t
+    get_or_create_linebot_event_group();
 };
 
 } // namespace app

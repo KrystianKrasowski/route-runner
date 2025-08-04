@@ -24,6 +24,7 @@ namespace app
 {
 
 StaticEventGroup_t task_factory::shell_event_group_buffer_;
+StaticEventGroup_t task_factory::linebot_event_group_buffer_;
 
 task_factory::task_factory(
     device::tree& devices, isr_event_emitter_adapter& events
@@ -176,7 +177,7 @@ task_factory::get_or_create_printer()
     return *printer_;
 }
 
-inline EventGroupHandle_t
+EventGroupHandle_t
 task_factory::get_or_create_shell_event_group()
 {
     if (!shell_event_group_)
@@ -186,6 +187,18 @@ task_factory::get_or_create_shell_event_group()
     }
 
     return shell_event_group_;
+}
+
+EventGroupHandle_t
+task_factory::get_or_create_linebot_event_group()
+{
+    if (!linebot_event_group_)
+    {
+        linebot_event_group_ =
+            xEventGroupCreateStatic(&linebot_event_group_buffer_);
+    }
+
+    return linebot_event_group_;
 }
 
 } // namespace app

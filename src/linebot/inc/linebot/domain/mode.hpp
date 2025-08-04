@@ -20,6 +20,7 @@ public:
     {
     }
 
+    // TODO: Remove this implicit converions
     constexpr
     operator value() const
     {

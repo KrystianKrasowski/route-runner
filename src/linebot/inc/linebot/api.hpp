@@ -1,10 +1,12 @@
 #pragma once
 
 #include "linebot/data_store.hpp"
+#include "linebot/domain/actions.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/mode_control.hpp"
 #include "linebot/domain/motion_control.hpp"
 #include "linebot/domain/pid_control.hpp"
+#include "linebot/domain/remote_control.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
@@ -23,6 +25,9 @@ public:
        status_indicator_port& status_indicator,
        route_guard_port&      route_guard,
        printer_port&          printer);
+
+    actions
+    dispatch(const remote_control commands);
 
     void
     attempt_maneuver(const motion_control control);
