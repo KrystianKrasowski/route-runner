@@ -72,6 +72,13 @@ struct remote_control
     }
 
     bool
+    has_same_move(const remote_control& other) const
+    {
+        uint16_t mask = FORWARD | BACKWARD | LEFT | RIGHT | STOP;
+        return (value_ & mask) == (other.value_ & mask);
+    }
+
+    bool
     has_kp_up() const
     {
         return value_ & KP_UP && !(value_ & KP_DOWN);
@@ -108,10 +115,10 @@ struct remote_control
     }
 
     bool
-    has_pid_tunning() const
+    has_same_pid_tuning(const remote_control& other) const
     {
-        return has_kp_up() || has_kp_down() || has_ki_up() || has_ki_down()
-            || has_kd_up() || has_kd_down();
+        uint16_t mask = KP_UP | KP_DOWN | KI_UP | KI_DOWN | KD_UP | KD_DOWN;
+        return (value_ & mask) == (other.value_ & mask);
     }
 
     bool
@@ -127,9 +134,10 @@ struct remote_control
     }
 
     bool
-    has_mode_transition() const
+    has_same_mode_transition(const remote_control& other) const
     {
-        return has_break() || has_follow();
+        uint16_t mask = FOLLOW | BREAK;
+        return (value_ & mask) == (other.value_ & mask);
     }
 
 private:

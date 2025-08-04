@@ -36,20 +36,22 @@ api::dispatch(const remote_control commands)
 {
     uint8_t values = actions::NONE;
 
-    if (commands.has_move())
+    if (!commands.has_same_move(store_.remote_control_))
     {
         values |= actions::APPLY_MANEUVER;
     }
 
-    if (commands.has_pid_tunning())
+    if (!commands.has_same_pid_tuning(store_.remote_control_))
     {
         values |= actions::TUNE_PID;
     }
 
-    if (commands.has_mode_transition())
+    if (!commands.has_same_mode_transition(store_.remote_control_))
     {
         values |= actions::CHANGE_MODE;
     }
+
+    store_.remote_control_ = commands;
 
     return actions{values};
 }

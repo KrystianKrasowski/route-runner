@@ -9,10 +9,10 @@ struct actions
 {
     enum value
     {
-        NONE = 0,
-        APPLY_MANEUVER,
-        TUNE_PID,
-        CHANGE_MODE,
+        NONE           = 0,
+        APPLY_MANEUVER = 1,
+        TUNE_PID       = 2,
+        CHANGE_MODE    = 4,
     };
 
     actions(uint8_t values)
