@@ -1,7 +1,6 @@
 #include "api_fixture.hpp"
 #include "catch2/catch_test_macros.hpp"
 #include "linebot/domain/maneuver.hpp"
-#include "linebot/domain/motion_control.hpp"
 
 namespace linebot
 {
@@ -18,7 +17,7 @@ TEST_CASE_METHOD(api_fixture, "should halt vehicle", "[linebot]")
     CHECK(motion_.applied_maneuver_.value() == maneuver::none());
     CHECK(status_indicator_.applied_mode_.value() == mode::MANUAL);
     CHECK(route_guard_.stopped);
-    CHECK(store_.motion_control_ == motion_control{motion_control::STOP});
+    CHECK(store_.remote_control_ == remote_control{remote_control::STOP});
 }
 
 } // namespace linebot

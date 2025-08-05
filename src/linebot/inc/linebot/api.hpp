@@ -3,9 +3,6 @@
 #include "linebot/data_store.hpp"
 #include "linebot/domain/actions.hpp"
 #include "linebot/domain/coordinates.hpp"
-#include "linebot/domain/mode_control.hpp"
-#include "linebot/domain/motion_control.hpp"
-#include "linebot/domain/pid_control.hpp"
 #include "linebot/domain/remote_control.hpp"
 #include "linebot/motion_port.hpp"
 #include "linebot/printer_port.hpp"
@@ -30,13 +27,16 @@ public:
     dispatch(const remote_control commands);
 
     void
-    attempt_maneuver(const motion_control control);
+    apply_motion_by_remote();
+
+    void
+    switch_mode_by_remote();
+
+    void
+    tune_pid_regulator();
 
     void
     attempt_maneuver(const coordinates& line_positon);
-
-    void
-    attempt_mode_switch(const mode_control control);
 
     void
     attempt_mode_switch(const coordinates& line_position);
@@ -49,9 +49,6 @@ public:
 
     void
     dump_store();
-
-    void
-    tune_pid_regulator(const pid_control control);
 
 private:
 
@@ -73,12 +70,6 @@ private:
           printer_{printer}
     {
     }
-
-    inline bool
-    is_applicable(const motion_control control);
-
-    inline bool
-    is_applicable(const pid_control control);
 };
 
 } // namespace linebot

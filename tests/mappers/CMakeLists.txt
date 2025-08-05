@@ -5,8 +5,7 @@ target_compile_features(mappers_test PRIVATE cxx_std_23)
 target_sources(
     mappers_test
         PRIVATE
-            dualshock2_mapper_motion_control_test.cpp
-            dualshock2_mapper_pid_control_test.cpp
+            dualshock2_mapper_remote_control_test.cpp
             qtrhd06a_mapper_coordinates_test.cpp
 )
 

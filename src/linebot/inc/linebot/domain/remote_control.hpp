@@ -140,6 +140,12 @@ struct remote_control
         return (value_ & mask) == (other.value_ & mask);
     }
 
+    uint16_t
+    as_uint() const
+    {
+        return value_;
+    }
+
 private:
 
     uint16_t value_{STOP};

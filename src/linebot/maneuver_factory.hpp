@@ -3,7 +3,6 @@
 #include "coordinates_error_center_of_mass.hpp"
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
-#include "linebot/domain/motion_control.hpp"
 #include "pid_regulator.hpp"
 #include <cstdint>
 #include <etl/optional.h>
@@ -15,7 +14,7 @@ constexpr int8_t CORRECTION_MANUAL_LEFT  = -50;
 constexpr int8_t CORRECTION_MANUAL_RIGHT = 50;
 
 inline maneuver
-create_maneuver(motion_control control)
+create_maneuver(const remote_control control)
 {
     int8_t correction = 0;
 
