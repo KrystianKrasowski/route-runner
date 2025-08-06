@@ -24,7 +24,10 @@ public:
        printer_port&          printer);
 
     actions
-    query(const remote_control commands);
+    query(remote_control commands);
+
+    actions
+    query(coordinates line_position);
 
     void
     apply_motion_by_remote();
@@ -34,6 +37,15 @@ public:
 
     void
     tune_pid_regulator();
+
+    void
+    apply_motion_by_line_position();
+
+    void
+    switch_mode_by_line_position();
+
+    void
+    toggle_route_guard();
 
     void
     attempt_maneuver(const coordinates& line_positon);

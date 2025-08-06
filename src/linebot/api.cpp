@@ -31,14 +31,33 @@ api::of(
 }
 
 actions
-api::query(const remote_control commands)
+api::query(remote_control commands)
 {
     actions_dispatcher dispatcher{store_};
     auto               actions = dispatcher.query(commands);
 
+    // TODO: Check memory footprint when change this to move semantic
     store_.remote_control_ = commands;
 
     return actions;
+}
+
+actions
+api::query(coordinates line_position)
+{
+    store_.line_position_ = etl::move(line_position);
+
+    uint8_t values = 0;
+
+    values |= actions::CHANGE_MODE_BY_COORDS;
+    values |= actions::ROUTE_GUARD_TOGGLE;
+
+    if (store_.mode_.is_tracking())
+    {
+        values |= actions::APPLY_MANEUVER_BY_COORDS;
+    }
+
+    return actions{values};
 }
 
 void
@@ -66,6 +85,15 @@ api::tune_pid_regulator()
     tuner.tune_proportional();
     tuner.tune_integral();
     tuner.tune_derivative();
+}
+
+void
+api::apply_motion_by_line_position()
+{
+    pid_regulator pid{store_.pid_params_, store_.errors_};
+
+    maneuver motion = create_maneuver(store_.line_position_, pid);
+    motion_.apply(motion);
 }
 
 void

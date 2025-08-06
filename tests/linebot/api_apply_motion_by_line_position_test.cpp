@@ -40,10 +40,11 @@ TEST_CASE_METHOD(
             coordinates::of_6(100, 0, 0, 0, 0, 0)
         );
 
-        store_.mode_ = GENERATE(mode::FOLLOWING, mode::RECOVERING);
+        store_.mode_          = GENERATE(mode::FOLLOWING, mode::RECOVERING);
+        store_.line_position_ = line_position;
 
         // when
-        api_.attempt_maneuver(line_position);
+        api_.apply_motion_by_line_position();
 
         // then
         REQUIRE(motion_.applied_maneuver_.has_value());
@@ -75,10 +76,11 @@ TEST_CASE_METHOD(
             coordinates::of_6(0, 0, 0, 0, 0, 100)
         );
 
-        store_.mode_ = GENERATE(mode::FOLLOWING, mode::RECOVERING);
+        store_.mode_          = GENERATE(mode::FOLLOWING, mode::RECOVERING);
+        store_.line_position_ = line_position;
 
         // when
-        api_.attempt_maneuver(line_position);
+        api_.apply_motion_by_line_position();
 
         // then
         REQUIRE(motion_.applied_maneuver_.has_value());
@@ -92,11 +94,11 @@ TEST_CASE_METHOD(
     SECTION("stop on finish")
     {
         // given
-        store_.mode_              = mode::FOLLOWING;
-        coordinates line_position = coordinates::of_6(5, 0, 0, 0, 0, 5);
+        store_.mode_          = mode::FOLLOWING;
+        store_.line_position_ = coordinates::of_6(5, 0, 0, 0, 0, 5);
 
         // when
-        api_.attempt_maneuver(line_position);
+        api_.apply_motion_by_line_position();
 
         // then
         REQUIRE(motion_.applied_maneuver_.has_value());
@@ -176,34 +178,17 @@ TEST_CASE_METHOD(
         );
 
         // given
-        store_.mode_        = mode::FOLLOWING;
-        auto line_position  = std::get<0>(params);
-        int  expected_error = std::get<1>(params);
+        store_.mode_          = mode::FOLLOWING;
+        store_.line_position_ = std::get<0>(params);
+        int expected_error    = std::get<1>(params);
 
         // when
-        api_.attempt_maneuver(line_position);
+        api_.apply_motion_by_line_position();
         int actual_error = store_.errors_.back();
 
         // then
         CHECK(actual_error == expected_error);
     }
-}
-
-TEST_CASE_METHOD(
-    api_fixture,
-    "should skip maneuver by line position in non-tracking mode",
-    "[linebot]"
-)
-{
-    // given
-    auto line_position = coordinates::of_6(0, 0, 100, 100, 0, 0);
-    store_.mode_       = GENERATE(mode::MANUAL, mode::LINE_DETECTED);
-
-    // when
-    api_.attempt_maneuver(line_position);
-
-    // then
-    CHECK(!motion_.applied_maneuver_.has_value());
 }
 
 } // namespace linebot

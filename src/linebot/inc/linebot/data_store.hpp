@@ -1,5 +1,6 @@
 #pragma once
 
+#include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/mode.hpp"
 #include "linebot/domain/pid_params.hpp"
 #include "linebot/domain/remote_control.hpp"
@@ -18,13 +19,17 @@ struct data_store
     remote_control remote_control_{remote_control::STOP};
     mode           mode_{mode::MANUAL};
     pid_params     pid_params_{700, 0, 4100};
+    coordinates    line_position_;
 
     static data_store&
     of();
 
 private:
 
-    data_store() = default;
+    data_store()
+        : line_position_{coordinates::of_6(0, 0, 0, 0, 0, 0)}
+    {
+    }
 };
 
 } // namespace linebot

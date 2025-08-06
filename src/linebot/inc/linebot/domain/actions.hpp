@@ -9,13 +9,16 @@ struct actions
 {
     enum value
     {
-        NONE           = 0,
-        APPLY_MANEUVER = 1,
-        TUNE_PID       = 2,
-        CHANGE_MODE    = 4,
+        NONE                     = 0,
+        APPLY_MANEUVER           = 1,
+        TUNE_PID                 = 2,
+        CHANGE_MODE              = 4,
+        APPLY_MANEUVER_BY_COORDS = 8,
+        CHANGE_MODE_BY_COORDS    = 16,
+        ROUTE_GUARD_TOGGLE       = 32,
     };
 
-    actions(uint8_t values)
+    explicit actions(uint8_t values)
         : values_{values}
     {
     }

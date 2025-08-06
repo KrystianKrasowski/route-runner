@@ -19,11 +19,14 @@ struct coordinates_error_center_of_mass
 
         int16_t sum        = 0;
         int16_t weight_sum = 0;
+        auto    length     = line_position.get_length();
+        auto    values     = line_position.get_values();
+        auto    weights    = line_position.get_weights();
 
-        for (uint8_t i = 0; i < line_position.length_; i++)
+        for (uint8_t i = 0; i < length; i++)
         {
-            auto value  = line_position.values_[i];
-            auto weight = line_position.weights_[i];
+            auto value  = values[i];
+            auto weight = weights[i];
 
             sum        += value;
             weight_sum += (value * weight);
