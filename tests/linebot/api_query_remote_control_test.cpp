@@ -130,7 +130,8 @@ TEST_CASE_METHOD(
 )
 {
     // given
-    store_.mode_ = GENERATE(mode::FOLLOWING, mode::RECOVERING);
+    store_.remote_control_ = remote_control{FOLLOW};
+    store_.mode_           = GENERATE(mode::FOLLOWING, mode::RECOVERING);
 
     // when
     auto actions = api_.query(remote_control{BREAK});

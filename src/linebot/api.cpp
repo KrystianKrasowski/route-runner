@@ -33,11 +33,10 @@ api::of(
 actions
 api::query(remote_control commands)
 {
-    auto previous_control  = store_.remote_control_;
-    store_.remote_control_ = etl::move(commands);
-
     actions_dispatcher dispatcher{store_};
-    auto               actions = dispatcher.query(previous_control);
+    auto               actions = dispatcher.query(commands);
+
+    store_.remote_control_ = etl::move(commands);
 
     return actions;
 }
