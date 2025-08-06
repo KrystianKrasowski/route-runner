@@ -8,7 +8,7 @@
 namespace app
 {
 
-class route_guard_toggle_task : public task_base<route_guard_toggle_task, 48>
+class route_guard_toggle_task : public task_base<route_guard_toggle_task, 32>
 {
 public:
 

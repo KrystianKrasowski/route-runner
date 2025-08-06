@@ -6,7 +6,7 @@
 namespace app
 {
 
-class manual_pid_tune_task : public task_base<manual_pid_tune_task, 48>
+class manual_pid_tune_task : public task_base<manual_pid_tune_task, 40>
 {
 public:
 
