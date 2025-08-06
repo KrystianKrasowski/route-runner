@@ -33,11 +33,11 @@ api::of(
 actions
 api::query(remote_control commands)
 {
-    actions_dispatcher dispatcher{store_};
-    auto               actions = dispatcher.query(commands);
+    auto previous_control  = store_.remote_control_;
+    store_.remote_control_ = etl::move(commands);
 
-    // TODO: Check memory footprint when change this to move semantic
-    store_.remote_control_ = commands;
+    actions_dispatcher dispatcher{store_};
+    auto               actions = dispatcher.query(previous_control);
 
     return actions;
 }
@@ -97,37 +97,25 @@ api::apply_motion_by_line_position()
 }
 
 void
-api::attempt_maneuver(const coordinates& line_position)
-{
-    if (store_.mode_.is_tracking())
-    {
-        pid_regulator pid{store_.pid_params_, store_.errors_};
-
-        maneuver motion = create_maneuver(line_position, pid);
-        motion_.apply(motion);
-    }
-}
-
-void
-api::attempt_mode_switch(const coordinates& line_position)
+api::switch_mode_by_line_position()
 {
     mode_state_machine mode_transition{store_.mode_};
 
-    if (mode_transition.transit(line_position))
+    if (mode_transition.transit(store_.line_position_))
     {
         status_indicator_.apply(store_.mode_);
     }
 }
 
 void
-api::attempt_route_guard_toggle(const coordinates& line_position)
+api::toggle_route_guard()
 {
-    if (store_.mode_.is_following() && !line_position.is_on_route())
+    if (store_.mode_.is_following() && !store_.line_position_.is_on_route())
     {
         route_guard_.start();
     }
 
-    if (store_.mode_.is_recovering() && line_position.is_on_route())
+    if (store_.mode_.is_recovering() && store_.line_position_.is_on_route())
     {
         route_guard_.stop();
     }

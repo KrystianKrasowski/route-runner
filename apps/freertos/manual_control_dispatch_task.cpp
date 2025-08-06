@@ -30,26 +30,9 @@ manual_control_dispatch_task::run()
         if (count)
         {
             auto raw_control = dualshock2_.read();
-            auto commands    = mapper::map_remote_control(raw_control);
-            auto actions     = api_.query(commands);
+            auto actions = api_.query(mapper::map_remote_control(raw_control));
 
             xEventGroupSetBits(event_group_, actions.as_uint());
-
-            // TODO: Use event_group to dispatch this
-            if (actions.contain(linebot::actions::APPLY_MANEUVER))
-            {
-                api_.apply_motion_by_remote();
-            }
-
-            if (actions.contain(linebot::actions::CHANGE_MODE))
-            {
-                api_.switch_mode_by_remote();
-            }
-
-            if (actions.contain(linebot::actions::TUNE_PID))
-            {
-                api_.tune_pid_regulator();
-            }
         }
     }
 }

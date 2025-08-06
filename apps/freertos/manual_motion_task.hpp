@@ -8,8 +8,7 @@
 namespace app
 {
 
-class manual_motion_task
-    : public task_base<manual_motion_task, 32>
+class manual_motion_task : public task_base<manual_motion_task, 48>
 {
 public:
 
@@ -32,9 +31,7 @@ private:
     linebot::api&      api_;
     EventGroupHandle_t event_group_;
 
-    manual_motion_task(
-        linebot::api& api, EventGroupHandle_t event_group
-    )
+    manual_motion_task(linebot::api& api, EventGroupHandle_t event_group)
         : task_base{"remote_motion", 2},
           api_{api},
           event_group_{event_group}

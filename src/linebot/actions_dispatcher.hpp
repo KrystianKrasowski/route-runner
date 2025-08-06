@@ -17,7 +17,7 @@ public:
     }
 
     actions
-    query(const remote_control commands)
+    query(remote_control commands)
     {
         uint8_t values = actions::NONE;
 
@@ -33,7 +33,7 @@ private:
     const data_store& store_;
 
     void
-    maybe_apply_maneuver(const remote_control commands, uint8_t& values)
+    maybe_apply_maneuver(remote_control commands, uint8_t& values)
     {
         bool is_same_move     = commands.has_same_move(store_.remote_control_);
         bool is_tracking_mode = store_.mode_.is_tracking();
@@ -46,7 +46,7 @@ private:
     }
 
     void
-    maybe_tune_pid(const remote_control commands, uint8_t& values)
+    maybe_tune_pid(remote_control commands, uint8_t& values)
     {
         if (!commands.has_same_pid_tuning(store_.remote_control_))
         {
@@ -55,7 +55,7 @@ private:
     }
 
     void
-    maybe_change_mode(const remote_control commands, uint8_t& values)
+    maybe_change_mode(remote_control commands, uint8_t& values)
     {
         if (!commands.has_same_mode_transition(store_.remote_control_))
         {

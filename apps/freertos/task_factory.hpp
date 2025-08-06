@@ -14,10 +14,13 @@
 #include "manual_mode_switch_task.hpp"
 #include "manual_motion_task.hpp"
 #include "manual_pid_tune_task.hpp"
+#include "route_guard_toggle_task.hpp"
 #include "task_domain_dump.hpp"
 #include "task_immediate_stop.hpp"
-#include "task_route_tracking.hpp"
 #include "task_shell_command.hpp"
+#include "tracking_dispatch_task.hpp"
+#include "tracking_mode_switch_task.hpp"
+#include "tracking_motion_task.hpp"
 
 namespace app
 {
@@ -40,8 +43,17 @@ public:
     manual_pid_tune_task&
     create_manual_pid_tune_task();
 
-    task_route_tracking&
-    create_route_tracking_task();
+    tracking_dispatch_task&
+    create_tracking_dispatch_task();
+
+    tracking_motion_task&
+    create_tracking_motion_task();
+
+    tracking_mode_switch_task&
+    create_tracking_mode_switch_task();
+
+    route_guard_toggle_task&
+    create_route_guard_toggle_task();
 
     task_immediate_stop&
     create_immediate_stop_task();

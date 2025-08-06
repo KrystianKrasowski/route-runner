@@ -11,7 +11,7 @@ class pid_tuner
 {
 public:
 
-    pid_tuner(const remote_control control, pid_params& params)
+    pid_tuner(const remote_control& control, pid_params& params)
         : control_{control},
           params_{params}
     {

@@ -48,15 +48,6 @@ public:
     toggle_route_guard();
 
     void
-    attempt_maneuver(const coordinates& line_positon);
-
-    void
-    attempt_mode_switch(const coordinates& line_position);
-
-    void
-    attempt_route_guard_toggle(const coordinates& line_position);
-
-    void
     halt();
 
     void

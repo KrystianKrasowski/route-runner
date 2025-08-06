@@ -14,11 +14,10 @@
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
-#include "remote_control_dispatch_task.hpp"
 #include "task_domain_dump.hpp"
 #include "task_immediate_stop.hpp"
-#include "task_route_tracking.hpp"
 #include "task_shell_command.hpp"
+#include "tracking_mode_switch_task.hpp"
 
 namespace app
 {
@@ -86,15 +85,53 @@ task_factory::create_manual_pid_tune_task()
     return task;
 }
 
-task_route_tracking&
-task_factory::create_route_tracking_task()
+tracking_dispatch_task&
+task_factory::create_tracking_dispatch_task()
 {
-    auto& api      = get_or_create_api();
-    auto& task     = task_route_tracking::of(devices_.line_sensor_, api);
-    auto  event_id = device::event_id::QTRHD06A_CONVERSION_COMPLETE;
+    auto  isr_event   = device::event_id::QTRHD06A_CONVERSION_COMPLETE;
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task =
+        tracking_dispatch_task::of(devices_.line_sensor_, api, event_group);
 
     task.register_rtos_task();
-    events_.register_task_notification(event_id, task.get_handle());
+    events_.register_task_notification(isr_event, task.get_handle());
+
+    return task;
+}
+
+tracking_motion_task&
+task_factory::create_tracking_motion_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = tracking_motion_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+tracking_mode_switch_task&
+task_factory::create_tracking_mode_switch_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = tracking_mode_switch_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+route_guard_toggle_task&
+task_factory::create_route_guard_toggle_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = route_guard_toggle_task::of(api, event_group);
+
+    task.register_rtos_task();
 
     return task;
 }

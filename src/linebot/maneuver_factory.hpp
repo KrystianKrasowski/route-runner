@@ -14,7 +14,7 @@ constexpr int8_t CORRECTION_MANUAL_LEFT  = -50;
 constexpr int8_t CORRECTION_MANUAL_RIGHT = 50;
 
 inline maneuver
-create_maneuver(const remote_control control)
+create_maneuver(const remote_control& control)
 {
     int8_t correction = 0;
 

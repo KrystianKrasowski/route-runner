@@ -17,7 +17,7 @@ public:
     }
 
     bool
-    transit(const remote_control control)
+    transit(const remote_control& control)
     {
         return maybe_switch_to_following(control)
             || maybe_switch_to_manual(control);
