@@ -8,7 +8,7 @@
 namespace app
 {
 
-class tracking_motion_task : public task_base<tracking_motion_task, 40>
+class tracking_motion_task : public task_base<tracking_motion_task, 48>
 {
 public:
 

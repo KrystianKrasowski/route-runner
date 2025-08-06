@@ -18,7 +18,7 @@ struct data_store
 
     remote_control remote_control_{remote_control::STOP};
     mode           mode_{mode::MANUAL};
-    pid_params     pid_params_{700, 0, 4100};
+    pid_params     pid_params_{640, 2, 4200};
     coordinates    line_position_;
 
     static data_store&
