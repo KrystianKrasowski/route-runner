@@ -3,8 +3,7 @@ add_subdirectory(config)
 add_executable(${PROJECT_NAME}
     main.cpp
     isr_event_emitter_adapter.cpp
-    # TODO: rename task below
-    manual_control_dispatch_task.cpp
+    manual_dispatch_task.cpp
     manual_motion_task.cpp
     manual_mode_switch_task.cpp
     manual_pid_tune_task.cpp
@@ -12,10 +11,9 @@ add_executable(${PROJECT_NAME}
     tracking_motion_task.cpp
     tracking_mode_switch_task.cpp
     route_guard_toggle_task.cpp
-    # TODO: Rename tasks below
-    task_immediate_stop.cpp
-    task_shell_command.cpp
-    task_domain_dump.cpp
+    immediate_stop_task.cpp
+    shell_command_task.cpp
+    domain_dump_task.cpp
     task_factory.cpp
     stack_overflow_handler.cpp
 )

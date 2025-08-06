@@ -1,24 +1,24 @@
-#include "task_domain_dump.hpp"
+#include "domain_dump_task.hpp"
 #include "FreeRTOS.h"
 #include "projdefs.h"
-#include "task_shell_command.hpp"
+#include "shell_command_task.hpp"
 
 namespace app
 {
 
-task_domain_dump&
-task_domain_dump::of(linebot::api& api, EventGroupHandle_t event_group)
+domain_dump_task&
+domain_dump_task::of(linebot::api& api, EventGroupHandle_t event_group)
 {
-    static task_domain_dump task{api, event_group};
+    static domain_dump_task task{api, event_group};
     return task;
 }
 
 void
-task_domain_dump::run()
+domain_dump_task::run()
 {
     while (1)
     {
-        EventBits_t wait_for = task_shell_command::DOMAIN_DUMP_BIT;
+        EventBits_t wait_for = shell_command_task::DOMAIN_DUMP_BIT;
 
         EventBits_t bits = xEventGroupWaitBits(
             event_group_, wait_for, pdTRUE, pdTRUE, pdMS_TO_TICKS(1000)

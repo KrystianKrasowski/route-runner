@@ -14,9 +14,6 @@
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
-#include "task_domain_dump.hpp"
-#include "task_immediate_stop.hpp"
-#include "task_shell_command.hpp"
 #include "tracking_mode_switch_task.hpp"
 
 namespace app
@@ -33,13 +30,13 @@ task_factory::task_factory(
 {
 }
 
-manual_control_dispatch_task&
+manual_dispatch_task&
 task_factory::create_manual_control_dispatch_task()
 {
     auto  isr_event   = device::event_id::DUALSHOCK2_RX_COMPLETE;
     auto& api         = get_or_create_api();
     auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = manual_control_dispatch_task::of(
+    auto& task        = manual_dispatch_task::of(
         devices_.remote_control_, api, event_group
     );
 
@@ -136,11 +133,11 @@ task_factory::create_route_guard_toggle_task()
     return task;
 }
 
-task_immediate_stop&
+immediate_stop_task&
 task_factory::create_immediate_stop_task()
 {
     auto& api      = get_or_create_api();
-    auto& task     = task_immediate_stop::of(api);
+    auto& task     = immediate_stop_task::of(api);
     auto  event_id = device::event_id::TIMEOUT;
 
     task.register_rtos_task();
@@ -149,12 +146,12 @@ task_factory::create_immediate_stop_task()
     return task;
 }
 
-task_shell_command&
+shell_command_task&
 task_factory::create_shell_command_task()
 {
     auto& api         = get_or_create_api();
     auto  event_group = get_or_create_shell_event_group();
-    auto& task     = task_shell_command::of(devices_.shell_, api, event_group);
+    auto& task     = shell_command_task::of(devices_.shell_, api, event_group);
     auto  event_id = device::event_id::SHELL_COMMANDED;
 
     task.register_rtos_task();
@@ -163,12 +160,12 @@ task_factory::create_shell_command_task()
     return task;
 }
 
-task_domain_dump&
+domain_dump_task&
 task_factory::create_domain_dump_task()
 {
     auto& api         = get_or_create_api();
     auto  event_group = get_or_create_shell_event_group();
-    auto& task        = task_domain_dump::of(api, event_group);
+    auto& task        = domain_dump_task::of(api, event_group);
 
     task.register_rtos_task();
 

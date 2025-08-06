@@ -1,4 +1,4 @@
-#include "task_shell_command.hpp"
+#include "shell_command_task.hpp"
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "linebot/api.hpp"
@@ -8,17 +8,17 @@
 namespace app
 {
 
-task_shell_command&
-task_shell_command::of(
+shell_command_task&
+shell_command_task::of(
     device::shell& shell, linebot::api& api, EventGroupHandle_t event_group
 )
 {
-    static task_shell_command task{shell, api, event_group};
+    static shell_command_task task{shell, api, event_group};
     return task;
 }
 
 void
-task_shell_command::run()
+shell_command_task::run()
 {
     while (1)
     {

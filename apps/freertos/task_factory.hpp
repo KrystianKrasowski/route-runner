@@ -10,14 +10,14 @@
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
-#include "manual_control_dispatch_task.hpp"
+#include "manual_dispatch_task.hpp"
 #include "manual_mode_switch_task.hpp"
 #include "manual_motion_task.hpp"
 #include "manual_pid_tune_task.hpp"
 #include "route_guard_toggle_task.hpp"
-#include "task_domain_dump.hpp"
-#include "task_immediate_stop.hpp"
-#include "task_shell_command.hpp"
+#include "domain_dump_task.hpp"
+#include "immediate_stop_task.hpp"
+#include "shell_command_task.hpp"
 #include "tracking_dispatch_task.hpp"
 #include "tracking_mode_switch_task.hpp"
 #include "tracking_motion_task.hpp"
@@ -31,7 +31,7 @@ public:
 
     task_factory(device::tree& devices, isr_event_emitter_adapter& events);
 
-    manual_control_dispatch_task&
+    manual_dispatch_task&
     create_manual_control_dispatch_task();
 
     manual_motion_task&
@@ -55,13 +55,13 @@ public:
     route_guard_toggle_task&
     create_route_guard_toggle_task();
 
-    task_immediate_stop&
+    immediate_stop_task&
     create_immediate_stop_task();
 
-    task_shell_command&
+    shell_command_task&
     create_shell_command_task();
 
-    task_domain_dump&
+    domain_dump_task&
     create_domain_dump_task();
 
 private:

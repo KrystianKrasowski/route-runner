@@ -7,17 +7,17 @@
 namespace app
 {
 
-class task_immediate_stop : public task_base<task_immediate_stop, 48>
+class immediate_stop_task : public task_base<immediate_stop_task, 48>
 {
 public:
 
-    static task_immediate_stop&
+    static immediate_stop_task&
     of(linebot::api& api);
 
-    task_immediate_stop(task_immediate_stop& other) = delete;
+    immediate_stop_task(immediate_stop_task& other) = delete;
 
-    task_immediate_stop&
-    operator=(task_immediate_stop& other) = delete;
+    immediate_stop_task&
+    operator=(immediate_stop_task& other) = delete;
 
     void
     run();
@@ -26,7 +26,7 @@ private:
 
     linebot::api api_;
 
-    explicit task_immediate_stop(linebot::api& api)
+    explicit immediate_stop_task(linebot::api& api)
         : task_base{"route guard", 3},
           api_{api}
     {

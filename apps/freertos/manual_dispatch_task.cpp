@@ -1,4 +1,4 @@
-#include "manual_control_dispatch_task.hpp"
+#include "manual_dispatch_task.hpp"
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "linebot/api.hpp"
@@ -9,19 +9,19 @@
 namespace app
 {
 
-manual_control_dispatch_task&
-manual_control_dispatch_task::of(
+manual_dispatch_task&
+manual_dispatch_task::of(
     device::dualshock2& dualshock2,
     linebot::api&       api,
     EventGroupHandle_t  event_group
 )
 {
-    static manual_control_dispatch_task task{dualshock2, api, event_group};
+    static manual_dispatch_task task{dualshock2, api, event_group};
     return task;
 }
 
 void
-manual_control_dispatch_task::run()
+manual_dispatch_task::run()
 {
     while (1)
     {

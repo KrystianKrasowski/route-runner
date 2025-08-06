@@ -8,11 +8,11 @@
 namespace app
 {
 
-class task_domain_dump : public task_base<task_domain_dump, 128>
+class domain_dump_task : public task_base<domain_dump_task, 128>
 {
 public:
 
-    static task_domain_dump&
+    static domain_dump_task&
     of(linebot::api& api, EventGroupHandle_t event_group);
 
     void
@@ -23,7 +23,7 @@ private:
     linebot::api&      api_;
     EventGroupHandle_t event_group_;
 
-    task_domain_dump(linebot::api& api, EventGroupHandle_t event_group)
+    domain_dump_task(linebot::api& api, EventGroupHandle_t event_group)
         : task_base{"domain dump", 1},
           api_{api},
           event_group_{event_group}

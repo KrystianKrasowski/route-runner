@@ -10,12 +10,12 @@
 namespace app
 {
 
-class manual_control_dispatch_task
-    : public task_base<manual_control_dispatch_task, 48>
+class manual_dispatch_task
+    : public task_base<manual_dispatch_task, 48>
 {
 public:
 
-    static manual_control_dispatch_task&
+    static manual_dispatch_task&
     of(device::dualshock2& dualshock2,
        linebot::api&       api,
        EventGroupHandle_t  event_group);
@@ -23,13 +23,13 @@ public:
     void
     run();
 
-    manual_control_dispatch_task(manual_control_dispatch_task& other) = delete;
+    manual_dispatch_task(manual_dispatch_task& other) = delete;
 
-    manual_control_dispatch_task&
-    operator=(manual_control_dispatch_task& other) = delete;
+    manual_dispatch_task&
+    operator=(manual_dispatch_task& other) = delete;
 
-    manual_control_dispatch_task&&
-    operator=(manual_control_dispatch_task&& other) = delete;
+    manual_dispatch_task&&
+    operator=(manual_dispatch_task&& other) = delete;
 
 private:
 
@@ -37,7 +37,7 @@ private:
     linebot::api&       api_;
     EventGroupHandle_t  event_group_;
 
-    manual_control_dispatch_task(
+    manual_dispatch_task(
         device::dualshock2& dualshock2,
         linebot::api&       api,
         EventGroupHandle_t  event_group

@@ -1,19 +1,19 @@
 #include "FreeRTOS.h"
-#include "task_immediate_stop.hpp"
+#include "immediate_stop_task.hpp"
 #include <cstdint>
 
 namespace app
 {
 
-task_immediate_stop&
-task_immediate_stop::of(linebot::api& api)
+immediate_stop_task&
+immediate_stop_task::of(linebot::api& api)
 {
-    static task_immediate_stop task{api};
+    static immediate_stop_task task{api};
     return task;
 }
 
 void
-task_immediate_stop::run()
+immediate_stop_task::run()
 {
     while (1)
     {
