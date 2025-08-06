@@ -14,9 +14,9 @@
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
+#include "remote_control_dispatch_task.hpp"
 #include "task_domain_dump.hpp"
 #include "task_immediate_stop.hpp"
-#include "task_manual_control.hpp"
 #include "task_route_tracking.hpp"
 #include "task_shell_command.hpp"
 
@@ -34,15 +34,54 @@ task_factory::task_factory(
 {
 }
 
-task_manual_control&
-task_factory::create_manual_control_task()
+manual_control_dispatch_task&
+task_factory::create_manual_control_dispatch_task()
 {
-    auto& api      = get_or_create_api();
-    auto& task     = task_manual_control::of(devices_.remote_control_, api);
-    auto  event_id = device::event_id::DUALSHOCK2_RX_COMPLETE;
+    auto  isr_event   = device::event_id::DUALSHOCK2_RX_COMPLETE;
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_control_dispatch_task::of(
+        devices_.remote_control_, api, event_group
+    );
 
     task.register_rtos_task();
-    events_.register_task_notification(event_id, task.get_handle());
+    events_.register_task_notification(isr_event, task.get_handle());
+
+    return task;
+}
+
+manual_motion_task&
+task_factory::create_manual_motion_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_motion_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+manual_mode_switch_task&
+task_factory::create_manual_mode_switch_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_mode_switch_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+manual_pid_tune_task&
+task_factory::create_manual_pid_tune_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_pid_tune_task::of(api, event_group);
+
+    task.register_rtos_task();
 
     return task;
 }

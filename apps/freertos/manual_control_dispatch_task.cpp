@@ -1,23 +1,27 @@
-#include "task_manual_control.hpp"
+#include "manual_control_dispatch_task.hpp"
 #include "FreeRTOS.h"
+#include "event_groups.h"
 #include "linebot/api.hpp"
 #include "linebot/domain/actions.hpp"
 #include "mapper/dualshock2_remote_control.hpp"
-#include "task_base.hpp"
 #include <cstdint>
 
 namespace app
 {
 
-task_manual_control&
-task_manual_control::of(device::dualshock2& dualshock2, linebot::api& api)
+manual_control_dispatch_task&
+manual_control_dispatch_task::of(
+    device::dualshock2& dualshock2,
+    linebot::api&       api,
+    EventGroupHandle_t  event_group
+)
 {
-    static task_manual_control task{dualshock2, api};
+    static manual_control_dispatch_task task{dualshock2, api, event_group};
     return task;
 }
 
 void
-task_manual_control::run()
+manual_control_dispatch_task::run()
 {
     while (1)
     {
@@ -28,6 +32,8 @@ task_manual_control::run()
             auto raw_control = dualshock2_.read();
             auto commands    = mapper::map_remote_control(raw_control);
             auto actions     = api_.query(commands);
+
+            xEventGroupSetBits(event_group_, actions.as_uint());
 
             // TODO: Use event_group to dispatch this
             if (actions.contain(linebot::actions::APPLY_MANEUVER))

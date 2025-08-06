@@ -10,9 +10,12 @@
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
+#include "manual_control_dispatch_task.hpp"
+#include "manual_mode_switch_task.hpp"
+#include "manual_motion_task.hpp"
+#include "manual_pid_tune_task.hpp"
 #include "task_domain_dump.hpp"
 #include "task_immediate_stop.hpp"
-#include "task_manual_control.hpp"
 #include "task_route_tracking.hpp"
 #include "task_shell_command.hpp"
 
@@ -25,8 +28,17 @@ public:
 
     task_factory(device::tree& devices, isr_event_emitter_adapter& events);
 
-    task_manual_control&
-    create_manual_control_task();
+    manual_control_dispatch_task&
+    create_manual_control_dispatch_task();
+
+    manual_motion_task&
+    create_manual_motion_task();
+
+    manual_mode_switch_task&
+    create_manual_mode_switch_task();
+
+    manual_pid_tune_task&
+    create_manual_pid_tune_task();
 
     task_route_tracking&
     create_route_tracking_task();

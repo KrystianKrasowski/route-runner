@@ -3,7 +3,10 @@ add_subdirectory(config)
 add_executable(${PROJECT_NAME}
     main.cpp
     isr_event_emitter_adapter.cpp
-    task_manual_control.cpp
+    manual_control_dispatch_task.cpp
+    manual_motion_task.cpp
+    manual_mode_switch_task.cpp
+    manual_pid_tune_task.cpp
     task_route_tracking.cpp
     task_immediate_stop.cpp
     task_shell_command.cpp
