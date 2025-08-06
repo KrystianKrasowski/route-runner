@@ -47,7 +47,7 @@ create_maneuver(const remote_control& control)
 }
 
 inline maneuver
-create_maneuver(const coordinates& line_position, pid_regulator& pid)
+create_maneuver(const coordinates& line_position, const pid_regulator& pid)
 {
     if (line_position.is_on_finish())
     {

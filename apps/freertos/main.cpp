@@ -27,7 +27,9 @@ main()
     (void)task_factory.create_shell_command_task();
     (void)task_factory.create_domain_dump_task();
 
-    (void)app::stack_overflow_handler::hook(devices.blink_);
+    (void)app::stack_overflow_handler::hook(
+        devices.blink_, devices.motor_left_, devices.motor_right_
+    );
 
     vTaskStartScheduler();
 

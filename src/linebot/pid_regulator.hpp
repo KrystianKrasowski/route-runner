@@ -22,7 +22,7 @@ public:
     }
 
     int8_t
-    regulate(int8_t error)
+    regulate(int8_t error) const
     {
         int16_t errors_sum =
             etl::accumulate(past_errors_.begin(), past_errors_.end(), 0);
@@ -51,7 +51,7 @@ public:
     }
 
     int8_t
-    get_last_error()
+    get_last_error() const
     {
         return past_errors_.empty() ? 0 : past_errors_.back();
     }
