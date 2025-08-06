@@ -55,7 +55,7 @@ TEST_CASE_METHOD(
     auto expected          = std::get<1>(params);
 
     // when
-    auto actions = api_.dispatch(commands);
+    auto actions = api_.query(commands);
 
     // then
     CHECK(actions.contain(expected));
@@ -91,8 +91,8 @@ TEST_CASE_METHOD(
     actions dispatched_actions{NONE};
 
     // when
-    dispatched_actions = api_.dispatch(commands);
-    dispatched_actions = api_.dispatch(commands);
+    dispatched_actions = api_.query(commands);
+    dispatched_actions = api_.query(commands);
 
     // then
     CHECK(!dispatched_actions.contain(unexpected));
@@ -119,7 +119,7 @@ TEST_CASE_METHOD(
     store_.mode_ = mode;
 
     // when
-    auto actions = api_.dispatch(commands);
+    auto actions = api_.query(commands);
 
     // then
     CHECK(!actions.contain(APPLY_MANEUVER));
@@ -133,7 +133,7 @@ TEST_CASE_METHOD(
     store_.mode_ = GENERATE(mode::FOLLOWING, mode::RECOVERING);
 
     // when
-    auto actions = api_.dispatch(remote_control{BREAK});
+    auto actions = api_.query(remote_control{BREAK});
 
     // then
     CHECK(actions.contain(APPLY_MANEUVER));

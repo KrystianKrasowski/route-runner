@@ -24,7 +24,7 @@ public:
        printer_port&          printer);
 
     actions
-    dispatch(const remote_control commands);
+    query(const remote_control commands);
 
     void
     apply_motion_by_remote();

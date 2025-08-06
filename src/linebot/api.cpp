@@ -31,10 +31,10 @@ api::of(
 }
 
 actions
-api::dispatch(const remote_control commands)
+api::query(const remote_control commands)
 {
     actions_dispatcher dispatcher{store_};
-    auto               actions = dispatcher.dispatch(commands);
+    auto               actions = dispatcher.query(commands);
 
     store_.remote_control_ = commands;
 

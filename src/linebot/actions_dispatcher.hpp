@@ -17,7 +17,7 @@ public:
     }
 
     actions
-    dispatch(const remote_control commands)
+    query(const remote_control commands)
     {
         uint8_t values = actions::NONE;
 

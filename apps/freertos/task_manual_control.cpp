@@ -27,8 +27,9 @@ task_manual_control::run()
         {
             auto raw_control = dualshock2_.read();
             auto commands    = mapper::map_remote_control(raw_control);
-            auto actions     = api_.dispatch(commands);
+            auto actions     = api_.query(commands);
 
+            // TODO: Use event_group to dispatch this
             if (actions.contain(linebot::actions::APPLY_MANEUVER))
             {
                 api_.apply_motion_by_remote();
