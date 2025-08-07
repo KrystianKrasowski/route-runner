@@ -20,6 +20,7 @@ public:
     {
     }
 
+    // TODO: Remove this implicit converions
     constexpr
     operator value() const
     {
@@ -27,31 +28,31 @@ public:
     }
 
     constexpr bool
-    is_line_detected()
+    is_line_detected() const
     {
         return value_ == LINE_DETECTED;
     }
 
     constexpr bool
-    is_manual()
+    is_manual() const
     {
         return value_ == MANUAL;
     }
 
     constexpr bool
-    is_following()
+    is_following() const 
     {
         return value_ == FOLLOWING;
     }
 
     constexpr bool
-    is_recovering()
+    is_recovering() const
     {
         return value_ == RECOVERING;
     }
 
     constexpr bool
-    is_tracking()
+    is_tracking() const
     {
         return is_following() || is_recovering();
     }

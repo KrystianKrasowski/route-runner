@@ -1,7 +1,7 @@
 #pragma once
 
-#include "linebot/domain/pid_control.hpp"
 #include "linebot/domain/pid_params.hpp"
+#include "linebot/domain/remote_control.hpp"
 #include <cstdint>
 
 namespace linebot
@@ -11,7 +11,7 @@ class pid_tuner
 {
 public:
 
-    pid_tuner(const pid_control control, pid_params& params)
+    pid_tuner(const remote_control& control, pid_params& params)
         : control_{control},
           params_{params}
     {
@@ -65,8 +65,8 @@ private:
     static constexpr uint8_t TUNE_STEP_KI = 1;
     static constexpr uint8_t TUNE_STEP_KD = 100;
 
-    const pid_control control_;
-    pid_params&       params_;
+    const remote_control control_;
+    pid_params&          params_;
 };
 
 } // namespace linebot

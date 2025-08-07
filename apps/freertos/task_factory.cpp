@@ -14,16 +14,13 @@
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
-#include "task_domain_dump.hpp"
-#include "task_immediate_stop.hpp"
-#include "task_manual_control.hpp"
-#include "task_route_tracking.hpp"
-#include "task_shell_command.hpp"
+#include "tracking_mode_switch_task.hpp"
 
 namespace app
 {
 
 StaticEventGroup_t task_factory::shell_event_group_buffer_;
+StaticEventGroup_t task_factory::linebot_event_group_buffer_;
 
 task_factory::task_factory(
     device::tree& devices, isr_event_emitter_adapter& events
@@ -33,37 +30,114 @@ task_factory::task_factory(
 {
 }
 
-task_manual_control&
-task_factory::create_manual_control_task()
+manual_dispatch_task&
+task_factory::create_manual_control_dispatch_task()
 {
-    auto& api      = get_or_create_api();
-    auto& task     = task_manual_control::of(devices_.remote_control_, api);
-    auto  event_id = device::event_id::DUALSHOCK2_RX_COMPLETE;
+    auto  isr_event   = device::event_id::DUALSHOCK2_RX_COMPLETE;
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_dispatch_task::of(
+        devices_.remote_control_, api, event_group
+    );
 
     task.register_rtos_task();
-    events_.register_task_notification(event_id, task.get_handle());
+    events_.register_task_notification(isr_event, task.get_handle());
 
     return task;
 }
 
-task_route_tracking&
-task_factory::create_route_tracking_task()
+manual_motion_task&
+task_factory::create_manual_motion_task()
 {
-    auto& api      = get_or_create_api();
-    auto& task     = task_route_tracking::of(devices_.line_sensor_, api);
-    auto  event_id = device::event_id::QTRHD06A_CONVERSION_COMPLETE;
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_motion_task::of(api, event_group);
 
     task.register_rtos_task();
-    events_.register_task_notification(event_id, task.get_handle());
 
     return task;
 }
 
-task_immediate_stop&
+manual_mode_switch_task&
+task_factory::create_manual_mode_switch_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_mode_switch_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+manual_pid_tune_task&
+task_factory::create_manual_pid_tune_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_pid_tune_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+tracking_dispatch_task&
+task_factory::create_tracking_dispatch_task()
+{
+    auto  isr_event   = device::event_id::QTRHD06A_CONVERSION_COMPLETE;
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task =
+        tracking_dispatch_task::of(devices_.line_sensor_, api, event_group);
+
+    task.register_rtos_task();
+    events_.register_task_notification(isr_event, task.get_handle());
+
+    return task;
+}
+
+tracking_motion_task&
+task_factory::create_tracking_motion_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = tracking_motion_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+tracking_mode_switch_task&
+task_factory::create_tracking_mode_switch_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = tracking_mode_switch_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+route_guard_toggle_task&
+task_factory::create_route_guard_toggle_task()
+{
+    auto& api         = get_or_create_api();
+    auto  event_group = get_or_create_linebot_event_group();
+    auto& task        = route_guard_toggle_task::of(api, event_group);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+immediate_stop_task&
 task_factory::create_immediate_stop_task()
 {
     auto& api      = get_or_create_api();
-    auto& task     = task_immediate_stop::of(api);
+    auto& task     = immediate_stop_task::of(api);
     auto  event_id = device::event_id::TIMEOUT;
 
     task.register_rtos_task();
@@ -72,12 +146,12 @@ task_factory::create_immediate_stop_task()
     return task;
 }
 
-task_shell_command&
+shell_command_task&
 task_factory::create_shell_command_task()
 {
     auto& api         = get_or_create_api();
     auto  event_group = get_or_create_shell_event_group();
-    auto& task     = task_shell_command::of(devices_.shell_, api, event_group);
+    auto& task     = shell_command_task::of(devices_.shell_, api, event_group);
     auto  event_id = device::event_id::SHELL_COMMANDED;
 
     task.register_rtos_task();
@@ -86,12 +160,12 @@ task_factory::create_shell_command_task()
     return task;
 }
 
-task_domain_dump&
+domain_dump_task&
 task_factory::create_domain_dump_task()
 {
     auto& api         = get_or_create_api();
     auto  event_group = get_or_create_shell_event_group();
-    auto& task        = task_domain_dump::of(api, event_group);
+    auto& task        = domain_dump_task::of(api, event_group);
 
     task.register_rtos_task();
 
@@ -176,7 +250,7 @@ task_factory::get_or_create_printer()
     return *printer_;
 }
 
-inline EventGroupHandle_t
+EventGroupHandle_t
 task_factory::get_or_create_shell_event_group()
 {
     if (!shell_event_group_)
@@ -186,6 +260,18 @@ task_factory::get_or_create_shell_event_group()
     }
 
     return shell_event_group_;
+}
+
+EventGroupHandle_t
+task_factory::get_or_create_linebot_event_group()
+{
+    if (!linebot_event_group_)
+    {
+        linebot_event_group_ =
+            xEventGroupCreateStatic(&linebot_event_group_buffer_);
+    }
+
+    return linebot_event_group_;
 }
 
 } // namespace app

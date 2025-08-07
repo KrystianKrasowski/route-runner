@@ -35,10 +35,11 @@ TEST_CASE_METHOD(
 
     CAPTURE(current_mode, line_position, expected_mode);
 
-    store_.mode_ = current_mode;
+    store_.mode_          = current_mode;
+    store_.line_position_ = line_position;
 
     // when
-    api_.attempt_mode_switch(line_position);
+    api_.switch_mode_by_line_position();
 
     // then
     REQUIRE(status_indicator_.applied_mode_.has_value());
@@ -51,11 +52,11 @@ TEST_CASE_METHOD(
 )
 {
     // given
-    store_.mode_ = mode::FOLLOWING;
+    store_.mode_          = mode::FOLLOWING;
+    store_.line_position_ = coordinates::of_6(20, 20, 20, 20, 20, 20);
 
     // when
-    auto coords = coordinates::of_6(20, 20, 20, 20, 20, 20);
-    api_.attempt_mode_switch(coords);
+    api_.switch_mode_by_line_position();
 
     // then
     CHECK(store_.mode_ == mode::FOLLOWING);

@@ -7,14 +7,16 @@ target_sources(
     linebot_test
         PRIVATE
             name_helpers.cpp
-            api_attempt_maneuver_by_remote_test.cpp
-            api_attempt_maneuver_by_line_position_test.cpp
-            api_attempt_mode_switch_by_remote_test.cpp
-            api_attempt_mode_switch_by_line_position_test.cpp
-            api_attempt_route_guard_toggle_test.cpp
+            api_apply_motion_by_remote_test.cpp
+            api_apply_motion_by_line_position_test.cpp
+            api_switch_mode_by_remote_test.cpp
+            api_switch_mode_by_line_position.cpp
+            api_toggle_route_guard_test.cpp
             api_halt_test.cpp
             api_dump_store_test.cpp
             api_tune_pid_test.cpp
+            api_query_remote_control_test.cpp
+            api_query_line_position_test.cpp
 )
 
 target_link_libraries(

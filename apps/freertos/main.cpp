@@ -15,13 +15,21 @@ main()
     app::task_factory task_factory{devices, events};
 
     // don't need the instances for these right now
-    (void)task_factory.create_manual_control_task();
-    (void)task_factory.create_route_tracking_task();
+    (void)task_factory.create_manual_control_dispatch_task();
+    (void)task_factory.create_manual_motion_task();
+    (void)task_factory.create_manual_mode_switch_task();
+    (void)task_factory.create_manual_pid_tune_task();
+    (void)task_factory.create_tracking_dispatch_task();
+    (void)task_factory.create_tracking_motion_task();
+    (void)task_factory.create_tracking_mode_switch_task();
+    (void)task_factory.create_route_guard_toggle_task();
     (void)task_factory.create_immediate_stop_task();
     (void)task_factory.create_shell_command_task();
     (void)task_factory.create_domain_dump_task();
 
-    (void)app::stack_overflow_handler::hook(devices.blink_);
+    (void)app::stack_overflow_handler::hook(
+        devices.blink_, devices.motor_left_, devices.motor_right_
+    );
 
     vTaskStartScheduler();
 

@@ -10,11 +10,17 @@
 #include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
-#include "task_domain_dump.hpp"
-#include "task_immediate_stop.hpp"
-#include "task_manual_control.hpp"
-#include "task_route_tracking.hpp"
-#include "task_shell_command.hpp"
+#include "manual_dispatch_task.hpp"
+#include "manual_mode_switch_task.hpp"
+#include "manual_motion_task.hpp"
+#include "manual_pid_tune_task.hpp"
+#include "route_guard_toggle_task.hpp"
+#include "domain_dump_task.hpp"
+#include "immediate_stop_task.hpp"
+#include "shell_command_task.hpp"
+#include "tracking_dispatch_task.hpp"
+#include "tracking_mode_switch_task.hpp"
+#include "tracking_motion_task.hpp"
 
 namespace app
 {
@@ -25,35 +31,57 @@ public:
 
     task_factory(device::tree& devices, isr_event_emitter_adapter& events);
 
-    task_manual_control&
-    create_manual_control_task();
+    manual_dispatch_task&
+    create_manual_control_dispatch_task();
 
-    task_route_tracking&
-    create_route_tracking_task();
+    manual_motion_task&
+    create_manual_motion_task();
 
-    task_immediate_stop&
+    manual_mode_switch_task&
+    create_manual_mode_switch_task();
+
+    manual_pid_tune_task&
+    create_manual_pid_tune_task();
+
+    tracking_dispatch_task&
+    create_tracking_dispatch_task();
+
+    tracking_motion_task&
+    create_tracking_motion_task();
+
+    tracking_mode_switch_task&
+    create_tracking_mode_switch_task();
+
+    route_guard_toggle_task&
+    create_route_guard_toggle_task();
+
+    immediate_stop_task&
     create_immediate_stop_task();
 
-    task_shell_command&
+    shell_command_task&
     create_shell_command_task();
 
-    task_domain_dump&
+    domain_dump_task&
     create_domain_dump_task();
 
 private:
 
+    // Look out for this class growth. If there was more event groups, mutexes,
+    // etc, consider extracting them to separate modules, other factories maybe
     static StaticEventGroup_t shell_event_group_buffer_;
+    static StaticEventGroup_t linebot_event_group_buffer_;
 
     device::tree&              devices_;
     isr_event_emitter_adapter& events_;
 
-    linebot::data_store*            store_             = nullptr;
-    linebot::motion_port*           motion_            = nullptr;
-    linebot::status_indicator_port* status_indicator_  = nullptr;
-    linebot::route_guard_port*      route_guard_       = nullptr;
-    linebot::printer_port*          printer_           = nullptr;
-    linebot::api*                   api_               = nullptr;
-    EventGroupHandle_t              shell_event_group_ = nullptr;
+    linebot::data_store*            store_               = nullptr;
+    linebot::motion_port*           motion_              = nullptr;
+    linebot::status_indicator_port* status_indicator_    = nullptr;
+    linebot::route_guard_port*      route_guard_         = nullptr;
+    linebot::printer_port*          printer_             = nullptr;
+    linebot::api*                   api_                 = nullptr;
+    EventGroupHandle_t              shell_event_group_   = nullptr;
+    EventGroupHandle_t              linebot_event_group_ = nullptr;
 
     linebot::api&
     get_or_create_api();
@@ -75,6 +103,9 @@ private:
 
     inline EventGroupHandle_t
     get_or_create_shell_event_group();
+
+    EventGroupHandle_t
+    get_or_create_linebot_event_group();
 };
 
 } // namespace app

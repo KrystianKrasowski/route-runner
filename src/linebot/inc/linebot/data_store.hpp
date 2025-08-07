@@ -1,9 +1,9 @@
 #pragma once
 
+#include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/mode.hpp"
-#include "linebot/domain/motion_control.hpp"
-#include "linebot/domain/pid_control.hpp"
 #include "linebot/domain/pid_params.hpp"
+#include "linebot/domain/remote_control.hpp"
 #include <cstdint>
 #include <etl/circular_buffer.h>
 
@@ -16,17 +16,20 @@ struct data_store
 
     etl::circular_buffer<int8_t, ERROR_HISTORY_LENGTH> errors_;
 
-    motion_control motion_control_{motion_control::STOP};
-    pid_control    pid_control_{pid_control::NONE};
+    remote_control remote_control_{remote_control::STOP};
     mode           mode_{mode::MANUAL};
-    pid_params     pid_params_{700, 0, 4100};
+    pid_params     pid_params_{640, 2, 4200};
+    coordinates    line_position_;
 
     static data_store&
     of();
 
 private:
 
-    data_store() = default;
+    data_store()
+        : line_position_{coordinates::of_6(0, 0, 0, 0, 0, 0)}
+    {
+    }
 };
 
 } // namespace linebot

@@ -5,7 +5,6 @@ target_sources(
         PRIVATE
             api.cpp
             data_store.cpp
-            coordinates.cpp
 )
 
 target_include_directories(
