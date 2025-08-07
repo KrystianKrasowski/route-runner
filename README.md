@@ -65,8 +65,10 @@ For the power details visit the [Power supply](#power-supply) section
 * MANUAL - 1 short blink per second
 * DETECTED - 2 short blinks per second
 * TRACKING - 4 short blinks per second
+* STACK OVERFLOW (FreeRTOS) 1 shor blink, 1 longer
 
 short blink is a sequence `on -> off` with 250ms duration
+longer blink is a sequence `on -> off` with 500ms duration
 
 ## Hardware
 * The line sensor is positioned at 4mm above the surface and the calibration is hardcoded.
@@ -102,20 +104,26 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
     * *PA7* (A6) - channel 6
 * Status indicator
     * **PA8** (D9)
+* USART
+    * *PA15* - USART Rx
+    * *PA2* - USART Tx
 
 ### Other peripheral usage summary
-* TIM2 channel 1 - timer for (dualshock2) MANUAL CONTROL communication trigger
+* TIM2 - timer for (dualshock2) MANUAL CONTROL communication trigger
 * TIM3 channel 4 - timer for PWM signal for left motor (PB1)
 * TIM3 channel 3 - timer for PWM signal for right motor (PB0)
-* TIM1 channel 1 - timer for (LED) status indicator (by toggle on compare)
 * TIM6 - timer trigger for ADC conversion by TRGO, every 1ms
+* TIM7 - timer for toggle sequence for blinking LED status indicator
 * TIM15 - off route guard
-* ADC in dual mode with DMA controller for conversions readings
+* TIM16 - trigger enqueued messages for USART transmittion
+* ADC12 in dual mode with DMA controller for conversions readings
+* SPI1 bus - communication with Dualshock2 controller (via DMA)
+* USART2 - serial communication with PC
 
 Pins in **bold** are unchangeable. *Italic* pin change may implicate other changes.
 
 ### Electrical schematics
-![schematic](./doc/img/schematic.png)
+![schematic](./docs/img/schematic.png)
 
 ## Software
 
@@ -123,7 +131,7 @@ Pins in **bold** are unchangeable. *Italic* pin change may implicate other chang
 
 Software architecture is inspired by the hexagonal (ports and adapters) pattern. The main goal of this approach was to be abe to embed the domain into any other MCU platform, wherher to use RTOS or bare metal, with or without STM32 HAL, etc. Any infrastructure change must not imply the domain logic changes.
 
-![lib-dependency](./doc/img/architecture-1.png)
+![lib-dependency](./docs/img/architecture-1.png)
 
 ## Development
 
