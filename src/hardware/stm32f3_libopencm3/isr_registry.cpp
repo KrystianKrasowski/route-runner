@@ -25,36 +25,58 @@ isr_register(uint8_t nvic_number, isr_handler& handler)
     case NVIC_TIM2_IRQ:
         tim2_handler = &handler;
         nvic_enable_irq(NVIC_TIM2_IRQ);
+        // Setting 10th priority, it does not call any RTOS API directly, but
+        // triggers SPI via DMA
+        nvic_set_priority(NVIC_TIM2_IRQ, 10);
         break;
 
     case NVIC_TIM7_IRQ:
         tim7_handler = &handler;
         nvic_enable_irq(NVIC_TIM7_IRQ);
+        // Setting 4th priority, as it does not call any FreeRTOS calls
+        // Setting this high, as it is for device status indication
+        // Need to work even for RTOS crashes
+        nvic_set_priority(NVIC_TIM7_IRQ, 4);
         break;
 
     case NVIC_TIM1_BRK_TIM15_IRQ:
         tim15_handler = &handler;
         nvic_enable_irq(NVIC_TIM1_BRK_TIM15_IRQ);
+        // Setting highest possible priority for RTOS API calls, as this is
+        // responsible for guarding too long route drifts
+        nvic_set_priority(NVIC_TIM1_BRK_TIM15_IRQ, 5);
         break;
 
     case NVIC_TIM1_UP_TIM16_IRQ:
         tim16_handler = &handler;
         nvic_enable_irq(NVIC_TIM1_UP_TIM16_IRQ);
+        // Setting lowest possible priority for RTOS API calls, as this is
+        // responsible only for dumping to serial console
+        nvic_set_priority(NVIC_TIM1_UP_TIM16_IRQ, 15);
         break;
 
     case NVIC_DMA1_CHANNEL1_IRQ:
         dma1_channel1_handler = &handler;
         nvic_enable_irq(NVIC_DMA1_CHANNEL1_IRQ);
+        // Setting for the second highest possible priority for RTOS API calls,
+        // as this is reponsible for triggering route guard
+        nvic_set_priority(NVIC_DMA1_CHANNEL1_IRQ, 6);
         break;
 
     case NVIC_DMA1_CHANNEL2_IRQ:
         dma1_channel2_handler = &handler;
         nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
+        // Setting 11th priority, as it calls mid-priority task of manual
+        // control
+        nvic_set_priority(NVIC_DMA1_CHANNEL2_IRQ, 11);
         break;
 
     case NVIC_USART2_EXTI26_IRQ:
         usart2_handler = &handler;
         nvic_enable_irq(NVIC_USART2_EXTI26_IRQ);
+        // Setting second lowest priority, as this is responsible for receiving
+        // USART requests
+        nvic_set_priority(NVIC_USART2_EXTI26_IRQ, 14);
         break;
     }
 }
