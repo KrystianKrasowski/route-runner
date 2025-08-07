@@ -28,7 +28,7 @@ isr_handler_dma1_channel2::handle()
     {
         dma_clear_interrupt_flags(DMA1, DMA_CHANNEL2, DMA_TCIF);
         remote_control_.poll_end();
-        data_store_.on_dualshock2_rx_isr();
+        data_store_.swap_dualshock2_buffers_isr();
         event_emitter_.emit(device::event_id::DUALSHOCK2_RX_COMPLETE);
     }
 }

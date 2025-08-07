@@ -5,21 +5,19 @@ namespace hardware
 {
 
 void
-data_store::on_dualshock2_rx_isr()
+data_store::swap_dualshock2_buffers_isr()
 {
-    for (uint8_t i = 0; i < DUALSHOCK2_BUFFER_LENGTH; i++)
-    {
-        p_dualshock2_rbuff_[i] = p_dualshock2_wbuff_[i];
-    }
+    volatile uint8_t* temp = p_dualshock2_rbuff_;
+    p_dualshock2_rbuff_    = p_dualshock2_wbuff_;
+    p_dualshock2_wbuff_    = temp;
 }
 
 void
-data_store::on_qtrhd06a_conversion_isr()
+data_store::swap_qtrhd06a_buffers_isr()
 {
-    for (uint8_t i = 0; i < QTRHD06A_BUFFER_LENGTH; i++)
-    {
-        p_qtrhd06a_rbuff_[i] = p_qtrhd06a_wbuff_[i];
-    }
+    volatile uint16_t* temp = p_qtrhd06a_rbuff_;
+    p_qtrhd06a_rbuff_       = p_qtrhd06a_wbuff_;
+    p_qtrhd06a_wbuff_       = temp;
 }
 
 void

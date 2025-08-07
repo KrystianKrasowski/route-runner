@@ -35,7 +35,7 @@ tree::of(isr_event_emitter& events)
     auto& blink = hardware::toggle_sequence_gpio::of(TIM7, GPIOA, GPIO8);
 
     auto& remote_control = hardware::dualshock2::of(
-        GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store.p_dualshock2_rbuff_
+        GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store
     );
 
     auto& motor_left =
@@ -44,9 +44,7 @@ tree::of(isr_event_emitter& events)
     auto& motor_right =
         hardware::l293::of(GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4);
 
-    auto& line_sensor = hardware::qtrhd06a::of(
-        store.p_qtrhd06a_rbuff_, store.QTRHD06A_BUFFER_LENGTH
-    );
+    auto& line_sensor = hardware::qtrhd06a::of(store);
 
     auto& offroute_timeout = hardware::timeout::of(TIM15);
 

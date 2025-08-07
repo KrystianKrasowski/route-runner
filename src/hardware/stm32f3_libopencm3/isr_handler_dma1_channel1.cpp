@@ -28,7 +28,13 @@ isr_handler_dma1_channel1::handle()
     if (dma_get_interrupt_flag(DMA1, DMA_CHANNEL1, DMA_TCIF))
     {
         dma_clear_interrupt_flags(DMA1, DMA_CHANNEL1, DMA_TCIF);
-        data_store_.on_qtrhd06a_conversion_isr();
+        data_store_.swap_qtrhd06a_buffers_isr();
+
+        uint32_t memory_address = (uint32_t)data_store_.p_qtrhd06a_wbuff_;
+        dma_disable_channel(DMA1, DMA_CHANNEL1);
+        dma_set_memory_address(DMA1, DMA_CHANNEL1, memory_address);
+        dma_enable_channel(DMA1, DMA_CHANNEL1);
+
         event_emitter_.emit(device::event_id::QTRHD06A_CONVERSION_COMPLETE);
     }
 }
