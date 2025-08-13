@@ -19,6 +19,9 @@
 - [Development](#development)
 
 ## Overview
+
+[YouTube video](https://youtu.be/DjguqcQfWMA)
+
 Route runner is a name of the line following robot project. It is built using the following components:
 * STM32 NUCLEO-F303 board as a microcontroller
 * 2 DC motors driven by simple L293D driver
