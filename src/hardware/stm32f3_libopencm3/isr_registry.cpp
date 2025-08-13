@@ -12,7 +12,6 @@ namespace hardware
 isr_handler* tim2_handler          = nullptr;
 isr_handler* tim7_handler          = nullptr;
 isr_handler* tim15_handler         = nullptr;
-isr_handler* tim16_handler         = nullptr;
 isr_handler* dma1_channel1_handler = nullptr;
 isr_handler* dma1_channel2_handler = nullptr;
 isr_handler* usart2_handler        = nullptr;
@@ -45,14 +44,6 @@ isr_register(uint8_t nvic_number, isr_handler& handler)
         // Setting highest possible priority for RTOS API calls, as this is
         // responsible for guarding too long route drifts
         nvic_set_priority(NVIC_TIM1_BRK_TIM15_IRQ, 5);
-        break;
-
-    case NVIC_TIM1_UP_TIM16_IRQ:
-        tim16_handler = &handler;
-        nvic_enable_irq(NVIC_TIM1_UP_TIM16_IRQ);
-        // Setting lowest possible priority for RTOS API calls, as this is
-        // responsible only for dumping to serial console
-        nvic_set_priority(NVIC_TIM1_UP_TIM16_IRQ, 15);
         break;
 
     case NVIC_DMA1_CHANNEL1_IRQ:
@@ -128,19 +119,6 @@ extern "C"
         else
         {
             timer_clear_flag(TIM15, timer_status_flags);
-        }
-    }
-
-    void
-    tim1_up_tim16_isr()
-    {
-        if (hardware::tim16_handler)
-        {
-            hardware::tim16_handler->handle();
-        }
-        else
-        {
-            timer_clear_flag(TIM16, timer_status_flags);
         }
     }
 

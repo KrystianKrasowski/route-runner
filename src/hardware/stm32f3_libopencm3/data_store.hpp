@@ -10,7 +10,7 @@ struct data_store
 {
     static const uint8_t DUALSHOCK2_BUFFER_LENGTH = 5;
     static const uint8_t QTRHD06A_BUFFER_LENGTH   = 40;
-    static const uint8_t SHELL_TXBUFF_LENGTH      = 100;
+    static const uint8_t SHELL_TXBUFF_LENGTH      = 128;
 
     const uint8_t p_dualshock2_request_[DUALSHOCK2_BUFFER_LENGTH] = {
         0x1, 0x42, 0x0, 0x0, 0x0
@@ -21,7 +21,7 @@ struct data_store
     volatile uint16_t qtrhd06a_buffer1_[QTRHD06A_BUFFER_LENGTH];
     volatile uint16_t qtrhd06a_buffer2_[QTRHD06A_BUFFER_LENGTH];
     volatile char     shell_command_;
-    volatile char     p_shell_output_[SHELL_TXBUFF_LENGTH];
+    volatile char     shell_output_buffer_[SHELL_TXBUFF_LENGTH];
 
     volatile uint8_t*  p_dualshock2_wbuff_ = dualshock2_buffer1_;
     volatile uint8_t*  p_dualshock2_rbuff_ = dualshock2_buffer2_;

@@ -38,9 +38,6 @@ static inline void
 tim15_setup();
 
 static inline void
-tim16_setup();
-
-static inline void
 spi_setup();
 
 static inline void
@@ -91,12 +88,11 @@ peripherals_setup(const data_store& store)
     );
     dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff_);
     dma1_channel3_setup((uint32_t)store.p_dualshock2_request_);
-    dma1_channel7_setup((uint32_t)store.p_shell_output_);
+    dma1_channel7_setup((uint32_t)store.shell_output_buffer_);
     adc12_setup();
     tim6_setup();
     tim7_setup();
     tim15_setup();
-    tim16_setup();
     usart2_setup();
 }
 
@@ -281,24 +277,6 @@ tim15_setup()
 
     // enable update interrupt
     timer_enable_irq(TIM15, TIM_DIER_UIE);
-}
-
-static inline void
-tim16_setup()
-{
-    // set timer frequency to 20Hz
-    timer_set_prescaler(TIM16, 16000 - 1);
-    timer_set_period(TIM16, 50 - 1);
-
-    // reinitialize the counter and update the registers on update event
-    timer_generate_event(TIM16, TIM_EGR_UG);
-    timer_clear_flag(TIM16, TIM_SR_UIF);
-
-    // enable update interrupt
-    timer_enable_irq(TIM16, TIM_DIER_UIE);
-
-    // enable timer
-    timer_enable_counter(TIM16);
 }
 
 static inline void

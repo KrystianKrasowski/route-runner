@@ -118,7 +118,6 @@ The device is powered by two 18650 Li-ion 2500mAh 20A baterries of total voltage
 * TIM6 - timer trigger for ADC conversion by TRGO, every 1ms
 * TIM7 - timer for toggle sequence for blinking LED status indicator
 * TIM15 - off route guard
-* TIM16 - trigger enqueued messages for USART transmittion
 * ADC12 in dual mode with DMA controller for conversions readings
 * SPI1 bus - communication with Dualshock2 controller (via DMA)
 * USART2 - serial communication with PC

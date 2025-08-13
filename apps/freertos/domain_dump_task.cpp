@@ -1,15 +1,18 @@
 #include "domain_dump_task.hpp"
 #include "FreeRTOS.h"
-#include "projdefs.h"
 #include "shell_command_task.hpp"
 
 namespace app
 {
 
 domain_dump_task&
-domain_dump_task::of(linebot::api& api, EventGroupHandle_t event_group)
+domain_dump_task::of(
+    linebot::api&      api,
+    EventGroupHandle_t event_group,
+    shell_stream&      shell_stream
+)
 {
-    static domain_dump_task task{api, event_group};
+    static domain_dump_task task{api, event_group, shell_stream};
     return task;
 }
 
@@ -26,7 +29,9 @@ domain_dump_task::run()
 
         if ((bits & wait_for) != 0)
         {
-            api_.dump_store();
+            linebot::info_string info = "";
+            api_.dump_store(info);
+            shell_stream_.send(info);
         }
     }
 }

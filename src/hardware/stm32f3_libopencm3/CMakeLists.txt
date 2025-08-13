@@ -7,7 +7,6 @@ target_sources(
             isr_handler_tim2.cpp
             isr_handler_tim7.cpp
             isr_handler_tim15.cpp
-            isr_handler_tim16.cpp
             isr_handler_dma1_channel1.cpp
             isr_handler_dma1_channel2.cpp
             isr_handler_usart2.cpp

@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
     immediate_stop_task.cpp
     shell_command_task.cpp
     domain_dump_task.cpp
+    shell_output_task.cpp
     task_factory.cpp
     stack_overflow_handler.cpp
 )

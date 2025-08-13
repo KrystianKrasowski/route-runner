@@ -1,7 +1,6 @@
 #include "task_factory.hpp"
 #include "FreeRTOS.h"
 #include "adapter/motion_l293.hpp"
-#include "adapter/printer_shell.hpp"
 #include "adapter/route_guard_timeout.hpp"
 #include "adapter/status_indicator_toggle_sequence.hpp"
 #include "device/isr_event_emitter.hpp"
@@ -11,7 +10,6 @@
 #include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
 #include "linebot/motion_port.hpp"
-#include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
 #include "tracking_mode_switch_task.hpp"
@@ -36,9 +34,8 @@ task_factory::create_manual_control_dispatch_task()
     auto  isr_event   = device::event_id::DUALSHOCK2_RX_COMPLETE;
     auto& api         = get_or_create_api();
     auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = manual_dispatch_task::of(
-        devices_.remote_control_, api, event_group
-    );
+    auto& task =
+        manual_dispatch_task::of(devices_.remote_control_, api, event_group);
 
     task.register_rtos_task();
     events_.register_task_notification(isr_event, task.get_handle());
@@ -163,9 +160,21 @@ task_factory::create_shell_command_task()
 domain_dump_task&
 task_factory::create_domain_dump_task()
 {
-    auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_shell_event_group();
-    auto& task        = domain_dump_task::of(api, event_group);
+    auto& api          = get_or_create_api();
+    auto  event_group  = get_or_create_shell_event_group();
+    auto& shell_stream = get_or_create_shell_stream();
+    auto& task         = domain_dump_task::of(api, event_group, shell_stream);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+shell_output_task&
+task_factory::create_shell_output_task()
+{
+    auto& shell_stream = get_or_create_shell_stream();
+    auto& task         = shell_output_task::of(devices_.shell_, shell_stream);
 
     task.register_rtos_task();
 
@@ -181,11 +190,8 @@ task_factory::get_or_create_api()
         auto& motion           = get_or_create_motion();
         auto& status_indicator = get_or_create_status_indicator();
         auto& route_guard      = get_or_create_route_guard();
-        auto& printer          = get_or_create_printer();
 
-        api_ = &linebot::api::of(
-            store, motion, status_indicator, route_guard, printer
-        );
+        api_ = &linebot::api::of(store, motion, status_indicator, route_guard);
     }
 
     return *api_;
@@ -239,17 +245,6 @@ task_factory::get_or_create_route_guard()
     return *route_guard_;
 }
 
-linebot::printer_port&
-task_factory::get_or_create_printer()
-{
-    if (!printer_)
-    {
-        printer_ = &adapter::printer_shell::of(devices_.shell_);
-    }
-
-    return *printer_;
-}
-
 EventGroupHandle_t
 task_factory::get_or_create_shell_event_group()
 {
@@ -272,6 +267,17 @@ task_factory::get_or_create_linebot_event_group()
     }
 
     return linebot_event_group_;
+}
+
+shell_stream&
+task_factory::get_or_create_shell_stream()
+{
+    if (!shell_stream_)
+    {
+        shell_stream_ = &shell_stream::of();
+    }
+
+    return *shell_stream_;
 }
 
 } // namespace app

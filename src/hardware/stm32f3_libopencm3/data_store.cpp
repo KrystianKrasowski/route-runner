@@ -25,7 +25,7 @@ data_store::clear_shell_output()
 {
     for (uint8_t i = 0; i < SHELL_TXBUFF_LENGTH; i++)
     {
-        p_shell_output_[i] = 0;
+        shell_output_buffer_[i] = 0;
     }
 }
 
