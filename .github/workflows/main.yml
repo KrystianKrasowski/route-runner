@@ -15,7 +15,7 @@ on:
 jobs:
   build-and-test:
     # Debian runner
-    runs-on: debian-latest
+    runs-on: ubuntu-latest
     # If debian-latest is unavailable, uncomment below and comment out the line above:
     # runs-on: ubuntu-latest
     # container:
