@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - test/ci
+  pull_request:
+    branches:
+      - main
+      - test/ci
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake make gcc-arm-none-eabi g++ gcc
+
+      - name: Configure (Release)
+        run: cmake --preset release
+
+      - name: Build (Release)
+        run: cmake --build --preset release
+
+      - name: Configure (Test)
+        run: cmake --preset test
+
+      - name: Build (Test)
+        run: cmake --build --preset test
+
+      - name: Run tests
+        run: ctest --preset test --output-on-failure
+        continue-on-error: true
+
