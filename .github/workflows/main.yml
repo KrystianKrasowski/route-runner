@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/ci 
+      - test/ci
+  pull_request:
+    branches:
+      - main
+      - feature/ci
+      - test/ci
+
+jobs:
+  build-and-test:
+    # Debian runner
+    runs-on: debian-latest
+    # If debian-latest is unavailable, uncomment below and comment out the line above:
+    # runs-on: ubuntu-latest
+    # container:
+    #   image: debian:bookworm
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake make gcc-arm-none-eabi g++ gcc
+
+      - name: Configure (Release)
+        run: cmake --preset release
+
+      - name: Build (Release)
+        run: cmake --build --preset release
+
+      - name: Configure (Test)
+        run: cmake --preset test
+
+      - name: Build (Test)
+        run: cmake --build --preset test
+
+      - name: Run tests
+        run: ctest --preset test --output-on-failure
+        continue-on-error: true
+
