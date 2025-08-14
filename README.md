@@ -14,7 +14,6 @@
     - [Other peripherals usage summary](#other-peripheral-usage-summary)
     - [Electrical schematics](#electrical-schematics)
 - [Software](#software)
-    - [Build and flash](#build-and-flash)
     - [Application architecture](#application-architecture)
 - [Development](#development)
 - [Future work](#future-work)
@@ -173,7 +172,6 @@ Here is an example of clangd lsp configuration via the vim-lsp-settings plugin
 
 ## Future work
 
-* Github Actions
 * Use of stream buffers for USART communication
 * FreeRTOS tasks' stack depth monitoring
 * FreeRTOS tasks' stack usage optimization
