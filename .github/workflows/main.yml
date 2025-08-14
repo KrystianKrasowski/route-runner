@@ -14,16 +14,13 @@ on:
 
 jobs:
   build-and-test:
-    # Debian runner
     runs-on: ubuntu-latest
-    # If debian-latest is unavailable, uncomment below and comment out the line above:
-    # runs-on: ubuntu-latest
-    # container:
-    #   image: debian:bookworm
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Install dependencies
         run: |
