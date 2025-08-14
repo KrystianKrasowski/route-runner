@@ -27,7 +27,7 @@ public:
     query(remote_control commands);
 
     actions
-    query(coordinates line_position);
+    query(const coordinates& line_position);
 
     void
     apply_motion_by_remote();

@@ -36,15 +36,15 @@ api::query(remote_control commands)
     actions_dispatcher dispatcher{store_};
     auto               actions = dispatcher.query(commands);
 
-    store_.remote_control_ = etl::move(commands);
+    store_.remote_control_ = commands;
 
     return actions;
 }
 
 actions
-api::query(coordinates line_position)
+api::query(const coordinates& line_position)
 {
-    store_.line_position_ = etl::move(line_position);
+    store_.line_position_ = line_position;
 
     uint8_t values = 0;
 
