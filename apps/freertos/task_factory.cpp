@@ -163,7 +163,7 @@ task_factory::create_domain_dump_task()
     auto& api          = get_or_create_api();
     auto  event_group  = get_or_create_shell_event_group();
     auto& shell_stream = get_or_create_shell_stream();
-    auto& task         = domain_dump_task::of(api, event_group, shell_stream);
+    auto& task         = domain_dump_task::of(shell_stream, api, event_group);
 
     task.register_rtos_task();
 

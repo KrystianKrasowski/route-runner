@@ -7,7 +7,7 @@
 namespace app
 {
 
-class shell_output_task : public task_base<shell_output_task, 128>
+class shell_output_task : public task_base<shell_output_task, 56>
 {
 public:
 

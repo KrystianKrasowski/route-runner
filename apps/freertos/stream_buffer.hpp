@@ -52,8 +52,9 @@ public:
         while (offset < STRLEN)
         {
             memcpy(chunk, raw_message + offset, BUFFLEN);
-            offset +=
-                xStreamBufferSend(handle_, chunk, BUFFLEN, pdMS_TO_TICKS(1000));
+            offset += xStreamBufferSend(
+                handle_, chunk, BUFFLEN, pdMS_TO_TICKS(TX_TIMEOUT_MS)
+            );
         }
     }
 
@@ -61,18 +62,21 @@ public:
     receive(void* buffer, size_t length)
     {
         return xStreamBufferReceive(
-            handle_, buffer, length, pdMS_TO_TICKS(100)
+            handle_, buffer, length, pdMS_TO_TICKS(RX_TIMEOUT_MS)
         );
     }
 
 private:
 
+    static constexpr uint16_t TX_TIMEOUT_MS = 1000;
+    static constexpr uint16_t RX_TIMEOUT_MS = 100;
+
     std::size_t          trigger_bytes_;
-    uint8_t              storage_[BUFFLEN + 1];
+    uint8_t              storage_[BUFFLEN + 1] = {0};
     StaticStreamBuffer_t buffer_;
     StreamBufferHandle_t handle_;
 
-    stream_buffer(std::size_t trigger_bytes)
+    explicit stream_buffer(std::size_t trigger_bytes)
         : trigger_bytes_{trigger_bytes}
     {
     }

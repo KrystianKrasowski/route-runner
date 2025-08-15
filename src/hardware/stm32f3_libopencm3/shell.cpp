@@ -28,6 +28,9 @@ shell::send(char* data, uint8_t length)
         length = store_.SHELL_TXBUFF_LENGTH;
     }
 
+    // This copies only 4 bytes. I could implement some callback, delegate, etc.
+    // But it obfuscates code a lot. And with this implementation we have
+    // separation of buffers
     for (uint8_t i = 0; i < length; ++i)
     {
         store_.shell_output_buffer_[i] = data[i];

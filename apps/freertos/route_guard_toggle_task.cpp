@@ -4,9 +4,9 @@ namespace app
 {
 
 route_guard_toggle_task&
-route_guard_toggle_task::of(linebot::api& api, EventGroupHandle_t even_group)
+route_guard_toggle_task::of(linebot::api& api, EventGroupHandle_t event_group)
 {
-    static route_guard_toggle_task task{api, even_group};
+    static route_guard_toggle_task task{api, event_group};
     return task;
 }
 

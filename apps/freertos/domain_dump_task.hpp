@@ -10,33 +10,33 @@
 namespace app
 {
 
-class domain_dump_task : public task_base<domain_dump_task, 128>
+class domain_dump_task : public task_base<domain_dump_task, 96>
 {
 public:
 
     static domain_dump_task&
-    of(linebot::api&      api,
-       EventGroupHandle_t event_group,
-       shell_stream&      shell_stream);
+    of(const shell_stream& shell_stream,
+       linebot::api&       api,
+       EventGroupHandle_t  event_group);
 
     void
     run();
 
 private:
 
-    linebot::api&      api_;
-    EventGroupHandle_t event_group_;
-    shell_stream&      shell_stream_;
+    const shell_stream& shell_stream_;
+    linebot::api&       api_;
+    EventGroupHandle_t  event_group_;
 
     domain_dump_task(
-        linebot::api&      api,
-        EventGroupHandle_t event_group,
-        shell_stream&      shell_stream
+        const shell_stream& shell_stream,
+        linebot::api&       api,
+        EventGroupHandle_t  event_group
     )
         : task_base{"domain dump", 1},
+          shell_stream_{shell_stream},
           api_{api},
-          event_group_{event_group},
-          shell_stream_{shell_stream}
+          event_group_{event_group}
     {
     }
 };

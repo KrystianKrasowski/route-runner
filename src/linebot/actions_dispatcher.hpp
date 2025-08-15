@@ -11,7 +11,7 @@ class actions_dispatcher
 {
 public:
 
-    actions_dispatcher(const data_store& store)
+    explicit actions_dispatcher(const data_store& store)
         : store_{store}
     {
     }

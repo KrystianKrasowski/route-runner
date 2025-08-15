@@ -7,12 +7,12 @@ namespace app
 
 domain_dump_task&
 domain_dump_task::of(
-    linebot::api&      api,
-    EventGroupHandle_t event_group,
-    shell_stream&      shell_stream
+    const shell_stream& shell_stream,
+    linebot::api&       api,
+    EventGroupHandle_t  event_group
 )
 {
-    static domain_dump_task task{api, event_group, shell_stream};
+    static domain_dump_task task{shell_stream, api, event_group};
     return task;
 }
 

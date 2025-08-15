@@ -13,13 +13,11 @@ shell_output_task::of(device::shell& shell, shell_stream& stream_buffer)
 void
 shell_output_task::run()
 {
-    // TODO: Extract this magic number
     char   buffer[device::shell::MAX_LENGTH];
-    size_t received_bytes;
 
     while (1)
     {
-        received_bytes = stream_buffer_.receive(buffer, sizeof(buffer));
+        size_t received_bytes = stream_buffer_.receive(buffer, sizeof(buffer));
 
         if (received_bytes > 0)
         {

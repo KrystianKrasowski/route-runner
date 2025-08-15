@@ -34,9 +34,6 @@ struct data_store
 
     void
     swap_qtrhd06a_buffers_isr();
-
-    void
-    clear_shell_output();
 };
 
 } // namespace hardware
