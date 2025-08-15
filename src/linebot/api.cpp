@@ -4,12 +4,12 @@
 #include "linebot/domain/coordinates.hpp"
 #include "linebot/domain/maneuver.hpp"
 #include "linebot/motion_port.hpp"
-#include "linebot/printer_port.hpp"
 #include "linebot/status_indicator_port.hpp"
 #include "maneuver_factory.hpp"
 #include "mode_state_machine.hpp"
 #include "pid_regulator.hpp"
 #include "pid_tuner.hpp"
+#include <etl/to_string.h>
 
 namespace linebot
 {
@@ -19,11 +19,10 @@ api::of(
     data_store&            store,
     motion_port&           motion,
     status_indicator_port& status_indicator,
-    route_guard_port&      route_guard,
-    printer_port&          printer
+    route_guard_port&      route_guard
 )
 {
-    static api api{store, motion, status_indicator, route_guard, printer};
+    static api api{store, motion, status_indicator, route_guard};
 
     status_indicator.apply(store.mode_);
 
@@ -135,10 +134,19 @@ api::halt()
 }
 
 void
-api::dump_store()
+api::dump_store(info_string& buffer)
 {
-    printer_.print(store_.mode_);
-    printer_.print(store_.pid_params_);
+    buffer += "Mode: ";
+    etl::to_string(static_cast<uint8_t>(store_.mode_), buffer, true);
+    buffer += "\n\r";
+
+    buffer += "PID: kp ";
+    etl::to_string(store_.pid_params_.kp_, buffer, true);
+    buffer += ", ki ";
+    etl::to_string(store_.pid_params_.ki_, buffer, true);
+    buffer += ", kd ";
+    etl::to_string(store_.pid_params_.kd_, buffer, true);
+    buffer += "\n\r";
 }
 
 } // namespace linebot

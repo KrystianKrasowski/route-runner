@@ -22,7 +22,7 @@ private:
 
     data_store& store_;
 
-    qtrhd06a(data_store& store)
+    explicit qtrhd06a(data_store& store)
         : store_{store}
     {
     }

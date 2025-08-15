@@ -20,13 +20,4 @@ data_store::swap_qtrhd06a_buffers_isr()
     p_qtrhd06a_wbuff_       = temp;
 }
 
-void
-data_store::clear_shell_output()
-{
-    for (uint8_t i = 0; i < SHELL_TXBUFF_LENGTH; i++)
-    {
-        p_shell_output_[i] = 0;
-    }
-}
-
 } // namespace hardware

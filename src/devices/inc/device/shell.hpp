@@ -8,13 +8,13 @@ namespace device
 
 struct shell
 {
-    static constexpr size_t MAX_LENGTH = 100;
+    static constexpr size_t MAX_LENGTH = 32;
 
     virtual char
     read() = 0;
 
     virtual void
-    send(etl::string<MAX_LENGTH>& message) = 0;
+    send(char* data, uint8_t length) = 0;
 };
 
 } // namespace device

@@ -74,7 +74,7 @@ dualshock2::poll_end()
 bool
 dualshock2::is_state_valid()
 {
-    volatile uint8_t* state_buffer = store_.p_dualshock2_rbuff_;
+    volatile uint8_t const * state_buffer = store_.p_dualshock2_rbuff_;
 
     bool b_1st_byte_valid = 0xff == state_buffer[0];
     bool b_2nd_byte_valid = 0x41 == state_buffer[1] || 0x73 == state_buffer[1];

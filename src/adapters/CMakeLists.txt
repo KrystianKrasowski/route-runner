@@ -4,7 +4,6 @@ add_library(
             motion_l293.cpp
             status_indicator_toggle_sequence.cpp
             route_guard_timeout.cpp
-            printer_shell.cpp
 )
 
 target_link_libraries(

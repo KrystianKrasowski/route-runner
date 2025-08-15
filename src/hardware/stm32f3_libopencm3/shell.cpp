@@ -21,47 +21,24 @@ shell::read()
 }
 
 void
-shell::send(etl::string<MAX_LENGTH>& message)
+shell::send(char* data, uint8_t length)
 {
-    if (output_chars_.available() >= message.size())
+    if (length > store_.SHELL_TXBUFF_LENGTH)
     {
-        for (auto& chr : message)
-        {
-            output_chars_.push(chr);
-        }
-    }
-}
-
-void
-shell::dump()
-{
-    if (!output_chars_.empty())
-    {
-        store_.clear_shell_output();
-
-        uint8_t data_length = dump_queue_to_dma_buffer();
-
-        dma_disable_channel(dma_port_, dma_channel_);
-        dma_set_number_of_data(dma_port_, dma_channel_, data_length);
-        dma_enable_channel(dma_port_, dma_channel_);
-    }
-}
-
-uint8_t
-shell::dump_queue_to_dma_buffer()
-{
-    uint8_t char_index = 0;
-
-    while (!output_chars_.empty())
-    {
-        // not poped into buffer directly, due to volatile
-        char chr;
-        output_chars_.pop_into(chr);
-        store_.p_shell_output_[char_index] = chr;
-        char_index++;
+        length = store_.SHELL_TXBUFF_LENGTH;
     }
 
-    return char_index;
+    // This copies only 4 bytes. I could implement some callback, delegate, etc.
+    // But it obfuscates code a lot. And with this implementation we have
+    // separation of buffers
+    for (uint8_t i = 0; i < length; ++i)
+    {
+        store_.shell_output_buffer_[i] = data[i];
+    }
+
+    dma_disable_channel(dma_port_, dma_channel_);
+    dma_set_number_of_data(dma_port_, dma_channel_, length);
+    dma_enable_channel(dma_port_, dma_channel_);
 }
 
 } // namespace hardware

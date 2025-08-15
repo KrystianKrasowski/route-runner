@@ -2,12 +2,13 @@
 
 #include "FreeRTOS.h"
 #include "device/tree.hpp"
+#include "domain_dump_task.hpp"
 #include "event_groups.h"
+#include "immediate_stop_task.hpp"
 #include "isr_event_emitter_adapter.hpp"
 #include "linebot/api.hpp"
 #include "linebot/data_store.hpp"
 #include "linebot/motion_port.hpp"
-#include "linebot/printer_port.hpp"
 #include "linebot/route_guard_port.hpp"
 #include "linebot/status_indicator_port.hpp"
 #include "manual_dispatch_task.hpp"
@@ -15,9 +16,10 @@
 #include "manual_motion_task.hpp"
 #include "manual_pid_tune_task.hpp"
 #include "route_guard_toggle_task.hpp"
-#include "domain_dump_task.hpp"
-#include "immediate_stop_task.hpp"
+#include "shell_output_task.hpp"
 #include "shell_command_task.hpp"
+#include "stream_buffer.h"
+#include "stream_buffer.hpp"
 #include "tracking_dispatch_task.hpp"
 #include "tracking_mode_switch_task.hpp"
 #include "tracking_motion_task.hpp"
@@ -64,6 +66,9 @@ public:
     domain_dump_task&
     create_domain_dump_task();
 
+    shell_output_task&
+    create_shell_output_task();
+
 private:
 
     // Look out for this class growth. If there was more event groups, mutexes,
@@ -78,10 +83,10 @@ private:
     linebot::motion_port*           motion_              = nullptr;
     linebot::status_indicator_port* status_indicator_    = nullptr;
     linebot::route_guard_port*      route_guard_         = nullptr;
-    linebot::printer_port*          printer_             = nullptr;
     linebot::api*                   api_                 = nullptr;
     EventGroupHandle_t              shell_event_group_   = nullptr;
     EventGroupHandle_t              linebot_event_group_ = nullptr;
+    shell_stream*                   shell_stream_        = nullptr;
 
     linebot::api&
     get_or_create_api();
@@ -98,14 +103,14 @@ private:
     inline linebot::route_guard_port&
     get_or_create_route_guard();
 
-    inline linebot::printer_port&
-    get_or_create_printer();
-
     inline EventGroupHandle_t
     get_or_create_shell_event_group();
 
     EventGroupHandle_t
     get_or_create_linebot_event_group();
+
+    shell_stream&
+    get_or_create_shell_stream();
 };
 
 } // namespace app
