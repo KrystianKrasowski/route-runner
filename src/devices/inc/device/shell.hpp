@@ -8,7 +8,7 @@ namespace device
 
 struct shell
 {
-    static constexpr size_t MAX_LENGTH = 100;
+    static constexpr size_t MAX_LENGTH = 32;
 
     virtual char
     read() = 0;

@@ -5,7 +5,7 @@
 namespace linebot
 {
 
-constexpr static size_t INFO_STRING_LENGTH = 128;
+constexpr static size_t INFO_STRING_LENGTH = 48;
 
 using info_string = etl::string<INFO_STRING_LENGTH>;
 

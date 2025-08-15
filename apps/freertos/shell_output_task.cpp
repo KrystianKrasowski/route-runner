@@ -14,7 +14,7 @@ void
 shell_output_task::run()
 {
     // TODO: Extract this magic number
-    char   buffer[128];
+    char   buffer[device::shell::MAX_LENGTH];
     size_t received_bytes;
 
     while (1)

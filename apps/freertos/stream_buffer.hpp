@@ -4,6 +4,7 @@
 #include "stream_buffer.h"
 #include <cstddef>
 #include <cstdint>
+#include <device/shell.hpp>
 #include <etl/string.h>
 
 namespace app
@@ -42,15 +43,26 @@ public:
 
     template <size_t STRLEN>
     void
-    send(etl::string<STRLEN>& message) const
+    send(const etl::string<STRLEN>& message) const
     {
-        xStreamBufferSend(handle_, message.c_str(), STRLEN, pdMS_TO_TICKS(1000));
+        size_t      offset = 0;
+        char        chunk[BUFFLEN];
+        const char* raw_message = message.c_str();
+
+        while (offset < STRLEN)
+        {
+            memcpy(chunk, raw_message + offset, BUFFLEN);
+            offset +=
+                xStreamBufferSend(handle_, chunk, BUFFLEN, pdMS_TO_TICKS(1000));
+        }
     }
 
     size_t
     receive(void* buffer, size_t length)
     {
-        return xStreamBufferReceive(handle_, buffer, length, pdMS_TO_TICKS(100));
+        return xStreamBufferReceive(
+            handle_, buffer, length, pdMS_TO_TICKS(100)
+        );
     }
 
 private:
@@ -66,6 +78,6 @@ private:
     }
 };
 
-using shell_stream = stream_buffer<128>;
+using shell_stream = stream_buffer<device::shell::MAX_LENGTH>;
 
 } // namespace app
