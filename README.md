@@ -46,6 +46,9 @@ For the power details visit the [Power supply](#power-supply) section
 * LEFT - turn left
 * FOLLOW - start tracking the route
 * BREAK - stop stracking
+* PID Tune, Kp up/down - increase/decrease propotional factor by 10
+* PID Tune, Ki up/down - increase/decrease integral factor by 1
+* PID Tune, Kd up/down - increase/decrease derivative factor by 100
 
 ### Command - dualshock2 mapping
 * FORWARD - R2
@@ -54,6 +57,12 @@ For the power details visit the [Power supply](#power-supply) section
 * LEFT - R2 or L2 + LEFT
 * FOLLOW - CROSS
 * BREAK - CIRCLE
+* PID Tune, Kp up - SQUARE + R1
+* PID Tune, Kp down - SQUARE + L1
+* PID Tune, Ki up - TRIANGLE + R1
+* PID Tune, Ki down - TRIANGLE + L1
+* PID Tune, Kd up - CIRCLE + R1
+* PID Tune, Kd down - CIRCLE + L1
 
 ### Modes reference
 * MANUAL - vehicle can be manually controlled
@@ -68,10 +77,11 @@ For the power details visit the [Power supply](#power-supply) section
 * MANUAL - 1 short blink per second
 * DETECTED - 2 short blinks per second
 * TRACKING - 4 short blinks per second
-* STACK OVERFLOW (FreeRTOS) 1 shor blink, 1 longer
+* STACK OVERFLOW (FreeRTOS) 1 short blink, 1 long blink
 
-short blink is a sequence `on -> off` with 250ms duration
-longer blink is a sequence `on -> off` with 500ms duration
+> Short blink is a sequence `on -> off` with 250ms duration
+
+> Long blink is a sequence `on -> off` with 500ms duration
 
 ## Hardware
 * The line sensor is positioned at 4mm above the surface and the calibration is hardcoded.
@@ -171,6 +181,5 @@ Here is an example of clangd lsp configuration via the vim-lsp-settings plugin
 
 ## Future work
 
-* Use of stream buffers for USART communication
 * FreeRTOS tasks' stack depth monitoring
 * FreeRTOS tasks' stack usage optimization
