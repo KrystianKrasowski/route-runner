@@ -55,8 +55,8 @@ For the power details visit the [Power supply](#power-supply) section
 * BACKWARD - L2
 * RIGHT - R2 or L2 + RIGHT
 * LEFT - R2 or L2 + LEFT
-* FOLLOW - CROSS
-* BREAK - CIRCLE
+* FOLLOW - START
+* BREAK - CROSS
 * PID Tune, Kp up - SQUARE + R1
 * PID Tune, Kp down - SQUARE + L1
 * PID Tune, Ki up - TRIANGLE + R1
