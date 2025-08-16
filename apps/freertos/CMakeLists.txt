@@ -18,6 +18,7 @@ add_executable(${PROJECT_NAME}
     task_factory.cpp
     stack_overflow_handler.cpp
     mutex.cpp
+    memory_usage_dump_task.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

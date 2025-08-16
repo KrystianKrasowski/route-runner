@@ -33,11 +33,15 @@ shell_command_task::run()
             case 'd':
                 bits = DOMAIN_DUMP_BIT;
                 break;
+
+            case 'm':
+                bits = TASK_MEM_USE_BIT;
+                break;
             }
 
             if (bits != 0)
             {
-                xEventGroupSetBits(event_group_, DOMAIN_DUMP_BIT);
+                xEventGroupSetBits(event_group_, bits);
             }
         }
     }

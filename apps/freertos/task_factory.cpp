@@ -175,7 +175,19 @@ task_factory::create_shell_output_task()
 {
     auto& shell_stream = get_or_create_shell_stream();
     auto& mutex        = get_or_create_shell_mutex();
-    auto& task         = shell_output_task::of(devices_.shell_, shell_stream, mutex);
+    auto& task = shell_output_task::of(devices_.shell_, shell_stream, mutex);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+memory_usage_dump_task&
+task_factory::create_memory_usage_dump_task()
+{
+    auto& shell_stream = get_or_create_shell_stream();
+    auto  event_group  = get_or_create_shell_event_group();
+    auto& task         = memory_usage_dump_task::of(shell_stream, event_group);
 
     task.register_rtos_task();
 

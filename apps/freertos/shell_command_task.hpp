@@ -15,7 +15,8 @@ class shell_command_task
 {
 public:
 
-    static constexpr uint8_t DOMAIN_DUMP_BIT = 0x1;
+    static constexpr uint8_t DOMAIN_DUMP_BIT  = 0x1;
+    static constexpr uint8_t TASK_MEM_USE_BIT = 0x2;
 
     static shell_command_task&
     of(device::shell& shell, linebot::api& api, EventGroupHandle_t event_group);

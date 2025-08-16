@@ -15,6 +15,7 @@
 #include "manual_mode_switch_task.hpp"
 #include "manual_motion_task.hpp"
 #include "manual_pid_tune_task.hpp"
+#include "memory_usage_dump_task.hpp"
 #include "mutex.hpp"
 #include "route_guard_toggle_task.hpp"
 #include "shell_command_task.hpp"
@@ -69,6 +70,9 @@ public:
 
     shell_output_task&
     create_shell_output_task();
+
+    memory_usage_dump_task&
+    create_memory_usage_dump_task();
 
 private:
 
