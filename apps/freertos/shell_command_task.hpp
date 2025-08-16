@@ -10,7 +10,8 @@
 namespace app
 {
 
-class shell_command_task : public task_base<shell_command_task, 64>
+class shell_command_task
+    : public task_base<shell_command_task, TASK_MEM_SHELL_COMMAND>
 {
 public:
 
@@ -33,7 +34,7 @@ private:
     shell_command_task(
         device::shell& shell, linebot::api& api, EventGroupHandle_t event_group
     )
-        : task_base("shell disp", 1),
+        : task_base("shcmd", 1),
           shell_{shell},
           api_{api},
           event_group_{event_group}

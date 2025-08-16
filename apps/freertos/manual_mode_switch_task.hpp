@@ -8,7 +8,8 @@
 namespace app
 {
 
-class manual_mode_switch_task : public task_base<manual_mode_switch_task, 32>
+class manual_mode_switch_task
+    : public task_base<manual_mode_switch_task, TASK_MEM_MANUAL_MODE_SWITCH>
 {
 public:
 
@@ -32,7 +33,7 @@ private:
     EventGroupHandle_t event_group_;
 
     manual_mode_switch_task(linebot::api& api, EventGroupHandle_t event_group)
-        : task_base{"remote_mode", 2},
+        : task_base{"mnmds", 2},
           api_{api},
           event_group_{event_group}
     {

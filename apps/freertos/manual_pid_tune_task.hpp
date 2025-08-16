@@ -6,7 +6,8 @@
 namespace app
 {
 
-class manual_pid_tune_task : public task_base<manual_pid_tune_task, 40>
+class manual_pid_tune_task
+    : public task_base<manual_pid_tune_task, TASK_MEM_MANUAL_PID_TUNE>
 {
 public:
 
@@ -30,7 +31,7 @@ private:
     EventGroupHandle_t event_group_;
 
     manual_pid_tune_task(linebot::api& api, EventGroupHandle_t event_group)
-        : task_base{"pid_tune", 1},
+        : task_base{"mnpid", 1},
           api_{api},
           event_group_{event_group}
     {

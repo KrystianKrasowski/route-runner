@@ -9,7 +9,7 @@ namespace app
 {
 
 class tracking_mode_switch_task
-    : public task_base<tracking_mode_switch_task, 48>
+    : public task_base<tracking_mode_switch_task, TASK_MEM_TRACKING_MODE_SWITCH>
 {
 public:
 
@@ -33,7 +33,7 @@ private:
     EventGroupHandle_t event_group_;
 
     tracking_mode_switch_task(linebot::api& api, EventGroupHandle_t event_group)
-        : task_base{"tracking_mode", 2},
+        : task_base{"trmds", 2},
           api_{api},
           event_group_{event_group}
     {

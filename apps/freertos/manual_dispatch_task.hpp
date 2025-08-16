@@ -11,7 +11,7 @@ namespace app
 {
 
 class manual_dispatch_task
-    : public task_base<manual_dispatch_task, 48>
+    : public task_base<manual_dispatch_task, TASK_MEM_MANUAL_DISPATCH>
 {
 public:
 
@@ -42,7 +42,7 @@ private:
         linebot::api&       api,
         EventGroupHandle_t  event_group
     )
-        : task_base{"remote_disp", 2},
+        : task_base{"mndsp", 2},
           dualshock2_{dualshock2},
           api_{api},
           event_group_{event_group}

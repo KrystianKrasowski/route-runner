@@ -8,7 +8,8 @@
 namespace app
 {
 
-class tracking_motion_task : public task_base<tracking_motion_task, 48>
+class tracking_motion_task
+    : public task_base<tracking_motion_task, TASK_MEM_TRACKING_MOTION>
 {
 public:
 
@@ -32,7 +33,7 @@ private:
     EventGroupHandle_t even_group_;
 
     tracking_motion_task(linebot::api& api, EventGroupHandle_t event_groups)
-        : task_base{"tracking_motion", 2},
+        : task_base{"trmot", 2},
           api_{api},
           even_group_{event_groups}
     {

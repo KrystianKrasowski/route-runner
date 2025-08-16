@@ -8,7 +8,8 @@
 namespace app
 {
 
-class manual_motion_task : public task_base<manual_motion_task, 48>
+class manual_motion_task
+    : public task_base<manual_motion_task, TASK_MEM_MANUAL_MOTION>
 {
 public:
 
@@ -32,7 +33,7 @@ private:
     EventGroupHandle_t event_group_;
 
     manual_motion_task(linebot::api& api, EventGroupHandle_t event_group)
-        : task_base{"remote_motion", 2},
+        : task_base{"mnmot", 2},
           api_{api},
           event_group_{event_group}
     {

@@ -15,9 +15,10 @@
 #include "manual_mode_switch_task.hpp"
 #include "manual_motion_task.hpp"
 #include "manual_pid_tune_task.hpp"
+#include "mutex.hpp"
 #include "route_guard_toggle_task.hpp"
-#include "shell_output_task.hpp"
 #include "shell_command_task.hpp"
+#include "shell_output_task.hpp"
 #include "stream_buffer.h"
 #include "stream_buffer.hpp"
 #include "tracking_dispatch_task.hpp"
@@ -87,6 +88,7 @@ private:
     EventGroupHandle_t              shell_event_group_   = nullptr;
     EventGroupHandle_t              linebot_event_group_ = nullptr;
     shell_stream*                   shell_stream_        = nullptr;
+    mutex*                          shell_mutex_         = nullptr;
 
     linebot::api&
     get_or_create_api();
@@ -111,6 +113,9 @@ private:
 
     shell_stream&
     get_or_create_shell_stream();
+
+    mutex&
+    get_or_create_shell_mutex();
 };
 
 } // namespace app

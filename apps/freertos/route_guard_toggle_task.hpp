@@ -8,7 +8,8 @@
 namespace app
 {
 
-class route_guard_toggle_task : public task_base<route_guard_toggle_task, 32>
+class route_guard_toggle_task
+    : public task_base<route_guard_toggle_task, TASK_MEM_ROUTE_GUARD_TOGGLE>
 {
 public:
 
@@ -32,7 +33,7 @@ private:
     EventGroupHandle_t event_group_;
 
     route_guard_toggle_task(linebot::api& api, EventGroupHandle_t event_group)
-        : task_base{"immediate_stop", 3},
+        : task_base{"rtgrd", 3},
           api_{api},
           event_group_{event_group}
     {

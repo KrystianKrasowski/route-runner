@@ -9,7 +9,8 @@
 namespace app
 {
 
-class tracking_dispatch_task : public task_base<tracking_dispatch_task, 48>
+class tracking_dispatch_task
+    : public task_base<tracking_dispatch_task, TASK_MEM_TRACKING_DISPATCH>
 {
 public:
 
@@ -40,7 +41,7 @@ private:
         linebot::api&      api,
         EventGroupHandle_t event_group
     )
-        : task_base{"tracking_disp", 3},
+        : task_base{"trdsp", 3},
           qtrhd06a_{qtrhd06a},
           api_{api},
           event_group_{event_group}

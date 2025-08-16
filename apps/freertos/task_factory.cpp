@@ -174,7 +174,8 @@ shell_output_task&
 task_factory::create_shell_output_task()
 {
     auto& shell_stream = get_or_create_shell_stream();
-    auto& task         = shell_output_task::of(devices_.shell_, shell_stream);
+    auto& mutex        = get_or_create_shell_mutex();
+    auto& task         = shell_output_task::of(devices_.shell_, shell_stream, mutex);
 
     task.register_rtos_task();
 
@@ -278,6 +279,17 @@ task_factory::get_or_create_shell_stream()
     }
 
     return *shell_stream_;
+}
+
+mutex&
+task_factory::get_or_create_shell_mutex()
+{
+    if (!shell_mutex_)
+    {
+        shell_mutex_ = &mutex::of();
+    }
+
+    return *shell_mutex_;
 }
 
 } // namespace app

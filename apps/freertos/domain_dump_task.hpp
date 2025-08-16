@@ -10,7 +10,8 @@
 namespace app
 {
 
-class domain_dump_task : public task_base<domain_dump_task, 96>
+class domain_dump_task
+    : public task_base<domain_dump_task, TASK_MEM_DOMAIN_DUMP>
 {
 public:
 
@@ -33,7 +34,7 @@ private:
         linebot::api&       api,
         EventGroupHandle_t  event_group
     )
-        : task_base{"domain dump", 1},
+        : task_base{"dmdmp", 1},
           shell_stream_{shell_stream},
           api_{api},
           event_group_{event_group}
