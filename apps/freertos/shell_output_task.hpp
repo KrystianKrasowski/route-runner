@@ -19,6 +19,11 @@ public:
     void
     run();
 
+    shell_output_task(shell_output_task& other) = delete;
+
+    shell_output_task&
+    operator=(shell_output_task& other) = delete;
+
 private:
 
     static constexpr uint16_t TIMEOUT_MS = 1000;

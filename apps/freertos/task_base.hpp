@@ -11,14 +11,20 @@ namespace app
 
 using task_name = etl::string<6>;
 
+struct task_info
+{
+    TaskHandle_t handle_;
+    task_name    name_;
+};
+
 template <class T, uint16_t stack_depth>
 class task_base
 {
 public:
 
     task_base(task_name name, UBaseType_t priority)
-        : name{name},
-          priority{priority}
+        : name_{name},
+          priority_{priority}
     {
     }
 
@@ -33,34 +39,40 @@ public:
     register_rtos_task()
     {
         auto*       p_task    = static_cast<T*>(this);
-        const char* task_name = name.c_str();
+        const char* task_name = name_.c_str();
 
-        handle = xTaskCreateStatic(
+        handle_ = xTaskCreateStatic(
             &task_base::rtos_entry,
             task_name,
             stack_depth,
             p_task,
-            priority,
-            stack,
-            &task_control_block
+            priority_,
+            stack_,
+            &task_control_block_
         );
 
-        return handle;
+        return handle_;
     }
 
     TaskHandle_t
     get_handle() const
     {
-        return handle;
+        return handle_;
+    }
+
+    task_info
+    describe() const
+    {
+        return {handle_, name_};
     }
 
 private:
 
-    etl::string<16> name;
-    UBaseType_t     priority;
-    StackType_t     stack[stack_depth];
-    StaticTask_t    task_control_block;
-    TaskHandle_t    handle;
+    task_name    name_;
+    UBaseType_t  priority_;
+    StackType_t  stack_[stack_depth];
+    StaticTask_t task_control_block_;
+    TaskHandle_t handle_;
 };
 
 } // namespace app

@@ -23,6 +23,11 @@ public:
     void
     run();
 
+    domain_dump_task(domain_dump_task& other) = delete;
+
+    domain_dump_task&
+    operator=(domain_dump_task& other) = delete;
+
 private:
 
     const shell_stream& shell_stream_;
@@ -43,4 +48,3 @@ private:
 };
 
 } // namespace app
-

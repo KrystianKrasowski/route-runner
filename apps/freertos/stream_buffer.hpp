@@ -47,13 +47,18 @@ public:
     {
         size_t      offset = 0;
         char        chunk[BUFFLEN];
-        const char* raw_message = message.c_str();
+        const char* raw_message  = message.c_str();
+        auto        message_size = message.size();
 
-        while (offset < STRLEN)
+        while (offset < message_size)
         {
-            memcpy(chunk, raw_message + offset, BUFFLEN);
+            auto size_left  = message_size - offset;
+            auto chunk_size = size_left < BUFFLEN ? size_left : BUFFLEN;
+
+            memcpy(chunk, raw_message + offset, chunk_size);
+
             offset += xStreamBufferSend(
-                handle_, chunk, BUFFLEN, pdMS_TO_TICKS(TX_TIMEOUT_MS)
+                handle_, chunk, chunk_size, pdMS_TO_TICKS(TX_TIMEOUT_MS)
             );
         }
     }

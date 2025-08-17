@@ -25,6 +25,11 @@ public:
     void
     run();
 
+    shell_command_task(shell_command_task& other) = delete;
+
+    shell_command_task&
+    operator=(shell_command_task& other) = delete;
+
 private:
 
     const event_group& event_group_;

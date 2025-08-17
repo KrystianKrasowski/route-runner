@@ -1,4 +1,8 @@
 #include "memory_usage_dump_task.hpp"
+#include "FreeRTOS.h"
+#include "shell_command_task.hpp"
+#include "task.h"
+#include <etl/to_string.h>
 
 namespace app
 {
@@ -13,6 +17,12 @@ memory_usage_dump_task::of(
 }
 
 void
+memory_usage_dump_task::monitor(task_info task)
+{
+    monitored_tasks_.push_back(task);
+}
+
+void
 memory_usage_dump_task::run()
 {
     while (1)
@@ -22,8 +32,19 @@ memory_usage_dump_task::run()
 
         if ((bits & wait_for) != 0)
         {
-            etl::string<7> msg = "hello\n\r";
-            shell_stream_.send(msg);
+            message_string message = "";
+
+            for (auto task : monitored_tasks_)
+            {
+                auto watermark = uxTaskGetStackHighWaterMark(task.handle_);
+
+                message += task.name_;
+                message += ": ";
+                etl::to_string(watermark, message, true);
+                message += "\n\r";
+            }
+
+            shell_stream_.send(message);
         }
     }
 }
