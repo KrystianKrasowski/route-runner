@@ -20,12 +20,14 @@ public:
     void
     run();
 
-    manual_mode_switch_task(manual_mode_switch_task& other) = delete;
+    manual_mode_switch_task(const manual_mode_switch_task& other) = delete;
+
+    manual_mode_switch_task(manual_mode_switch_task&& other) = delete;
 
     manual_mode_switch_task&
-    operator=(manual_mode_switch_task& other) = delete;
+    operator=(const manual_mode_switch_task& other) = delete;
 
-    manual_mode_switch_task&&
+    manual_mode_switch_task&
     operator=(manual_mode_switch_task&& other) = delete;
 
 private:

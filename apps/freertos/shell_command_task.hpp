@@ -25,10 +25,15 @@ public:
     void
     run();
 
-    shell_command_task(shell_command_task& other) = delete;
+    shell_command_task(const shell_command_task& other) = delete;
+
+    shell_command_task(shell_command_task&& other) = delete;
 
     shell_command_task&
-    operator=(shell_command_task& other) = delete;
+    operator=(const shell_command_task& other) = delete;
+
+    shell_command_task&
+    operator=(shell_command_task&& other) = delete;
 
 private:
 

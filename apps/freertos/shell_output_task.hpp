@@ -19,10 +19,15 @@ public:
     void
     run();
 
-    shell_output_task(shell_output_task& other) = delete;
+    shell_output_task(const shell_output_task& other) = delete;
+
+    shell_output_task(shell_output_task&& other) = delete;
 
     shell_output_task&
-    operator=(shell_output_task& other) = delete;
+    operator=(const shell_output_task& other) = delete;
+
+    shell_output_task&
+    operator=(shell_output_task&& other) = delete;
 
 private:
 

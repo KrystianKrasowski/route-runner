@@ -23,10 +23,15 @@ public:
     void
     run();
 
-    domain_dump_task(domain_dump_task& other) = delete;
+    domain_dump_task(const domain_dump_task& other) = delete;
+
+    domain_dump_task(domain_dump_task&& other) = delete;
 
     domain_dump_task&
-    operator=(domain_dump_task& other) = delete;
+    operator=(const domain_dump_task& other) = delete;
+
+    domain_dump_task&
+    operator=(domain_dump_task&& other) = delete;
 
 private:
 

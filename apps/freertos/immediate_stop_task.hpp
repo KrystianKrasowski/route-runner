@@ -15,10 +15,15 @@ public:
     static immediate_stop_task&
     of(linebot::api& api);
 
-    immediate_stop_task(immediate_stop_task& other) = delete;
+    immediate_stop_task(const immediate_stop_task& other) = delete;
+
+    immediate_stop_task(immediate_stop_task&& other) = delete;
 
     immediate_stop_task&
-    operator=(immediate_stop_task& other) = delete;
+    operator=(const immediate_stop_task& other) = delete;
+
+    immediate_stop_task&
+    operator=(immediate_stop_task&& other) = delete;
 
     void
     run();

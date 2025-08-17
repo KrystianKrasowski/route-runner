@@ -23,10 +23,15 @@ public:
     void
     run();
 
-    memory_usage_dump_task(memory_usage_dump_task& other) = delete;
+    memory_usage_dump_task(const memory_usage_dump_task& other) = delete;
+
+    memory_usage_dump_task(memory_usage_dump_task&& other) = delete;
 
     memory_usage_dump_task&
-    operator=(memory_usage_dump_task& other) = delete;
+    operator=(const memory_usage_dump_task& other) = delete;
+
+    memory_usage_dump_task&
+    operator=(memory_usage_dump_task&& other) = delete;
 
 private:
 

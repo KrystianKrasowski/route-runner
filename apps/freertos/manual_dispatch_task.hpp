@@ -24,12 +24,14 @@ public:
     void
     run();
 
-    manual_dispatch_task(manual_dispatch_task& other) = delete;
+    manual_dispatch_task(const manual_dispatch_task& other) = delete;
+
+    manual_dispatch_task(manual_dispatch_task&& other) = delete;
 
     manual_dispatch_task&
-    operator=(manual_dispatch_task& other) = delete;
+    operator=(const manual_dispatch_task& other) = delete;
 
-    manual_dispatch_task&&
+    manual_dispatch_task&
     operator=(manual_dispatch_task&& other) = delete;
 
 private:

@@ -18,12 +18,14 @@ public:
     void
     run();
 
-    manual_pid_tune_task(manual_pid_tune_task& other) = delete;
+    manual_pid_tune_task(const manual_pid_tune_task& other) = delete;
+
+    manual_pid_tune_task(manual_pid_tune_task&& other) = delete;
 
     manual_pid_tune_task&
-    operator=(manual_pid_tune_task& other) = delete;
+    operator=(const manual_pid_tune_task& other) = delete;
 
-    manual_pid_tune_task&&
+    manual_pid_tune_task&
     operator=(manual_pid_tune_task&& other) = delete;
 
 private:

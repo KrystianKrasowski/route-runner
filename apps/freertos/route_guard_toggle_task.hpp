@@ -20,12 +20,14 @@ public:
     void
     run();
 
-    route_guard_toggle_task(route_guard_toggle_task& other) = delete;
+    route_guard_toggle_task(const route_guard_toggle_task& other) = delete;
+
+    route_guard_toggle_task(route_guard_toggle_task&& other) = delete;
 
     route_guard_toggle_task&
-    operator=(route_guard_toggle_task& other) = delete;
+    operator=(const route_guard_toggle_task& other) = delete;
 
-    route_guard_toggle_task&&
+    route_guard_toggle_task&
     operator=(route_guard_toggle_task&& other) = delete;
 
 private:

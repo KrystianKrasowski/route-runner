@@ -23,12 +23,14 @@ public:
     void
     run();
 
-    tracking_dispatch_task(tracking_dispatch_task& other) = delete;
+    tracking_dispatch_task(const tracking_dispatch_task& other) = delete;
+
+    tracking_dispatch_task(tracking_dispatch_task&& other) = delete;
 
     tracking_dispatch_task&
-    operator=(tracking_dispatch_task& other) = delete;
+    operator=(const tracking_dispatch_task& other) = delete;
 
-    tracking_dispatch_task&&
+    tracking_dispatch_task&
     operator=(tracking_dispatch_task&& other) = delete;
 
 private:

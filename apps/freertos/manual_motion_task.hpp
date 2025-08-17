@@ -20,12 +20,14 @@ public:
     void
     run();
 
-    manual_motion_task(manual_motion_task& other) = delete;
+    manual_motion_task(const manual_motion_task& other) = delete;
+
+    manual_motion_task(manual_motion_task&& other) = delete;
 
     manual_motion_task&
-    operator=(manual_motion_task& other) = delete;
+    operator=(const manual_motion_task& other) = delete;
 
-    manual_motion_task&&
+    manual_motion_task&
     operator=(manual_motion_task&& other) = delete;
 
 private:

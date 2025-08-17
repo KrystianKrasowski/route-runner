@@ -20,12 +20,14 @@ public:
     void
     run();
 
-    tracking_mode_switch_task(tracking_mode_switch_task& other) = delete;
+    tracking_mode_switch_task(const tracking_mode_switch_task& other) = delete;
+
+    tracking_mode_switch_task(tracking_mode_switch_task&& other) = delete;
 
     tracking_mode_switch_task&
-    operator=(tracking_mode_switch_task& other) = delete;
+    operator=(const tracking_mode_switch_task& other) = delete;
 
-    tracking_mode_switch_task&&
+    tracking_mode_switch_task&
     operator=(tracking_mode_switch_task&& other) = delete;
 
 private:

@@ -20,12 +20,14 @@ public:
     void
     run();
 
-    tracking_motion_task(tracking_motion_task& other) = delete;
+    tracking_motion_task(const tracking_motion_task& other) = delete;
+
+    tracking_motion_task(tracking_motion_task&& other) = delete;
 
     tracking_motion_task&
-    operator=(tracking_motion_task& other) = delete;
+    operator=(const tracking_motion_task& other) = delete;
 
-    tracking_motion_task&&
+    tracking_motion_task&
     operator=(tracking_motion_task&& other) = delete;
 
 private:
