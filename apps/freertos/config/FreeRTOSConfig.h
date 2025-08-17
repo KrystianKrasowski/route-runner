@@ -11,12 +11,12 @@
 #define configTICK_RATE_HZ                      250
 #define configMAX_PRIORITIES                    4
 #define configMINIMAL_STACK_SIZE                32
-#define configMAX_TASK_NAME_LEN                 16
+#define configMAX_TASK_NAME_LEN                 6
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 0
 #define configUSE_TASK_NOTIFICATIONS            1
 #define configTASK_NOTIFICATION_ARRAY_ENTRIES   1
-#define configUSE_MUTEXES                       0
+#define configUSE_MUTEXES                       1
 #define configUSE_RECURSIVE_MUTEXES             0
 #define configUSE_COUNTING_SEMAPHORES           0
 #define configQUEUE_REGISTRY_SIZE               10
@@ -86,12 +86,13 @@
 
 // API functions to include
 
-#define INCLUDE_vTaskPrioritySet  1
-#define INCLUDE_uxTaskPriorityGet 1
-#define INCLUDE_vTaskDelete       1
-#define INCLUDE_vTaskSuspend      1
-#define INCLUDE_vTaskDelay        1
-#define INCLUDE_vTaskDelayUntil   1
+#define INCLUDE_vTaskPrioritySet            1
+#define INCLUDE_uxTaskPriorityGet           1
+#define INCLUDE_vTaskDelete                 1
+#define INCLUDE_vTaskSuspend                1
+#define INCLUDE_vTaskDelay                  1
+#define INCLUDE_vTaskDelayUntil             1
+#define INCLUDE_uxTaskGetStackHighWaterMark 1
 
 // libopencm3 handlers
 

@@ -16,7 +16,7 @@ public:
     of(data_store& store);
 
     etl::array<uint8_t, device::qtrhd06a::VALUES_LENGTH>
-    read() override;
+    read() const override;
 
 private:
 

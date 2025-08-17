@@ -3,6 +3,7 @@
 #include "FreeRTOS.h"
 #include "device/tree.hpp"
 #include "domain_dump_task.hpp"
+#include "event_group.hpp"
 #include "event_groups.h"
 #include "immediate_stop_task.hpp"
 #include "isr_event_emitter_adapter.hpp"
@@ -15,9 +16,11 @@
 #include "manual_mode_switch_task.hpp"
 #include "manual_motion_task.hpp"
 #include "manual_pid_tune_task.hpp"
+#include "memory_usage_dump_task.hpp"
+#include "mutex.hpp"
 #include "route_guard_toggle_task.hpp"
-#include "shell_output_task.hpp"
 #include "shell_command_task.hpp"
+#include "shell_output_task.hpp"
 #include "stream_buffer.h"
 #include "stream_buffer.hpp"
 #include "tracking_dispatch_task.hpp"
@@ -69,12 +72,13 @@ public:
     shell_output_task&
     create_shell_output_task();
 
+    memory_usage_dump_task&
+    create_memory_usage_dump_task();
+
 private:
 
     // Look out for this class growth. If there was more event groups, mutexes,
     // etc, consider extracting them to separate modules, other factories maybe
-    static StaticEventGroup_t shell_event_group_buffer_;
-    static StaticEventGroup_t linebot_event_group_buffer_;
 
     device::tree&              devices_;
     isr_event_emitter_adapter& events_;
@@ -84,9 +88,10 @@ private:
     linebot::status_indicator_port* status_indicator_    = nullptr;
     linebot::route_guard_port*      route_guard_         = nullptr;
     linebot::api*                   api_                 = nullptr;
-    EventGroupHandle_t              shell_event_group_   = nullptr;
-    EventGroupHandle_t              linebot_event_group_ = nullptr;
+    event_group*                    shell_event_group_   = nullptr;
+    event_group*                    linebot_event_group_ = nullptr;
     shell_stream*                   shell_stream_        = nullptr;
+    mutex*                          shell_mutex_         = nullptr;
 
     linebot::api&
     get_or_create_api();
@@ -103,14 +108,17 @@ private:
     inline linebot::route_guard_port&
     get_or_create_route_guard();
 
-    inline EventGroupHandle_t
+    inline event_group&
     get_or_create_shell_event_group();
 
-    EventGroupHandle_t
+    inline event_group&
     get_or_create_linebot_event_group();
 
-    shell_stream&
+    inline shell_stream&
     get_or_create_shell_stream();
+
+    inline mutex&
+    get_or_create_shell_mutex();
 };
 
 } // namespace app

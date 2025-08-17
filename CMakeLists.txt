@@ -17,6 +17,10 @@ if(TARGET_HARDWARE STREQUAL "native_host")
     enable_testing()
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(__DEBUG)
+endif()
+
 add_subdirectory(apps)
 add_subdirectory(src)
 add_subdirectory(extern)

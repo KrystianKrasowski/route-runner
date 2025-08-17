@@ -4,9 +4,9 @@ namespace app
 {
 
 manual_pid_tune_task&
-manual_pid_tune_task::of(linebot::api& api, EventGroupHandle_t event_group)
+manual_pid_tune_task::of(const event_group& event_group, linebot::api& api)
 {
-    static manual_pid_tune_task task{api, event_group};
+    static manual_pid_tune_task task{event_group, api};
     return task;
 }
 
@@ -17,9 +17,7 @@ manual_pid_tune_task::run()
 
     while (1)
     {
-        auto events = xEventGroupWaitBits(
-            event_group_, bits_to_wait, pdTRUE, pdTRUE, pdMS_TO_TICKS(20)
-        );
+        auto events = event_group_.wait_bits(bits_to_wait, true, true, 20);
 
         if (events & bits_to_wait)
         {

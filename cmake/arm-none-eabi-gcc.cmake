@@ -32,8 +32,8 @@ set(CMAKE_ASM_FLAGS "${ARM_CPU_FLAGS}")
 
 # Build type-specific optimization
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g3")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g3")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Og -g3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Og -g3")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os")

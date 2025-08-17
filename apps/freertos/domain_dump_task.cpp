@@ -8,11 +8,11 @@ namespace app
 domain_dump_task&
 domain_dump_task::of(
     const shell_stream& shell_stream,
-    linebot::api&       api,
-    EventGroupHandle_t  event_group
+    const event_group&  event_group,
+    linebot::api&       api
 )
 {
-    static domain_dump_task task{shell_stream, api, event_group};
+    static domain_dump_task task{shell_stream, event_group, api};
     return task;
 }
 
@@ -22,10 +22,7 @@ domain_dump_task::run()
     while (1)
     {
         EventBits_t wait_for = shell_command_task::DOMAIN_DUMP_BIT;
-
-        EventBits_t bits = xEventGroupWaitBits(
-            event_group_, wait_for, pdTRUE, pdTRUE, pdMS_TO_TICKS(1000)
-        );
+        EventBits_t bits = event_group_.wait_bits(wait_for, true, true, 1000);
 
         if ((bits & wait_for) != 0)
         {

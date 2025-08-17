@@ -17,9 +17,6 @@
 namespace app
 {
 
-StaticEventGroup_t task_factory::shell_event_group_buffer_;
-StaticEventGroup_t task_factory::linebot_event_group_buffer_;
-
 task_factory::task_factory(
     device::tree& devices, isr_event_emitter_adapter& events
 )
@@ -33,9 +30,9 @@ task_factory::create_manual_control_dispatch_task()
 {
     auto  isr_event   = device::event_id::DUALSHOCK2_RX_COMPLETE;
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
+    auto& event_group = get_or_create_linebot_event_group();
     auto& task =
-        manual_dispatch_task::of(devices_.remote_control_, api, event_group);
+        manual_dispatch_task::of(event_group, devices_.remote_control_, api);
 
     task.register_rtos_task();
     events_.register_task_notification(isr_event, task.get_handle());
@@ -47,8 +44,8 @@ manual_motion_task&
 task_factory::create_manual_motion_task()
 {
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = manual_motion_task::of(api, event_group);
+    auto& event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_motion_task::of(event_group, api);
 
     task.register_rtos_task();
 
@@ -59,8 +56,8 @@ manual_mode_switch_task&
 task_factory::create_manual_mode_switch_task()
 {
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = manual_mode_switch_task::of(api, event_group);
+    auto& event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_mode_switch_task::of(event_group, api);
 
     task.register_rtos_task();
 
@@ -71,8 +68,8 @@ manual_pid_tune_task&
 task_factory::create_manual_pid_tune_task()
 {
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = manual_pid_tune_task::of(api, event_group);
+    auto& event_group = get_or_create_linebot_event_group();
+    auto& task        = manual_pid_tune_task::of(event_group, api);
 
     task.register_rtos_task();
 
@@ -84,9 +81,9 @@ task_factory::create_tracking_dispatch_task()
 {
     auto  isr_event   = device::event_id::QTRHD06A_CONVERSION_COMPLETE;
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
+    auto& event_group = get_or_create_linebot_event_group();
     auto& task =
-        tracking_dispatch_task::of(devices_.line_sensor_, api, event_group);
+        tracking_dispatch_task::of(devices_.line_sensor_, event_group, api);
 
     task.register_rtos_task();
     events_.register_task_notification(isr_event, task.get_handle());
@@ -98,8 +95,8 @@ tracking_motion_task&
 task_factory::create_tracking_motion_task()
 {
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = tracking_motion_task::of(api, event_group);
+    auto& event_group = get_or_create_linebot_event_group();
+    auto& task        = tracking_motion_task::of(event_group, api);
 
     task.register_rtos_task();
 
@@ -110,8 +107,8 @@ tracking_mode_switch_task&
 task_factory::create_tracking_mode_switch_task()
 {
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = tracking_mode_switch_task::of(api, event_group);
+    auto& event_group = get_or_create_linebot_event_group();
+    auto& task        = tracking_mode_switch_task::of(event_group, api);
 
     task.register_rtos_task();
 
@@ -122,8 +119,8 @@ route_guard_toggle_task&
 task_factory::create_route_guard_toggle_task()
 {
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_linebot_event_group();
-    auto& task        = route_guard_toggle_task::of(api, event_group);
+    auto& event_group = get_or_create_linebot_event_group();
+    auto& task        = route_guard_toggle_task::of(event_group, api);
 
     task.register_rtos_task();
 
@@ -147,8 +144,8 @@ shell_command_task&
 task_factory::create_shell_command_task()
 {
     auto& api         = get_or_create_api();
-    auto  event_group = get_or_create_shell_event_group();
-    auto& task     = shell_command_task::of(devices_.shell_, api, event_group);
+    auto& event_group = get_or_create_shell_event_group();
+    auto& task     = shell_command_task::of(event_group, devices_.shell_, api);
     auto  event_id = device::event_id::SHELL_COMMANDED;
 
     task.register_rtos_task();
@@ -161,9 +158,9 @@ domain_dump_task&
 task_factory::create_domain_dump_task()
 {
     auto& api          = get_or_create_api();
-    auto  event_group  = get_or_create_shell_event_group();
+    auto& event_group  = get_or_create_shell_event_group();
     auto& shell_stream = get_or_create_shell_stream();
-    auto& task         = domain_dump_task::of(shell_stream, api, event_group);
+    auto& task         = domain_dump_task::of(shell_stream, event_group, api);
 
     task.register_rtos_task();
 
@@ -174,7 +171,20 @@ shell_output_task&
 task_factory::create_shell_output_task()
 {
     auto& shell_stream = get_or_create_shell_stream();
-    auto& task         = shell_output_task::of(devices_.shell_, shell_stream);
+    auto& mutex        = get_or_create_shell_mutex();
+    auto& task = shell_output_task::of(devices_.shell_, shell_stream, mutex);
+
+    task.register_rtos_task();
+
+    return task;
+}
+
+memory_usage_dump_task&
+task_factory::create_memory_usage_dump_task()
+{
+    auto& shell_stream = get_or_create_shell_stream();
+    auto& event_group  = get_or_create_shell_event_group();
+    auto& task         = memory_usage_dump_task::of(shell_stream, event_group);
 
     task.register_rtos_task();
 
@@ -245,28 +255,26 @@ task_factory::get_or_create_route_guard()
     return *route_guard_;
 }
 
-EventGroupHandle_t
+event_group&
 task_factory::get_or_create_shell_event_group()
 {
     if (!shell_event_group_)
     {
-        shell_event_group_ =
-            xEventGroupCreateStatic(&shell_event_group_buffer_);
+        shell_event_group_ = &event_group::of();
     }
 
-    return shell_event_group_;
+    return *shell_event_group_;
 }
 
-EventGroupHandle_t
+event_group&
 task_factory::get_or_create_linebot_event_group()
 {
     if (!linebot_event_group_)
     {
-        linebot_event_group_ =
-            xEventGroupCreateStatic(&linebot_event_group_buffer_);
+        linebot_event_group_ = &event_group::of();
     }
 
-    return linebot_event_group_;
+    return *linebot_event_group_;
 }
 
 shell_stream&
@@ -278,6 +286,17 @@ task_factory::get_or_create_shell_stream()
     }
 
     return *shell_stream_;
+}
+
+mutex&
+task_factory::get_or_create_shell_mutex()
+{
+    if (!shell_mutex_)
+    {
+        shell_mutex_ = &mutex::of();
+    }
+
+    return *shell_mutex_;
 }
 
 } // namespace app
