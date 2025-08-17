@@ -181,5 +181,10 @@ Here is an example of clangd lsp configuration via the vim-lsp-settings plugin
 
 ## Future work
 
-* FreeRTOS tasks' stack depth monitoring
-* FreeRTOS tasks' stack usage optimization
+* Custom PCB design
+    * Learning about bootloader
+* Add display screen
+    * Display battery discharge
+    * Display PID parameters
+    * Dispaly current mode
+* Add some non-volatile memory for diagnostics storage
