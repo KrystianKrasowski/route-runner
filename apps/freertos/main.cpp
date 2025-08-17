@@ -14,6 +14,7 @@ main()
 
     app::task_factory task_factory{devices, events};
 
+#ifdef __DEBUG
     auto& manual_dispatch = task_factory.create_manual_control_dispatch_task();
     auto& manual_motion   = task_factory.create_manual_motion_task();
     auto& manual_mode     = task_factory.create_manual_mode_switch_task();
@@ -28,10 +29,6 @@ main()
     auto& shell_output      = task_factory.create_shell_output_task();
     auto& memory_usage      = task_factory.create_memory_usage_dump_task();
 
-    (void)app::stack_overflow_handler::hook(
-        devices.blink_, devices.motor_left_, devices.motor_right_
-    );
-
     memory_usage.monitor(manual_dispatch.describe());
     memory_usage.monitor(manual_motion.describe());
     memory_usage.monitor(manual_mode.describe());
@@ -45,6 +42,21 @@ main()
     memory_usage.monitor(domain_dump.describe());
     memory_usage.monitor(shell_output.describe());
     memory_usage.monitor(memory_usage.describe());
+#else
+    (void)task_factory.create_manual_control_dispatch_task();
+    (void)task_factory.create_manual_motion_task();
+    (void)task_factory.create_manual_mode_switch_task();
+    (void)task_factory.create_manual_pid_tune_task();
+    (void)task_factory.create_tracking_dispatch_task();
+    (void)task_factory.create_tracking_motion_task();
+    (void)task_factory.create_tracking_mode_switch_task();
+    (void)task_factory.create_route_guard_toggle_task();
+    (void)task_factory.create_immediate_stop_task();
+#endif
+
+    (void)app::stack_overflow_handler::hook(
+        devices.blink_, devices.motor_left_, devices.motor_right_
+    );
 
     vTaskStartScheduler();
 
