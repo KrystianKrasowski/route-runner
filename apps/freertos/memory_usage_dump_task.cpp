@@ -5,7 +5,7 @@ namespace app
 
 memory_usage_dump_task&
 memory_usage_dump_task::of(
-    const shell_stream& shell_stream, EventGroupHandle_t event_group
+    const shell_stream& shell_stream, const event_group& event_group
 )
 {
     static memory_usage_dump_task task{shell_stream, event_group};
@@ -18,10 +18,7 @@ memory_usage_dump_task::run()
     while (1)
     {
         EventBits_t wait_for = shell_command_task::TASK_MEM_USE_BIT;
-
-        EventBits_t bits = xEventGroupWaitBits(
-            event_group_, wait_for, pdTRUE, pdTRUE, pdMS_TO_TICKS(1000)
-        );
+        EventBits_t bits = event_group_.wait_bits(wait_for, true, true, 1000);
 
         if ((bits & wait_for) != 0)
         {

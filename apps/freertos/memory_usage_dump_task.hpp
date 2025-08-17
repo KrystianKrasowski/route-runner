@@ -14,7 +14,7 @@ class memory_usage_dump_task
 public:
 
     static memory_usage_dump_task&
-    of(const shell_stream& shell_stream, EventGroupHandle_t event_group);
+    of(const shell_stream& shell_stream, const event_group& event_group);
 
     void
     run();
@@ -22,10 +22,10 @@ public:
 private:
 
     const shell_stream& shell_stream_;
-    EventGroupHandle_t  event_group_;
+    const event_group&  event_group_;
 
     memory_usage_dump_task(
-        const shell_stream& shell_stream, EventGroupHandle_t event_group
+        const shell_stream& shell_stream, const event_group& event_group
     )
         : task_base{"memdmp", 1},
           shell_stream_{shell_stream},

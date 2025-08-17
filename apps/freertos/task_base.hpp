@@ -9,12 +9,14 @@
 namespace app
 {
 
+using task_name = etl::string<6>;
+
 template <class T, uint16_t stack_depth>
 class task_base
 {
 public:
 
-    task_base(etl::string<16> name, UBaseType_t priority)
+    task_base(task_name name, UBaseType_t priority)
         : name{name},
           priority{priority}
     {

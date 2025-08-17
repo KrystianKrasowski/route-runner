@@ -10,10 +10,10 @@ namespace app
 
 shell_command_task&
 shell_command_task::of(
-    device::shell& shell, linebot::api& api, EventGroupHandle_t event_group
+    const event_group& event_group, device::shell& shell, linebot::api& api
 )
 {
-    static shell_command_task task{shell, api, event_group};
+    static shell_command_task task{event_group, shell, api};
     return task;
 }
 
@@ -41,7 +41,7 @@ shell_command_task::run()
 
             if (bits != 0)
             {
-                xEventGroupSetBits(event_group_, bits);
+                event_group_.set_bits(bits);
             }
         }
     }

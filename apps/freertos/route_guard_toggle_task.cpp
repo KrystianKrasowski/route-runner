@@ -4,9 +4,9 @@ namespace app
 {
 
 route_guard_toggle_task&
-route_guard_toggle_task::of(linebot::api& api, EventGroupHandle_t event_group)
+route_guard_toggle_task::of(const event_group& event_group, linebot::api& api)
 {
-    static route_guard_toggle_task task{api, event_group};
+    static route_guard_toggle_task task{event_group, api};
     return task;
 }
 
@@ -17,9 +17,7 @@ route_guard_toggle_task::run()
 
     while (1)
     {
-        auto events = xEventGroupWaitBits(
-            event_group_, bits_to_wait, pdTRUE, pdTRUE, pdMS_TO_TICKS(5)
-        );
+        auto events = event_group_.wait_bits(bits_to_wait, true, true, 5);
 
         if (events & bits_to_wait)
         {

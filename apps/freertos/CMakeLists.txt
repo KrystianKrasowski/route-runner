@@ -19,6 +19,7 @@ add_executable(${PROJECT_NAME}
     stack_overflow_handler.cpp
     mutex.cpp
     memory_usage_dump_task.cpp
+    event_group.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

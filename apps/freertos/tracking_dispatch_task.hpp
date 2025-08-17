@@ -2,6 +2,7 @@
 
 #include "FreeRTOS.h"
 #include "device/qtrhd06a.hpp"
+#include "event_group.hpp"
 #include "event_groups.h"
 #include "linebot/api.hpp"
 #include "task_base.hpp"
@@ -15,9 +16,9 @@ class tracking_dispatch_task
 public:
 
     static tracking_dispatch_task&
-    of(device::qtrhd06a&  qtrhd06a,
-       linebot::api&      api,
-       EventGroupHandle_t event_group);
+    of(const device::qtrhd06a& qtrhd06a,
+       const event_group&      event_group,
+       linebot::api&           api);
 
     void
     run();
@@ -32,19 +33,19 @@ public:
 
 private:
 
-    device::qtrhd06a&  qtrhd06a_;
-    linebot::api&      api_;
-    EventGroupHandle_t event_group_;
+    const device::qtrhd06a& qtrhd06a_;
+    const event_group&      event_group_;
+    linebot::api&           api_;
 
     tracking_dispatch_task(
-        device::qtrhd06a&  qtrhd06a,
-        linebot::api&      api,
-        EventGroupHandle_t event_group
+        const device::qtrhd06a& qtrhd06a,
+        const event_group&      event_group,
+        linebot::api&           api
     )
         : task_base{"trdsp", 3},
           qtrhd06a_{qtrhd06a},
-          api_{api},
-          event_group_{event_group}
+          event_group_{event_group},
+          api_{api}
     {
     }
 };

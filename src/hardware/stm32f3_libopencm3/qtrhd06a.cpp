@@ -14,7 +14,7 @@ qtrhd06a::of(data_store& store)
 }
 
 etl::array<uint8_t, device::qtrhd06a::VALUES_LENGTH>
-qtrhd06a::read()
+qtrhd06a::read() const
 {
     uint16_t l3 = 0, l2 = 0, l1 = 0, r1 = 0, r2 = 0, r3 = 0;
 

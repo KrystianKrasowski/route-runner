@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FreeRTOS.h"
+#include "event_group.hpp"
 #include "event_groups.h"
 #include "linebot/api.hpp"
 #include "task_base.hpp"
@@ -14,7 +15,7 @@ class tracking_motion_task
 public:
 
     static tracking_motion_task&
-    of(linebot::api& api, EventGroupHandle_t event_group);
+    of(const event_group& event_group, linebot::api& api);
 
     void
     run();
@@ -29,13 +30,13 @@ public:
 
 private:
 
+    const event_group& even_group_;
     linebot::api&      api_;
-    EventGroupHandle_t even_group_;
 
-    tracking_motion_task(linebot::api& api, EventGroupHandle_t event_groups)
+    tracking_motion_task(const event_group& event_groups, linebot::api& api)
         : task_base{"trmot", 2},
-          api_{api},
-          even_group_{event_groups}
+          even_group_{event_groups},
+          api_{api}
     {
     }
 };

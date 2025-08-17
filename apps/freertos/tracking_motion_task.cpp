@@ -4,9 +4,9 @@ namespace app
 {
 
 tracking_motion_task&
-tracking_motion_task::of(linebot::api& api, EventGroupHandle_t event_group)
+tracking_motion_task::of(const event_group& event_group, linebot::api& api)
 {
-    static tracking_motion_task task{api, event_group};
+    static tracking_motion_task task{event_group, api};
     return task;
 }
 
@@ -17,9 +17,7 @@ tracking_motion_task::run()
 
     while (1)
     {
-        auto events = xEventGroupWaitBits(
-            even_group_, bits_to_wait, pdTRUE, pdTRUE, pdMS_TO_TICKS(5)
-        );
+        auto events = even_group_.wait_bits(bits_to_wait, true, true, 5);
 
         if (events & bits_to_wait)
         {

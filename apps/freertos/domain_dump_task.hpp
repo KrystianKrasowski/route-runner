@@ -1,7 +1,7 @@
-#ifndef _APPLICATION_TASK_DOMAIN_DUMP_H
-#define _APPLICATION_TASK_DOMAIN_DUMP_H
+#pragma once
 
 #include "FreeRTOS.h"
+#include "event_group.hpp"
 #include "event_groups.h"
 #include "linebot/api.hpp"
 #include "stream_buffer.hpp"
@@ -17,8 +17,8 @@ public:
 
     static domain_dump_task&
     of(const shell_stream& shell_stream,
-       linebot::api&       api,
-       EventGroupHandle_t  event_group);
+       const event_group&  event_group,
+       linebot::api&       api);
 
     void
     run();
@@ -26,22 +26,21 @@ public:
 private:
 
     const shell_stream& shell_stream_;
+    const event_group&  event_group_;
     linebot::api&       api_;
-    EventGroupHandle_t  event_group_;
 
     domain_dump_task(
         const shell_stream& shell_stream,
-        linebot::api&       api,
-        EventGroupHandle_t  event_group
+        const event_group&  event_group,
+        linebot::api&       api
     )
         : task_base{"dmdmp", 1},
           shell_stream_{shell_stream},
-          api_{api},
-          event_group_{event_group}
+          event_group_{event_group},
+          api_{api}
     {
     }
 };
 
 } // namespace app
 
-#endif

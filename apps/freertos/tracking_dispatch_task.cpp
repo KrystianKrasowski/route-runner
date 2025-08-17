@@ -6,12 +6,12 @@ namespace app
 
 tracking_dispatch_task&
 tracking_dispatch_task::of(
-    device::qtrhd06a&  qtrhd06a,
-    linebot::api&      api,
-    EventGroupHandle_t event_group
+    const device::qtrhd06a& qtrhd06a,
+    const event_group&      event_group,
+    linebot::api&           api
 )
 {
-    static tracking_dispatch_task task{qtrhd06a, api, event_group};
+    static tracking_dispatch_task task{qtrhd06a, event_group, api};
     return task;
 }
 
@@ -27,7 +27,7 @@ tracking_dispatch_task::run()
             auto raw_values = qtrhd06a_.read();
             auto actions    = api_.query(mapper::map(raw_values));
 
-            xEventGroupSetBits(event_group_, actions.as_uint());
+            event_group_.set_bits(actions.as_uint());
         }
     }
 }
