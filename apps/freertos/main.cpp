@@ -14,7 +14,6 @@ main()
 
     app::task_factory task_factory{devices, events};
 
-    // don't need the instances for these right now
     auto& manual_dispatch = task_factory.create_manual_control_dispatch_task();
     auto& manual_motion   = task_factory.create_manual_motion_task();
     auto& manual_mode     = task_factory.create_manual_mode_switch_task();
