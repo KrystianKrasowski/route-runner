@@ -76,10 +76,10 @@ private:
     static constexpr uint16_t TX_TIMEOUT_MS = 1000;
     static constexpr uint16_t RX_TIMEOUT_MS = 100;
 
-    std::size_t          trigger_bytes_;
-    uint8_t              storage_[BUFFLEN + 1] = {0};
     StaticStreamBuffer_t buffer_;
     StreamBufferHandle_t handle_;
+    std::size_t          trigger_bytes_;
+    uint8_t              storage_[BUFFLEN + 1] = {0};
 
     explicit stream_buffer(std::size_t trigger_bytes)
         : trigger_bytes_{trigger_bytes}

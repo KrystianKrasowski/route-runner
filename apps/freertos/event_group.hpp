@@ -29,8 +29,8 @@ public:
 
 private:
 
-    EventGroupHandle_t handle_;
     StaticEventGroup_t buffer_;
+    EventGroupHandle_t handle_;
 
     event_group() = default;
 };

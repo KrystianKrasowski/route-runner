@@ -31,10 +31,10 @@ public:
 private:
 
     uint32_t       gpio_1a_port_;
-    uint16_t       gpio_1a_pin_;
     uint32_t       gpio_2a_port_;
-    uint16_t       gpio_2a_pin_;
     uint32_t       pwm_timer_port_;
+    uint16_t       gpio_1a_pin_;
+    uint16_t       gpio_2a_pin_;
     enum tim_oc_id pwm_channel_;
 
     l293(
@@ -46,10 +46,10 @@ private:
         enum tim_oc_id pwm_channel
     )
         : gpio_1a_port_{gpio_1a_port},
-          gpio_1a_pin_{gpio_1a_pin},
           gpio_2a_port_{gpio_2a_port},
-          gpio_2a_pin_{gpio_2a_pin},
           pwm_timer_port_{pwm_timer_port},
+          gpio_1a_pin_{gpio_1a_pin},
+          gpio_2a_pin_{gpio_2a_pin},
           pwm_channel_{pwm_channel}
     {
     }

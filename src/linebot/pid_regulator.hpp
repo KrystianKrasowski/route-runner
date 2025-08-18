@@ -10,8 +10,6 @@ namespace linebot
 
 class pid_regulator
 {
-    using errors_buffer =
-        etl::circular_buffer<int8_t, data_store::ERROR_HISTORY_LENGTH>;
 
 public:
 

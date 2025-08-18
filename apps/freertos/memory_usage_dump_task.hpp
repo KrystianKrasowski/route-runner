@@ -42,10 +42,10 @@ private:
 
     using message_string = etl::string<MESSAGE_LENGTH>;
 
+    etl::vector<task_info, MONITORED_TASKS_LENGTH> monitored_tasks_;
+
     const shell_stream& shell_stream_;
     const event_group&  event_group_;
-
-    etl::vector<task_info, MONITORED_TASKS_LENGTH> monitored_tasks_;
 
     memory_usage_dump_task(
         const shell_stream& shell_stream, const event_group& event_group

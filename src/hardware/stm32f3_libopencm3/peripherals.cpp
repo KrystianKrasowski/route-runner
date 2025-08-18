@@ -1,5 +1,5 @@
-#include "config.h"
 #include "peripherals.hpp"
+#include "config.h"
 #include <cstdint>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/adc.h>
@@ -87,7 +87,7 @@ peripherals_setup(const data_store& store)
         (uint32_t)store.p_qtrhd06a_wbuff_, store.QTRHD06A_BUFFER_LENGTH
     );
     dma1_channel2_setup((uint32_t)store.p_dualshock2_wbuff_);
-    dma1_channel3_setup((uint32_t)store.p_dualshock2_request_);
+    dma1_channel3_setup((uint32_t)store.DUALSHOCK2_REQUEST);
     dma1_channel7_setup((uint32_t)store.shell_output_buffer_);
     adc12_setup();
     tim6_setup();
