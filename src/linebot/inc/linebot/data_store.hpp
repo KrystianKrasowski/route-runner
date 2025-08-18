@@ -10,16 +10,15 @@
 namespace linebot
 {
 
+using errors_buffer = etl::circular_buffer<int8_t, 10>;
+
 struct data_store
 {
-    static constexpr uint8_t ERROR_HISTORY_LENGTH{10};
-
-    etl::circular_buffer<int8_t, ERROR_HISTORY_LENGTH> errors_;
-
+    pid_params     pid_params_{640, 2, 4200};
     remote_control remote_control_{remote_control::STOP};
     mode           mode_{mode::MANUAL};
-    pid_params     pid_params_{640, 2, 4200};
     coordinates    line_position_;
+    errors_buffer  errors_;
 
     static data_store&
     of();

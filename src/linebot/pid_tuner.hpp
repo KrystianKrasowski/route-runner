@@ -12,8 +12,8 @@ class pid_tuner
 public:
 
     pid_tuner(const remote_control& control, pid_params& params)
-        : control_{control},
-          params_{params}
+        : params_{params},
+          control_{control}
     {
     }
 
@@ -65,8 +65,8 @@ private:
     static constexpr uint8_t TUNE_STEP_KI = 1;
     static constexpr uint8_t TUNE_STEP_KD = 100;
 
-    const remote_control control_;
     pid_params&          params_;
+    const remote_control control_;
 };
 
 } // namespace linebot
