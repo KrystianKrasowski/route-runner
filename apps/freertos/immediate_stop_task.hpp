@@ -30,7 +30,7 @@ public:
 
 private:
 
-    linebot::api api_;
+    linebot::api& api_;
 
     explicit immediate_stop_task(linebot::api& api)
         : task_base{"immst", 3},

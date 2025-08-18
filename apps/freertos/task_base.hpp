@@ -68,10 +68,10 @@ public:
 
 private:
 
-    task_name    name_;
-    UBaseType_t  priority_;
     StackType_t  stack_[stack_depth];
     StaticTask_t task_control_block_;
+    task_name    name_;
+    UBaseType_t  priority_;
     TaskHandle_t handle_;
 };
 
