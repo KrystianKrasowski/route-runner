@@ -31,12 +31,12 @@ public:
 
 private:
 
+    data_store& store_;
     uint32_t    chip_select_port_;
-    uint16_t    chip_select_pin_;
     uint32_t    spi_dma_port_;
+    uint16_t    chip_select_pin_;
     uint8_t     spi_dma_tx_channel_;
     uint8_t     spi_dma_rx_channel_;
-    data_store& store_;
 
     dualshock2(
         uint32_t    chip_select_port,
@@ -46,12 +46,12 @@ private:
         uint8_t     spi_dma_rx_channel,
         data_store& store
     )
-        : chip_select_port_{chip_select_port},
-          chip_select_pin_{chip_select_pin},
+        : store_{store},
+          chip_select_port_{chip_select_port},
           spi_dma_port_{spi_dma_port},
+          chip_select_pin_{chip_select_pin},
           spi_dma_tx_channel_{spi_dma_tx_channel},
-          spi_dma_rx_channel_{spi_dma_rx_channel},
-          store_{store}
+          spi_dma_rx_channel_{spi_dma_rx_channel}
     {
     }
 
