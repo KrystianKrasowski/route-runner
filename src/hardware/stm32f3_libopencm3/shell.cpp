@@ -7,11 +7,13 @@
 namespace hardware
 {
 
-shell&
-shell::of(data_store& store, uint32_t dma_port, uint8_t dma_channel)
+shell::shell(
+    data_store& store, const uint32_t dma_port, const uint8_t dma_channel
+)
+    : store_{store},
+      dma_port_{dma_port},
+      dma_channel_{dma_channel}
 {
-    static shell device{store, dma_port, dma_channel};
-    return device;
 }
 
 char

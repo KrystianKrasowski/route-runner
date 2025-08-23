@@ -23,6 +23,11 @@ struct tree
 
     static tree
     of(isr_event_emitter& events);
+
+    void
+    init(isr_event_emitter& events);
 };
+
+extern tree g_device_tree;
 
 } // namespace device

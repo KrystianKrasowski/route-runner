@@ -26,29 +26,36 @@ namespace device
 
 static hardware::data_store store;
 
-tree
-tree::of(isr_event_emitter& events)
+hardware::toggle_sequence_gpio blink{TIM7, GPIOA, GPIO8};
+
+hardware::dualshock2 remote_control{
+    GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store
+};
+
+hardware::l293 motor_left{GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3};
+
+hardware::l293 motor_right{GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4};
+
+hardware::qtrhd06a line_sensor{store};
+
+hardware::timeout offroute_timeout{TIM15};
+
+hardware::shell shell{store, DMA1, DMA_CHANNEL7};
+
+tree g_device_tree = {
+    blink,
+    remote_control,
+    motor_left,
+    motor_right,
+    line_sensor,
+    offroute_timeout,
+    shell
+};
+
+void
+tree::init(isr_event_emitter& events)
 {
     hardware::peripherals_setup(store);
-
-    // devices
-    auto& blink = hardware::toggle_sequence_gpio::of(TIM7, GPIOA, GPIO8);
-
-    auto& remote_control = hardware::dualshock2::of(
-        GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store
-    );
-
-    auto& motor_left =
-        hardware::l293::of(GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3);
-
-    auto& motor_right =
-        hardware::l293::of(GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4);
-
-    auto& line_sensor = hardware::qtrhd06a::of(store);
-
-    auto& offroute_timeout = hardware::timeout::of(TIM15);
-
-    auto& shell = hardware::shell::of(store, DMA1, DMA_CHANNEL7);
 
     // ISRs
     auto& isr_handler_tim2  = hardware::isr_handler_tim2::of(remote_control);
@@ -66,16 +73,6 @@ tree::of(isr_event_emitter& events)
     hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, isr_handler_dma1_channel2);
     hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, isr_handler_dma1_channel1);
     hardware::isr_register(NVIC_USART2_EXTI26_IRQ, isr_handler_usart2);
-
-    return tree{
-        blink,
-        remote_control,
-        motor_left,
-        motor_right,
-        line_sensor,
-        offroute_timeout,
-        shell
-    };
 }
 
 } // namespace device

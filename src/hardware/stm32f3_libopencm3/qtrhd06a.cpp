@@ -6,11 +6,9 @@
 namespace hardware
 {
 
-qtrhd06a&
-qtrhd06a::of(data_store& store)
+qtrhd06a::qtrhd06a(data_store& store)
+    : store_{store}
 {
-    static qtrhd06a device{store};
-    return device;
 }
 
 etl::array<uint8_t, device::qtrhd06a::VALUES_LENGTH>

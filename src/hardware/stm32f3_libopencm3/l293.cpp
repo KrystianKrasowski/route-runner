@@ -8,29 +8,21 @@
 namespace hardware
 {
 
-static etl::pool<l293, 2> pool;
-
-l293&
-l293::of(
-    uint32_t       gpio_1a_port,
-    uint16_t       gpio_1a_pin,
-    uint32_t       gpio_2a_port,
-    uint16_t       gpio_2a_pin,
-    uint32_t       pwm_timer_port,
-    enum tim_oc_id pwm_channel
+l293::l293(
+    const uint32_t       gpio_1a_port,
+    const uint16_t       gpio_1a_pin,
+    const uint32_t       gpio_2a_port,
+    const uint16_t       gpio_2a_pin,
+    const uint32_t       pwm_timer_port,
+    const enum tim_oc_id pwm_channel
 )
+    : gpio_1a_port_{gpio_1a_port},
+      gpio_2a_port_{gpio_2a_port},
+      pwm_timer_port_{pwm_timer_port},
+      gpio_1a_pin_{gpio_1a_pin},
+      gpio_2a_pin_{gpio_2a_pin},
+      pwm_channel_{pwm_channel}
 {
-    l293* device = pool.allocate();
-    new (device) l293(
-        gpio_1a_port,
-        gpio_1a_pin,
-        gpio_2a_port,
-        gpio_2a_pin,
-        pwm_timer_port,
-        pwm_channel
-    );
-
-    return *device;
 }
 
 void
