@@ -5,11 +5,9 @@
 namespace hardware
 {
 
-isr_handler_tim2&
-isr_handler_tim2::of(dualshock2& dualshock2_)
+isr_handler_tim2::isr_handler_tim2(dualshock2& dualshock2_)
+    : dualshock_{dualshock2_}
 {
-    static isr_handler_tim2 handler{dualshock2_};
-    return handler;
 }
 
 void

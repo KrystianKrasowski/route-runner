@@ -26,21 +26,21 @@ namespace device
 
 static hardware::data_store store;
 
-hardware::toggle_sequence_gpio blink{TIM7, GPIOA, GPIO8};
+static hardware::toggle_sequence_gpio blink{TIM7, GPIOA, GPIO8};
 
-hardware::dualshock2 remote_control{
+static hardware::dualshock2 remote_control{
     GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store
 };
 
-hardware::l293 motor_left{GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3};
+static hardware::l293 motor_left{GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3};
 
-hardware::l293 motor_right{GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4};
+static hardware::l293 motor_right{GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4};
 
-hardware::qtrhd06a line_sensor{store};
+static hardware::qtrhd06a line_sensor{store};
 
-hardware::timeout offroute_timeout{TIM15};
+static hardware::timeout offroute_timeout{TIM15};
 
-hardware::shell shell{store, DMA1, DMA_CHANNEL7};
+static hardware::shell shell{store, DMA1, DMA_CHANNEL7};
 
 tree g_device_tree = {
     blink,
@@ -52,20 +52,35 @@ tree g_device_tree = {
     shell
 };
 
+hardware::isr_handler_tim2 isr_handler_tim2{remote_control};
+
+hardware::isr_handler_tim7 isr_handler_tim7{blink};
+
+hardware::isr_handler_tim15 isr_handler_tim15;
+
+hardware::isr_handler_dma1_channel2 isr_handler_dma1_channel2{
+    remote_control, store
+};
+
+hardware::isr_handler_dma1_channel1 isr_handler_dma1_channel1{
+    line_sensor, store
+};
+
+hardware::isr_handler_usart2 isr_handler_usart2{store};
+
 void
 tree::init(isr_event_emitter& events)
 {
     hardware::peripherals_setup(store);
 
-    // ISRs
-    auto& isr_handler_tim2  = hardware::isr_handler_tim2::of(remote_control);
-    auto& isr_handler_tim7  = hardware::isr_handler_tim7::of(blink);
-    auto& isr_handler_tim15 = hardware::isr_handler_tim15::of(events);
-    auto& isr_handler_dma1_channel2 =
-        hardware::isr_handler_dma1_channel2::of(remote_control, store, events);
-    auto& isr_handler_dma1_channel1 =
-        hardware::isr_handler_dma1_channel1::of(line_sensor, store, events);
-    auto& isr_handler_usart2 = hardware::isr_handler_usart2::of(events, store);
+    // I'm not 100% convinced this is the best idea, but this way I could avoid
+    // cyclic dependency between application and hardware. I suppose one can
+    // treat setting isr even emitter port as a part of the peripheral
+    // initialization, that must go at the runtime begin
+    isr_handler_tim15.set_isr_event_emitter(events);
+    isr_handler_dma1_channel2.set_isr_event_emitter(events);
+    isr_handler_dma1_channel1.set_isr_event_emitter(events);
+    isr_handler_usart2.set_isr_event_emitter(events);
 
     hardware::isr_register(NVIC_TIM2_IRQ, isr_handler_tim2);
     hardware::isr_register(NVIC_TIM7_IRQ, isr_handler_tim7);

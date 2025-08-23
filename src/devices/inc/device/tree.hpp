@@ -21,9 +21,6 @@ struct tree
     timeout&         offroute_timeout_;
     shell&           shell_;
 
-    static tree
-    of(isr_event_emitter& events);
-
     void
     init(isr_event_emitter& events);
 };

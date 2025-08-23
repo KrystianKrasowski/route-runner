@@ -5,11 +5,9 @@
 namespace hardware
 {
 
-isr_handler_tim7&
-isr_handler_tim7::of(toggle_sequence_gpio& toggle_sequence)
+isr_handler_tim7::isr_handler_tim7(toggle_sequence_gpio& toggle_sequence)
+    : toggle_sequence_{toggle_sequence}
 {
-    static isr_handler_tim7 handler{toggle_sequence};
-    return handler;
 }
 
 void
