@@ -69,14 +69,16 @@ hardware::isr_handler_dma1_channel1 isr_handler_dma1_channel1{
 hardware::isr_handler_usart2 isr_handler_usart2{store};
 
 void
-tree::init(isr_event_emitter& events)
+tree::init(isr_event_emitter& events) const
 {
     hardware::peripherals_setup(store);
 
     // I'm not 100% convinced this is the best idea, but this way I could avoid
     // cyclic dependency between application and hardware. I suppose one can
     // treat setting isr even emitter port as a part of the peripheral
-    // initialization, that must go at the runtime begin
+    // initialization, that must go at the runtime begin.
+    // This could probably be avoided by providing isr_event_emitter from some
+    // other adapter CMake module
     isr_handler_tim15.set_isr_event_emitter(events);
     isr_handler_dma1_channel2.set_isr_event_emitter(events);
     isr_handler_dma1_channel1.set_isr_event_emitter(events);

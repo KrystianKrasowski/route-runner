@@ -22,7 +22,7 @@ struct tree
     shell&           shell_;
 
     void
-    init(isr_event_emitter& events);
+    init(isr_event_emitter& events) const;
 };
 
 extern tree g_device_tree;
