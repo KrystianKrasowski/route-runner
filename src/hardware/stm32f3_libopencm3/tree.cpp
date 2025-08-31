@@ -42,6 +42,22 @@ static hardware::timeout offroute_timeout{TIM15};
 
 static hardware::shell shell{store, DMA1, DMA_CHANNEL7};
 
+static hardware::isr_handler_tim2 remote_control_trigger_isr{remote_control};
+
+static hardware::isr_handler_tim7 blink_update_isr{blink};
+
+static hardware::isr_handler_tim15 offroute_timeout_isr;
+
+static hardware::isr_handler_dma1_channel2 remote_control_update_isr{
+    remote_control, store
+};
+
+static hardware::isr_handler_dma1_channel1 line_sensor_update_isr{
+    line_sensor, store
+};
+
+static hardware::isr_handler_usart2 shell_new_command_isr{store};
+
 tree g_device_tree = {
     blink,
     remote_control,
@@ -51,22 +67,6 @@ tree g_device_tree = {
     offroute_timeout,
     shell
 };
-
-hardware::isr_handler_tim2 isr_handler_tim2{remote_control};
-
-hardware::isr_handler_tim7 isr_handler_tim7{blink};
-
-hardware::isr_handler_tim15 isr_handler_tim15;
-
-hardware::isr_handler_dma1_channel2 isr_handler_dma1_channel2{
-    remote_control, store
-};
-
-hardware::isr_handler_dma1_channel1 isr_handler_dma1_channel1{
-    line_sensor, store
-};
-
-hardware::isr_handler_usart2 isr_handler_usart2{store};
 
 void
 tree::init(isr_event_emitter& events) const
@@ -79,17 +79,17 @@ tree::init(isr_event_emitter& events) const
     // initialization, that must go at the runtime begin.
     // This could probably be avoided by providing isr_event_emitter from some
     // other adapter CMake module
-    isr_handler_tim15.set_isr_event_emitter(events);
-    isr_handler_dma1_channel2.set_isr_event_emitter(events);
-    isr_handler_dma1_channel1.set_isr_event_emitter(events);
-    isr_handler_usart2.set_isr_event_emitter(events);
+    offroute_timeout_isr.set_isr_event_emitter(events);
+    remote_control_update_isr.set_isr_event_emitter(events);
+    line_sensor_update_isr.set_isr_event_emitter(events);
+    shell_new_command_isr.set_isr_event_emitter(events);
 
-    hardware::isr_register(NVIC_TIM2_IRQ, isr_handler_tim2);
-    hardware::isr_register(NVIC_TIM7_IRQ, isr_handler_tim7);
-    hardware::isr_register(NVIC_TIM1_BRK_TIM15_IRQ, isr_handler_tim15);
-    hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, isr_handler_dma1_channel2);
-    hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, isr_handler_dma1_channel1);
-    hardware::isr_register(NVIC_USART2_EXTI26_IRQ, isr_handler_usart2);
+    hardware::isr_register(NVIC_TIM2_IRQ, remote_control_trigger_isr);
+    hardware::isr_register(NVIC_TIM7_IRQ, blink_update_isr);
+    hardware::isr_register(NVIC_TIM1_BRK_TIM15_IRQ, offroute_timeout_isr);
+    hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, remote_control_update_isr);
+    hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, line_sensor_update_isr);
+    hardware::isr_register(NVIC_USART2_EXTI26_IRQ, shell_new_command_isr);
 }
 
 } // namespace device

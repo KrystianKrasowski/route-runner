@@ -16,6 +16,13 @@ isr_handler* dma1_channel1_handler = nullptr;
 isr_handler* dma1_channel2_handler = nullptr;
 isr_handler* usart2_handler        = nullptr;
 
+/*
+ * ISR priority distribution:
+ * 0..4     - most important non-RTOS-related routines
+ * 5..9     - most important RTOS-related routines
+ * 10..12   - important RTOS-related routeins
+ * 13..15   - less important RTOS-related routines
+ */
 void
 isr_register(uint8_t nvic_number, isr_handler& handler)
 {
