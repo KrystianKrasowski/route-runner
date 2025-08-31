@@ -17,6 +17,7 @@
     - [Application architecture](#application-architecture)
 - [Development](#development)
 - [Future work](#future-work)
+- [Decision log](#decision-log)
 
 ## Overview
 
@@ -188,3 +189,14 @@ Here is an example of clangd lsp configuration via the vim-lsp-settings plugin
     * Display PID parameters
     * Dispaly current mode
 * Add some non-volatile memory for diagnostics storage
+
+## Decision log
+* [Application architecture pt. 1](./docs/decision-log/2025-01-11--app-architecture-pt1.md)
+* [Application architecture pt. 2](./docs/decision-log/2025-02-02--app-architecture-pt2.md)
+* [Duty cycle characteristic](./docs/decision-log/2025-03-24--duty-cycle-characteristic.md)
+* [Opaque pointer/handle pattern](./docs/decision-log/2025-04-12--opaque.md)
+* [Single function return](./docs/decision-log/2025-04-14--single-function-return.md)
+* [Message queue](./docs/decision-log/2025-04-19--message-queue.md)
+* [API command reentrancy](./docs/decision-log/2025-08-06--api-command-reentrancy.md)
+* [Objects creation approach](./docs/decision-log/2025-08-30--objects-creation-approach.md)
+

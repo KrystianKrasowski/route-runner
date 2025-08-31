@@ -8,18 +8,12 @@
 namespace hardware
 {
 
-isr_handler_dma1_channel1&
-isr_handler_dma1_channel1::of(
-    qtrhd06a&                  line_sensor,
-    data_store&                data_store,
-    device::isr_event_emitter& event_emitter
+isr_handler_dma1_channel1::isr_handler_dma1_channel1(
+    qtrhd06a& line_sensor, data_store& data_store
 )
+    : line_sensor_{line_sensor},
+      data_store_{data_store}
 {
-    static isr_handler_dma1_channel1 handler{
-        line_sensor, data_store, event_emitter
-    };
-
-    return handler;
 }
 
 void
@@ -34,8 +28,7 @@ isr_handler_dma1_channel1::handle()
         dma_disable_channel(DMA1, DMA_CHANNEL1);
         dma_set_memory_address(DMA1, DMA_CHANNEL1, memory_address);
         dma_enable_channel(DMA1, DMA_CHANNEL1);
-
-        event_emitter_.emit(device::event_id::QTRHD06A_CONVERSION_COMPLETE);
+        emit_event(device::event_id::QTRHD06A_CONVERSION_COMPLETE);
     }
 }
 

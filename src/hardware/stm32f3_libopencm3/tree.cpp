@@ -26,56 +26,70 @@ namespace device
 
 static hardware::data_store store;
 
-tree
-tree::of(isr_event_emitter& events)
+static hardware::toggle_sequence_gpio blink{TIM7, GPIOA, GPIO8};
+
+static hardware::dualshock2 remote_control{
+    GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store
+};
+
+static hardware::l293 motor_left{GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3};
+
+static hardware::l293 motor_right{GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4};
+
+static hardware::qtrhd06a line_sensor{store};
+
+static hardware::timeout offroute_timeout{TIM15};
+
+static hardware::shell shell{store, DMA1, DMA_CHANNEL7};
+
+static hardware::isr_handler_tim2 remote_control_trigger_isr{remote_control};
+
+static hardware::isr_handler_tim7 blink_update_isr{blink};
+
+static hardware::isr_handler_tim15 offroute_timeout_isr;
+
+static hardware::isr_handler_dma1_channel2 remote_control_update_isr{
+    remote_control, store
+};
+
+static hardware::isr_handler_dma1_channel1 line_sensor_update_isr{
+    line_sensor, store
+};
+
+static hardware::isr_handler_usart2 shell_new_command_isr{store};
+
+tree g_device_tree = {
+    blink,
+    remote_control,
+    motor_left,
+    motor_right,
+    line_sensor,
+    offroute_timeout,
+    shell
+};
+
+void
+tree::init(isr_event_emitter& events) const
 {
     hardware::peripherals_setup(store);
 
-    // devices
-    auto& blink = hardware::toggle_sequence_gpio::of(TIM7, GPIOA, GPIO8);
+    // I'm not 100% convinced this is the best idea, but this way I could avoid
+    // cyclic dependency between application and hardware. I suppose one can
+    // treat setting isr even emitter port as a part of the peripheral
+    // initialization, that must go at the runtime begin.
+    // This could probably be avoided by providing isr_event_emitter from some
+    // other adapter CMake module
+    offroute_timeout_isr.set_isr_event_emitter(events);
+    remote_control_update_isr.set_isr_event_emitter(events);
+    line_sensor_update_isr.set_isr_event_emitter(events);
+    shell_new_command_isr.set_isr_event_emitter(events);
 
-    auto& remote_control = hardware::dualshock2::of(
-        GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store
-    );
-
-    auto& motor_left =
-        hardware::l293::of(GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3);
-
-    auto& motor_right =
-        hardware::l293::of(GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4);
-
-    auto& line_sensor = hardware::qtrhd06a::of(store);
-
-    auto& offroute_timeout = hardware::timeout::of(TIM15);
-
-    auto& shell = hardware::shell::of(store, DMA1, DMA_CHANNEL7);
-
-    // ISRs
-    auto& isr_handler_tim2  = hardware::isr_handler_tim2::of(remote_control);
-    auto& isr_handler_tim7  = hardware::isr_handler_tim7::of(blink);
-    auto& isr_handler_tim15 = hardware::isr_handler_tim15::of(events);
-    auto& isr_handler_dma1_channel2 =
-        hardware::isr_handler_dma1_channel2::of(remote_control, store, events);
-    auto& isr_handler_dma1_channel1 =
-        hardware::isr_handler_dma1_channel1::of(line_sensor, store, events);
-    auto& isr_handler_usart2 = hardware::isr_handler_usart2::of(events, store);
-
-    hardware::isr_register(NVIC_TIM2_IRQ, isr_handler_tim2);
-    hardware::isr_register(NVIC_TIM7_IRQ, isr_handler_tim7);
-    hardware::isr_register(NVIC_TIM1_BRK_TIM15_IRQ, isr_handler_tim15);
-    hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, isr_handler_dma1_channel2);
-    hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, isr_handler_dma1_channel1);
-    hardware::isr_register(NVIC_USART2_EXTI26_IRQ, isr_handler_usart2);
-
-    return tree{
-        blink,
-        remote_control,
-        motor_left,
-        motor_right,
-        line_sensor,
-        offroute_timeout,
-        shell
-    };
+    hardware::isr_register(NVIC_TIM2_IRQ, remote_control_trigger_isr);
+    hardware::isr_register(NVIC_TIM7_IRQ, blink_update_isr);
+    hardware::isr_register(NVIC_TIM1_BRK_TIM15_IRQ, offroute_timeout_isr);
+    hardware::isr_register(NVIC_DMA1_CHANNEL2_IRQ, remote_control_update_isr);
+    hardware::isr_register(NVIC_DMA1_CHANNEL1_IRQ, line_sensor_update_isr);
+    hardware::isr_register(NVIC_USART2_EXTI26_IRQ, shell_new_command_isr);
 }
 
 } // namespace device

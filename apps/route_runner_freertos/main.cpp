@@ -10,9 +10,9 @@ app::isr_event_emitter_adapter events;
 int
 main()
 {
-    auto devices = device::tree::of(events);
+    device::g_device_tree.init(events);
 
-    app::task_factory task_factory{devices, events};
+    app::task_factory task_factory{device::g_device_tree, events};
 
 #ifdef __DEBUG
     auto& manual_dispatch = task_factory.create_manual_control_dispatch_task();
@@ -55,7 +55,9 @@ main()
 #endif
 
     (void)app::stack_overflow_handler::hook(
-        devices.blink_, devices.motor_left_, devices.motor_right_
+        device::g_device_tree.blink_,
+        device::g_device_tree.motor_left_,
+        device::g_device_tree.motor_right_
     );
 
     vTaskStartScheduler();

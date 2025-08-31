@@ -11,26 +11,22 @@ class toggle_sequence_gpio : public device::toggle_sequence
 {
 public:
 
-    static toggle_sequence_gpio&
-    of(uint32_t timer_port, uint32_t gpio_port, uint16_t gpio_pin);
+    toggle_sequence_gpio(
+        const uint32_t timer_port,
+        const uint32_t gpio_port,
+        const uint16_t gpio_pin
+    );
 
     void
     change_sequence(uint8_t value) override;
 
 private:
 
-    uint32_t timer_port_;
-    uint32_t gpio_port_;
-    uint16_t gpio_pin_;
-    uint8_t  sequence_{0x1};
-    uint8_t  sequence_count_{0};
-
-    toggle_sequence_gpio(
-        uint32_t timer_port, uint32_t gpio_port, uint16_t gpio_pin
-    )
-        : timer_port_{timer_port}, gpio_port_{gpio_port}, gpio_pin_{gpio_pin}
-    {
-    }
+    const uint32_t timer_port_;
+    const uint32_t gpio_port_;
+    const uint16_t gpio_pin_;
+    uint8_t        sequence_{0x1};
+    uint8_t        sequence_count_{0};
 
     void
     toggle();

@@ -12,8 +12,7 @@ class isr_handler_tim7 : public isr_handler
 {
 public:
 
-    static isr_handler_tim7&
-    of(toggle_sequence_gpio& toggle_sequence);
+    explicit isr_handler_tim7(toggle_sequence_gpio& toggle_sequence);
 
     void
     handle() override;
@@ -21,11 +20,6 @@ public:
 private:
 
     toggle_sequence_gpio& toggle_sequence_;
-
-    explicit isr_handler_tim7(toggle_sequence_gpio& toggle_sequence)
-        : toggle_sequence_{toggle_sequence}
-    {
-    }
 };
 
 } // namespace hardware

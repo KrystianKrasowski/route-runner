@@ -11,8 +11,9 @@ class shell : public device::shell
 {
 public:
 
-    static shell&
-    of(data_store& store, uint32_t dma_port, uint8_t dma_channel);
+    shell(
+        data_store& store, const uint32_t dma_port, const uint8_t dma_channel
+    );
 
     char
     read() override;
@@ -22,16 +23,9 @@ public:
 
 private:
 
-    data_store&                                store_;
-    uint32_t                                   dma_port_;
-    uint8_t                                    dma_channel_;
-
-    shell(data_store& store, uint32_t dma_port, uint8_t dma_channel)
-        : store_{store},
-          dma_port_{dma_port},
-          dma_channel_{dma_channel}
-    {
-    }
+    data_store&    store_;
+    const uint32_t dma_port_;
+    const uint8_t  dma_channel_;
 };
 
 } // namespace hardware

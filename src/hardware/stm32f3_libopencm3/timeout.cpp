@@ -5,11 +5,9 @@
 namespace hardware
 {
 
-timeout&
-timeout::of(uint32_t timer_port)
+timeout::timeout(const uint32_t timer_port)
+    : timer_port_{timer_port}
 {
-    static timeout device{timer_port};
-    return device;
 }
 
 void
