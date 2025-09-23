@@ -12,16 +12,16 @@ class status_indicator_toggle_sequence : public linebot::status_indicator_port
 public:
 
     static status_indicator_toggle_sequence&
-    of(device::toggle_sequence& blink);
+    of(const device::toggle_sequence& blink);
 
     void
     apply(linebot::mode mode) override;
 
 private:
 
-    device::toggle_sequence& blink_;
+    const device::toggle_sequence& blink_;
 
-    status_indicator_toggle_sequence(device::toggle_sequence& blink)
+    status_indicator_toggle_sequence(const device::toggle_sequence& blink)
         : blink_{blink}
     {
     }

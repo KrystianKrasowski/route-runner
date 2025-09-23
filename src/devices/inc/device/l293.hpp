@@ -15,13 +15,13 @@ struct l293
     };
 
     virtual void
-    rotate(rotation direction) = 0;
+    rotate(rotation direction) const = 0;
 
     virtual void
-    enable(uint8_t duty_cycle) = 0;
+    enable(uint8_t duty_cycle) const = 0;
 
     virtual void
-    disable() = 0;
+    disable() const = 0;
 };
 
 } // namespace device

@@ -12,14 +12,14 @@ class isr_handler_tim2 : public isr_handler
 {
 public:
 
-    explicit isr_handler_tim2(dualshock2& dualshock2_);
+    explicit isr_handler_tim2(dualshock2 const & dualshock2_);
 
     void
     handle() override;
 
 private:
 
-    dualshock2& dualshock_;
+    dualshock2 const & dualshock_;
 };
 
 } // namespace hardware

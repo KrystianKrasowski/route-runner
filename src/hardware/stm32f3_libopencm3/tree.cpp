@@ -24,54 +24,64 @@
 namespace device
 {
 
-static hardware::data_store store;
+static hardware::data_store s_store;
 
-static hardware::toggle_sequence_gpio blink{TIM7, GPIOA, GPIO8};
+// === BLINK ===
+static hardware::toggle_sequence_gpio_data s_toggle_sequence_data;
 
-static hardware::dualshock2 remote_control{
-    GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, store
+static hardware::toggle_sequence_gpio const s_blink{
+    TIM7, GPIOA, GPIO8, &s_toggle_sequence_data
 };
 
-static hardware::l293 motor_left{GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3};
+// == REMOTE CONTROL ===
+static hardware::dualshock2 const s_remote_control{
+    GPIOF, GPIO0, DMA1, DMA_CHANNEL3, DMA_CHANNEL2, &s_store
+};
 
-static hardware::l293 motor_right{GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4};
+static hardware::l293 const s_motor_left{
+    GPIOA, GPIO12, GPIOA, GPIO10, TIM3, TIM_OC3
+};
 
-static hardware::qtrhd06a line_sensor{store};
+static hardware::l293 const s_motor_right{
+    GPIOB, GPIO6, GPIOB, GPIO7, TIM3, TIM_OC4
+};
 
-static hardware::timeout offroute_timeout{TIM15};
+static hardware::qtrhd06a const s_line_sensor{&s_store};
 
-static hardware::shell shell{store, DMA1, DMA_CHANNEL7};
+static hardware::timeout const s_offroute_timeout{TIM15};
 
-static hardware::isr_handler_tim2 remote_control_trigger_isr{remote_control};
+static hardware::shell const s_shell{&s_store, DMA1, DMA_CHANNEL7};
 
-static hardware::isr_handler_tim7 blink_update_isr{blink};
+static hardware::isr_handler_tim2 remote_control_trigger_isr{s_remote_control};
+
+static hardware::isr_handler_tim7 blink_update_isr{s_blink};
 
 static hardware::isr_handler_tim15 offroute_timeout_isr;
 
 static hardware::isr_handler_dma1_channel2 remote_control_update_isr{
-    remote_control, store
+    s_remote_control, s_store
 };
 
 static hardware::isr_handler_dma1_channel1 line_sensor_update_isr{
-    line_sensor, store
+    s_line_sensor, s_store
 };
 
-static hardware::isr_handler_usart2 shell_new_command_isr{store};
+static hardware::isr_handler_usart2 shell_new_command_isr{s_store};
 
-tree g_device_tree = {
-    blink,
-    remote_control,
-    motor_left,
-    motor_right,
-    line_sensor,
-    offroute_timeout,
-    shell
+tree const g_device_tree = {
+    s_blink,
+    s_remote_control,
+    s_motor_left,
+    s_motor_right,
+    s_line_sensor,
+    s_offroute_timeout,
+    s_shell
 };
 
 void
 tree::init(isr_event_emitter& events) const
 {
-    hardware::peripherals_setup(store);
+    hardware::peripherals_setup(s_store);
 
     // I'm not 100% convinced this is the best idea, but this way I could avoid
     // cyclic dependency between application and hardware. I suppose one can

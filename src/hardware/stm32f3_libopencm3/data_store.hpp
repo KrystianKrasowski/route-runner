@@ -15,10 +15,10 @@ struct data_store
         0x1, 0x42, 0x0, 0x0, 0x0
     };
 
-    volatile uint8_t*  p_dualshock2_wbuff_ = nullptr;
-    volatile uint8_t*  p_dualshock2_rbuff_ = nullptr;
     volatile uint16_t* p_qtrhd06a_wbuff_   = nullptr;
     volatile uint16_t* p_qtrhd06a_rbuff_   = nullptr;
+    volatile uint8_t*  p_dualshock2_wbuff_ = nullptr;
+    volatile uint8_t*  p_dualshock2_rbuff_ = nullptr;
 
     volatile uint16_t qtrhd06a_buffer1_[QTRHD06A_BUFFER_LENGTH];
     volatile uint16_t qtrhd06a_buffer2_[QTRHD06A_BUFFER_LENGTH];
@@ -28,10 +28,10 @@ struct data_store
     volatile char     shell_output_buffer_[SHELL_TXBUFF_LENGTH];
 
     data_store()
-        : p_dualshock2_wbuff_{dualshock2_buffer1_},
-          p_dualshock2_rbuff_{dualshock2_buffer2_},
-          p_qtrhd06a_wbuff_{qtrhd06a_buffer1_},
-          p_qtrhd06a_rbuff_{qtrhd06a_buffer2_}
+        : p_qtrhd06a_wbuff_{qtrhd06a_buffer1_},
+          p_qtrhd06a_rbuff_{qtrhd06a_buffer2_},
+          p_dualshock2_wbuff_{dualshock2_buffer1_},
+          p_dualshock2_rbuff_{dualshock2_buffer2_}
     {
     }
 

@@ -11,7 +11,7 @@ class toggle_sequence
 public:
 
     virtual void
-    change_sequence(uint8_t value) = 0;
+    change_sequence(uint8_t value) const = 0;
 };
 
 } // namespace device

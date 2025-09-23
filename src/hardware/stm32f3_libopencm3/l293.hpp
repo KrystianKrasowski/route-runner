@@ -12,31 +12,31 @@ class l293 : public device::l293
 public:
 
     l293(
-        const uint32_t       gpio_1a_port,
-        const uint16_t       gpio_1a_pin,
-        const uint32_t       gpio_2a_port,
-        const uint16_t       gpio_2a_pin,
-        const uint32_t       pwm_timer_port,
-        const enum tim_oc_id pwm_channel
+        uint32_t const       gpio_1a_port,
+        uint16_t const       gpio_1a_pin,
+        uint32_t const       gpio_2a_port,
+        uint16_t const       gpio_2a_pin,
+        uint32_t const       pwm_timer_port,
+        enum tim_oc_id const pwm_channel
     );
 
     void
-    rotate(rotation direction) override;
+    rotate(rotation direction) const override;
 
     void
-    enable(uint8_t duty_cycle) override;
+    enable(uint8_t duty_cycle) const override;
 
     void
-    disable() override;
+    disable() const override;
 
 private:
 
-    uint32_t       gpio_1a_port_;
-    uint32_t       gpio_2a_port_;
-    uint32_t       pwm_timer_port_;
-    uint16_t       gpio_1a_pin_;
-    uint16_t       gpio_2a_pin_;
-    enum tim_oc_id pwm_channel_;
+    uint32_t const       gpio_1a_port_;
+    uint32_t const       gpio_2a_port_;
+    uint32_t const       pwm_timer_port_;
+    uint16_t const       gpio_1a_pin_;
+    uint16_t const       gpio_2a_pin_;
+    enum tim_oc_id const pwm_channel_;
 };
 
 } // namespace hardware

@@ -11,9 +11,9 @@ namespace app
 
 manual_dispatch_task&
 manual_dispatch_task::of(
-    const event_group&  event_group,
-    device::dualshock2& dualshock2,
-    linebot::api&       api
+    event_group const &        event_group,
+    device::dualshock2 const & dualshock2,
+    linebot::api&              api
 )
 {
     static manual_dispatch_task task{event_group, dualshock2, api};

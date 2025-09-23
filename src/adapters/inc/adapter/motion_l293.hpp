@@ -14,18 +14,20 @@ class motion_l293 : public linebot::motion_port
 public:
 
     static motion_l293&
-    of(device::l293& motor_left, device::l293& motor_right);
+    of(device::l293 const & motor_left, device::l293 const & motor_right);
 
     void
     apply(linebot::maneuver maneuver) override;
 
 private:
 
-    device::l293&     motor_left_;
-    device::l293&     motor_right_;
-    linebot::maneuver last_maneuver_ = linebot::maneuver::none();
+    device::l293 const & motor_left_;
+    device::l293 const & motor_right_;
+    linebot::maneuver    last_maneuver_ = linebot::maneuver::none();
 
-    motion_l293(device::l293& motor_left, device::l293& motor_right)
+    motion_l293(
+        device::l293 const & motor_left, device::l293 const & motor_right
+    )
         : motor_left_{motor_left},
           motor_right_{motor_right}
     {

@@ -10,7 +10,9 @@ namespace app
 
 shell_command_task&
 shell_command_task::of(
-    const event_group& event_group, device::shell& shell, linebot::api& api
+    event_group const &   event_group,
+    device::shell const & shell,
+    linebot::api&         api
 )
 {
     static shell_command_task task{event_group, shell, api};

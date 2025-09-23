@@ -5,7 +5,7 @@
 namespace hardware
 {
 
-isr_handler_tim2::isr_handler_tim2(dualshock2& dualshock2_)
+isr_handler_tim2::isr_handler_tim2(dualshock2 const & dualshock2_)
     : dualshock_{dualshock2_}
 {
 }

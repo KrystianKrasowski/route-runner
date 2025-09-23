@@ -5,7 +5,7 @@
 namespace hardware
 {
 
-isr_handler_tim7::isr_handler_tim7(toggle_sequence_gpio& toggle_sequence)
+isr_handler_tim7::isr_handler_tim7(const toggle_sequence_gpio& toggle_sequence)
     : toggle_sequence_{toggle_sequence}
 {
 }

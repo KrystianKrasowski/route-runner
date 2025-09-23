@@ -7,29 +7,36 @@
 namespace hardware
 {
 
+struct toggle_sequence_gpio_data
+{
+    uint8_t sequence_{0x1};
+    uint8_t sequence_count_{0};
+};
+
 class toggle_sequence_gpio : public device::toggle_sequence
+
 {
 public:
 
     toggle_sequence_gpio(
-        const uint32_t timer_port,
-        const uint32_t gpio_port,
-        const uint16_t gpio_pin
+        uint32_t const                   timer_port,
+        uint32_t const                   gpio_port,
+        uint16_t const                   gpio_pin,
+        toggle_sequence_gpio_data* const p_data_store
     );
 
     void
-    change_sequence(uint8_t value) override;
+    change_sequence(uint8_t value) const override;
 
 private:
 
-    const uint32_t timer_port_;
-    const uint32_t gpio_port_;
-    const uint16_t gpio_pin_;
-    uint8_t        sequence_{0x1};
-    uint8_t        sequence_count_{0};
+    uint32_t const                   timer_port_;
+    uint32_t const                   gpio_port_;
+    uint16_t const                   gpio_pin_;
+    toggle_sequence_gpio_data* const p_data_store_;
 
     void
-    toggle();
+    toggle() const;
 
     friend class isr_handler_tim7;
 };

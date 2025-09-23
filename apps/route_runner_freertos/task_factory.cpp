@@ -18,7 +18,7 @@ namespace app
 {
 
 task_factory::task_factory(
-    device::tree& devices, isr_event_emitter_adapter& events
+    device::tree const & devices, isr_event_emitter_adapter& events
 )
     : devices_{devices},
       events_{events}

@@ -4,7 +4,7 @@ namespace adapter
 {
 
 route_guard_timeout&
-route_guard_timeout::of(device::timeout& offroute_timeout)
+route_guard_timeout::of(device::timeout const & offroute_timeout)
 {
     static route_guard_timeout adapter{offroute_timeout};
     return adapter;

@@ -12,7 +12,7 @@ class isr_handler_dma1_channel2 : public isr_handler, public isr_events_aware
 public:
 
     isr_handler_dma1_channel2(
-        dualshock2& remote_control, data_store& data_store
+        dualshock2 const & remote_control, data_store& data_store
     );
 
     void
@@ -20,8 +20,8 @@ public:
 
 private:
 
-    dualshock2& remote_control_;
-    data_store& data_store_;
+    dualshock2 const & remote_control_;
+    data_store&        data_store_;
 };
 
 } // namespace hardware

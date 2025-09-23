@@ -8,26 +8,28 @@ namespace hardware
 {
 
 shell::shell(
-    data_store& store, const uint32_t dma_port, const uint8_t dma_channel
+    data_store* const p_store,
+    uint32_t const    dma_port,
+    uint8_t const     dma_channel
 )
-    : store_{store},
+    : p_store_{p_store},
       dma_port_{dma_port},
       dma_channel_{dma_channel}
 {
 }
 
 char
-shell::read()
+shell::read() const
 {
-    return store_.shell_command_;
+    return p_store_->shell_command_;
 }
 
 void
-shell::send(char* data, uint8_t length)
+shell::send(char* data, uint8_t length) const
 {
-    if (length > store_.SHELL_TXBUFF_LENGTH)
+    if (length > p_store_->SHELL_TXBUFF_LENGTH)
     {
-        length = store_.SHELL_TXBUFF_LENGTH;
+        length = p_store_->SHELL_TXBUFF_LENGTH;
     }
 
     // This copies only 4 bytes. I could implement some callback, delegate, etc.
@@ -35,7 +37,7 @@ shell::send(char* data, uint8_t length)
     // separation of buffers
     for (uint8_t i = 0; i < length; ++i)
     {
-        store_.shell_output_buffer_[i] = data[i];
+        p_store_->shell_output_buffer_[i] = data[i];
     }
 
     dma_disable_channel(dma_port_, dma_channel_);

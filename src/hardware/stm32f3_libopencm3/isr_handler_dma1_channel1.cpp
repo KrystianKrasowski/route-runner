@@ -9,7 +9,7 @@ namespace hardware
 {
 
 isr_handler_dma1_channel1::isr_handler_dma1_channel1(
-    qtrhd06a& line_sensor, data_store& data_store
+    qtrhd06a const & line_sensor, data_store& data_store
 )
     : line_sensor_{line_sensor},
       data_store_{data_store}

@@ -5,7 +5,7 @@ namespace app
 
 shell_output_task&
 shell_output_task::of(
-    device::shell& shell, shell_stream& stream_buffer, mutex& mutex
+    device::shell const & shell, shell_stream& stream_buffer, mutex& mutex
 )
 {
     static shell_output_task task{shell, stream_buffer, mutex};

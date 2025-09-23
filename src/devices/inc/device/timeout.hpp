@@ -8,10 +8,10 @@ namespace device
 struct timeout
 {
     virtual void
-    start(uint16_t millis) = 0;
+    start(uint16_t millis) const = 0;
 
     virtual void
-    stop() = 0;
+    stop() const = 0;
 };
 
 } // namespace device

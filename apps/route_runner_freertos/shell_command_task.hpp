@@ -20,7 +20,9 @@ public:
     static constexpr uint8_t TASK_MEM_USE_BIT = 0x2;
 
     static shell_command_task&
-    of(const event_group& event_group, device::shell& shell, linebot::api& api);
+    of(event_group const &   event_group,
+       device::shell const & shell,
+       linebot::api&         api);
 
     void
     run();
@@ -37,14 +39,16 @@ public:
 
 private:
 
-    const event_group& event_group_;
-    device::shell&     shell_;
-    linebot::api&      api_;
+    event_group const &   event_group_;
+    device::shell const & shell_;
+    linebot::api&         api_;
 
     // TODO: Task names should be passed by their consturctor - we can have
     // multiple instances of one derived task
     shell_command_task(
-        const event_group& event_group, device::shell& shell, linebot::api& api
+        event_group const &   event_group,
+        device::shell const & shell,
+        linebot::api&         api
     )
         : task_base("shcmd", 1),
           event_group_{event_group},

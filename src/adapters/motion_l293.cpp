@@ -30,7 +30,9 @@ duty_cycle(int8_t correction)
 }
 
 motion_l293&
-motion_l293::of(device::l293& motor_left, device::l293& motor_right)
+motion_l293::of(
+    device::l293 const & motor_left, device::l293 const & motor_right
+)
 {
     static motion_l293 motion_adapter{motor_left, motor_right};
     return motion_adapter;

@@ -10,17 +10,17 @@ class timeout : public device::timeout
 {
 public:
 
-    explicit timeout(const uint32_t timer_port);
+    explicit timeout(uint32_t const timer_port);
 
     void
-    start(uint16_t millis) override;
+    start(uint16_t millis) const override;
 
     void
-    stop() override;
+    stop() const override;
 
 private:
 
-    const uint32_t timer_port_;
+    uint32_t const timer_port_;
 };
 
 } // namespace hardware

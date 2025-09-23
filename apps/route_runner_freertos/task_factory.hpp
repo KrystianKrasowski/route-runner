@@ -34,7 +34,9 @@ class task_factory
 {
 public:
 
-    task_factory(device::tree& devices, isr_event_emitter_adapter& events);
+    task_factory(
+        device::tree const & devices, isr_event_emitter_adapter& events
+    );
 
     manual_dispatch_task&
     create_manual_control_dispatch_task();
@@ -80,7 +82,7 @@ private:
     // Look out for this class growth. If there was more event groups, mutexes,
     // etc, consider extracting them to separate modules, other factories maybe
 
-    device::tree&              devices_;
+    device::tree const &       devices_;
     isr_event_emitter_adapter& events_;
 
     linebot::data_store*            store_               = nullptr;

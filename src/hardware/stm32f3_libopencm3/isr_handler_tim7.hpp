@@ -12,14 +12,14 @@ class isr_handler_tim7 : public isr_handler
 {
 public:
 
-    explicit isr_handler_tim7(toggle_sequence_gpio& toggle_sequence);
+    explicit isr_handler_tim7(const toggle_sequence_gpio& toggle_sequence);
 
     void
     handle() override;
 
 private:
 
-    toggle_sequence_gpio& toggle_sequence_;
+    const toggle_sequence_gpio& toggle_sequence_;
 };
 
 } // namespace hardware

@@ -11,7 +11,7 @@ static constexpr uint8_t TWO_BLINKS  = 0b00000101;
 static constexpr uint8_t FOUR_BLINKS = 0b01010101;
 
 status_indicator_toggle_sequence&
-status_indicator_toggle_sequence::of(device::toggle_sequence& blink)
+status_indicator_toggle_sequence::of(const device::toggle_sequence& blink)
 {
     static status_indicator_toggle_sequence adapter{blink};
     return adapter;

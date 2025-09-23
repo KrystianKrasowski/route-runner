@@ -12,9 +12,9 @@ public:
 
     static stack_overflow_handler&
     hook(
-        device::toggle_sequence& blink,
-        device::l293&            motor_left,
-        device::l293&            motor_right
+        device::toggle_sequence const & blink,
+        device::l293 const &            motor_left,
+        device::l293 const &            motor_right
     );
 
     void
@@ -22,14 +22,14 @@ public:
 
 private:
 
-    device::toggle_sequence& blink_;
-    device::l293&            motor_left_;
-    device::l293&            motor_right_;
+    device::toggle_sequence const & blink_;
+    device::l293 const &            motor_left_;
+    device::l293 const &            motor_right_;
 
     explicit stack_overflow_handler(
-        device::toggle_sequence& blink,
-        device::l293&            motor_left,
-        device::l293&            motor_right
+        device::toggle_sequence const & blink,
+        device::l293 const &            motor_left,
+        device::l293 const &            motor_right
     )
         : blink_{blink},
           motor_left_{motor_left},

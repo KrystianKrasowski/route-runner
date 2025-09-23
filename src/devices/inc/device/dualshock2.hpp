@@ -31,7 +31,7 @@ public:
     };
 
     virtual uint16_t
-    read() = 0;
+    read() const = 0;
 };
 
 } // namespace device

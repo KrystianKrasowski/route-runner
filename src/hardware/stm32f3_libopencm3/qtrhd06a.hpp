@@ -12,14 +12,14 @@ class qtrhd06a : public device::qtrhd06a
 {
 public:
 
-    explicit qtrhd06a(data_store& store);
+    explicit qtrhd06a(data_store* const p_store);
 
     etl::array<uint8_t, device::qtrhd06a::VALUES_LENGTH>
     read() const override;
 
 private:
 
-    data_store& store_;
+    data_store* const p_store_;
 };
 
 } // namespace hardware

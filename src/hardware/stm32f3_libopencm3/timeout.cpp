@@ -11,7 +11,7 @@ timeout::timeout(const uint32_t timer_port)
 }
 
 void
-timeout::start(uint16_t millis)
+timeout::start(uint16_t millis) const
 {
     timer_set_period(timer_port_, millis);
     timer_set_counter(timer_port_, 0);
@@ -19,7 +19,7 @@ timeout::start(uint16_t millis)
 }
 
 void
-timeout::stop()
+timeout::stop() const
 {
     timer_disable_counter(timer_port_);
 }

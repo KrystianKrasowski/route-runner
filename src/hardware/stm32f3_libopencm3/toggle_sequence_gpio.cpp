@@ -7,32 +7,39 @@ namespace hardware
 {
 
 toggle_sequence_gpio::toggle_sequence_gpio(
-    const uint32_t timer_port, const uint32_t gpio_port, const uint16_t gpio_pin
+    uint32_t const                   timer_port,
+    uint32_t const                   gpio_port,
+    uint16_t const                   gpio_pin,
+    toggle_sequence_gpio_data* const p_data_store
 )
     : timer_port_{timer_port},
       gpio_port_{gpio_port},
-      gpio_pin_{gpio_pin}
+      gpio_pin_{gpio_pin},
+      p_data_store_{p_data_store}
 {
 }
 
 void
-toggle_sequence_gpio::change_sequence(uint8_t value)
+toggle_sequence_gpio::change_sequence(uint8_t value) const
 {
     timer_disable_counter(timer_port_);
     gpio_clear(gpio_port_, gpio_pin_);
 
-    sequence_ = value;
+    p_data_store_->sequence_ = value;
 
     timer_enable_counter(timer_port_);
 }
 
 void
-toggle_sequence_gpio::toggle()
+toggle_sequence_gpio::toggle() const
 {
-    (sequence_ & (1 << sequence_count_)) ? gpio_set(gpio_port_, gpio_pin_)
-                                         : gpio_clear(gpio_port_, gpio_pin_);
+    uint8_t sequence = p_data_store_->sequence_;
+    uint8_t count    = p_data_store_->sequence_count_;
 
-    ++sequence_count_ &= 0x7;
+    (sequence & (1 << count)) ? gpio_set(gpio_port_, gpio_pin_)
+                              : gpio_clear(gpio_port_, gpio_pin_);
+
+    ++p_data_store_->sequence_count_ &= 0x7;
 }
 
 } // namespace hardware

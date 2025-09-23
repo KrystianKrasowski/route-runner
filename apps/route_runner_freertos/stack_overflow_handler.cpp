@@ -10,9 +10,9 @@ static stack_overflow_handler* p_handler = nullptr;
 
 stack_overflow_handler&
 stack_overflow_handler::hook(
-    device::toggle_sequence& blink,
-    device::l293&            motor_left,
-    device::l293&            motor_right
+    device::toggle_sequence const & blink,
+    device::l293 const &            motor_left,
+    device::l293 const &            motor_right
 )
 {
     static stack_overflow_handler handler{blink, motor_left, motor_right};

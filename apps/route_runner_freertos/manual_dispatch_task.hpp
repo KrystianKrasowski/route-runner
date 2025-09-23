@@ -17,9 +17,9 @@ class manual_dispatch_task
 public:
 
     static manual_dispatch_task&
-    of(const event_group&  event_group,
-       device::dualshock2& dualshock2,
-       linebot::api&       api);
+    of(event_group const &        event_group,
+       device::dualshock2 const & dualshock2,
+       linebot::api&              api);
 
     void
     run();
@@ -36,14 +36,14 @@ public:
 
 private:
 
-    const event_group&  event_group_;
-    device::dualshock2& dualshock2_;
-    linebot::api&       api_;
+    event_group const &        event_group_;
+    device::dualshock2 const & dualshock2_;
+    linebot::api&              api_;
 
     manual_dispatch_task(
-        const event_group&  event_group,
-        device::dualshock2& dualshock2,
-        linebot::api&       api
+        event_group const &        event_group,
+        device::dualshock2 const & dualshock2,
+        linebot::api&              api
     )
         : task_base{"mndsp", 2},
           event_group_{event_group},

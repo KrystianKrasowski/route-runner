@@ -14,7 +14,7 @@ class shell_output_task
 public:
 
     static shell_output_task&
-    of(device::shell& shell, shell_stream& stream_buffer, mutex& mutex);
+    of(device::shell const & shell, shell_stream& stream_buffer, mutex& mutex);
 
     void
     run();
@@ -33,12 +33,12 @@ private:
 
     static constexpr uint16_t TIMEOUT_MS = 1000;
 
-    device::shell& shell_;
-    shell_stream&  stream_buffer_;
-    mutex&         mutex_;
+    device::shell const & shell_;
+    shell_stream&         stream_buffer_;
+    mutex&                mutex_;
 
     shell_output_task(
-        device::shell& shell, shell_stream& stream_buffer, mutex& mutex
+        device::shell const & shell, shell_stream& stream_buffer, mutex& mutex
     )
         : task_base{"shout", 1},
           shell_{shell},

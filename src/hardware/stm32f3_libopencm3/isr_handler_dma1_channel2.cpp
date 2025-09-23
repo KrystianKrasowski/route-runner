@@ -7,7 +7,7 @@ namespace hardware
 {
 
 isr_handler_dma1_channel2::isr_handler_dma1_channel2(
-    dualshock2& remote_control, data_store& data_store
+    dualshock2 const & remote_control, data_store& data_store
 )
     : remote_control_{remote_control},
       data_store_{data_store}

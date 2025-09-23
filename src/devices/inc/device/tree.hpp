@@ -13,18 +13,18 @@ namespace device
 
 struct tree
 {
-    toggle_sequence& blink_;
-    dualshock2&      remote_control_;
-    l293&            motor_left_;
-    l293&            motor_right_;
-    qtrhd06a&        line_sensor_;
-    timeout&         offroute_timeout_;
-    shell&           shell_;
+    toggle_sequence const & blink_;
+    dualshock2 const &      remote_control_;
+    l293 const &            motor_left_;
+    l293 const &            motor_right_;
+    qtrhd06a const &        line_sensor_;
+    timeout const &         offroute_timeout_;
+    shell const &           shell_;
 
     void
     init(isr_event_emitter& events) const;
 };
 
-extern tree g_device_tree;
+extern tree const g_device_tree;
 
 } // namespace device

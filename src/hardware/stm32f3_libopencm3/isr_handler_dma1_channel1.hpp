@@ -11,15 +11,17 @@ class isr_handler_dma1_channel1 : public isr_handler, public isr_events_aware
 {
 public:
 
-    isr_handler_dma1_channel1(qtrhd06a& line_sensor, data_store& data_store);
+    isr_handler_dma1_channel1(
+        qtrhd06a const & line_sensor, data_store& data_store
+    );
 
     void
     handle() override;
 
 private:
 
-    qtrhd06a&   line_sensor_;
-    data_store& data_store_;
+    qtrhd06a const & line_sensor_;
+    data_store&      data_store_;
 };
 
 } // namespace hardware

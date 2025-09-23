@@ -9,12 +9,12 @@ namespace hardware
 {
 
 l293::l293(
-    const uint32_t       gpio_1a_port,
-    const uint16_t       gpio_1a_pin,
-    const uint32_t       gpio_2a_port,
-    const uint16_t       gpio_2a_pin,
-    const uint32_t       pwm_timer_port,
-    const enum tim_oc_id pwm_channel
+    uint32_t const       gpio_1a_port,
+    uint16_t const       gpio_1a_pin,
+    uint32_t const       gpio_2a_port,
+    uint16_t const       gpio_2a_pin,
+    uint32_t const       pwm_timer_port,
+    enum tim_oc_id const pwm_channel
 )
     : gpio_1a_port_{gpio_1a_port},
       gpio_2a_port_{gpio_2a_port},
@@ -26,7 +26,7 @@ l293::l293(
 }
 
 void
-l293::rotate(rotation direction)
+l293::rotate(rotation direction) const
 {
     switch (direction)
     {
@@ -48,7 +48,7 @@ l293::rotate(rotation direction)
 }
 
 void
-l293::enable(uint8_t duty_cycle)
+l293::enable(uint8_t duty_cycle) const
 {
     if (duty_cycle > 100)
     {
@@ -60,7 +60,7 @@ l293::enable(uint8_t duty_cycle)
 }
 
 void
-l293::disable()
+l293::disable() const
 {
     timer_disable_oc_output(pwm_timer_port_, pwm_channel_);
 }
